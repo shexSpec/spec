@@ -144,7 +144,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
         </ul></li>
       </ul>
       <div class="issue">
-        <p>
+        <p id="json-triples">
           When stable, consider switching to the rdfjs task force's <a href="https://github.com/rdfjs/representation-task-force/blob/master/interface-spec.md#term">JSON representation</a> i.e.
         </p>
         <ul>
@@ -523,7 +523,11 @@ _:User2
 
       <div class="issue">
         <p>
-          This is a conservative protection from negation conundrums.
+          This is a conservative protection from negation conundrums like:
+        </p>
+        <pre class="shex">&lt;S1&gt; { :p1 . } AND NOT @&lt;S2&gt;
+&lt;S2&gt; { :p1 . } AND NOT @&lt;S1&gt;</pre>
+        <p>
           <a href="orig.html#stratified-negation">Stratified negation</a> would permit additional expressivity e.g.
         </p>
         <pre>&lt;S1&gt; NOT (NOT @&lt;S1&gt;)</pre>
