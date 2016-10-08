@@ -458,6 +458,15 @@ _:User2
   <tr class="obj"><th id="dfn-Wildcard" class="obj">Wildcard</th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
           </table>
         </div>
+        <section id="node-constraint-semantics">
+          <h4>Semantics</h4>
+          <p>
+            For a node <span class="param">n</span> and conde constraint <span class="param">nc</span> <code class="function">satisfies(<m>n</m>, <m>nc</m>)</code> if and only if:
+          </p>
+          <ul>
+            <li></li>
+          </ul>
+        </section>
       </section>
 
       <section id="shapes-and-TEs">
@@ -566,6 +575,7 @@ _:User2
         The expression <code>matches(<m>T</m>, <m>expr</m>)</code> indicates that a set of triples <m>T</m> can satisfy these rules:
       </p>
       <ul>
+        <li><m>expr</m> has <span class="param">semActs</span> and <code class="function">satisfies(<m>n</m>, <m>se</m>, <m>G</m>, <m>m</m>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</li>
         <li><m>expr</m> has a <span class="param">min</span> or a <span class="param">max</span> and there is some partition of <m>matched</m> into <m class="function">m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every required repetition <m><sub>1</sub></m>, <m><sub>2</sub></m>,… ≤ <span class="param">min</span> in <span class="param">shapeExprs</span> and zero or more optional repetitions <m><sub><span class="param">min</span>+1</sub></m>, <m><sub><span class="param">min</span>+2</sub></m>,… ≤ <span class="param">max</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr</m>)</code> by the remaining rules in this list.</li>
         <li><m>expr</m> is a <span class="jobjref"><a href="#dfn-SomeOf" class="obj">SomeOf</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<m>T</m>, <m>expr</m>)</code>.</li>
         <li><m>expr</m> is an <span class="jobjref"><a href="#dfn-EachOf" class="obj">EachOf</a></span> and there is some partition of <m>matched</m> into <m>m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every expression <span class="function"><m>expr<sub>1</sub></m>, <m>expr<sub>2</sub></m>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr<sub>n</sub></m>)</code>.</li>
@@ -719,15 +729,31 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
 
       <section id="semantic-actions">
         <h3>Semantic Actions</h3>
+        <p>
+          Semantic actions serve as an extension point for Shape Expressions.
+          They appear in lists in <span class="jobjref"><a href="#dfn-Schema">Schema</a></span>'s <span class="param">startActs</span> and <span class="jobjref"><a href="#dfn-Shape">Shape</a></span>, <span class="jobjref"><a href="#dfn-SomeOf">SomeOf</a></span>, <span class="jobjref"><a href="#dfn-EachOf">EachOf</a></span> and <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span>'s <span class="param">semActs</span>.
+        </p>
+        <p>
+          A semantic action is a tuple of an identifier and some optional code:
+        </p>
         <div class="shexjTable">
           <table class="shexj">
   <tr class="obj"><th id="dfn-SemAct" class="obj">SemAct</th><td>{</td><td><span class="param">name</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">code</span>:<a class="trmref" href="#dfn-STRING">STRING</a>? }</td></tr>
           </table>
         </div>
+        <p>
+          The evaluation of semantic actions is implementation-dependent.
+          It takes a list of <span class="jobjref"><a href="#dfn-SemAct">SemAct</a></span>s and an unspecified list of other parameters and returns success or failure.
+        </p>
       </section>
 
       <section id="annotations">
         <h3>Annotations</h3>
+        <p>
+          Annotations do not affect whether a node conforms to some shape.
+          They enable additional documentation of elements in a schema.
+          They appear in lists in <span class="jobjref"><a href="#dfn-Shape">Shape</a></span>, <span class="jobjref"><a href="#dfn-SomeOf">SomeOf</a></span>, <span class="jobjref"><a href="#dfn-EachOf">EachOf</a></span> and <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span>'s <span class="param">annotations</span>.
+        </p>
         <div class="shexjTable">
           <table class="shexj">
   <tr class="obj"><th id="dfn-Annotation" class="obj">Annotation</th><td>{</td><td><span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">object</span>:<a class="nobref" href="#dfn-objectValue">objectValue</a> }</td></tr>
