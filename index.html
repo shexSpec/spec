@@ -7,7 +7,9 @@
     <!-- link rel="stylesheet" href="css/wgio.min.css"/ ask Iovka -->
     <link rel="stylesheet" href="local.css"/>
 
-    <script src='../primer/respec-w3c-common.js' async class='remove'></script>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            async="async" class='remove'></script>
+    <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
     <script src="https://www.w3.org/2013/ShEx/demobits/jquery.min.js" type="text/javascript"></script>
 
     <script class='remove'>
@@ -741,17 +743,48 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
   <tr class="obj"><th id="dfn-SemAct" class="obj">SemAct</th><td>{</td><td><span class="param">name</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">code</span>:<a class="trmref" href="#dfn-STRING">STRING</a>? }</td></tr>
           </table>
         </div>
-        <p>
-          The evaluation of semantic actions is implementation-dependent.
-          It takes a list of <span class="jobjref"><a href="#dfn-SemAct">SemAct</a></span>s and an unspecified list of other parameters and returns success or failure.
-        </p>
+        <section id="semantic-actions-semantics">
+          <h4>Semantics</h4>
+          <p>
+            The evaluation of a list of <span class="jobjref"><a href="#dfn-SemAct">SemAct</a></span>s returns success or failure.
+            The evaluation of an individual <span class="jobjref"><a href="#dfn-SemAct">SemAct</a></span> is implementation-dependent.
+          </p>
+        </section>
+        <section id="semantic-actions-uses">
+          <h4>Use - informative</h4>
+          <p>
+            A practical evaluation of a <span class="jobjref"><a href="#dfn-SemAct">SemAct</a></span> will provide access to some context.
+            For instance, the <a href="http://shex.io/extensions/Test/#def">http://shex.io/extensions/Test/</a> extension provides access to the subject, predicate and object of a triple matching a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span>.
+          </p>
+          <div class="example">
+            <div class="example-title marker"><span>Parameters example 1</span></div>
+            <pre class="schema">{ "type": "Schema", "shapes":{
+    "http://a.example/S1": {
+      "type": "Shape", "expression": {
+        "type": "TripleConstraint", "predicate": "http://a.example/p1",
+        "semActs": [
+          { "type": "SemAct", "code": " print(s) ",
+	    "name": "http://shex.io/extensions/Test/" },
+          { "type": "SemAct", "code": " print(o) ",
+	    "name": "http://shex.io/extensions/Test/" } ] } } } }
+</pre>
+            <pre class="data">&lt;http://a.example/n1&gt; &lt;http://a.example/p1&gt; &lt;http://a.example/o1&gt; .
+&lt;http://a.example/n2&gt; &lt;http://a.example/p1&gt; "a", "b" .
+&lt;http://a.example/n3&gt; &lt;http://a.example/p2&gt; &lt;http://a.example/o2&gt; .</pre>
+            <table>
+              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>print arguments</th></tr>
+              <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
+              <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n2&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
+              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td><td class="fail"><code>http://a.example/p2</code> not found.</td></tr>
+            </table>
+          </div>
+        </section>
       </section>
 
       <section id="annotations">
         <h3>Annotations</h3>
         <p>
-          Annotations do not affect whether a node conforms to some shape.
-          They enable additional documentation of elements in a schema.
+          Annotations provide a format-independent way to provide additional information about elements in a schema.
           They appear in lists in <span class="jobjref"><a href="#dfn-Shape">Shape</a></span>, <span class="jobjref"><a href="#dfn-SomeOf">SomeOf</a></span>, <span class="jobjref"><a href="#dfn-EachOf">EachOf</a></span> and <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span>'s <span class="param">annotations</span>.
         </p>
         <div class="shexjTable">
@@ -759,6 +792,13 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
   <tr class="obj"><th id="dfn-Annotation" class="obj">Annotation</th><td>{</td><td><span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">object</span>:<a class="nobref" href="#dfn-objectValue">objectValue</a> }</td></tr>
           </table>
         </div>
+        <section id="annotations-semantics">
+          <h4>Semantics - informative</h4>
+          <p>
+            Annotations do not affect whether a node conforms to some shape.
+            Because they are part of the structure of the schema, they can be parsed in one ShEx format and emitted in that format or another.
+          </p>
+        </section>
       </section>
     </section>
       
