@@ -214,7 +214,7 @@
       .fail { background-color: #fcc; }
       span.fail { background-color: #fcc; }
 
-      .param { color: #553800; }
+      .param { color: #630; }
       .var { color: #056800; }
       .rdf { border-left: thick solid #77f; padding-left: .5em; }
 
