@@ -463,12 +463,59 @@ _:User2
         <section id="node-constraint-semantics">
           <h4>Semantics</h4>
           <p>
-            For a node <span class="param">n</span> and conde constraint <span class="param">nc</span> <code class="function">satisfies(<m>n</m>, <m>nc</m>)</code> if and only if:
+            For a node <span class="param">n</span> and conde constraint <span class="param">nc</span>, <code class="function">satisfies(<m>n</m>, <m>nc</m>)</code> if and only if for every <span class="param">nodeKind</span>, <span class="param">datatype</span>, <span class="param">xsFacet</span> and <span class="param">values</span> constraint <span class="param">c</span> present in <span class="param">nc</span> <code class="function">nodeSatisfies(<m>n</m>, <m>c</m>)</code>.
+            The following sections define <code class="function">nodeSatisfies</code> for each of these types of constraints:
+          </p>
+          <ul>
+            <li><a href="#nodeKind">Node Kind Constraints</a></li>
+            <li><a href="#datatype">Datatype Constraints</a></li>
+            <li><a href="#xsFacet">XSFacet Constraints</a></li>
+            <li><a href="#values">Values Constraints</a></li>
+          </ul>
+        </section>
+
+        <section id="nodeKind">
+          <h4>Node Kind Constraints</h4>
+          <p>
+            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
           </p>
           <ul>
             <li></li>
+            <li></li>
           </ul>
-        </section>
+      </section>
+
+        <section id="datatype">
+          <h4>Datatype Constraints</h4>
+          <p>
+            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
+          </p>
+          <ul>
+            <li></li>
+            <li></li>
+          </ul>
+      </section>
+
+        <section id="xsFacet">
+          <h4>XML Schema Facet Constraints</h4>
+          <p>
+            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
+          </p>
+          <ul>
+            <li></li>
+            <li></li>
+          </ul>
+      </section>
+
+        <section id="values">
+          <h4>Values Constraints</h4>
+          <p>
+            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
+          </p>
+          <ul>
+            <li></li>
+            <li></li>
+          </ul>
       </section>
 
       <section id="shapes-and-TEs">
@@ -532,18 +579,17 @@ _:User2
 ] } } } }</pre></div>
       </div>
       <p id="negation-constraint">
-        <span class="label">negation constraint</span>: An <span class="jobjref"><a href="#dfn-Inclusion">Inclusion</a></span> object's <span class="param">include</span> property MUST appear in the schema's <span class="param">shapes</span> map and the corresponding triple expression MUST be a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with a <span class="param">tripleExpr</span>.
-        The function <code>dereference(<span class="param">include</span>)</code> returns the shape's <span class="param">tripleExpr</span>.
+        <span class="label">negation constraint</span>: .
       </p>
 
       <div class="issue">
         <p>
-          This is a conservative protection from negation conundrums like:
+          This is <a href="orig.html#stratified-negation">Stratified negation</a>, a conservative protection from negation conundrums like:
         </p>
         <pre class="shex">&lt;S1&gt; { :p1 . } AND NOT @&lt;S2&gt;
 &lt;S2&gt; { :p1 . } AND NOT @&lt;S1&gt;</pre>
         <p>
-          <a href="orig.html#stratified-negation">Stratified negation</a> would permit additional expressivity e.g.
+          A more aggressive strategy would permit additional expressivity e.g.
         </p>
         <pre>&lt;S1&gt; NOT (NOT @&lt;S1&gt;)</pre>
       </div>
@@ -776,7 +822,7 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>print arguments</th></tr>
               <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
               <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n2&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
-              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td><td class="fail"><code>http://a.example/p2</code> not found.</td></tr>
+              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td><td class="fail"><code>http://a.example/p1</code> not found.</td></tr>
             </table>
           </div>
         </section>
@@ -799,6 +845,20 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
             Annotations do not affect whether a node conforms to some shape.
             Because they are part of the structure of the schema, they can be parsed in one ShEx format and emitted in that format or another.
           </p>
+          <div class="example">
+            <div class="example-title marker"><span>Annotations example 1</span></div>
+            <pre class="schema">{ "type": "Schema", "shapes":{
+    "http://schema.example/IssueShape": {
+      "type": "Shape", "expression": {
+        "type": "TripleConstraint", "predicate": "http://schema.example/status",
+        "annotations": [
+           { "type": "Annotation",
+             "predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+             "object": "\"Represents reported software issues.\"" },
+           { "type": "Annotation",
+             "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+             "object": "\"softare issue\"" } ] } } }</pre>
+          </div>
         </section>
       </section>
     </section>
