@@ -199,8 +199,8 @@
       color: #000066
       }
 
-      pre.schema.hljs.css { color: #070; border: thin solid #0f0; }
-        pre.data.hljs.css { color: #007; border: thin solid #00f; }
+      pre.schema.hljs.xquery { color: #070; border: thin solid #0f0; }
+        pre.data.hljs.javascript { color: #007; border: thin solid #00f; }
       th.schema { color: #070; }
         th.data { color: #007; }
 /*      pre.schema:before { content: schema }
@@ -295,21 +295,3 @@ div.shexjTable th { text-align: right; }
       background-color: #fceefa
       }
 
-      pre.schema.hljs.css { color: #070; border: thin solid #0f0; }
-        pre.data.hljs.css { color: #007; border: thin solid #00f; }
-      th.schema { color: #070; }
-        th.data { color: #007; }
-/*      pre.schema:before { content: schema }
-        pre.data:before { content: data   }
-*/
-      table td { vertical-align: top; }
-      table th { text-align: center; }
-      table { border-collapse: collapse; }
-      td, th { border-style: solid; }
-      .pass { background-color: #cfc; }
-      .fail { background-color: #fcc; }
-      span.fail { background-color: #fcc; }
-
-      .param { color: #3500c8; }
-      .var { color: #056800; }
-      .rdf { border-left: thick solid #77f; padding-left: .5em; }
