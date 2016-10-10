@@ -79,12 +79,16 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
 
     <section id="introduction">
       <h2>Introduction</h2>
+      <p>
+				The Shape Expressions (ShEx) language provides a structural schema for RDF data.
+        This can be used to document APIs or datasets, aid in development of API-conformant messages, minimize defensive programming, guide user interfaces, or anything else that involves a machine-readable description of data organization and typing requirements.
+      </p>
 			<p>
-				The Shape Expressions (ShEx) language describes RDF graph structures as sets of potentially connected <code>shapes</code>.
+				ShEx describes RDF graph structures as sets of potentially connected <code>shapes</code>.
         These constrain the triples involving nodes in an RDF graph.
         <code>Node constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or RDFLiteral), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of RDFLiterals.
-        Additionally, they constrain lexical forms of RDFLiterals and IRIs and blank nodes.
-        This allows Shape Expressions schemas to share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
+        Additionally, they constrain lexical forms of RDFLiterals, IRIs and labeled blank nodes.
+        Shape Expressions schemas share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
 			</p>
     </section>
 
@@ -568,20 +572,30 @@ _:User2
       
       <section id="xs-string">
         <h4>XML Schema String Facet Constraints</h4>
-        <ul>
+        <!-- ul>
           <li><a href="#length">XML Schema Length Constraints</a></li>
           <li><a href="#minlength">XML Schema Minlength Constraints</a></li>
           <li><a href="#maxlength">XML Schema Maxlength Constraints</a></li>
           <li><a href="#pattern">XML Schema Pattern Constraints</a></li>
-        </ul>
+        </ul -->
         <p>
-          Let <m>lexical</m> 
-          String facets constraints apply to the lexical form of the 
-          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
+          String facet constraints apply to the lexical form of the RDF Literals and IRIs and the labels of blank nodes (see <a href="#blank-node-label">note below regarding access to blank node labels</a>).<br/>
+          Let <m>lex</m> =
         </p>
         <ul>
-          <li></li>
-          <li></li>
+          <li>if the value <m>n</m> is an RDF Literal, the lexical form of the literal.</li>
+          <li>if the value <m>n</m> is an IRI, the lexical IRI string.</li>
+          <li>if the value <m>n</m> is a blank node, the blank node label.</li>
+        </ul>
+        <p>
+          Let <m>len</m> = the number of unicode codepoints in <m>lex</m><br/>
+          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code>:
+        </p>
+        <ul>
+          <li>for "<code>length</code>" constraints, <m>v = len</m>,</li>
+          <li>for "<code>minlength</code>" constraints, <m>v =&gt; len</m>,</li>
+          <li>for "<code>maxlength</code>" constraints, <m>v &lt;= len</m>,</li>
+          <li>for "<code>pattern</code>" constraints, <m>v</m> is a valid <a href="https://www.w3.org/TR/xpath-functions/#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-30]] and invoking <code class="function"><a href="https://www.w3.org/TR/xpath-functions-30/#func-matches">fn:matches</a>(<m>lex</m>, <m>v</m>)</code> returns <code>fn:true</code>.</li>
         </ul>
         <div class="example">
           <div class="example-title marker"><span>String Facets example 1</span></div>
@@ -589,35 +603,92 @@ _:User2
   "http://schema.example/IssueShape": {
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/submittedBy",
-      "valueExpr": { "type": "NodeConstraint", "minlength": 20 } } } } }</pre>
+      "valueExpr": { "type": "NodeConstraint", "minlength": 10 } } } } }</pre>
           <pre class="data">
 &lt;issue1&gt; ex:submittedBy &lt;http://a.example/bob&gt; . <span class="comment"># 20 characters</span>
 <span class="fail">&lt;issue2&gt; ex:submittedBy "Bob" .</span> <span class="comment"># 3 characters</span></pre>
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
-            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be &gt;= 20 characters,<br/> 3 characters found.</td></tr>
+            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
           </table>
+        </div>
+
+        <div class="note" id="blank-node-label">
+          <p>
+            Access to blank node labels may be impossible or unadvisable for many use cases.
+            For instance, the SPARQL Query and SPARQL Update languages treat blank nodes in the query, labeled or otherwise, as variables.
+            Lexical constraints on blank node labels can only be implemented in systems which preserve such labels on data import.
+          </p>
+          <div class="example">
+            <div class="example-title marker"><span>String Facets example 2</span></div>
+            <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/submittedBy",
+      "valueExpr": { "type": "NodeConstraint", "pattern": "genUser[0-9]+" } } } } }</pre>
+            <pre class="data">
+&lt;issue6&gt; ex:submittedBy _:genUser218 .
+<span class="fail">&lt;issue7&gt; ex:submittedBy _:genContact817 .</span></pre>
+            <table>
+              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genUser[0-9]+</code>.</td></tr>
+            </table>
+          </div>
         </div>
       </section>
 
       <section id="xs-numeric">
         <h4>XML Schema Numeric Facet Constraints</h4>
-        <ul>
+        <!-- ul>
           <li><a href="#mininclusive">XML Schema Mininclusive Constraints</a></li>
           <li><a href="#minexclusive">XML Schema Minexclusive Constraints</a></li>
           <li><a href="#maxinclusive">XML Schema Maxinclusive Constraints</a></li>
           <li><a href="#maxexclusive">XML Schema Maxexclusive Constraints</a></li>
 	        <li><a href="#totaldigits">XML Schema Totaldigits Constraints</a></li>
           <li><a href="#fractiondigits">XML Schema Fractiondigits Constraints</a></li>
-        </ul>
+        </ul -->
         <p>
-          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
+          Numeric facet constraints apply to the numeric value of RDF Literals with datatypes listed in <a href="https://www.w3.org/TR/sparql11-query/#operandDataTypes">SPARQL 1.1 Operand Data Types</a>[[!sparql11-query]].
+          Numeric constraints on non-numeric values fail.<br/>
+          Let <m>num</m> be the numeric value of <m>n</m>.<br/>
+          .
+        </p>
+        <p>
+          Let <m>len</m> = the number of unicode codepoints in <m>lex</m><br/>
+          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code>:
         </p>
         <ul>
-          <li></li>
-          <li></li>
+          <li>for "<code>mininclusive</code>" constraints, <m>v &lt;= num</m>,</li>
+          <li>for "<code>minexclusive</code>" constraints, <m>v &lt; num</m>,</li>
+          <li>for "<code>maxinclusive</code>" constraints, <m>v =&gt; num</m>,</li>
+          <li>for "<code>maxexclusive</code>" constraints, <m>v &gt; num</m>,</li>
+	        <li>for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the lexical form of <m>n</m>,</li>
+          <li>for "<code>fractiondigits</code>" constraints, <m>v</m> equals the number of digits to the right of the decimal place in the lexical form of <m>n</m>.</li>
         </ul>
+        <div class="example">
+          <div class="example-title marker"><span>String Facets example 1</span></div>
+          <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/confirmations",
+      "valueExpr": { "type": "NodeConstraint", "mininclusive": 1 } } } } }</pre>
+            <pre class="data">
+&lt;issue1&gt; ex:confirmations 1 .
+&lt;issue2&gt; ex:confirmations 0 .
+<span class="fail">&lt;issue3&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
+            <table>
+              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>0</code> is less than <code>1</code>.</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
+            </table>
+          </div>
+        <p class="issue">
+          Is it more useful to measure digits on the <a href="https://www.w3.org/TR/xmlschema-2/#canonical-lexical-representation">canonical lexical representation</a> of <m>n</m>?
+          That would entail more implementation and testing burden.
+        </p>
       </section>
 
       <section id="values">
@@ -973,6 +1044,7 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
         </section>
       </section>
     </section>
+  </section>
       
     <section id="shexj">
       <h2>ShEx JSON Syntax (ShExJ)</h2>
@@ -2594,5 +2666,11 @@ CLOSED {
     <script>
     </script>
 
+
+    <h2 id="todo">TODO</h2>
+    <ul>
+      <li>s/BNode/blank node/g</li>
+      <li>review grey blocks and update to ShExJ</li>
+    </ul>
   </body>
 </html>
