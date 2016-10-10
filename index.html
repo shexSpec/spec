@@ -55,21 +55,16 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
   
   <body>
     <section id="abstract">
-      <p>
-  This document describes the formal semantics of Shape Expressions (ShEx) schemas.
-  The semantics is defined on a slight generalization of ShEx schemas, called the shapes language.
-  The generalization allows for a more succinct abstract syntax on which the semantics of the shapes language is defined.
-  In the generalization, 
-  <ul>
-    <li>
-      a triple constraint uses a set of predicates, instead of a single predicate. This allows to get rid of the CLOSED and EXTRA modifiers of ShEx schemas;
-    </li>
-    <li>
-      a node constraint is an arbitrary set of RDF nodes. This allows to abstract from the various ways of defining a node constraint.
-    </li>
-  </ul>
-  The semantics of ShEx schemas is then defined as a translation to the shapes language.
-      </p>
+			<p>
+				The Shape Expressions (ShEx) language describes RDF nodes and graph structures.
+        A <m>node constraint</m> describes an RDF node (IRI, blank node or RDFLiteral) and a <m>shape</m> describes the triples touching nodes in RDF graphs.
+				These descriptions identify predicates and their associated cardinalities and datatypes.
+        ShEx shapes can be used to communicate data structures associated with some process or interface, generate or validate data, or drive user interfaces.
+			</p>
+			<p>
+				This document defines the ShEx language.
+        See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of ShEx.
+			</p>  	
     </section>
 
     <section id="status">
@@ -79,8 +74,18 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
       <ul>
         <li>addition of a UNIQUE function</li>
         <li>addition of a mechanism for labeling productions</li>
-        <li>clarification of semantic actions</li>
       </ul>
+    </section>
+
+    <section id="introduction">
+      <h2>Introduction</h2>
+			<p>
+				The Shape Expressions (ShEx) language describes RDF graph structures as sets of potentially connected <code>shapes</code>.
+        These constrain the triples involving nodes in an RDF graph.
+        <code>Node constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or RDFLiteral), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of RDFLiterals.
+        Additionally, they constrain lexical forms of RDFLiterals and IRIs and blank nodes.
+        This allows Shape Expressions schemas to share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
+			</p>
     </section>
 
     <section id="notation">
@@ -89,12 +94,12 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
         The JSON Syntax serves as a serializable proxy for the ShEx abstract syntax.
         It consists of statements defining data structures and named members of those data structures.
         Each member has either a single type or two or more types that are a union (choice) of types.
-        Each type is either a reference to another statement, an RDF type, or a <a href="http://www.w3.org/TR/sparql11-query/#operandDataTypes">SPARQL literal term</a> (e.g. <code>numeric</code>)[[!sparql11-query]], or the template type <code>Set</code>, which signifies a <a href="https://en.wikipedia.org/wiki/Set_(mathematics)">logical set</a> of a type.
-        Sets are unordered and duplicate members have no significance; the set <code>(1, 1, 2, 3, 5)</code> is the same as the set <code>(5, 1, 3, 2)</code>.
+        Each type is either a reference to another statement, a primitive RDF type or  (e.g. <code>numeric</code>)[[!sparql11-query]], or the template type <code>Set</code>, which signifies a <a href="https://en.wikipedia.org/wiki/Set_(mathematics)">logical set</a> of a type.
       </p>
       <p>
         Optional parameters are suffixed with a "<code>?</code>".
-        For brevity, it is preferred that empty maps and lists are elided in serializations of ShExJ.
+        For brevity, empty maps and lists are elided in serializations of ShExJ.
+        References may be suffixed with a "<code>*</code>" to indicate that there may be any number of them, c.f. "<a class="nobref" href="#dfn-xsFacet">xsFacet</a>*" below.
       </p>
       <p>In this notation,</p>
 
@@ -127,7 +132,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
       </p>
 
       <p>
-        <code>IRI</code> and <code>BNode</code> are <a href="http://www.w3.org/TR/2014/REC-rdf11-mt-20140225/#notation">defined in RDF 1.1 Semantics</a>[[!rdf11-mt]].
+        <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri"><code>IRI</code></a> and <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node"><code>BNode</code></a> are defined in RDF 1.1 Conceppts and Abstract Syntax[[!rdf11-concepts]].
         <a href="#dfn-Target"><code>Target</code></a>, <a href="#dfn-Shape"><code>Shape</code></a> and <a href="#dfn-Constraint"><code>Constraint</code></a> are defined terms within this document.
       </p>
       <p>
@@ -463,13 +468,14 @@ _:User2
         <section id="node-constraint-semantics">
           <h4>Semantics</h4>
           <p>
-            For a node <span class="param">n</span> and conde constraint <span class="param">nc</span>, <code class="function">satisfies(<m>n</m>, <m>nc</m>)</code> if and only if for every <span class="param">nodeKind</span>, <span class="param">datatype</span>, <span class="param">xsFacet</span> and <span class="param">values</span> constraint <span class="param">c</span> present in <span class="param">nc</span> <code class="function">nodeSatisfies(<m>n</m>, <m>c</m>)</code>.
+            For a node <span class="param">n</span> and constraint <span class="param">nc</span>, <code class="function">satisfies(<m>n</m>, <m>nc</m>)</code> if and only if for every <span class="param">nodeKind</span>, <span class="param">datatype</span>, <span class="param">xsFacet</span> and <span class="param">values</span> constraint value <m>v</m> present in <span class="param">nc</span> <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code>.
             The following sections define <code class="function">nodeSatisfies</code> for each of these types of constraints:
           </p>
           <ul>
             <li><a href="#nodeKind">Node Kind Constraints</a></li>
             <li><a href="#datatype">Datatype Constraints</a></li>
-            <li><a href="#xsFacet">XSFacet Constraints</a></li>
+            <li><a href="#xs-string">XML Schema String Facet Constraints</a></li>
+            <li><a href="#xs-numeric">XML Schema Numeric Facet Constraints</a></li>
             <li><a href="#values">Values Constraints</a></li>
           </ul>
         </section>
@@ -477,45 +483,150 @@ _:User2
         <section id="nodeKind">
           <h4>Node Kind Constraints</h4>
           <p>
-            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
+            For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
           </p>
           <ul>
-            <li></li>
-            <li></li>
+            <li><m>v</m> = "iri" and <m>n</m> is an IRI.</li>
+            <li><m>v</m> = "bnode" and <m>n</m> is a BNode.</li>
+            <li><m>v</m> = "literal" and <m>n</m> is an RDFLiteral.</li>
+            <li><m>v</m> = "nonliteral" and <m>n</m> is an IRI or BNode.</li>
           </ul>
-      </section>
+          <div class="example">
+            <div class="example-title marker"><span>Node Kind example 1</span></div>
+            <pre class="schema">{ "type": "Schema", "shapes": {
+    "http://schema.example/IssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/state",
+      "valueExpr": { "type": "NodeConstraint", "nodeKind": "iri" } } } } }</pre>
+            <pre class="data">
+&lt;issue1&gt; ex:state ex:HunkyDory .
+&lt;issue2&gt; <span style="border-bottom: thin solid red;">ex:taste</span> ex:GoodEnough .
+<span class="fail">&lt;issue3&gt; ex:state "just fine" .</span></pre>
+            <table>
+              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail">expected 1 <code>ex:state</code> property.</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be an IRI, literal found.</td></tr>
+            </table>
+            <p>
+              Note that &lt;issue2&gt; <span class="fail">fails</span> not because of a nodeKind violation but instead because of a <a href="#cardinality">Cardinality</a> violation.
+            </p>
+          </div>
+        </section>
 
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p>
-            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
+            For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if <m>n</m> is an RDFLiteral with the datatype <m>v</m>.
           </p>
-          <ul>
-            <li></li>
-            <li></li>
-          </ul>
+          <div class="example">
+            <div class="example-title marker"><span>Datatype example 1</span></div>
+            <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/submittedOn",
+      "valueExpr": {
+        "type": "NodeConstraint", "datatype": "http://www.w3.org/2001/XMLSchema#dateTime"
+      } } } } }</pre>
+            <pre class="data">
+&lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
+<span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span></pre>
+            <table>
+              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be an <code>xsd:date</code>, <code>xsd:dateTime</code> found.</td></tr>
+            </table>
+          </div>
+          <div class="note">
+          <p>
+            In RDF 1.1, <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-language-tagged-string">language-tagged strings</a>[[!rdf11-concepts]] have the datatype <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#langString</code>.
+            RDF 1.0 included RDF literals with no datatype or language tag.
+            These are called "<a href="https://www.w3.org/TR/sparql11-query/#simple_literal">simple literals</a>" in SPARQL11[[!sparql11-query]].
+            In RDF 1.1, these literals have the datatype <code>http://www.w3.org/2001/XMLSchema#string</code>.
+          </p>
+          <div class="example">
+            <div class="example-title marker"><span>Datatype example 2</span></div>
+            <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/submittedOn",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+      } } } } }</pre>
+            <pre class="data">
+&lt;issue3&gt; rdfs:label "emits dense black smoke"@en .
+<span class="fail">&lt;issue4&gt; rdfs:label "unexpected odor" .</span></pre>
+            <table>
+              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue4&gt;</td><td>fail</td><td class="fail"><code>rdfs:label</code> expected to be an <code>rdf:langString</code>, <code>xsd:string</code> found.</td></tr>
+            </table>
+          </div>
+          </div>
+        </section>
+      
+      <section id="xs-string">
+        <h4>XML Schema String Facet Constraints</h4>
+        <ul>
+          <li><a href="#length">XML Schema Length Constraints</a></li>
+          <li><a href="#minlength">XML Schema Minlength Constraints</a></li>
+          <li><a href="#maxlength">XML Schema Maxlength Constraints</a></li>
+          <li><a href="#pattern">XML Schema Pattern Constraints</a></li>
+        </ul>
+        <p>
+          Let <m>lexical</m> 
+          String facets constraints apply to the lexical form of the 
+          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
+        </p>
+        <ul>
+          <li></li>
+          <li></li>
+        </ul>
+        <div class="example">
+          <div class="example-title marker"><span>String Facets example 1</span></div>
+          <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/submittedBy",
+      "valueExpr": { "type": "NodeConstraint", "minlength": 20 } } } } }</pre>
+          <pre class="data">
+&lt;issue1&gt; ex:submittedBy &lt;http://a.example/bob&gt; . <span class="comment"># 20 characters</span>
+<span class="fail">&lt;issue2&gt; ex:submittedBy "Bob" .</span> <span class="comment"># 3 characters</span></pre>
+          <table>
+            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be &gt;= 20 characters,<br/> 3 characters found.</td></tr>
+          </table>
+        </div>
       </section>
 
-        <section id="xsFacet">
-          <h4>XML Schema Facet Constraints</h4>
-          <p>
-            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
-          </p>
-          <ul>
-            <li></li>
-            <li></li>
-          </ul>
+      <section id="xs-numeric">
+        <h4>XML Schema Numeric Facet Constraints</h4>
+        <ul>
+          <li><a href="#mininclusive">XML Schema Mininclusive Constraints</a></li>
+          <li><a href="#minexclusive">XML Schema Minexclusive Constraints</a></li>
+          <li><a href="#maxinclusive">XML Schema Maxinclusive Constraints</a></li>
+          <li><a href="#maxexclusive">XML Schema Maxexclusive Constraints</a></li>
+	        <li><a href="#totaldigits">XML Schema Totaldigits Constraints</a></li>
+          <li><a href="#fractiondigits">XML Schema Fractiondigits Constraints</a></li>
+        </ul>
+        <p>
+          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
+        </p>
+        <ul>
+          <li></li>
+          <li></li>
+        </ul>
       </section>
 
-        <section id="values">
-          <h4>Values Constraints</h4>
-          <p>
-            For a node <m>n</m> and constraint <m>c</m>, <code class="function">satisfies(<m>n</m>, <m>c</m>)</code> if:
-          </p>
-          <ul>
-            <li></li>
-            <li></li>
-          </ul>
+      <section id="values">
+        <h4>Values Constraints</h4>
+        <p>
+          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
+        </p>
+        <ul>
+        </ul>
       </section>
 
       <section id="shapes-and-TEs">
