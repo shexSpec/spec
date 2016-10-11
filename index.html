@@ -57,7 +57,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
     <section id="abstract">
 			<p>
 				The Shape Expressions (ShEx) language describes RDF nodes and graph structures.
-        A <m>node constraint</m> describes an RDF node (IRI, blank node or RDFLiteral) and a <m>shape</m> describes the triples touching nodes in RDF graphs.
+        A <m>node constraint</m> describes an RDF node (IRI, blank node or literal) and a <m>shape</m> describes the triples touching nodes in RDF graphs.
 				These descriptions identify predicates and their associated cardinalities and datatypes.
         ShEx shapes can be used to communicate data structures associated with some process or interface, generate or validate data, or drive user interfaces.
 			</p>
@@ -86,8 +86,8 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
 			<p>
 				ShEx describes RDF graph structures as sets of potentially connected <code>shapes</code>.
         These constrain the triples involving nodes in an RDF graph.
-        <code>Node constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or RDFLiteral), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of RDFLiterals.
-        Additionally, they constrain lexical forms of RDFLiterals, IRIs and labeled blank nodes.
+        <code>Node constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or Literal), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of Literals.
+        Additionally, they constrain lexical forms of Literals, IRIs and labeled blank nodes.
         Shape Expressions schemas share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
 			</p>
     </section>
@@ -129,16 +129,13 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
       </p>
 
       <div class="shexj">
-        <pre><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a> { <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* }</pre>
+        <pre><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a> { <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* }
+       <a href="#dfn-xsFacet" class="nob">xsFacet</a> = <a class="nobref" href="#dfn-stringFacet">stringFacet</a> | <a class="nobref" href="#dfn-numericFacet">numericFacet</a> ;</pre>
       </div>
       <p>
-        signifies that a <code>NodeConstraint</code> has a <code class="param">nodeKind</code> of one of the four literals followed by any number of <a class="objref .shexj" href="#dfn-xsFacet">xsFacet</a>.
+        signifies that a <code>NodeConstraint</code> has a <code class="param">nodeKind</code> of one of the four literals followed by any number of <a class="objref .shexj" href="#dfn-xsFacet">xsFacet</a> and an <a class="objref .shexj" href="#dfn-xsFacet">xsFacet</a> is either a <a class="objref .shexj" href="#dfn-stringFacet">stringFacet</a> or a <a class="objref .shexj" href="#dfn-numericFacet">numericFacet</a>.
       </p>
 
-      <p>
-        <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri"><code>IRI</code></a> and <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node"><code>BNode</code></a> are defined in RDF 1.1 Conceppts and Abstract Syntax[[!rdf11-concepts]].
-        <a href="#dfn-Target"><code>Target</code></a>, <a href="#dfn-Shape"><code>Shape</code></a> and <a href="#dfn-Constraint"><code>Constraint</code></a> are defined terms within this document.
-      </p>
       <p>
         JSON examples are rendered in a <span class="json">.json</span> CSS style.
         Partial examples include ranges in a <span class="comment">.comment</span> CSS style to indicate text which would be substituted in a complete example.
@@ -150,7 +147,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
       </p>
       <ul>
         <li>IRI: the lexical form of the IRI, e.g. <code class="json">"http://example.org/resource"</code></li>
-        <li>BNode: the contatonation of "<code>_:</code>" and a blank node label, e.g. <code class="json">"_:blank3"</code></li>
+        <li>blank node: the contatonation of "<code>_:</code>" and a blank node label, e.g. <code class="json">"_:blank3"</code></li>
         <li>literal: the concatonation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
         <ul>
           <li>literal with type <code>http://www.w3.org/2001/XMLSchema#</code>: empty string, e.g. <code class="json">"abc"</code>.</li>
@@ -164,7 +161,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
         </p>
         <ul>
           <li>IRI: <code class="json">{ "termType": "NamedNode", "value": "http://example.org/resource" }</code></li>
-          <li>BNode: <code class="json">{ "termType": "BlankNode", "value": "blank3" }</code></li>
+          <li>blank node: <code class="json">{ "termType": "BlankNode", "value": "blank3" }</code></li>
           <li>literal:
           <ul>
             <li>literal with type <code>http://www.w3.org/2001/XMLSchema#</code>: <code class="json">{ "termType": "Literal", "value": "abc" }</code></li>
@@ -206,7 +203,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
       <h2>Terminology</h2>
       <p>Shape expressions are defined using terms from RDF semantics[[!rdf11-mt]]:</p>
       <ul>
-        <li><a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-node">Node</a>: one of <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-iri" class="math">IRI</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-blank-node" class="math">BNode</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-literal" class="math">RDFLiteral</a></li>
+        <li><a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-node">Node</a>: one of <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-iri" class="math">IRI</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-blank-node" class="math">blank node</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-literal" class="math">Literal</a></li>
         <li><a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-rdf-graph" class="math">Graph</a>: a set of <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-rdf-triple" class="math">Triples</a> of (<a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-subject" class="math">subject</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-predicate" class="math">predicate</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-object" class="math">object</a>)</li>
       </ul>
       <p>
@@ -253,7 +250,7 @@ _:User2
     foaf:mbox     &lt;mailto:bob@example.org&gt; .
         </pre>
         <p>
-          <code>User2</code> is a BNode in this graph and is expressed here as <code>_:User2</code>.
+          <code>User2</code> is a blank node in this graph and is expressed here as <code>_:User2</code>.
         </p>
   <p>
     There is one arc into <span class="pre">_:User2</span>; <m>arcsIn(G, <span class="pre">_:User2</span>)</m>:
@@ -352,7 +349,7 @@ _:User2
         <ul>
           <li>
             a node constraint (<span class="jobjref"><a href="#dfn-NodeConstraint">NodeConstraint</a></span>) that defines the set of allowed values of a node.
-            In shapes schemas, a node constraint can be an arbitrary set that contains IRIs or RDFLiteral using different ways of restraining the type of a node: XML string and numeric facets, RDF node kind, and value sets.
+            In shapes schemas, a node constraint can be an arbitrary set that contains IRIs or Literal using different ways of restraining the type of a node: XML string and numeric facets, RDF node kind, and value sets.
           </li>
           <li>
             a shape constraint (<span class="jobjref"><a href="#dfn-Shape">Shape</a></span>) that defines a constraint on the allowed neighbourhood of a node, that is, the allowed triples that contain this node as subject or object.
@@ -492,9 +489,9 @@ _:User2
           </p>
           <ul>
             <li><m>v</m> = "iri" and <m>n</m> is an IRI.</li>
-            <li><m>v</m> = "bnode" and <m>n</m> is a BNode.</li>
-            <li><m>v</m> = "literal" and <m>n</m> is an RDFLiteral.</li>
-            <li><m>v</m> = "nonliteral" and <m>n</m> is an IRI or BNode.</li>
+            <li><m>v</m> = "bnode" and <m>n</m> is a blank node.</li>
+            <li><m>v</m> = "literal" and <m>n</m> is an Literal.</li>
+            <li><m>v</m> = "nonliteral" and <m>n</m> is an IRI or blank node.</li>
           </ul>
           <div class="example">
             <div class="example-title marker"><span>Node Kind example 1</span></div>
@@ -522,7 +519,7 @@ _:User2
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p>
-            For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if <m>n</m> is an RDFLiteral with the datatype <m>v</m>.
+            For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if <m>n</m> is an Literal with the datatype <m>v</m>.
           </p>
           <div class="example">
             <div class="example-title marker"><span>Datatype example 1</span></div>
@@ -714,7 +711,7 @@ _:User2
           <li><m>s</m> is a <span class="jobjref"><a href="#dfn-Stem" class="obj">Stem</a></span> with <span class="param">stem</span> <m>st</m> and:
           <ul>
             <li><m>n</m> is an IRI and <m class="function"><a href="https://www.w3.org/TR/2014/REC-xpath-functions-30-20140408/#func-starts-with">fn:starts-with</a>(n, st)</m>.</li>
-            <li><m>n</m> is a BNode with label <m>l</m> and <m class="function"><a href="https://www.w3.org/TR/2014/REC-xpath-functions-30-20140408/#func-starts-with">fn:starts-with</a>(l, st)</m>.</li>
+            <li><m>n</m> is a blank node with label <m>l</m> and <m class="function"><a href="https://www.w3.org/TR/2014/REC-xpath-functions-30-20140408/#func-starts-with">fn:starts-with</a>(l, st)</m>.</li>
           </ul></li>
         </ul>
         <div class="example">
@@ -1080,7 +1077,7 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>print arguments</th></tr>
               <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
               <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n2&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
-              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td><td class="fail"><code>http://a.example/p1</code> not found.</td></tr>
+              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td></tr>
             </table>
           </div>
         </section>
@@ -2135,7 +2132,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"_:" (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | [0-9]) ((<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | ".")* <span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span>)?</code></td>
 </tr>
-    <tr id="handle-LANGTAG" class="params"><td></td><td>returns: <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#blank-node">BNode</a></td><td></td><td>The characters following the "<code>_:</code>" form a blank node label. This corresponds to any BNode in the input dataset that had the same label.</td></tr>
+    <tr id="handle-LANGTAG" class="params"><td></td><td>returns: <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#blank-node">BNode</a></td><td></td><td>The characters following the "<code>_:</code>" form a blank node label. This corresponds to any blank node in the input dataset that had the same label.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -2582,7 +2579,7 @@ CLOSED {
 &lt;SL_9&gt;  := xsd:int
 &lt;SL_10&gt; := IRI
 
-<span class="hl-ve lowlight1">&lt;SL_all_values&gt;  := IRI ∪ RDFLiteral ∪ {blank}</span>
+<span class="hl-ve lowlight1">&lt;SL_all_values&gt;  := IRI ∪ Literal ∪ {blank}</span>
 
 &lt;SomeShape&gt; := 
 <div class="hl-shapexpr lowlight3">{
@@ -2751,7 +2748,6 @@ CLOSED {
 
     <h2 id="todo">TODO</h2>
     <ul>
-      <li>s/BNode/blank node/g</li>
       <li>review grey blocks and update to ShExJ</li>
       <li>associating nodes with shapes</li>
     </ul>
