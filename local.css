@@ -162,7 +162,11 @@
       }
 
       .inline.json {
-	  padding: .5ex 0ex .5ex 0ex;
+	  padding: 0; /* .5ex 0ex .5ex 0ex; */
+	  margin: 0;
+      }
+
+      li p, li div.example {
 	  margin: 0;
       }
 
@@ -200,7 +204,8 @@
       }
 
       pre.schema.hljs.xquery { color: #070; border: thin solid #0f0; }
-        pre.data.hljs.javascript { color: #007; border: thin solid #00f; }
+      pre.data.hljs.javascript { color: #007; border: thin solid #00f; }
+      .inline .hljs { padding: 0; }
       th.schema { color: #070; }
         th.data { color: #007; }
 /*      pre.schema:before { content: schema }

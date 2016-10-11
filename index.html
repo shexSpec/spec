@@ -878,8 +878,49 @@ _:User2
         The expression <code>matches(<m>T</m>, <m>expr</m>)</code> indicates that a set of triples <m>T</m> can satisfy these rules:
       </p>
       <ul>
-        <li><m>expr</m> has <span class="param">semActs</span> and <code class="function">satisfies(<m>n</m>, <m>se</m>, <m>G</m>, <m>m</m>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</li>
-        <li><m>expr</m> has a <span class="param">min</span> or a <span class="param">max</span> and there is some partition of <m>matched</m> into <m class="function">m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every required repetition <m><sub>1</sub></m>, <m><sub>2</sub></m>,… ≤ <span class="param">min</span> in <span class="param">shapeExprs</span> and zero or more optional repetitions <m><sub><span class="param">min</span>+1</sub></m>, <m><sub><span class="param">min</span>+2</sub></m>,… ≤ <span class="param">max</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr</m>)</code> by the remaining rules in this list.</li>
+        <li>
+          <p><m>expr</m> has <span class="param">semActs</span> and <code class="function">satisfies(<m>n</m>, <m>se</m>, <m>G</m>, <m>m</m>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
+          <div class="example">
+            <code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2,
+  "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre></div>,<br/>
+              <m>G</m>, <m>m</m>)</div>
+            </code>
+            <div style="clear:both;"></div>
+            <span style="float:left;">if </span><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
+              <m>G</m>, <m>m</m>)</div>
+            </code>
+            <div style="clear:both;"></div>
+            and <code class="function">semActsSatisfied(<span class="inline json">[<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>]</span>)</code>
+          </div>
+        </li>
+        <li>
+          <p><m>expr</m> has a <span class="param">min</span> or a <span class="param">max</span> and there is some partition of <m>matched</m> into <m class="function">m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every required repetition <m><sub>1</sub></m>, <m><sub>2</sub></m>,… ≤ <span class="param">min</span> in <span class="param">shapeExprs</span> and zero or more optional repetitions <m><sub><span class="param">min</span>+1</sub></m>, <m><sub><span class="param">min</span>+2</sub></m>,… ≤ <span class="param">max</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr</m>)</code> by the remaining rules in this list.</p>
+          <div class="example">
+            <code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
+              <m>G</m>, <m>m</m>)</div>
+            </code>
+            <div style="clear:both;"></div>
+            <span style="float:left;">if </span><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
+              <m>G</m>, <m>m<sub>1</sub></m>)</div>
+            </code>
+            <div style="clear:both;"></div>
+            <span style="float:left;">and </span><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
+              <m>G</m>, <m>m<sub>2</sub></m>)</div>
+            </code>
+            <div style="clear:both;"></div>
+            and <m class="function">m = m<sub>1</sub> ∪ m<sub>2</sub></m>
+          </div>
+        </li>
         <li><m>expr</m> is a <span class="jobjref"><a href="#dfn-SomeOf" class="obj">SomeOf</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<m>T</m>, <m>expr</m>)</code>.</li>
         <li><m>expr</m> is an <span class="jobjref"><a href="#dfn-EachOf" class="obj">EachOf</a></span> and there is some partition of <m>matched</m> into <m>m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every expression <span class="function"><m>expr<sub>1</sub></m>, <m>expr<sub>2</sub></m>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr<sub>n</sub></m>)</code>.</li>
         <li><m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and:
