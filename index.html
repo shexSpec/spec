@@ -280,10 +280,11 @@ _:User2
     </section>
 
     <section id="shapes-language">
-      <h2>The Shapes Language</h2>
+      <h2>The Shape Expressions Language</h2>
       <p>
-  A shapes schema defines a set of named constraints, called shapes.
-  The name of a shape is also called shape label.
+        A Shape Expressions (ShEx) schema is a collection of labeled constraints.
+        These can be used to describe or test nodes in RDF graphs.
+        ShEx does not prescribe a laguage for associating nodes with shapes but several approaches are <a href="#associating-nodes-with-shapes">described in an appendix</a>.
       </p>
 
       <section id="shapes-schema">
@@ -465,7 +466,7 @@ _:User2
   <tr class="nob"><th id="dfn-objectValue" class="nob">objectValue</th><td>=</td><td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-STRING">STRING</a> | <a class="trmref" href="#dfn-DATATYPE_STRING">DATATYPE_STRING</a> | <a class="trmref" href="#dfn-LANG_STRING">LANG_STRING</a> ;</td></tr>
   <tr class="nob"><th id="dfn-valueSetValue" class="nob">valueSetValue</th><td>=</td><td><a class="nobref" href="#dfn-objectValue">objectValue</a> | <a class="objref" href="#dfn-Stem">Stem</a> | <a class="objref" href="#dfn-StemRange">StemRange</a> ;</td></tr>
   <tr class="obj"><th id="dfn-Stem" class="obj">Stem</th><td>{</td><td><span class="param">stem</span>:<a class="trmref" href="#dfn-IRI">IRI</a> }</td></tr>
-  <tr class="obj"><th id="dfn-StemRange" class="obj">StemRange</th><td>{</td><td><span class="param">stem</span>:(<a class="trmref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-Wildcard">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref" href="#dfn-valueSetValue">valueSetValue</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-StemRange" class="obj">StemRange</th><td>{</td><td><span class="param">stem</span>:(<a class="trmref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-Wildcard">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref" href="#dfn-objectValue">objectValue</a>|<a class="nobref" href="#dfn-Stem">Stem</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-Wildcard" class="obj">Wildcard</th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
           </table>
         </div>
@@ -651,12 +652,11 @@ _:User2
         </ul -->
         <p>
           Numeric facet constraints apply to the numeric value of RDF Literals with datatypes listed in <a href="https://www.w3.org/TR/sparql11-query/#operandDataTypes">SPARQL 1.1 Operand Data Types</a>[[!sparql11-query]].
-          Numeric constraints on non-numeric values fail.<br/>
-          Let <m>num</m> be the numeric value of <m>n</m>.<br/>
-          .
+          Numeric constraints on non-numeric values fail.
         </p>
         <p>
-          Let <m>len</m> = the number of unicode codepoints in <m>lex</m><br/>
+          Let <m>num</m> be the numeric value of <m>n</m>.<br/>
+          Let <m>len</m> = the number of unicode codepoints in <m>lex</m>.<br/>
           For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code>:
         </p>
         <ul>
@@ -692,12 +692,88 @@ _:User2
       </section>
 
       <section id="values">
-        <h4>Values Constraints</h4>
+        <h4>Values Constraint</h4>
         <p>
-          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if:
+          The <code><a href="#nodeSatisfies">nodeSatisfies</a></code> semantics for <span class="jobjref"><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a></span> <span class="param">values</span> depends on a <code>nodeIn</code> function <a href="#nodeIn">defined below</a>.
+        </p>
+        <p>
+          For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if <m>n</m> matches some <a class="nobref" href="#dfn-valueSetValue">valueSetValue</a> <m>vsv</m> in <m>v</m>.
+          A term matches a valueSetValue if:
         </p>
         <ul>
+          <li><m>vsv</m> is an <a class="nobref" href="#dfn-objectValue">objectValue</a> and <m>n = vsv</m>.</li>
+          <li><m>vsv</m> is a <a class="nobref" href="#dfn-Stem">Stem</a> with <span class="param">stem</span> <m>st</m> and <m>nodeIn(n, st)</m>.</li>
+          <li><m>vsv</m> is a <a class="nobref" href="#dfn-StemRange">StemRange</a> with <span class="param">stem</span> <m>st</m> and <span class="param">exclusions</span> <m>excls</m> and <m class="function">nodeIn(n, st)</m> and there is no <m>x</m> in <m>excls</m> such that <m class="function">nodeIn(n, excl)</m>.</li>
         </ul>
+        <p>
+          <span class="label" id="nodeIn">nodeIn</span>: asserts that an RDF node <m>n</m> is equal to an IRI or is in a set defined by a <span class="jobjref"><a href="#dfn-Stem" class="obj">Stem</a></span>.<br/>
+          The expression <code class="function">nodeIn(<m>n</m>, <m>s</m>)</code> is satisfied if:
+        </p>
+        <ul>
+          <li><m>s</m> is an IRI and <m>n = s</m>.</li>
+          <li><m>s</m> is a <span class="jobjref"><a href="#dfn-Stem" class="obj">Stem</a></span> with <span class="param">stem</span> <m>st</m> and:
+          <ul>
+            <li><m>n</m> is an IRI and <m class="function"><a href="https://www.w3.org/TR/2014/REC-xpath-functions-30-20140408/#func-starts-with">fn:starts-with</a>(n, st)</m>.</li>
+            <li><m>n</m> is a BNode with label <m>l</m> and <m class="function"><a href="https://www.w3.org/TR/2014/REC-xpath-functions-30-20140408/#func-starts-with">fn:starts-with</a>(l, st)</m>.</li>
+          </ul></li>
+        </ul>
+        <div class="example">
+          <div class="example-title marker"><span>Values Constraint example 1</span></div>
+          <p>NoActionIssueShape requires a state of Resolved or Rejected:</p>
+          <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/NoActionIssueShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/state",
+      "valueExpr": {
+        "type": "NodeConstraint", "values": [
+          "http://schema.example/Resolved",
+          "http://schema.example/Rejected" ] } } } } }</pre>
+          <pre class="data">
+&lt;issue1&gt; ex:state ex:Resolved .
+<span class="fail">&lt;issue2&gt; ex:state ex:Unresolved .</span></pre>
+          <table>
+            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+            <tr class="fail"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be <code>ex:Resolved</code>, <code>ex:Unresolved</code> found.</td></tr>
+          </table>
+        </div>
+
+        <p>
+          A value set can have a single value in it.
+          This is used to indicate that a specific value is required, e.g. that an ex:state must equal &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
+        </p>
+
+        <div class="example">
+          <div class="example-title marker"><span>Values Constraint example 2</span></div>
+          <p>An employee must have a type of foaf:Person and an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
+          <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/EmployeeShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://xmlns.com/foaf/0.1/mbox",
+      "valueExpr": {
+        "type": "NodeConstraint", "values": [
+          "\"N/A\"",
+          { "type": "StemRange", "stem": "mailto:engineering-" },
+          { "type": "StemRange", "stem": "mailto:sales-", "exclusions": [
+              { "type": "Stem", "stem": "mailto:sales-contacts" },
+              { "type": "Stem", "stem": "mailto:sales-interns" }
+            ] }
+        ] } } } } }</pre>
+          <pre class="data">
+&lt;issue3&gt; foaf:mbox "N/A" .
+&lt;issue4&gt; foaf:mbox &lt;mailto:engineering-2112@a.example&gt; .
+&lt;issue5&gt; foaf:mbox &lt;mailto:sales-835@a.example&gt; .
+<span class="fail">&lt;issue6&gt; foaf:mbox "missing" .</span>
+<span class="fail">&lt;issue7&gt; foaf:mbox &lt;mailto:sales-contactus-999@a.example&gt; .</span></pre>
+          <table>
+            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue4&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue5&gt;</td><td>pass</td></tr>
+            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue6&gt;</td><td>fail</td><td class="fail"><code>"missing"</code> is not in value set.</td></tr>
+            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:sales-contactus-999@a.example&gt;</code> is excluded.</td></tr>
+          </table>
+        </div>
       </section>
 
       <section id="shapes-and-TEs">
@@ -801,7 +877,7 @@ _:User2
           <li><span class="param">closed</span> is false or <m>unmatchables</m> is empty.</li>
         </ul>
       <p>
-        <span class="label" id="matches">matches</span>: A triple expression is matched by a set of triples that come from the neighbourhood of a node in an RDF graph.
+        <span class="label" id="matches">matches</span>: asserts that a triple expression is matched by a set of triples that come from the neighbourhood of a node in an RDF graph.
         The expression <code>matches(<m>T</m>, <m>expr</m>)</code> indicates that a set of triples <m>T</m> can satisfy these rules:
       </p>
       <ul>
@@ -2658,6 +2734,12 @@ CLOSED {
     </section>
     </section>
 
+    <section id="associating-nodes-with-shapes">
+      <h2>Associating Nodes With Shapes - informative</h2>
+      <p>
+      </p>
+    </section>
+
     <script>
       $("m").wrapInner("<span class='math'/>").children(0).unwrap();
       $("as").wrapInner("<span class='as'/>").children(0).unwrap();
@@ -2671,6 +2753,7 @@ CLOSED {
     <ul>
       <li>s/BNode/blank node/g</li>
       <li>review grey blocks and update to ShExJ</li>
+      <li>associating nodes with shapes</li>
     </ul>
   </body>
 </html>
