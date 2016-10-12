@@ -1048,10 +1048,15 @@ _:User2
                   <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
                   <div class="inline json">
                     <pre>{ "type": "TripleExpression",
-    "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
+  "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
               m)</div>
                   </m>
-                  <div style="clear:both;">holds if <m>T</m> has exactly one triple and that triple is in <m class="function">arcsOut(G, n)</m> and that triple has the predicate "http://xmlns.com/foaf/0.1/givenName".</div>
+                  <div style="clear:both;">holds if
+                  <ul class="tight">
+                    <li><m>T</m> has exactly one triple <m>t</m>.</li>
+                    <li><m>t</m> is in <m class="function">arcsIn(G, n)</m></li>
+                    <li><m>t</m> has the predicate "http://purl.org/dc/elements/1.1/author"</li>
+                  </ul></div>
                 </div>
               </li>
               <li>
@@ -1070,9 +1075,42 @@ _:User2
                     <li><m>T</m> has exactly one triple <m>t</m>.</li>
                     <li><m>t</m> is in <m class="function">arcsIn(G, n)</m></li>
                     <li><m>t</m> has the predicate "http://purl.org/dc/elements/1.1/author"</li>
-                    <li><m>t</m> as a subject <m>n2</m></li>
-                    <li>the schema has a shape <m>s2</m></li>
-                    <li><m class="function">satisfies(n2, s2, G, m)</m></li>
+                    <li><m>t</m> has a subject <m>n2</m></li>
+                    <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
+                    <li><m class="function">satisfies(n2, se2, G, m)</m></li>
+                  </ul></div>
+                </div>
+                <div class="example">
+                  For the schema<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/UserShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "inverse": true,
+      "predicate": "http://purl.org/dc/elements/1.1/author",
+      "valueExpr": {
+        "type": "ShapeAnd", "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri", "pattern": "http:.*" },
+          { "type": "ShapeRef",
+            "reference": "http://schema.example/IssueShape" }
+        ] } } },
+  "http://schema.example/IssueShape": { "type": "Shape" } } }</pre>
+                  </div>
+                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "TripleConstraint", "inverse": true,
+  "predicate": "http://purl.org/dc/elements/1.1/author",
+  "valueExpr": { … } }</pre></div>,<br/>
+              m)</div>
+                  </m>
+                  <div style="clear:both;">holds if
+                  <ul class="tight">
+                    <li><m>T</m> has exactly one triple <m>t</m>.</li>
+                    <li><m>t</m> is in <m class="function">arcsIn(G, n)</m></li>
+                    <li><m>t</m> has the predicate "http://purl.org/dc/elements/1.1/author"</li>
+                    <li><m>t</m> has a subject <m>n2</m></li>
+                    <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
+                    <li><m class="function">satisfies(n2, se2, G, m)</m></li>
                   </ul></div>
                 </div>
               </li>
