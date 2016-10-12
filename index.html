@@ -701,6 +701,7 @@ _:User2
           <li><m>vsv</m> is an <a class="nobref" href="#dfn-objectValue">objectValue</a> and <m>n = vsv</m>.</li>
           <li><m>vsv</m> is a <a class="nobref" href="#dfn-Stem">Stem</a> with <span class="param">stem</span> <m>st</m> and <m>nodeIn(n, st)</m>.</li>
           <li><m>vsv</m> is a <a class="nobref" href="#dfn-StemRange">StemRange</a> with <span class="param">stem</span> <m>st</m> and <span class="param">exclusions</span> <m>excls</m> and <m class="function">nodeIn(n, st)</m> and there is no <m>x</m> in <m>excls</m> such that <m class="function">nodeIn(n, excl)</m>.</li>
+          <li><m>vsv</m> is a <a class="nobref" href="#dfn-Wildcard">Wildcard</a> with <span class="param">exclusions</span> <m>excls</m> and there is no <m>x</m> in <m>excls</m> such that <m class="function">nodeIn(n, excl)</m>.</li>
         </ul>
         <p>
           <span class="label" id="nodeIn">nodeIn</span>: asserts that an RDF node <m>n</m> is equal to an IRI or is in a set defined by a <span class="jobjref"><a href="#dfn-Stem" class="obj">Stem</a></span>.<br/>
@@ -735,14 +736,9 @@ _:User2
           </table>
         </div>
 
-        <p>
-          A value set can have a single value in it.
-          This is used to indicate that a specific value is required, e.g. that an ex:state must equal &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
-        </p>
-
         <div class="example">
           <div class="example-title marker"><span>Values Constraint example 2</span></div>
-          <p>An employee must have a type of foaf:Person and an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
+          <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
           <pre class="schema">{ "type": "Schema", "shapes": {
   "http://schema.example/EmployeeShape": {
     "type": "Shape", "expression": {
@@ -771,6 +767,37 @@ _:User2
             <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:sales-contactus-999@a.example&gt;</code> is excluded.</td></tr>
           </table>
         </div>
+
+        <div class="example">
+          <div class="example-title marker"><span>Values Constraint example 3</span></div>
+          <p>An employee must not have an email address that starts with "engineering-"  or "sales-":</p>
+          <pre class="schema">{ "type": "Schema", "shapes": {
+  "http://schema.example/EmployeeShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://xmlns.com/foaf/0.1/mbox",
+      "valueExpr": {
+        "type": "NodeConstraint", "values": [
+          { "type": "Wildcard", "exclusions": [
+              { "type": "Stem", "stem": "mailto:engineering-" },
+              { "type": "Stem", "stem": "mailto:sales-" }
+            ] }
+        ] } } } } }</pre>
+          <pre class="data">
+&lt;issue8&gt; foaf:mbox 123 .
+&lt;issue9&gt; foaf:mbox &lt;mailto:core-engineering-2112@a.example&gt; .
+<span class="fail">&lt;issue10&gt; foaf:mbox &lt;mailto:engineering-2112@a.example&gt; .</span></pre>
+          <table>
+            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue8&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue9&gt;</td><td>pass</td></tr>
+            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue10&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:engineering-2112@a.example&gt;</code> is excluded.</td></tr>
+          </table>
+        </div>
+
+        <p>
+          A value set can have a single value in it.
+          This is used to indicate that a specific value is required, e.g. that an ex:state must equal &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
+        </p>
       </section>
 
       <section id="shapes-and-TEs">
@@ -812,7 +839,8 @@ _:User2
     "http://schema.example/EmployeeShape": {
       "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
         { "type": "Inclusion", "include": "http://schema.example/PersonShape" }
-        { "type": "TripleConstraint", "predicate": "http://schema.example/employeeNumber" }
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/employeeNumber" }
 ] } } } }</pre></div>
         <p>
           This inclusion is invalid because there is no corresponding shape expression:
@@ -830,7 +858,8 @@ _:User2
     "http://schema.example/PreferredCustomerShape": {
       "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
         { "type": "Inclusion", "include": "http://schema.example/CustomerShape" }
-        { "type": "TripleConstraint", "predicate": "http://schema.example/discount" }
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/discount" }
 ] } } } }</pre></div>
       </div>
       <p id="negation-constraint">
@@ -855,11 +884,11 @@ _:User2
         <h4>Semantics</h4>
         <p>
           The <code><a href="#satisfies">satisfies</a></code> semantics for a <span class="jobjref"><a href="#dfn-Shape" class="obj">Shape</a></span> depend on a <code>matches</code> function <a href="#matches">defined below</a>.
-          For a node <m>n</m>, shape <m>S</m>, graph <m>G</m>, and shapeMap <m>m</m>, <code class="function">satisfies(<m>n</m>, <m>se</m>, <m>G</m>, <m>m</m>)</code> if and only if:
+          For a node <m>n</m>, shape <m>S</m>, graph <m>G</m>, and shapeMap <m>m</m>, <code class="function">satisfies(<m>n</m>, <m>S</m>, <m>G</m>, <m>m</m>)</code> if and only if:
         </p>
         <ul>
           <li>
-            <code class="function">neigh(<m>G</m>, <m>n</m>)</code> can be partitioned into two sets <m>matched</m> and <m>remainder</m> such that <code class="function">matches(<m>matched</m>, <span class="param">expression</span>)</code>.
+            <code class="function">neigh(<m>G</m>, <m>n</m>)</code> can be partitioned into two sets <m>matched</m> and <m>remainder</m> such that <code class="function">matches(<m>matched</m>, <span class="param">expression</span>, <m>m</m>)</code>.
             If <span class="param">expression</span> is absent, <code class="function"><m>remainder</m> = neigh(<m>G</m>, <m>n</m>)</code>.<br/>
             Let <span class="label">outs</span> be the arcsOut in <m>remainder</m>:
             <code class="function"><m>outs</m> = <m>remainder</m> ∩ arcsOut(<m>G</m>, <m>n</m>)</code>.<br/>
@@ -875,62 +904,180 @@ _:User2
         </ul>
       <p>
         <span class="label" id="matches">matches</span>: asserts that a triple expression is matched by a set of triples that come from the neighbourhood of a node in an RDF graph.
-        The expression <code>matches(<m>T</m>, <m>expr</m>)</code> indicates that a set of triples <m>T</m> can satisfy these rules:
+        The expression <code>matches(<m>T</m>, <m>expr</m>, <m>m</m>)</code> indicates that a set of triples <m>T</m> can satisfy these rules:
       </p>
       <ul>
         <li>
-          <p><m>expr</m> has <span class="param">semActs</span> and <code class="function">satisfies(<m>n</m>, <m>se</m>, <m>G</m>, <m>m</m>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
+          <p><m>expr</m> has <span class="param">semActs</span> and <code class="function">matches(<m>T</m>, <m>expr</m>, <m>m</m>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
           <div class="example">
-            <code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2,
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3,
   "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre></div>,<br/>
-              <m>G</m>, <m>m</m>)</div>
-            </code>
-            <div style="clear:both;"></div>
-            <span style="float:left;">if </span><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;">evaluates as:</div>
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
-              <m>G</m>, <m>m</m>)</div>
-            </code>
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }</pre></div>,<br/>
+              m)</div>
+            </m>
             <div style="clear:both;"></div>
-            and <code class="function">semActsSatisfied(<span class="inline json">[<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>]</span>)</code>
+            <m class="function">and semActsSatisfied(<span class="inline json">[<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>]</span>)</m>
           </div>
         </li>
         <li>
-          <p><m>expr</m> has a <span class="param">min</span> or a <span class="param">max</span> and there is some partition of <m>matched</m> into <m class="function">m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every required repetition <m><sub>1</sub></m>, <m><sub>2</sub></m>,… ≤ <span class="param">min</span> in <span class="param">shapeExprs</span> and zero or more optional repetitions <m><sub><span class="param">min</span>+1</sub></m>, <m><sub><span class="param">min</span>+2</sub></m>,… ≤ <span class="param">max</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr</m>)</code> by the remaining rules in this list.</p>
+          <p><m>expr</m> has a <span class="param">min</span> or a <span class="param">max</span> and there is some partition of <m>T</m> into <m class="function">T<sub>1</sub></m>, <m>T<sub>2</sub></m>,… such that for every required repetition <m><sub>1</sub></m>, <m><sub>2</sub></m>,… ≤ <span class="param">min</span> in <span class="param">shapeExprs</span> and zero or more optional repetitions <m><sub><span class="param">min</span>+1</sub></m>, <m><sub><span class="param">min</span>+2</sub></m>,… ≤ <span class="param">max</span>, <code class="function">matches(<m>T<sub>n</sub></m>, <m>expr</m>, <m>m</m>)</code> by the remaining rules in this list.</p>
           <div class="example">
-            <code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
-              <m>G</m>, <m>m</m>)</div>
-            </code>
-            <div style="clear:both;"></div>
-            <span style="float:left;">if </span><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;">evaluates as:</div>
+            <m><div style="float:left;">Let e = </div><div style="float:left;">
             <div class="inline json">
-              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
-              <m>G</m>, <m>m<sub>1</sub></m>)</div>
-            </code>
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div></div>
             <div style="clear:both;"></div>
-            <span style="float:left;">and </span><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/>
+            (<m class="function">matches(T<sub>1</sub>, e, m)</m> and
+             <m class="function">matches(T<sub>2</sub>, e, m)</m><br/>
+              and T = T<sub>1</sub> ∪ T<sub>2</sub>)<br/>
+            or<br/>
+            (<m class="function">matches(T<sub>1</sub>, e, m)</m> and
+              <m class="function">matches(T<sub>2</sub>, e, m)</m> and
+              <m class="function">matches(T<sub>3</sub>, e, m)</m><br/>
+               and T = T<sub>1</sub> ∪ T<sub>2</sub> ∪ T<sub>3</sub>)</m>
+          </div>
+          <!-- div class="example">
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "ShapeOr", "shapeExprs": [<span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
-              <m>G</m>, <m>m<sub>2</sub></m>)</div>
-            </code>
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;">evaluates as:</div>
+            <m><div style="float:left;">Let subExpr = </div><div style="float:left;">
+            <div class="inline json">
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div></div>
+            </m>
             <div style="clear:both;"></div>
-            and <m class="function">m = m<sub>1</sub> ∪ m<sub>2</sub></m>
+            <m><div style="float:left;">matches(</div><div style="float:left;"><m>T<sub>1</sub></m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;"></div>
+            <m><div style="float:left;">and matches(</div><div style="float:left;"><m>T<sub>2</sub></m>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "SomeOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;"></div>
+            <m class="function">and T = T<sub>1</sub> ∪ T<sub>2</sub></m>
+          </div -->
+        </li>
+        <li>
+          <p><m>expr</m> is a <span class="jobjref"><a href="#dfn-SomeOf" class="obj">SomeOf</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<m>T</m>, <m>se2</m>, <m>m</m>)</code>.</p>
+          <div class="example">
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="inline json">
+              <pre>{ "type": "SomeOf", "shapeExprs": [
+  { "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] },
+  { "type": "TripleExpression", "min": 1, "max": "*",
+    "predicate": "http://xmlns.com/foaf/0.1/name" }
+] }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;">evaluates as:</div>
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="inline json">
+              <pre>{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;"></div>
+            <m><div style="float:left;">or matches(</div><div style="float:left;">T,<br/>
+            <div class="inline json">
+              <pre>{ "type": "TripleExpression", "min": 1, "max": "*",
+    "predicate": "http://xmlns.com/foaf/0.1/name" }</pre></div>,<br/>
+              m)</div>
+            </m>
           </div>
         </li>
-        <li><m>expr</m> is a <span class="jobjref"><a href="#dfn-SomeOf" class="obj">SomeOf</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<m>T</m>, <m>expr</m>)</code>.</li>
-        <li><m>expr</m> is an <span class="jobjref"><a href="#dfn-EachOf" class="obj">EachOf</a></span> and there is some partition of <m>matched</m> into <m>m<sub>1</sub></m>, <m>m<sub>2</sub></m>,… such that for every expression <span class="function"><m>expr<sub>1</sub></m>, <m>expr<sub>2</sub></m>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<m>m<sub>n</sub></m>, <m>expr<sub>n</sub></m>)</code>.</li>
-        <li><m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and:
-        <ul>
-          <li>
-            <m>T</m> is a set of one triple <m>t</m> and <m>t</m>'s predicate equals <m>expr</m>'s predicate.<br/>
-            Let <span class="label">value</span> be <m>t</m>'s subject if <span class="param">inverse</span> is true, else <m>t</m>'s object.
-          </li>
-          <li><m>expr</m> has no <span class="param">valueExpr</span> or <code class="function">satisfies(<m>value</m>, <span class="param">valueExpr</span>, <m>G</m>, <m>m</m>)</code>.</li>
-        </ul>
+        <li>
+          <p><m>expr</m> is an <span class="jobjref"><a href="#dfn-EachOf" class="obj">EachOf</a></span> and there is some partition of <m>T</m> into <m>T<sub>1</sub></m>, <m>T<sub>2</sub></m>,… such that for every expression <span class="function"><m>expr<sub>1</sub></m>, <m>expr<sub>2</sub></m>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<m>T<sub>n</sub></m>, <m>expr<sub>n</sub></m>, <m>m</m>)</code>.</p>
+          <div class="example">
+            <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="inline json">
+              <pre>{ "type": "EachOf", "shapeExprs": [
+  { "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/givenName" },
+  { "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/familyName" }
+] }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;">evaluates as:</div>
+            <m><div style="float:left;">matches(</div><div style="float:left;">T<sub>1</sub>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;"></div>
+            <m><div style="float:left;">and matches(</div><div style="float:left;">T<sub>2</sub>,<br/>
+            <div class="inline json">
+              <pre>{ "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/familyName" }</pre></div>,<br/>
+              m)</div>
+            </m>
+            <div style="clear:both;"></div>
+            <m>and T = T<sub>1</sub> ∪ T<sub>2</sub></m>
+          </div>
+        </li>
+        <li>
+          <m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and:
+          <ul>
+            <li>
+              <m>T</m> is a set of one triple <m>t</m> and <m>t</m>'s predicate equals <m>expr</m>'s predicate.<br/>
+              Let <span class="label">value</span> be <m>t</m>'s subject if <span class="param">inverse</span> is true, else <m>t</m>'s object.
+            </li>
+            <li>either
+            <ul>
+              <li>
+                <p><m>expr</m> has no <span class="param">valueExpr</span></p>
+                <div class="example">
+                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
+              m)</div>
+                  </m>
+                  <div style="clear:both;">holds if <m>T</m> has exactly one triple and that triple is in <m class="function">arcsOut(G, n)</m> and that triple has the predicate "http://xmlns.com/foaf/0.1/givenName".</div>
+                </div>
+              </li>
+              <li>
+                <p>or <code class="function">satisfies(<m>value</m>, <span class="param">valueExpr</span>, <m>G</m>, <m>m</m>)</code>.</p>
+                <div class="example">
+                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "TripleConstraint", "inverse": true,
+  "predicate": "http://purl.org/dc/elements/1.1/author",
+  "valueExpr": { "type": "ShapeRef",
+    "reference": "http://schema.example/IssueShape" } }</pre></div>,<br/>
+              m)</div>
+                  </m>
+                  <div style="clear:both;">holds if
+                  <ul class="tight">
+                    <li><m>T</m> has exactly one triple <m>t</m>.</li>
+                    <li><m>t</m> is in <m class="function">arcsIn(G, n)</m></li>
+                    <li><m>t</m> has the predicate "http://purl.org/dc/elements/1.1/author"</li>
+                    <li><m>t</m> as a subject <m>n2</m></li>
+                    <li>the schema has a shape <m>s2</m></li>
+                    <li><m class="function">satisfies(n2, s2, G, m)</m></li>
+                  </ul></div>
+                </div>
+              </li>
+            </ul></li>
+          </ul>
         </li>
         <li><m>expr</m> is an <span class="jobjref"><a href="#dfn-Inclusion" class="obj">Inclusion</a></span> and <code class="function">satisfies(<m>value</m>, dereference(<span class="param">include</span>), <m>G</m>, <m>m</m>)</code>.</li>
       </ul>
@@ -939,73 +1086,6 @@ _:User2
   A repeated triple expression <m>TExpr{min;max}</m> is satisfied by a set of triples if that set can be split into <m>k</m> disjoint subsets such that <m>min ≤ k ≤ max</m>, and each of these subsets matches the sub-expression <m>TExpr</m>.
       </p -->
     
-
-      <div class="Example">
-  <p>
-    Example of matching a triple constraint.
-  </p>
-<pre class="shex" style="float:left">
-# if typing is such that
-(:n1, &lt;SL_1&gt;) belongs to typing
-(:n2, &lt;SL_2&gt;) does not belong to typing
-
-# then 
-typing, {(:n :p :n1)} &#x22A7; {:p}  &lt;SL_1&gt;
-typing, {(:n :p :n1)} &#x22A7; {:p, :q}  &lt;SL_1&gt;
-typing, {(:n :p :n2)} &#x22AD; {:p} &lt;SL_2&gt;
-</pre>
-<div style="clear:both;"> </div>
-      </div>
-
-
-      <div class="Example">
-  <p>
-    Examples of satisfying an each-of triple expression.
-  </p>
-<pre class="shex" style="float:left">
-# if typing is such that it contains the following node-label associations
-(:n1, &lt;SL_1&gt;), (:n2, &lt;SL_2&gt;), (:n3, &lt;SL_1&gt;)
-
-# then
-typing, {(:n :p :n1), (:n :p :n2)}  &#x22A7;  {:p} &lt;SL_1&gt; ; {:q} &lt;SL_2&gt;
-typing, {(:n :p :n1), (:n :p :n3)}  &#x22A7;  {:p} &lt;SL_1&gt; ; {:p} &lt;SL_1&gt;
-typing, {(:n :p :n1)}               &#x22AD;  {:p} &lt;SL_1&gt; ; {:p} &lt;SL_1&gt
-</pre>
-<div style="clear:both;"> </div>
-      </div>
-
-
-      <div class="Example">
-  <p>
-    Examples of satisfying a some-of triple expression.
-  </p>
-<pre class="shex" style="float:left">
-# if typing is such that it contains the following node-label associations
-(:n1, &lt;SL_1&gt;), (:n2, &lt;SL_2&gt;), (:n3, &lt;SL_1&gt;)
-
-# then
-typing, {(:n :p :n1)}               &#x22A7;   {:p} &lt;SL_1&gt; | {:q} &lt;SL_2&gt;
-typing, {(:n :p :n1), (:n :p :n2)}  &#x22AD;   {:p} &lt;SL_1&gt; | {:q} &lt;SL_2&gt;
-</pre>
-<div style="clear:both;"> </div>
-      </div>
-
-
-      <div class="Example">
-  <p>
-    Examples of satisfying a triple expression with some-of and each-of operators.
-  </p>
-<pre class="shex" style="float:left">
-# if typing is such that it contains the following node-label associations
-(:n1, &lt;SL_1&gt;), (:n2, &lt;SL_2&gt;), (:n3, &lt;SL_1&gt;) 
-
-# then
-typing, {(:n :p :n1)}                &#x22A7;  {:p} &lt;SL_1&gt; | {:q} &lt;SL_2&gt;
-typing, {(:n :p :n1), (:n :p :n2)}   &#x22AD;  {:p} &lt;SL_1&gt; | {:q} &lt;SL_2&gt;
-</pre>
-<div style="clear:both;"> </div>
-      </div>
-
 
       <div class="Example">
   <div class="with-highlight">
