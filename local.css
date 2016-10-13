@@ -312,14 +312,15 @@ div.shexjTable th { text-align: right; }
 
 .trace li {
     list-style-type: none;
-      font-style: normal;
-      font-family: sans-serif;
-      color: #003333;
-      margin: 0;
-      line-height: 1.2;
+    font-style: normal;
+    font-family: sans-serif;
+    color: #003333;
+    margin: 0 0 0 .5em;
+    line-height: 1.2;
 }
 
 .trace ul {
-    padding-left: 1em;
+    padding-left: 0;
+    margin-left: .5em;
 }
 
