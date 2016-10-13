@@ -1085,7 +1085,7 @@ _:User2
                     <li><m class="function">satisfies(n2, se2, G, m)</m></li>
                   </ul></div>
                 </div>
-                <p class="issue">The following is a more verbose description of the above. Which is preferred?</p>
+                <p class="issue">[Editorial] The following is a more verbose description of the above. Which is preferred?</p>
                 <div class="example">
                   For the schema<br/>
                   <div class="inline json">
@@ -1315,8 +1315,8 @@ ex:lp  ^ex:reportedBy  ex:bug</div>
         </section>
       </section>
 
-      <section id="examples">
-        <h3>Examples</h3>
+      <section id="validation-examples">
+        <h3>Validation Examples</h3>
         <p>
           The following examples demonstrate proofs for validations in the form of a nested list of invocations of the evaluation functions defined above.
         </p>
@@ -1340,6 +1340,7 @@ S1:
 te1:
 tc1:
 
+
 nc1:
 te2:
 tc2:
@@ -1358,7 +1359,8 @@ nc3:
      {"type": "SomeOf", "expressions": [
         { "type": "TripleConstraint",
           "predicate": "http://xmlns.com/foaf/0.1/name",
-          "valueExpr": { "type": "NodeConstraint", "nodeKind": "literal" } },
+          "valueExpr":
+            { "type": "NodeConstraint", "nodeKind": "literal" } },
         { "type": "EachOf", "expressions": [
             { "type": "TripleConstraint", "min": 1, "max": "*" ,
               "predicate": "http://xmlns.com/foaf/0.1/givenName",
@@ -1394,45 +1396,142 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 </pre>
             </div>
             <div style="clear:both;"></div>
-            <p>Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, &lt;Alice&gt; satisfies S1 with the simple ShapeMap</p>
+            <p class="leadup">Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, &lt;Alice&gt; satisfies S1 with the simple ShapeMap</p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
               <pre>{ "http://a.example/Alice": "http://a.example/UserShape }</pre>
-            </div><div style="clear:both;"></div>
-     <ul class="trace">
-       <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3,t4,t5], matched = [t1,t2,t3], remainder = [t4,t5]</li>
-       <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, [t1,t2,t3], m)
-       <ul>
-         <li><a href="#matches-SomeOf">matches SomeOf</a> ([t1,t2,t3], te1, m)
-         <ul style="border-left:solid thin brown">
-           <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3], te2, m)
-           <ul style="border-left:solid thin brown">
-             <li><a href="#matches-cardinality">matches cardinality</a> ([t1, t2], tc2, m)
-             <ul style="border-left:solid thin brown">
-               <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc2, m)
-               <ul>
-                 <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Alice", nc2, [t1,t2,t3], m)
-                 <ul>
-                   <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Alice", nc2)</li>
-               </ul></li></ul></li>
-               <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc2, m)
-               <ul>
-                 <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Malsenior", nc2, [t1,t2,t3], m)
-                 <ul>
-                   <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Malsenior", nc2)</li>
-               </ul></li></ul></li>
-             </ul></li>
-             <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
-             <ul>
-               <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, [t1,t2,t3], m)
-               <ul>
-                 <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
-         </ul></li></ul></li></ul></li></ul></li>
-         <li>outs = [t4] <span class="comment">/* t5 is an ArcIn, t6 is not connected. */</span></li>
-         <li>matchables = Ø, unmatchables = [t5]</li>
-       </ul>
-       </li>
-     </ul>
+            </div>
+            <div style="clear:both;"></div>
+            <p class="leadup followup">as seen in this evaluation:</p>
+            <ul class="trace followup">
+              <li>G = [t1,t2,t3,t4,t5,t6]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, [t1,t2,t3], m)
+              <ul>
+                <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3,t4,t5], matched = [t1,t2,t3], remainder = [t4,t5]</li>
+                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t1,t2,t3], te1, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3], te2, m)
+                  <ul style="border-left:solid thin brown">
+                    <li><a href="#matches-cardinality">matches cardinality</a> ([t1, t2], tc2, m)
+                    <ul style="border-left:solid thin brown">
+                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc2, m)
+                      <ul>
+                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Alice", nc2, [t1,t2,t3], m)
+                        <ul>
+                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Alice", nc2)</li>
+                      </ul></li></ul></li>
+                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc2, m)
+                      <ul>
+                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Malsenior", nc2, [t1,t2,t3], m)
+                        <ul>
+                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Malsenior", nc2)</li>
+                      </ul></li></ul></li>
+                    </ul></li>
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                    <ul>
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, [t1,t2,t3], m)
+                      <ul>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
+                </ul></li></ul></li></ul></li></ul></li>
+                <li>outs = [t4] <span class="comment">/* t5 is an ArcIn, t6 is not connected. */</span></li>
+                <li>matchables = Ø, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+              </ul>
+              </li>
+            </ul>
+
+            <p class="leadup">
+              Replacing triples 1-3 with a single foaf:name property will also satisfy the schema:<br/>
+            </p>
+            <pre class="line-labels">
+
+
+t4:
+t5:
+t6:
+t7:</pre>
+            <div class="inline json">
+              <pre>BASE &lt;http://a.example/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+&lt;Alice&gt; foaf:mbox &lt;mailto:alice@example.com&gt; .
+&lt;Bob&gt; foaf:knows &lt;Alice&gt; .
+&lt;Bob&gt; foaf:mbox &lt;mailto:bob@example.com&gt; .
+&lt;Alice&gt; foaf:name "Alice Malsenior Walker" .
+</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <ul class="trace followup">
+              <li>G = [t7,t4,t5,t6]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, [t7], m)
+              <ul>
+                <li>neigh(G, &lt;Alice&gt;) = [t7,t4,t5], matched = [t7], remainder = [t4,t5]</li>
+                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t7], te1, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t7], tc1, m)
+                  <ul>
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, [t7], m)
+                    <ul>
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
+                </ul></li></ul></li></ul></li>
+                <li>outs = [t4] <span class="comment">/* t5 is an ArcIn, t6 is not connected. */</span></li>
+                <li>matchables = Ø, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+              </ul>
+              </li>
+            </ul>
+
+            <p class="leadup">
+              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple t3 that's not used in the triple expression te1:<br/>
+            </p>
+            <pre class="line-labels">
+
+
+t3:
+t4:
+t5:
+t6:
+t7:</pre>
+            <div class="inline json">
+              <pre>BASE &lt;http://a.example/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+<span class="fail">&lt;Alice&gt; foaf:familyName "Walker" .</span>
+&lt;Alice&gt; foaf:mbox &lt;mailto:alice@example.com&gt; .
+&lt;Bob&gt; foaf:knows &lt;Alice&gt; .
+&lt;Bob&gt; foaf:mbox &lt;mailto:bob@example.com&gt; .
+&lt;Alice&gt; foaf:name "Alice Malsenior Walker" .
+</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <ul class="trace followup">
+              <li>G = [t7,t4,t5,t6]</li>
+              <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, [t7], m)</span>
+              <ul>
+                <li>neigh(G, &lt;Alice&gt;) = [t7,t4,t5], matched = [t7], remainder = [t4,t5]</li>
+                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t7], te1, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t7], tc1, m)
+                  <ul>
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, [t7], m)
+                    <ul>
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
+                </ul></li></ul></li></ul></li>
+                <li>outs = [t4] <span class="comment">/* t5 is an ArcIn, t6 is not connected. */</span></li>
+                <li><span class="fail">matchables = [t3]</span>, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+              </ul>
+              </li>
+            </ul>
+            <p class="leadup">
+              Adding a <code>foaf:familyName</code> to <m>S1</m>'s <span class="param">extra</span> would allow this graph to satisfy the schema.
+            </p>
+              <pre class="line-labels">sch:
+
+S1:
+</pre>
+            <div class="inline json">
+              <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/UserShape":
+   {"type": "Shape", "extra": ["http://xmlns.com/foaf/0.1/familyName"] …
+   } } }</pre>
+            </div>
+            <div style="clear:both;"></div>
           </div>
         </section>
 

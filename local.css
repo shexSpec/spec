@@ -107,7 +107,7 @@
       font-family: monospace;
       tab-size: 4;
       line-height: 1.2;
-      display: table;
+      display: inline-block;
       border: thin dotted #888888;
       }
 
@@ -115,12 +115,12 @@
       font-family: monospace;
       tab-size: 4;
       line-height: 1.2;
-      display: table;
+      display: inline-block;
       border: thin dotted #888888;
       }
 
       .legend{
-      display: table;
+      display: inline-block;
       border: thin dotted #888888;
       }
       
@@ -322,5 +322,13 @@ div.shexjTable th { text-align: right; }
 .trace ul {
     padding-left: 0;
     margin-left: .5em;
+}
+
+.leadup {
+    margin-bottom: 0;
+}
+
+.followup {
+    margin-top: 0;
 }
 
