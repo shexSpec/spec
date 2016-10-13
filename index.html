@@ -413,7 +413,7 @@ _:User2
       <ul>
         <li id="satisfies-NodeConstraint"><m>S</m> is a <span class="jobjref"><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<m>n</m>, <m>se</m>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a graph or shapeMap.</li>
-        <li id="satisfies-Shape"><m>S</m> is a <span class="jobjref"><a href="#dfn-Shape" class="obj">Shape</a></span> and <code class="function">satisfies(<m>n</m>, <m>se</m>)</code> as described below in <a href="#shapes-and-TEs">Shapes and Triple Expressions</a>.</li>
+        <li id="satisfies-Shape-proxy"><m>S</m> is a <span class="jobjref"><a href="#dfn-Shape" class="obj">Shape</a></span> and <code class="function">satisfies(<m>n</m>, <m>se</m>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
         <li id="satisfies-ShapeOr"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeOr" class="obj">ShapeOr</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeAnd"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeAnd" class="obj">ShapeAnd</a></span> and for every shape expression <m>se2</m> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeNot"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeNot" class="obj">ShapeNot</a></span> and for the shape expression <m>se2</m> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
@@ -887,7 +887,7 @@ _:User2
       
       <section id="triple-expressions-semantics">
         <h4>Semantics</h4>
-        <p>
+        <p id="satisfies-Shape">
           The <code><a href="#satisfies">satisfies</a></code> semantics for a <span class="jobjref"><a href="#dfn-Shape" class="obj">Shape</a></span> depend on a <code>matches</code> function <a href="#matches">defined below</a>.
           For a node <m>n</m>, shape <m>S</m>, graph <m>G</m>, and shapeMap <m>m</m>, <code class="function">satisfies(<m>n</m>, <m>S</m>, <m>G</m>, <m>m</m>)</code> if and only if:
         </p>
@@ -898,7 +898,7 @@ _:User2
             Let <span class="label">outs</span> be the arcsOut in <m>remainder</m>:
             <code class="function"><m>outs</m> = <m>remainder</m> ∩ arcsOut(<m>G</m>, <m>n</m>)</code>.<br/>
             Let <span class="label">matchables</span> be the triples in <m>outs</m> whose predicate appears in a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> in <span class="param">expression</span>.
-            If <span class="param">expression</span> is absent, <code class="function"><m>matchables</m> = <m>outs</m></code>.<br/>
+            If <span class="param">expression</span> is absent, <code class="function"><m>matchables</m> = <m>Ø</m> (the empty set)</code>.<br/>
             Let <span class="label">unmatchables</span> be the triples in <m>outs</m> which are not in <m>matchables</m>.
             <code class="function"><m>matchables</m> ∪ <m>unmatchables</m> = <m>outs</m></code>.
           </li>
@@ -1378,13 +1378,19 @@ nc3:
 
 t1:
 t2:
-t3:</pre>
+t3:
+t4:
+t5:
+t6:</pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
-&lt;Alice&gt; foaf:givenName "Alice" ;
-&lt;Alice&gt; foaf:givenName "Malsenior" ;
-&lt;Alice&gt; foaf:familyName "Walker".
+&lt;Alice&gt; foaf:givenName "Alice" .
+&lt;Alice&gt; foaf:givenName "Malsenior" .
+&lt;Alice&gt; foaf:familyName "Walker" .
+&lt;Alice&gt; foaf:mbox &lt;mailto:alice@example.com&gt; .
+&lt;Bob&gt; foaf:knows &lt;Alice&gt; .
+&lt;Bob&gt; foaf:mbox &lt;mailto:bob@example.com&gt; .
 </pre>
             </div>
             <div style="clear:both;"></div>
@@ -1394,10 +1400,11 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
               <pre>{ "http://a.example/Alice": "http://a.example/UserShape }</pre>
             </div><div style="clear:both;"></div>
      <ul class="trace">
+       <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3,t4,t5], matched = [t1,t2,t3], remainder = [t4,t5]</li>
        <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, [t1,t2,t3], m)
        <ul>
          <li><a href="#matches-SomeOf">matches SomeOf</a> ([t1,t2,t3], te1, m)
-         <ul>
+         <ul style="border-left:solid thin brown">
            <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3], te2, m)
            <ul style="border-left:solid thin brown">
              <li><a href="#matches-cardinality">matches cardinality</a> ([t1, t2], tc2, m)
@@ -1420,7 +1427,12 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
                <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, [t1,t2,t3], m)
                <ul>
                  <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
-     </ul></li></ul></li></ul></li></ul></li></ul></li></ul>
+         </ul></li></ul></li></ul></li></ul></li>
+         <li>outs = [t4] <span class="comment">/* t5 is an ArcIn, t6 is not connected. */</span></li>
+         <li>matchables = Ø, unmatchables = [t5]</li>
+       </ul>
+       </li>
+     </ul>
           </div>
         </section>
 
