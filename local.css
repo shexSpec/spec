@@ -302,4 +302,24 @@ div.shexjTable th { text-align: right; }
 
 .tight li { margin: 0; line-height: 1; }
 
- 
+.line-labels {
+    float: left;
+    padding: 0;
+    margin: 0;
+    text-align: right;
+    border-top: solid medium transparent;
+}
+
+.trace li {
+    list-style-type: none;
+      font-style: normal;
+      font-family: sans-serif;
+      color: #003333;
+      margin: 0;
+      line-height: 1.2;
+}
+
+.trace ul {
+    padding-left: 1em;
+}
+
