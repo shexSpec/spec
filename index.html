@@ -1728,8 +1728,8 @@ PREFIX ex: &lt;http://a.example/ex#&gt;
           </div>
         </section>
 
-        <section id="example-reallistic-repeated-property">
-          <h4>Reallistic Repeated Property Examples</h4>
+        <section id="example-repeated-property-with-dependent-shapes">
+          <h4>Repeated Property With Dependent Shapes Example</h4>
           <!--
 BASE <http://schema.example/>
 PREFIX ex: <http://schema.example/>
@@ -1849,37 +1849,53 @@ inst:Testgrammer23
             <div style="clear:both;"></div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
-              <li>G = [t1,t2,t3,t4]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)
+              <li>G = [t1,t2,t3,t4,t5]</li>
+              <li>satisfies Shape (inst:Issue1, S1, G, m)
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3,t4], matched = [t1,t2,t3,t4], remainder = Ø</li>
-                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t1,t2,t3], te1, m)
-                <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3], te2, m)
-                  <ul style="border-left:solid thin brown">
-                    <li><a href="#matches-cardinality">matches cardinality</a> ([t1, t2], tc2, m)
-                    <ul style="border-left:solid thin brown">
-                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc2, m)
-                      <ul>
-                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Alice", nc2, [t1,t2,t3], m)
-                        <ul>
-                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Alice", nc2)</li>
-                      </ul></li></ul></li>
-                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc2, m)
-                      <ul>
-                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Malsenior", nc2, [t1,t2,t3], m)
-                        <ul>
-                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Malsenior", nc2)</li>
-                      </ul></li></ul></li>
-                    </ul></li>
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                <li>neigh(G, inst:Issue1) = [t1,t2], matched = [t1,t2], remainder = Ø</li>
+                <li>matches EachOf ([t1,t2], te1, m)
+                <ul>
+                  <li>matches TripleConstraint ([t1], tc1, m)
+                  <ul>
+                    <li>satisfies NodeConstraint (inst:Tester2, nc1, G, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, [t1,t2,t3], m)
+                      <li>satisfies2 NodeConstraint (inst:Tester2, nc1)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
-                </ul></li></ul></li></ul></li></ul></li>
-                <li>outs = [t4]</li>
-                <li>matchables = Ø, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+                        <li>satisfies Shape (inst:Tester2. S2, G, m)
+                        <ul>
+                          <li>neigh(G, inst:Tester2) = [t3], matched = [t3], remainder = Ø
+                          <ul>
+                            <li>matches TripleConstraint ([t3], tc3, m)
+                            <ul>
+                              <li>satisfies NodeConstraint (ex:testingRole, nc3, G, m)
+                              <ul>
+                                <li>satisfies2 NodeConstraint (ex:testingRole, nc3)</li>
+                          </ul></li></ul></li></ul></li>
+                          <li>outs = Ø</li>
+                          <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+                  </ul></li></ul></li></ul></li></ul></li>
+                  <li>matches TripleConstraint ([t2], tc1, m)
+                  <ul>
+                    <li>satisfies NodeConstraint (inst:Testgrammer23, nc2, G, m)
+                    <ul>
+                      <li>satisfies2 NodeConstraint (inst:Testgrammer23, nc2)
+                      <ul>
+                        <li>satisfies Shape (inst:Testgrammer23. S3, G, m)
+                        <ul>
+                          <li>neigh(G, inst:Testgrammer23) = [t4], matched = [t4], remainder = Ø
+                          <ul>
+                            <li>matches TripleConstraint ([t4], tc3, m)
+                            <ul>
+                              <li>satisfies NodeConstraint (ex:testingRole, nc4, G, m)
+                              <ul>
+                                <li>satisfies2 NodeConstraint (ex:testingRole, nc4)</li>
+                          </ul></li></ul></li></ul></li>
+                          <li>outs = Ø</li>
+                          <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+                  </ul></li></ul></li></ul></li></ul></li>
+                </ul></li>
+                <li>outs = Ø</li>
+                <li>matchables = Ø, unmatchables = Ø, closed is false</li>
               </ul>
               </li>
             </ul>
