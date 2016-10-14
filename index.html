@@ -932,7 +932,7 @@ _:User2
           </div>
         </li>
         <li>
-          <p id="matches-cardinality"><m>expr</m> has a <span class="label">cardinality</span> of either <span class="param">min</span> or <span class="param">max</span> not equal to 1 and there is some partition of <m>T</m> into <m class="function">T<sub>1</sub></m>, <m>T<sub>2</sub></m>,… such that for every required repetition <m><sub>1</sub></m>, <m><sub>2</sub></m>,… ≤ <span class="param">min</span> in <span class="param">shapeExprs</span> and zero or more optional repetitions <m><sub><span class="param">min</span>+1</sub></m>, <m><sub><span class="param">min</span>+2</sub></m>,… ≤ <span class="param">max</span>, <code class="function">matches(<m>T<sub>n</sub></m>, <m>expr</m>, <m>m</m>)</code> by the remaining rules in this list.</p>
+          <p id="matches-cardinality"><m>expr</m> has a <span class="label">cardinality</span> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1 and <m>T</m> can be partitioned into <m>k</m> subsets <m class="function">T<sub>1</sub></m>, <m>T<sub>2</sub></m>,…<m>T<sub>k</sub></m> such that <m>min ≤ k ≤ max</m> and for each <m>T<sub>n</sub></m>, <code class="function">matches(<m>T<sub>n</sub></m>, <m>expr</m>, <m>m</m>)</code> by the remaining rules in this list.</p>
           <div class="example">
             <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
@@ -1157,10 +1157,6 @@ _:User2
           </div>
         </li>
       </ul>
-      <!-- p>
-  Finally, a triple expression can be repeated by specifying a minimal cardinality that is a natural number, and a maximal cardinality that is a natural number of an unbounded value denoted as a star <m>*</m>. 
-  A repeated triple expression <m>TExpr{min;max}</m> is satisfied by a set of triples if that set can be split into <m>k</m> disjoint subsets such that <m>min ≤ k ≤ max</m>, and each of these subsets matches the sub-expression <m>TExpr</m>.
-      </p -->
     </section>
       
       </section>
@@ -1605,6 +1601,102 @@ inst:Tester2 ex:role ex:testingRole .</pre>
 
         <section id="example-recursion">
           <h4>Recursion Example</h4>
+          <!--
+BASE <http://schema.example/>
+PREFIX ex: <http://schema.example/>
+<IssueShape> {
+  ex:related @<IssueShape>*
+}
+          -->
+          <div class="example">
+              Schema:<br/>
+              <pre class="line-labels">sch:
+
+S1:
+tc1:
+
+
+nc1:
+
+</pre>
+            <div class="inline json">
+              <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape":
+  { "type": "Shape", "expression":
+    { "type": "TripleConstraint", "min": 0, "max": "*",
+      "predicate": "http://schema.example/related",
+      "valueExpr":
+      { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" }
+    } } } }</pre>
+            </div>
+            <div style="clear:both;"></div>
+            Data:<br/>
+            <pre class="line-labels"> 
+
+t1:
+t2:
+t3:</pre>
+            <div class="inline json">
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
+PREFIX inst: &lt;http://inst.example/&gt;
+inst:Issue1 ex:related inst:Issue2 .
+inst:Issue2 ex:related inst:Issue3 .
+inst:Issue3 ex:related inst:Issue1 .</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <p class="leadup">inst:Issue1 satisfies S1 with the ShapeMap</p>
+            <pre class="line-labels">m:</pre>
+            <div class="inline json">
+              <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
+  "http://inst.example/Issue2": "http://schema.example/IssueShape",
+  "http://inst.example/Issue3": "http://schema.example/IssueShape" }</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <p class="leadup followup">as seen in this evaluation:</p>
+            <ul class="trace followup">
+              <li>G = [t1,t2,t3]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, S1, G, m)
+              <ul>
+                <li>neigh(G, inst:Issue1) = [t1], matched = [t1], remainder = Ø</li>
+                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue2, nc1, G, m)
+                  <ul>
+                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue2, nc1)
+                    <ul>
+                      <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue2. S2, G, m)
+                      <ul>
+                        <li>neigh(G, inst:Issue2) = [t3], matched = [t3], remainder = Ø</li>
+                        <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                        <ul style="border-left:solid thin brown">
+                          <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue3, nc3, G, m)
+                          <ul>
+                            <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue3, nc3)
+                            <ul>
+                              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue3. S2, G, m)
+                              <ul>
+                                <li>neigh(G, inst:Issue3) = [t3], matched = [t3], remainder = Ø</li>
+                                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                                <ul style="border-left:solid thin brown">
+                                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue1, nc3, G, m)
+                                  <ul>
+                                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue1, nc3)<br/>
+                                    This is known to be true or the initial typing would not be satisfied.</li>
+                                </ul></li></ul></li>
+                                <li>outs = Ø</li>
+                                <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+                            </ul></li></ul></li>
+                        </ul></li></ul></li>
+                        <li>outs = Ø</li>
+                        <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+                </ul></li></ul></li></ul></li></ul></li>
+                <li>outs = Ø</li>
+                <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+              </ul>
+              </li>
+            </ul>
+            <div style="clear:both;"></div>
+          </div>
         </section>
 
         <section id="example-simple-repeated-property">
@@ -1937,10 +2029,6 @@ inst:Testgrammer23
             </ul>
             <div style="clear:both;"></div>
           </div>
-        </section>
-
-        <section id="example-referenced-shape">
-          <h4>Referenced Shape Example</h4>
         </section>
 
         <section id="example-negation">
