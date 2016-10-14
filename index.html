@@ -1161,70 +1161,7 @@ _:User2
   Finally, a triple expression can be repeated by specifying a minimal cardinality that is a natural number, and a maximal cardinality that is a natural number of an unbounded value denoted as a star <m>*</m>. 
   A repeated triple expression <m>TExpr{min;max}</m> is satisfied by a set of triples if that set can be split into <m>k</m> disjoint subsets such that <m>min ≤ k ≤ max</m>, and each of these subsets matches the sub-expression <m>TExpr</m>.
       </p -->
-    
-
-      <div class="Example">
-  <div class="with-highlight">
-    <p>
-      Consider the following triple expression and RDF graph.
-    </p>
-<pre class="shex" style="float:left">
-# graph G
-
-ex:lp    rdf:type     foaf:Person;
-         foaf:name    "Louisa Pavlova";
-         foaf:mbox    "louisa@shex.org";
-         foaf:mbox    "lpavlova@jobs.com";
-         ex:memberOf  ex:gr2 .
-ex:gr2   ex:leader    ex:lp .
-ex:bug   ex:reportedBy  ex:lp .
-</pre>
-<pre class="shex" style="float:left">
-# typing is such that it contains the following node-label associations
-
-<span class="hl-all lowlight1">(n, &lt;SL_all&gt;)  for all node n in G</span>
-<span class="hl-rdftype lowlight1">(foaf:Person, &lt;SL_Person&gt;)</span>
-<span class="hl-foafname lowlight1">("Louisa Pavlova", &lt;SL_string&gt;)</span>
-<div class="hl-foafmbox lowlight1">("louisa@shex.org", &lt;SL_mbox_string&gt;)
-("lpavlova@jobs.com", &lt;SL_mbox_string&gt;)</div><span class="hl-leader lowlight1">(ex:gr2, &lt;SL_Group&gt;)</span>
-
-</pre>
-<pre class="shex" style="float:left">
-# triple expression TExpr
-
-<span class="hl-rdftype lowlight1">{rdf:type}  &lt;SL_Person&gt;</span> ;
-<span class="hl-foafname lowlight1">{foaf:name} &lt;SL_string&gt;</span> ;
-<span class="hl-foafmbox lowlight1">( {foaf:mbox} &lt;SL_mbox_string&gt; {1;3} | {foaf:adress} &lt;SL_adr&gt; )</span> ;
-<span class="hl-leader lowlight1">{^ex:leader} &lt;SL_Group&gt;</span> ;
-<span class="hl-all lowlight1">C{rdf:type, foaf:name, foaf:givenName, foaf:familyName, foaf:mbox, ^ex:leader} &lt;SL_all&gt; *</span>
-</pre>
-<pre class="shex" style="foaf:left">
-# neigh(G, ex:lp), the neighbourhood of ex:lp in G
-
-<span class="hl-rdftype lowlight1">ex:lp  rdf:type     foaf:Person .</span>
-<span class="hl-foafname lowlight1">ex:lp  foaf:name    "Louisa Pavlova" .</span>
-<div class="hl-foafmbox lowlight1">ex:lp  foaf:mbox    "louisa@shex.org" .
-ex:lp  foaf:mbox    "lpavlova@jobs.com" .</div><span class="hl-leader lowlight1">ex:lp  ^ex:leader   ex:gr2</span>
-<div class="hl-all lowlight1">ex:lp  ex:memberOf  ex:gr2
-ex:lp  ^ex:reportedBy  ex:bug</div>
-</pre>
-<div style="clear:both;"> </div>
-
-    <p>
-      Then <span class="pre">typing, neigh(G, ex:lp) ⊢ TExpr</span>.
-      Move the mouse over the triples in <span class="pre">neigh(G, ex:lp)</span> to see which triples contribute to satisfy which of the sub-expressions of <span class="pre">TExpr</span>.
-    </p>
-  </div>
-  <script type="text/javascript">
-    <!--
-        prepareHighlight(["hl-rdftype","hl-foafname", "hl-foafmbox", "hl-leader", "hl-all"], "highlight1", "lowlight1");
-        prepareHighlight([], "highlight2", "lowlight2");
-        prepareHighlight([], "highlight3", "lowlight3");
-        prepareHighlight([], "highlight4", "lowlight4");
-      -->
-  </script>
-      </div>
-      </section>
+    </section>
       
       </section>
 
@@ -1563,6 +1500,107 @@ S1:
 
         <section id="example-dependent-shape">
           <h4>Dependent Shape Example</h4>
+          <!--
+BASE <http://schema.example/>
+PREFIX ex: <http://schema.example/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+<IssueShape> {
+  ex:reproducedBy @<TesterShape>;
+}
+<TesterShape> {
+  ex:role [ex:testingRole]
+}
+          -->
+          <div class="example">
+              Schema:<br/>
+              <pre class="line-labels">sch:
+
+S1:
+tc1:
+
+
+nc1:
+
+
+S2:
+tc2:
+
+
+nc2:
+
+
+</pre>
+            <div class="inline json">
+              <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/IssueShape":
+  { "type": "Shape", "expression":
+    { "type": "TripleConstraint",
+      "predicate": "http://schema.example/reproducedBy",
+      "valueExpr":
+      { "type": "ShapeRef",
+        "reference": "http://schema.example/TesterShape" } } },
+  "http://schema.example/TesterShape":
+  { "type": "Shape", "expression":
+    { "type": "TripleConstraint",
+      "predicate": "http://schema.example/role",
+      "valueExpr":
+      { "type": "NodeConstraint",
+        "values": [ "http://schema.example/testingRole" ] } } }
+  } }</pre>
+            </div>
+            <div style="clear:both;"></div>
+            Data:<br/>
+            <pre class="line-labels">
+
+t1:
+t2:</pre>
+            <div class="inline json">
+              <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
+PREFIX inst: &lt;http://inst.example/&gt;
+inst:Issue1 ex:reproducedBy inst:Tester2 ;
+inst:Tester2 ex:role ex:testingRole .</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <p class="leadup">inst:Issue1 satisfies S1 with the ShapeMap</p>
+            <pre class="line-labels">m:</pre>
+            <div class="inline json">
+              <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
+  "http://inst.example/Tester2": "http://schema.example/TesterShape",
+  "http://inst.example/Testgrammer23": "http://schema.example/ProgrammerShape" }</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <p class="leadup followup">as seen in this evaluation:</p>
+            <ul class="trace followup">
+              <li>G = [t1]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, S1, G, m)
+              <ul>
+                <li>neigh(G, inst:Issue1) = [t1,t2], matched = [t1,t2], remainder = Ø</li>
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                  <ul style="border-left:solid thin brown">
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Tester2, nc1, G, m)
+                    <ul>
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Tester2, nc1)
+                      <ul>
+                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Tester2. S2, G, m)
+                        <ul>
+                          <li>neigh(G, inst:Tester2) = [t2], matched = [t2], remainder = Ø</li>
+                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc2, m)
+                          <ul style="border-left:solid thin brown">
+                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, nc2, G, m)
+                            <ul>
+                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, nc2)</li>
+                        </ul></li></ul></li>
+                          <li>outs = Ø</li>
+                          <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+                  </ul></li></ul></li></ul></li></ul></li>
+                <li>outs = Ø</li>
+                <li>matchables = Ø, unmatchables = Ø, closed is false</li>
+              </ul>
+              </li>
+            </ul>
+            <div style="clear:both;"></div>
+          </div>
         </section>
 
         <section id="example-recursion">
@@ -1850,46 +1888,44 @@ inst:Testgrammer23
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [t1,t2,t3,t4,t5]</li>
-              <li>satisfies Shape (inst:Issue1, S1, G, m)
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, S1, G, m)
               <ul>
                 <li>neigh(G, inst:Issue1) = [t1,t2], matched = [t1,t2], remainder = Ø</li>
-                <li>matches EachOf ([t1,t2], te1, m)
-                <ul>
-                  <li>matches TripleConstraint ([t1], tc1, m)
+                <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2], te1, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
                   <ul>
-                    <li>satisfies NodeConstraint (inst:Tester2, nc1, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Tester2, nc1, G, m)
                     <ul>
-                      <li>satisfies2 NodeConstraint (inst:Tester2, nc1)
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Tester2, nc1)
                       <ul>
-                        <li>satisfies Shape (inst:Tester2. S2, G, m)
+                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Tester2. S2, G, m)
                         <ul>
-                          <li>neigh(G, inst:Tester2) = [t3], matched = [t3], remainder = Ø
-                          <ul>
-                            <li>matches TripleConstraint ([t3], tc3, m)
+                          <li>neigh(G, inst:Tester2) = [t3], matched = [t3], remainder = Ø</li>
+                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                          <ul style="border-left:solid thin brown">
+                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, nc3, G, m)
                             <ul>
-                              <li>satisfies NodeConstraint (ex:testingRole, nc3, G, m)
-                              <ul>
-                                <li>satisfies2 NodeConstraint (ex:testingRole, nc3)</li>
-                          </ul></li></ul></li></ul></li>
+                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, nc3)</li>
+                        </ul></li></ul></li>
                           <li>outs = Ø</li>
                           <li>matchables = Ø, unmatchables = Ø, closed is false</li>
                   </ul></li></ul></li></ul></li></ul></li>
-                  <li>matches TripleConstraint ([t2], tc1, m)
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc1, m)
                   <ul>
-                    <li>satisfies NodeConstraint (inst:Testgrammer23, nc2, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Testgrammer23, nc2, G, m)
                     <ul>
-                      <li>satisfies2 NodeConstraint (inst:Testgrammer23, nc2)
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Testgrammer23, nc2)
                       <ul>
-                        <li>satisfies Shape (inst:Testgrammer23. S3, G, m)
+                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Testgrammer23. S3, G, m)
                         <ul>
-                          <li>neigh(G, inst:Testgrammer23) = [t4], matched = [t4], remainder = Ø
-                          <ul>
-                            <li>matches TripleConstraint ([t4], tc3, m)
+                          <li>neigh(G, inst:Testgrammer23) = [t5], matched = [t5], remainder = Ø</li>
+                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t5], tc3, m)
+                          <ul style="border-left:solid thin brown">
+                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, nc4, G, m)
                             <ul>
-                              <li>satisfies NodeConstraint (ex:testingRole, nc4, G, m)
-                              <ul>
-                                <li>satisfies2 NodeConstraint (ex:testingRole, nc4)</li>
-                          </ul></li></ul></li></ul></li>
+                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, nc4)</li>
+                          </ul></li></ul></li>
                           <li>outs = Ø</li>
                           <li>matchables = Ø, unmatchables = Ø, closed is false</li>
                   </ul></li></ul></li></ul></li></ul></li>
