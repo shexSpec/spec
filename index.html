@@ -95,7 +95,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
     <section id="notation">
       <h2>Notation</h2>
       <p>
-        The JSON Syntax serves as a serializable proxy for the ShEx abstract syntax.
+        The JSON[[!rfc6901]] Syntax serves as a serializable proxy for the ShEx abstract syntax.
         It consists of statements defining data structures and named members of those data structures.
         Each member has either a single type or two or more types that are a union (choice) of types.
         Each type is either a reference to another statement, a primitive RDF type or  (e.g. <code>numeric</code>)[[!sparql11-query]], or the template type <code>Set</code>, which signifies a <a href="https://en.wikipedia.org/wiki/Set_(mathematics)">logical set</a> of a type.
@@ -1247,6 +1247,7 @@ _:User2
           </div>
         </section>
       </section>
+    </section>
 
       <section id="validation-examples">
         <h3>Validation Examples</h3>
@@ -2040,7 +2041,6 @@ inst:Testgrammer23
         </section>
 
       </section>
-    </section>
   </section>
       
     <section id="shexj">
