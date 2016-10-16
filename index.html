@@ -1254,6 +1254,190 @@ _:User2
         <p>
           The following examples demonstrate proofs for validations in the form of a nested list of invocations of the evaluation functions defined above.
         </p>
+        <section id="example-simple">
+          <h4>Simple Examples</h4>
+          <!--
+              BASE <http://schema.example/>
+              PREFIX ex: <http://schema.example/>
+              PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+              PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+              PREFIX dc: <http://purl.org/dc/elements/1.1/>
+              <IntConstraint> xsd:integer
+          -->
+          <div class="example">
+              Schema:<br/>
+              <pre class="line-labels">
+
+<span class="lineno schema">S1</span>
+</pre>
+            <div class="inline json">
+              <pre>{ "type": "Schema", "shapes":
+  { "http://schema.example/IntConstraint":
+    { "type": "NodeConstraint",
+      "datatype": "http://www.w3.org/2001/XMLSchema#integer"
+    } } }</pre>
+            </div>
+            <div style="clear:both;"></div>
+<!--             Data:<br/>
+            <pre class="line-labels">
+
+
+<span class="lineno data">t1</span></pre>
+            <div class="inline json">
+              <pre>PREFIX ex: &lt;http://a.example/&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+ex:someNode ex:somePredicate "30"^^xsd:integer .
+</pre>
+            </div>
+            <div style="clear:both;"></div> -->
+            <p class="leadup">
+              Here the shape identified by <code>http://schema.example/IntConstraint</code> is a shape expression consisting of a single <span class="jobjref"><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a></span>.
+              Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, "30"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; satisfies <span class="lineno schema">IntConstraint</span>:
+            </p>
+            <ul class="trace followup">
+              <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("30"^^xsd:integer, <span class="lineno schema">S1</span>, G, m)
+              <ul>
+                <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("30"^^xsd:integer, <span class="lineno schema">S1</span>)</li>
+              </ul></li>
+            </ul>
+            <p class="followup">
+              This document uses this nested tree convention to indicate that the dependency of an evaluation on those nested inside it.
+              Nesting is expressed as indentation.
+              Here, the evaluation of <m class="function">satisfies NodeConstraint ("30"^^xsd:integer, S1, G, m)</m> depends on <m class="function">satisfies2 NodeConstraint ("30"^^xsd:integer, S1)</m>.
+            </p>
+          </div>
+
+          <p class="leadup">
+            Validating a shape requires evaluating it's triple expression as well as the variables and functions <m>neigh(G, n)</m>, <m>matched</m>, <m>remainder</m>, <m>outs</m>, <m>matchables</m> and <m>unmatchables</m>:<br/>
+          </p>
+          <div class="example">
+            <!--
+                BASE &lt;http://schema.example/&gt;
+                PREFIX ex: &lt;http://schema.example/&gt;
+                PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+                PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+                PREFIX dc: &lt;http://purl.org/dc/elements/1.1/&gt;
+                &lt;UserShape&gt; { ex:shoeSize . }
+            -->
+            Schema:<br/>
+            <pre class="line-labels"> 
+
+<span class="lineno schema">S1</span>
+<span class="lineno schema">tc1</span>
+</pre>
+            <div class="inline json">
+              <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/UserShape":
+  { "type": "Shape", "expression":
+    { "type": "TripleConstraint",
+      "predicate": "http://schema.example/shoeSize"
+      } } } }</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <pre class="line-labels"> 
+
+<span class="lineno schema">t1</span></pre>
+            <div class="inline json">
+              <pre>BASE &lt;http://a.example/&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+&lt;Alice&gt; ex:shoeSize "30"^^xsd:integer .
+</pre>
+            </div>
+            <div style="clear:both;">Data:</div>
+            <ul class="trace followup">
+              <li>G = [<span class="lineno data">t1</span>] <span class="comment">The graph G consists of one triple.</span></li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
+              <ul>
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1</span>] <span class="comment">/* The neighborhood around &lt;Alice&gt; consists of one triple. */</span></li>
+                <li>matched = [<span class="lineno data">t1</span>] <span class="comment">/* That triple is matched in the nested evaluation. */</span></li>
+                <li>remainder = Ø <span class="comment">/* The remainder is the empty set. */</span></li>
+                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)</li>
+                <li>outs = [<span class="lineno data">t4</span>] <span class="comment">/* There is one arc out. */</span></li>
+                <li>matchables = Ø <span class="comment">/* There are no remaining arcs out of &lt;Alice&gt; with predicates appearing in tc1. */</span></li>
+                <li>unmatchables = Ø <span class="comment">/* There are no other arcs out of &lt;Alice&gt;. */</span></li>
+                <li><span class="parameter">closed</span> is false <span class="comment">/* The <span class="jobjref"><a href="#dfn-Shape">Shape</a></span>'s closed paramater has a value of false. */</span></li>
+              </ul>
+              </li>
+            </ul>
+          </div>
+            <p class="leadup">
+              It is quite common that Shapes will constrain their nested TripleConstraints with NodeConstraints.
+              Here is an example including that, extra triples and a closed shape:
+            </p>
+          <div class="example">
+            <!--
+                BASE <http://schema.example/>
+                PREFIX ex: <http://schema.example/>
+                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                PREFIX dc: <http://purl.org/dc/elements/1.1/>
+                <UserShape> CLOSED EXTRA a {
+                  a [ex:Teacher]
+                }
+            -->
+            Schema:<br/>
+            <pre class="line-labels"> 
+
+<span class="lineno schema">S1</span>
+<span class="lineno schema">tc1</span>
+
+
+
+<span class="lineno schema">nc1</span>
+</pre>
+            <div class="inline json">
+              <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/UserShape":
+  { "type": "Shape", "expression":
+    { "type": "TripleConstraint",
+      "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
+      "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "valueExpr":
+      { "type": "NodeConstraint",
+        "values": ["http://schema.example/Teacher"]
+      } } } } }</pre>
+            </div>
+            <div style="clear:both;">Data:</div>
+            <pre class="line-labels"> 
+
+<span class="lineno schema">t1</span>
+<span class="lineno schema">t2</span>
+<span class="lineno schema">t3</span>
+<span class="lineno schema">t4</span>
+<span class="lineno schema">t5</span></pre>
+            <div class="inline json">
+              <pre>BASE &lt;http://a.example/&gt;
+PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+&lt;Alice&gt; ex:shoeSize "30"^^xsd:integer .
+&lt;Alice&gt; a ex:Teacher .
+&lt;Alice&gt; a ex:Person .
+&lt;SomeHat&gt; ex:owner &lt;Alice&gt; .
+&lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt;
+</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <ul class="trace followup">
+              <li>G = [<span class="lineno data">t1,t2,t3,t4,t5</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
+              <ul>
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1,t2,t3,t4</span>], matched = [<span class="lineno data">t2</span>], remainder = [<span class="lineno data">t1,t3</span>]</li>
+                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:Teacher, <span class="lineno schema">nc1</span>, G, m)
+                  <ul>
+                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:Teacher, <span class="lineno schema">nc1</span>)</li>
+                </ul></li></ul></li>
+                <li>outs = [<span class="lineno data">t1,t2,t3</span>]</li>
+                <li>matchables = [<span class="lineno data">t3</span>], unmatchables = [<span class="lineno data">t1</span>], <span class="parameter">closed</span> is false</li>
+              </ul>
+              </li>
+            </ul>
+            <p>
+              The non-empty matchables is permitted because the triple <code>t3</code> has a predicate which appears in the "extra" list: <span class="json">["http://schema.example/Teacher"]</span>.
+            </p>
+          </div>
+        </section>
+
         <section id="example-disjunction">
           <h4>Disjunction Example</h4>
           <!--
@@ -1268,23 +1452,23 @@ _:User2
           -->
           <div class="example">
               Schema:<br/>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
-te1:
-tc1:
-
-
-nc1:
-te2:
-tc2:
+<span class="lineno schema">S1</span>
+<span class="lineno schema">te1</span>
+<span class="lineno schema">tc1</span>
 
 
-nc2:
-tc3:
+<span class="lineno schema">nc1</span>
+<span class="lineno schema">te2</span>
+<span class="lineno schema">tc2</span>
 
 
-nc3:
+<span class="lineno schema">nc2</span>
+<span class="lineno schema">tc3</span>
+
+
+<span class="lineno schema">nc3</span>
 </pre>
             <div class="inline json">
               <pre>{ "type": "Schema", "shapes": {
@@ -1312,12 +1496,12 @@ nc3:
             <pre class="line-labels">
 
 
-t1:
-t2:
-t3:
-t4:
-t5:
-t6:</pre>
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span>
+<span class="lineno data">t3</span>
+<span class="lineno data">t4</span>
+<span class="lineno data">t5</span>
+<span class="lineno data">t6</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
@@ -1330,7 +1514,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 </pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup">Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, &lt;Alice&gt; satisfies S1 with the simple ShapeMap</p>
+            <p class="leadup">Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, &lt;Alice&gt; satisfies <span class="lineno">S1</span> with the simple ShapeMap</p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
               <pre>{ "http://a.example/Alice": "http://a.example/UserShape }</pre>
@@ -1338,37 +1522,37 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <div style="clear:both;"></div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
-              <li>G = [t1,t2,t3,t4,t5,t6]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)
+              <li>G = [<span class="lineno data">t1,t2,t3,t4,t5,t6</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno">S1</span>, G, m)
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3,t4,t5], matched = [t1,t2,t3], remainder = [t4,t5]</li>
-                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t1,t2,t3], te1, m)
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1,t2,t3,t4,t5</span>], matched = [<span class="lineno data">t1,t2,t3</span>], remainder = [<span class="lineno data">t4,t5</span>]</li>
+                <li><a href="#matches-SomeOf">matches SomeOf</a> ([<span class="lineno data">t1,t2,t3</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3], te2, m)
+                  <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1,t2,t3</span>], <span class="lineno schema">te2</span>, m)
                   <ul style="border-left:solid thin brown">
-                    <li><a href="#matches-cardinality">matches cardinality</a> ([t1,t2], tc2, m)
+                    <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t1,t2</span>], <span class="lineno schema">tc2</span>, m)
                     <ul style="border-left:solid thin brown">
-                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc2, m)
+                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc2</span>, m)
                       <ul>
-                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Alice", nc2, G, m)
+                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Alice", <span class="lineno schema">nc2</span>, G, m)
                         <ul>
-                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Alice", nc2)</li>
+                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Alice", <span class="lineno schema">nc2</span>)</li>
                       </ul></li></ul></li>
-                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc2, m)
+                      <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc2</span>, m)
                       <ul>
-                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Malsenior", nc2, G, m)
+                        <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Malsenior", <span class="lineno schema">nc2</span>, G, m)
                         <ul>
-                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Malsenior", nc2)</li>
+                          <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Malsenior", <span class="lineno schema">nc2</span>)</li>
                       </ul></li></ul></li>
                     </ul></li>
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc3</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>)</li>
                 </ul></li></ul></li></ul></li></ul></li>
-                <li>outs = [t4] <span class="comment">/* t5 is in <m>ArcsIn(G, &lt;Alice&gt;)></m>, t6 is not in <m>neigh(G, &lt;Alice&gt;)></m>. */</span></li>
-                <li>matchables = Ø, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+                <li>outs = [<span class="lineno data">t4</span>] <span class="comment">/* <span class="lineno data">t5</span> is in <m>ArcsIn(G, &lt;Alice&gt;)></m>, <span class="lineno data">t6</span> is not in <m>neigh(G, &lt;Alice&gt;)></m>. */</span></li>
+                <li>matchables = Ø, unmatchables = [<span class="lineno data">t5</span>], <span class="parameter">closed</span> is false</li>
               </ul>
               </li>
             </ul>
@@ -1379,10 +1563,10 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <pre class="line-labels">
 
 
-t4:
-t5:
-t6:
-t7:</pre>
+<span class="lineno schema">t4</span>
+<span class="lineno schema">t5</span>
+<span class="lineno schema">t6</span>
+<span class="lineno schema">t7</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
@@ -1394,35 +1578,35 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </div>
             <div style="clear:both;"></div>
             <ul class="trace followup">
-              <li>G = [t4,t5,t6,t7]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)
+              <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [t4,t5,t7], matched = [t7], remainder = [t4,t5]</li>
-                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t7], te1, m)
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t4,t5,t7</span>], matched = [<span class="lineno data">t7</span>], remainder = [<span class="lineno data">t4,t5</span>]</li>
+                <li><a href="#matches-SomeOf">matches SomeOf</a> ([<span class="lineno data">t7</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t7], tc1, m)
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t7</span>], <span class="lineno schema">tc1</span>, m)
                   <ul>
-                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>, G, m)
                     <ul>
-                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>)</li>
                 </ul></li></ul></li></ul></li>
-                <li>outs = [t4]</li>
-                <li>matchables = Ø, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+                <li>outs = [<span class="lineno data">t4</span>]</li>
+                <li>matchables = Ø, unmatchables = [<span class="lineno data">t5</span>], <span class="parameter">closed</span> is false</li>
               </ul>
               </li>
             </ul>
 
             <p class="leadup">
-              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple t3 that's not used in the triple expression te1:<br/>
+              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that's not used in the triple expression <span class="lineno schema">te1</span>:<br/>
             </p>
             <pre class="line-labels">
 
 
-t3:
-t4:
-t5:
-t6:
-t7:</pre>
+<span class="lineno schema">t3</span>
+<span class="lineno schema">t4</span>
+<span class="lineno schema">t5</span>
+<span class="lineno schema">t6</span>
+<span class="lineno schema">t7</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
@@ -1435,30 +1619,30 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </div>
             <div style="clear:both;"></div>
             <ul class="trace followup">
-              <li>G = [t4,t5,t6,t7]</li>
-              <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)</span>
+              <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
+              <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)</span>
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [t4,t5,t7], matched = [t7], remainder = [t4,t5]</li>
-                <li><a href="#matches-SomeOf">matches SomeOf</a> ([t7], te1, m)
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t4,t5,t7</span>], matched = [<span class="lineno data">t7</span>], remainder = [<span class="lineno data">t4,t5</span>]</li>
+                <li><a href="#matches-SomeOf">matches SomeOf</a> ([<span class="lineno data">t7</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t7], tc1, m)
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t7</span>], <span class="lineno schema">tc1</span>, m)
                   <ul>
-                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", nc3, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>, G, m)
                     <ul>
-                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", nc3)</li>
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>)</li>
                 </ul></li></ul></li></ul></li>
-                <li>outs = [t4]</li>
-                <li><span class="fail">matchables = [t3]</span>, unmatchables = [t5], <span class="parameter">closed</span> is false</li>
+                <li>outs = [<span class="lineno data">t4</span>]</li>
+                <li><span class="fail">matchables = [<span class="lineno data">t3</span>]</span>, unmatchables = [<span class="lineno data">t5</span>], <span class="parameter">closed</span> is false</li>
               </ul>
               </li>
             </ul>
 
             <p class="leadup">
-              Adding a <code>foaf:familyName</code> to <m>S1</m>'s <span class="param">extra</span> would allow this graph to satisfy the schema.
+              Adding a <code>foaf:familyName</code> to <m><span class="lineno schema">S1</span></m>'s <span class="param">extra</span> would allow this graph to satisfy the schema.
             </p>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
+<span class="lineno schema">S1</span>
 </pre>
             <div class="inline json">
               <pre>{ "type": "Schema", "shapes": {
@@ -1469,11 +1653,11 @@ S1:
             <div style="clear:both;"></div>
 
             <p class="leadup">
-              Closing <m>S1</m> would also cause a validation failure if <m>unmatchables</m> were not empty:
+              Closing <m><span class="lineno schema">S1</span></m> would also cause a validation failure if <m>unmatchables</m> were not empty:
             </p>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
+<span class="lineno schema">S1</span>
 </pre>
             <div class="inline json">
               <pre>{ "type": "Schema", "shapes": {
@@ -1483,11 +1667,11 @@ S1:
             </div>
             <div style="clear:both;"></div>
             <ul class="trace followup">
-              <li>G = [t4,t5,t6,t7]</li>
-              <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)</span>
+              <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
+              <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)</span>
               <ul>
                 <li>...</li>
-                <li><span class="fail">unmatchables = [t5], <span class="parameter">closed</span> is true</span></li>
+                <li><span class="fail">unmatchables = [<span class="lineno data">t5</span>], <span class="parameter">closed</span> is true</span></li>
               </ul>
               </li>
             </ul>
@@ -1511,20 +1695,20 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
           -->
           <div class="example">
               Schema:<br/>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
-tc1:
-
-
-nc1:
+<span class="lineno schema">S1</span>
+<span class="lineno schema">tc1</span>
 
 
-S2:
-tc2:
+<span class="lineno schema">nc1</span>
 
 
-nc2:
+<span class="lineno schema">S2</span>
+<span class="lineno schema">tc2</span>
+
+
+<span class="lineno schema">nc2</span>
 
 
 </pre>
@@ -1550,8 +1734,8 @@ nc2:
             Data:<br/>
             <pre class="line-labels">
 
-t1:
-t2:</pre>
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span></pre>
             <div class="inline json">
               <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
@@ -1559,7 +1743,7 @@ inst:Issue1 ex:reproducedBy inst:Tester2 ;
 inst:Tester2 ex:role ex:testingRole .</pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup">inst:Issue1 satisfies S1 with the ShapeMap</p>
+            <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the ShapeMap</p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
               <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
@@ -1569,24 +1753,24 @@ inst:Tester2 ex:role ex:testingRole .</pre>
             <div style="clear:both;"></div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
-              <li>G = [t1]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, S1, G, m)
+              <li>G = [<span class="lineno data">t1</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, inst:Issue1) = [t1,t2], matched = [t1,t2], remainder = Ø</li>
-                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                <li>neigh(G, inst:Issue1) = [<span class="lineno data">t1,t2</span>], matched = [<span class="lineno data">t1,t2</span>], remainder = Ø</li>
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
                   <ul style="border-left:solid thin brown">
-                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Tester2, nc1, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Tester2, <span class="lineno schema">nc1</span>, G, m)
                     <ul>
-                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Tester2, nc1)
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Tester2, <span class="lineno schema">nc1</span>)
                       <ul>
-                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Tester2. S2, G, m)
+                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Tester2. <span class="lineno schema">S2</span>, G, m)
                         <ul>
-                          <li>neigh(G, inst:Tester2) = [t2], matched = [t2], remainder = Ø</li>
-                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc2, m)
+                          <li>neigh(G, inst:Tester2) = [<span class="lineno data">t2</span>], matched = [<span class="lineno data">t2</span>], remainder = Ø</li>
+                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc2</span>, m)
                           <ul style="border-left:solid thin brown">
-                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, nc2, G, m)
+                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, <span class="lineno schema">nc2</span>, G, m)
                             <ul>
-                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, nc2)</li>
+                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, <span class="lineno schema">nc2</span>)</li>
                         </ul></li></ul></li>
                           <li>outs = Ø</li>
                           <li>matchables = Ø, unmatchables = Ø, closed is false</li>
@@ -1611,13 +1795,13 @@ PREFIX ex: <http://schema.example/>
           -->
           <div class="example">
               Schema:<br/>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
-tc1:
+<span class="lineno schema">S1</span>
+<span class="lineno schema">tc1</span>
 
 
-nc1:
+<span class="lineno schema">nc1</span>
 
 </pre>
             <div class="inline json">
@@ -1634,9 +1818,9 @@ nc1:
             Data:<br/>
             <pre class="line-labels"> 
 
-t1:
-t2:
-t3:</pre>
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span>
+<span class="lineno data">t3</span></pre>
             <div class="inline json">
               <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
@@ -1645,7 +1829,7 @@ inst:Issue2 ex:related inst:Issue3 .
 inst:Issue3 ex:related inst:Issue1 .</pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup">inst:Issue1 satisfies S1 with the ShapeMap</p>
+            <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the ShapeMap</p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
               <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
@@ -1655,33 +1839,33 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
             <div style="clear:both;"></div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
-              <li>G = [t1,t2,t3]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, S1, G, m)
+              <li>G = [<span class="lineno data">t1,t2,t3</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, inst:Issue1) = [t1], matched = [t1], remainder = Ø</li>
-                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                <li>neigh(G, inst:Issue1) = [<span class="lineno data">t1</span>], matched = [<span class="lineno data">t1</span>], remainder = Ø</li>
+                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue2, nc1, G, m)
+                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue2, <span class="lineno schema">nc1</span>, G, m)
                   <ul>
-                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue2, nc1)
+                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue2, <span class="lineno schema">nc1</span>)
                     <ul>
-                      <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue2. S2, G, m)
+                      <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue2. <span class="lineno schema">S2</span>, G, m)
                       <ul>
-                        <li>neigh(G, inst:Issue2) = [t3], matched = [t3], remainder = Ø</li>
-                        <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                        <li>neigh(G, inst:Issue2) = [<span class="lineno data">t3</span>], matched = [<span class="lineno data">t3</span>], remainder = Ø</li>
+                        <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc3</span>, m)
                         <ul style="border-left:solid thin brown">
-                          <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue3, nc3, G, m)
+                          <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue3, <span class="lineno schema">nc3</span>, G, m)
                           <ul>
-                            <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue3, nc3)
+                            <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue3, <span class="lineno schema">nc3</span>)
                             <ul>
-                              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue3. S2, G, m)
+                              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue3. <span class="lineno schema">S2</span>, G, m)
                               <ul>
-                                <li>neigh(G, inst:Issue3) = [t3], matched = [t3], remainder = Ø</li>
-                                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                                <li>neigh(G, inst:Issue3) = [<span class="lineno data">t3</span>], matched = [<span class="lineno data">t3</span>], remainder = Ø</li>
+                                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc3</span>, m)
                                 <ul style="border-left:solid thin brown">
-                                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue1, nc3, G, m)
+                                  <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Issue1, <span class="lineno schema">nc3</span>, G, m)
                                   <ul>
-                                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue1, nc3)<br/>
+                                    <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Issue1, <span class="lineno schema">nc3</span>)<br/>
                                     This is known to be true or the initial typing would not be satisfied.</li>
                                 </ul></li></ul></li>
                                 <li>outs = Ø</li>
@@ -1715,19 +1899,19 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
           -->
           <div class="example">
               Schema:<br/>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
-te1:
-tc1:
-
-
-nc1:
-
-tc2:
+<span class="lineno schema">S1</span>
+<span class="lineno schema">te1</span>
+<span class="lineno schema">tc1</span>
 
 
-nc2:
+<span class="lineno schema">nc1</span>
+
+<span class="lineno schema">tc2</span>
+
+
+<span class="lineno schema">nc2</span>
 
 </pre>
             <div class="inline json">
@@ -1752,10 +1936,10 @@ nc2:
             <pre class="line-labels">
 
 
-t1:
-t2:
-t3:
-t4:</pre>
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span>
+<span class="lineno data">t3</span>
+<span class="lineno data">t4</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX ex: &lt;http://a.example/ex#&gt;
@@ -1765,48 +1949,48 @@ PREFIX ex: &lt;http://a.example/ex#&gt;
 &lt;s&gt; ex:val "d" .</pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup">&lt;s&gt; satisfies S1 with:</p>
+            <p class="leadup">&lt;s&gt; satisfies <span class="lineno schema">S1</span> with:</p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
               <pre>{ "http://a.example/s": "http://a.example/S1 }</pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup followup">If <m>tc1</m> consumes as many triples as it can, it consumes three and <m>tc2</m> consumes one:</p>
+            <p class="leadup followup">If <m><span class="lineno schema">tc1</span></m> consumes as many triples as it can, it consumes three and <m><span class="lineno schema">tc2</span></m> consumes one:</p>
             <ul class="trace followup">
-              <li>G = [t1,t2,t3,t4]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)
+              <li>G = [<span class="lineno data">t1,t2,t3,t4</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3,t4], matched = [t1,t2,t3,t4], remainder = Ø</li>
-                <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3,t4], te1, m)
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1,t2,t3,t4</span>], matched = [<span class="lineno data">t1,t2,t3,t4</span>], remainder = Ø</li>
+                <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1,t2,t3,t4</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-cardinality">matches cardinality</a> ([t1,t2,t3], tc1, m)
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t1,t2,t3</span>], <span class="lineno schema">tc1</span>, m)
                   <ul style="border-left:solid thin brown">
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("a", nc1, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("a", nc1)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>)</li>
                     </ul></li></ul></li>
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc1, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc1</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("b", nc1, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("b", <span class="lineno schema">nc1</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("b", nc1)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("b", <span class="lineno schema">nc1</span>)</li>
                     </ul></li></ul></li>
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc1, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc1</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("c", nc1, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("c", <span class="lineno schema">nc1</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("c", nc1)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("c", <span class="lineno schema">nc1</span>)</li>
                     </ul></li></ul></li>
                   </ul></li>
-                  <li><a href="#matches-cardinality">matches cardinality</a> ([t4], tc2, m)
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t4</span>], <span class="lineno schema">tc2</span>, m)
                   <ul style="border-left:solid thin brown">
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t4], tc2, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t4</span>], <span class="lineno schema">tc2</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("d", nc2, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("d", <span class="lineno schema">nc2</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("d", nc2)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("d", <span class="lineno schema">nc2</span>)</li>
                     </ul></li></ul></li>
                   </ul></li>
                 </ul></li>
@@ -1817,36 +2001,36 @@ PREFIX ex: &lt;http://a.example/ex#&gt;
             </ul>
             <div style="clear:both;"></div>
 
-            <p class="leadup">If we eliminate <m>t4</m>, either <m>t2</m> or <m>t3</m> must be allocated to <m>tc2</m>:</p>
+            <p class="leadup">If we eliminate <m><span class="lineno data">t4</span></m>, either <m><span class="lineno data">t2</span></m> or <m><span class="lineno data">t3</span></m> must be allocated to <m><span class="lineno schema">tc2</span></m>:</p>
             <ul class="trace followup">
-              <li>G = [t1,t2,t3]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, S1, G, m)
+              <li>G = [<span class="lineno data">t1,t2,t3</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [t1,t2,t3], matched = [t1,t2,t3], remainder = Ø</li>
-                <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2,t3], te1, m)
+                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1,t2,t3</span>], matched = [<span class="lineno data">t1,t2,t3</span>], remainder = Ø</li>
+                <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1,t2,t3</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-cardinality">matches cardinality</a> ([t1,t2], tc1, m)
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t1,t2</span>], <span class="lineno schema">tc1</span>, m)
                   <ul style="border-left:solid thin brown">
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("a", nc1, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("a", nc1)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>)</li>
                     </ul></li></ul></li>
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc1, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc1</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("b", nc1, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("b", <span class="lineno schema">nc1</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("b", nc1)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("b", <span class="lineno schema">nc1</span>)</li>
                     </ul></li></ul></li>
                   </ul></li>
-                  <li><a href="#matches-cardinality">matches cardinality</a> ([t3], tc2, m)
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc2</span>, m)
                   <ul style="border-left:solid thin brown">
-                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc2, m)
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc2</span>, m)
                     <ul>
-                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("d", nc2, G, m)
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("d", <span class="lineno schema">nc2</span>, G, m)
                       <ul>
-                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("d", nc2)</li>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("d", <span class="lineno schema">nc2</span>)</li>
                     </ul></li></ul></li>
                   </ul></li>
                 </ul></li>
@@ -1880,34 +2064,34 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
           -->
           <div class="example">
               Schema:<br/>
-              <pre class="line-labels">sch:
+              <pre class="line-labels"> 
 
-S1:
-te1:
-tc1:
-
-
-nc1:
-
-tc2:
+<span class="lineno schema">S1</span>
+<span class="lineno schema">te1</span>
+<span class="lineno schema">tc1</span>
 
 
-nc2:
+<span class="lineno schema">nc1</span>
+
+<span class="lineno schema">tc2</span>
+
+
+<span class="lineno schema">nc2</span>
 
 
 
-S2:
-tc3:
+<span class="lineno schema">S2</span>
+<span class="lineno schema">tc3</span>
 
 
-nc3:
+<span class="lineno schema">nc3</span>
 
 
-S3:
-tc4:
+<span class="lineno schema">S3</span>
+<span class="lineno schema">tc4</span>
 
 
-nc4:
+<span class="lineno schema">nc4</span>
 </pre>
             <div class="inline json">
               <pre>{ "type": "Schema", "shapes": {
@@ -1946,15 +2130,15 @@ nc4:
             <pre class="line-labels"> 
 
 
-t1:
-t2:
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span>
 
 
-t3:
+<span class="lineno data">t3</span>
 
 
-t4:
-t5:</pre>
+<span class="lineno data">t4</span>
+<span class="lineno data">t5</span></pre>
             <div class="inline json">
               <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
@@ -1970,7 +2154,7 @@ inst:Testgrammer23
   ex:department ex:ProgrammingDepartment .</pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup">inst:Issue1 satisfies S1 with the ShapeMap</p>
+            <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the ShapeMap</p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
               <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
@@ -1980,44 +2164,44 @@ inst:Testgrammer23
             <div style="clear:both;"></div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
-              <li>G = [t1,t2,t3,t4,t5]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, S1, G, m)
+              <li>G = [<span class="lineno data">t1,t2,t3,t4,t5</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Issue1, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, inst:Issue1) = [t1,t2], matched = [t1,t2], remainder = Ø</li>
-                <li><a href="#matches-EachOf">matches EachOf</a> ([t1,t2], te1, m)
+                <li>neigh(G, inst:Issue1) = [<span class="lineno data">t1,t2</span>], matched = [<span class="lineno data">t1,t2</span>], remainder = Ø</li>
+                <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1,t2</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
-                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t1], tc1, m)
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
                   <ul>
-                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Tester2, nc1, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Tester2, <span class="lineno schema">nc1</span>, G, m)
                     <ul>
-                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Tester2, nc1)
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Tester2, <span class="lineno schema">nc1</span>)
                       <ul>
-                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Tester2. S2, G, m)
+                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Tester2. <span class="lineno schema">S2</span>, G, m)
                         <ul>
-                          <li>neigh(G, inst:Tester2) = [t3], matched = [t3], remainder = Ø</li>
-                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t3], tc3, m)
+                          <li>neigh(G, inst:Tester2) = [<span class="lineno data">t3</span>], matched = [<span class="lineno data">t3</span>], remainder = Ø</li>
+                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t3</span>], <span class="lineno schema">tc3</span>, m)
                           <ul style="border-left:solid thin brown">
-                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, nc3, G, m)
+                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, <span class="lineno schema">nc3</span>, G, m)
                             <ul>
-                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, nc3)</li>
+                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, <span class="lineno schema">nc3</span>)</li>
                         </ul></li></ul></li>
                           <li>outs = Ø</li>
                           <li>matchables = Ø, unmatchables = Ø, closed is false</li>
                   </ul></li></ul></li></ul></li></ul></li>
-                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t2], tc1, m)
+                  <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc1</span>, m)
                   <ul>
-                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Testgrammer23, nc2, G, m)
+                    <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (inst:Testgrammer23, <span class="lineno schema">nc2</span>, G, m)
                     <ul>
-                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Testgrammer23, nc2)
+                      <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (inst:Testgrammer23, <span class="lineno schema">nc2</span>)
                       <ul>
-                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Testgrammer23. S3, G, m)
+                        <li><a href="#satisfies-Shape">satisfies Shape</a> (inst:Testgrammer23. <span class="lineno schema">S3</span>, G, m)
                         <ul>
-                          <li>neigh(G, inst:Testgrammer23) = [t5], matched = [t5], remainder = Ø</li>
-                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([t5], tc3, m)
+                          <li>neigh(G, inst:Testgrammer23) = [<span class="lineno data">t5</span>], matched = [<span class="lineno data">t5</span>], remainder = Ø</li>
+                          <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t5</span>], <span class="lineno schema">tc3</span>, m)
                           <ul style="border-left:solid thin brown">
-                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, nc4, G, m)
+                            <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:testingRole, <span class="lineno schema">nc4</span>, G, m)
                             <ul>
-                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, nc4)</li>
+                              <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> (ex:testingRole, <span class="lineno schema">nc4</span>)</li>
                           </ul></li></ul></li>
                           <li>outs = Ø</li>
                           <li>matchables = Ø, unmatchables = Ø, closed is false</li>

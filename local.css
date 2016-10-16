@@ -332,3 +332,15 @@ div.shexjTable th { text-align: right; }
     margin-top: 0;
 }
 
+.lineno.schema {
+    border-radius: .4em;
+    background-color: #ECEAEE;
+    border: thin solid #DCDADE;
+}
+
+.lineno.data {
+    border-radius: .4em;
+    background-color: #ECFADE;
+    border: thin solid #DCEACE;
+}
+
