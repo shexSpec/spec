@@ -10,7 +10,7 @@
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
             async="async" class='remove'></script>
     <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
-    <script src="https://www.w3.org/2013/ShEx/demobits/jquery.min.js" type="text/javascript"></script>
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
 
     <script class='remove'>
       var respecConfig = {
@@ -155,7 +155,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
           <li>datatyped literal: U+005E U+005E ('<code>^^</code>') and the lexical form of the datatype URI, e.g. <code class="json">"\"123\"^^http://www.w3.org/2001/XMLSchema#integer"</code></li>
         </ul></li>
       </ul>
-      <div class="issue">
+      <!--div class="issue">
         <p id="json-triples">
           When stable, consider switching to the rdfjs task force's <a href="https://github.com/rdfjs/representation-task-force/blob/master/interface-spec.md#term">JSON representation</a> i.e.
         </p>
@@ -169,7 +169,7 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
             <li>datatyped literal: <code class="json">{ "termType": "Literal", "value": "123", "language": "", "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#integer" }</code></li>
           </ul></li>
         </ul>
-      </div>
+      </div-->
       <p>
         The term definitions given in this document rely on matching triple patterns in the form <code>(subject, predicate, object)</code> where each position may be supplied by a constant, a previously defined term, or the underscore "<code>_</code>", which represents a previously undefined element or wildcard.
         This corresponds to a <a href="http://www.w3.org/TR/sparql11-query/#defn_TriplePattern">SPARQL Triple Pattern</a> where each "_" is replaced by a unique blank node.
@@ -689,7 +689,8 @@ _:User2
           </div>
         <p class="issue">
           Is it more useful to measure digits on the <a href="https://www.w3.org/TR/xmlschema-2/#canonical-lexical-representation">canonical lexical representation</a> of <m>n</m>?
-          That would entail more implementation and testing burden.
+          That would entail marginally more implementation and testing burden.
+          This affects leading/trailing digits as well as xsd:decimals, e.g. "0e0"^^xsd:decimal.
         </p>
       </section>
 
@@ -1336,7 +1337,7 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
             <div style="clear:both;"></div>
             <pre class="line-labels"> 
 
-<span class="lineno schema">t1</span></pre>
+<span class="lineno data">t1</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
@@ -1352,7 +1353,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
                 <li>matched = [<span class="lineno data">t1</span>] <span class="comment">/* That triple is matched in the nested evaluation. */</span></li>
                 <li>remainder = Ø <span class="comment">/* The remainder is the empty set. */</span></li>
                 <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)</li>
-                <li>outs = [<span class="lineno data">t4</span>] <span class="comment">/* There is one arc out. */</span></li>
+                <li>outs = [<span class="lineno data">t1</span>] <span class="comment">/* There is one arc out. */</span></li>
                 <li>matchables = Ø <span class="comment">/* There are no remaining arcs out of &lt;Alice&gt; with predicates appearing in tc1. */</span></li>
                 <li>unmatchables = Ø <span class="comment">/* There are no other arcs out of &lt;Alice&gt;. */</span></li>
                 <li><span class="parameter">closed</span> is false <span class="comment">/* The <span class="jobjref"><a href="#dfn-Shape">Shape</a></span>'s closed paramater has a value of false. */</span></li>
@@ -1400,11 +1401,11 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
             <div style="clear:both;">Data:</div>
             <pre class="line-labels"> 
 
-<span class="lineno schema">t1</span>
-<span class="lineno schema">t2</span>
-<span class="lineno schema">t3</span>
-<span class="lineno schema">t4</span>
-<span class="lineno schema">t5</span></pre>
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span>
+<span class="lineno data">t3</span>
+<span class="lineno data">t4</span>
+<span class="lineno data">t5</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
@@ -1421,7 +1422,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
               <ul>
                 <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1,t2,t3,t4</span>], matched = [<span class="lineno data">t2</span>], remainder = [<span class="lineno data">t1,t3</span>]</li>
-                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
+                <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc1</span>, m)
                 <ul style="border-left:solid thin brown">
                   <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> (ex:Teacher, <span class="lineno schema">nc1</span>, G, m)
                   <ul>
@@ -1563,10 +1564,10 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <pre class="line-labels">
 
 
-<span class="lineno schema">t4</span>
-<span class="lineno schema">t5</span>
-<span class="lineno schema">t6</span>
-<span class="lineno schema">t7</span></pre>
+<span class="lineno data">t4</span>
+<span class="lineno data">t5</span>
+<span class="lineno data">t6</span>
+<span class="lineno data">t7</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
@@ -1602,11 +1603,11 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <pre class="line-labels">
 
 
-<span class="lineno schema">t3</span>
-<span class="lineno schema">t4</span>
-<span class="lineno schema">t5</span>
-<span class="lineno schema">t6</span>
-<span class="lineno schema">t7</span></pre>
+<span class="lineno data">t3</span>
+<span class="lineno data">t4</span>
+<span class="lineno data">t5</span>
+<span class="lineno data">t6</span>
+<span class="lineno data">t7</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
