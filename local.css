@@ -344,3 +344,6 @@ div.shexjTable th { text-align: right; }
     border: thin solid #DCEACE;
 }
 
+.exsec, .validation span:nth-child(1) {
+    font-weight: bold
+}

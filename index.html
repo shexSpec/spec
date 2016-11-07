@@ -690,7 +690,7 @@ _:User2
         <p class="issue">
           Is it more useful to measure digits on the <a href="https://www.w3.org/TR/xmlschema-2/#canonical-lexical-representation">canonical lexical representation</a> of <m>n</m>?
           That would entail marginally more implementation and testing burden.
-          This affects leading/trailing digits as well as xsd:decimals, e.g. "0e0"^^xsd:decimal.
+          This affects leading/trailing zeros as well as xsd:decimals, e.g. "0e0"^^xsd:decimal.
         </p>
       </section>
 
@@ -1266,7 +1266,7 @@ _:User2
               <IntConstraint> xsd:integer
           -->
           <div class="example">
-              Schema:<br/>
+              <span class="exsec">Schema:</span><br/>
               <pre class="line-labels">
 
 <span class="lineno schema">S1</span>
@@ -1291,21 +1291,22 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
 </pre>
             </div>
             <div style="clear:both;"></div> -->
-            <p class="leadup">
+            <p>
               Here the shape identified by <code>http://schema.example/IntConstraint</code> is a shape expression consisting of a single <span class="jobjref"><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a></span>.
-              Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, "30"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; satisfies <span class="lineno schema">IntConstraint</span>:
+              Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, "30"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; satisfies <span class="lineno schema">IntConstraint</span>.
             </p>
+            <p>
+              This document uses this nested tree convention to indicate that the dependency of an evaluation on those nested inside it.
+              Nesting is expressed as indentation.
+              Here, the evaluation of <m class="function">satisfies NodeConstraint ("30"^^xsd:integer, S1, G, m)</m> depends on <m class="function">satisfies2 NodeConstraint ("30"^^xsd:integer, S1)</m>.
+            </p>
+            <div class="validation"><span>Validate</span> <span>"30"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt;</span> as <span class="hljs-string">IntConstraint</span>:</div>
             <ul class="trace followup">
               <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("30"^^xsd:integer, <span class="lineno schema">S1</span>, G, m)
               <ul>
                 <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("30"^^xsd:integer, <span class="lineno schema">S1</span>)</li>
               </ul></li>
             </ul>
-            <p class="followup">
-              This document uses this nested tree convention to indicate that the dependency of an evaluation on those nested inside it.
-              Nesting is expressed as indentation.
-              Here, the evaluation of <m class="function">satisfies NodeConstraint ("30"^^xsd:integer, S1, G, m)</m> depends on <m class="function">satisfies2 NodeConstraint ("30"^^xsd:integer, S1)</m>.
-            </p>
           </div>
 
           <p class="leadup">
@@ -1320,7 +1321,7 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
                 PREFIX dc: &lt;http://purl.org/dc/elements/1.1/&gt;
                 &lt;UserShape&gt; { ex:shoeSize . }
             -->
-            Schema:<br/>
+            <span class="exsec">Schema:</span><br/>
             <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -1334,7 +1335,7 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
       "predicate": "http://schema.example/shoeSize"
       } } } }</pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
 
 <span class="lineno data">t1</span></pre>
@@ -1344,7 +1345,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;Alice&gt; ex:shoeSize "30"^^xsd:integer .
 </pre>
             </div>
-            <div style="clear:both;">Data:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1</span>] <span class="comment">The graph G consists of one triple.</span></li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -1376,7 +1377,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
                   a [ex:Teacher]
                 }
             -->
-            Schema:<br/>
+            <span class="exsec">Schema:</span><br/>
             <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -1398,7 +1399,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
         "values": ["http://schema.example/Teacher"]
       } } } } }</pre>
             </div>
-            <div style="clear:both;">Data:</div>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
@@ -1416,7 +1417,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt;
 </pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4,t5</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -1452,7 +1453,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               }
           -->
           <div class="example">
-              Schema:<br/>
+              <div class="exsec">Schema:</div><br/>
               <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -1492,8 +1493,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
           ] } ] } } } }
 </pre>
             </div>
-            <div style="clear:both;"></div>
-            Data:<br/>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels">
 
 
@@ -1521,7 +1521,8 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
               <pre>{ "http://a.example/Alice": "http://a.example/UserShape }</pre>
             </div>
             <div style="clear:both;"></div>
-            <p class="leadup followup">as seen in this evaluation:</p>
+            <p class="leadup followup">as seen in this validation.</p>
+            <div class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4,t5,t6</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno">S1</span>, G, m)
@@ -1559,8 +1560,9 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </ul>
 
             <p class="leadup">
-              Replacing triples 1-3 with a single foaf:name property will also satisfy the schema:<br/>
+              Replacing triples 1-3 with a single foaf:name property will also satisfy the schema.
             </p>
+            <div class="exsec">Data:</div>
             <pre class="line-labels">
 
 
@@ -1577,7 +1579,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 &lt;Alice&gt; foaf:name "Alice Malsenior Walker" .
 </pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -1598,8 +1600,9 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </ul>
 
             <p class="leadup">
-              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that's not used in the triple expression <span class="lineno schema">te1</span>:<br/>
+              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that's not used in the triple expression <span class="lineno schema">te1</span>.
             </p>
+            <div class="exsec">Data:</div>
             <pre class="line-labels">
 
 
@@ -1618,7 +1621,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 &lt;Alice&gt; foaf:name "Alice Malsenior Walker" .
 </pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
               <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)</span>
@@ -1695,7 +1698,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 }
           -->
           <div class="example">
-              Schema:<br/>
+              <div class="exsec">Schema:</div>
               <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -1731,8 +1734,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         "values": [ "http://schema.example/testingRole" ] } } }
   } }</pre>
             </div>
-            <div style="clear:both;"></div>
-            Data:<br/>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels">
 
 <span class="lineno data">t1</span>
@@ -1751,7 +1753,7 @@ inst:Tester2 ex:role ex:testingRole .</pre>
   "http://inst.example/Tester2": "http://schema.example/TesterShape",
   "http://inst.example/Testgrammer23": "http://schema.example/ProgrammerShape" }</pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/IssueShape</span>:</div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1</span>]</li>
@@ -1795,7 +1797,7 @@ PREFIX ex: <http://schema.example/>
 }
           -->
           <div class="example">
-              Schema:<br/>
+              <div class="exsec">Schema:</div>
               <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -1815,8 +1817,7 @@ PREFIX ex: <http://schema.example/>
       { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" }
     } } } }</pre>
             </div>
-            <div style="clear:both;"></div>
-            Data:<br/>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
@@ -1837,7 +1838,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
   "http://inst.example/Issue2": "http://schema.example/IssueShape",
   "http://inst.example/Issue3": "http://schema.example/IssueShape" }</pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/IssueShape</span>:</div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3</span>]</li>
@@ -1899,7 +1900,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
               }
           -->
           <div class="example">
-              Schema:<br/>
+              <div class="exsec">Schema:</div>
               <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -1932,8 +1933,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
               "values": [ "\"b\"", "\"c\"", "\"d\"" ] } }
         ] } } } }</pre>
             </div>
-            <div style="clear:both;"></div>
-            Data:<br/>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels">
 
 
@@ -1955,13 +1955,13 @@ PREFIX ex: &lt;http://a.example/ex#&gt;
             <div class="inline json">
               <pre>{ "http://a.example/s": "http://a.example/S1 }</pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/TestResultShape</span>:</div>
             <p class="leadup followup">If <m><span class="lineno schema">tc1</span></m> consumes as many triples as it can, it consumes three and <m><span class="lineno schema">tc2</span></m> consumes one:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4</span>]</li>
-              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;s&gt;, <span class="lineno schema">S1</span>, G, m)
               <ul>
-                <li>neigh(G, &lt;Alice&gt;) = [<span class="lineno data">t1,t2,t3,t4</span>], matched = [<span class="lineno data">t1,t2,t3,t4</span>], remainder = Ø</li>
+                <li>neigh(G, &lt;s&gt;) = [<span class="lineno data">t1,t2,t3,t4</span>], matched = [<span class="lineno data">t1,t2,t3,t4</span>], remainder = Ø</li>
                 <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1,t2,t3,t4</span>], <span class="lineno schema">te1</span>, m)
                 <ul style="border-left:solid thin brown">
                   <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t1,t2,t3</span>], <span class="lineno schema">tc1</span>, m)
@@ -2064,7 +2064,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 }
           -->
           <div class="example">
-              Schema:<br/>
+              <div class="exsec">Schema:</div>
               <pre class="line-labels"> 
 
 <span class="lineno schema">S1</span>
@@ -2126,8 +2126,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         "values": [ "http://schema.example/ProgrammingDepartment" ] } } }
   } }</pre>
             </div>
-            <div style="clear:both;"></div>
-            Data:<br/>
+            <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
 
 
@@ -2162,7 +2161,7 @@ inst:Testgrammer23
   "http://inst.example/Tester2": "http://schema.example/TesterShape",
   "http://inst.example/Testgrammer23": "http://schema.example/ProgrammerShape" }</pre>
             </div>
-            <div style="clear:both;"></div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/IssueShape</span>:</div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4,t5</span>]</li>
