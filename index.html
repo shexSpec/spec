@@ -655,6 +655,7 @@ _:User2
         <p>
           Numeric facet constraints apply to the numeric value of RDF Literals with datatypes listed in <a href="https://www.w3.org/TR/sparql11-query/#operandDataTypes">SPARQL 1.1 Operand Data Types</a>[[!sparql11-query]].
           Numeric constraints on non-numeric values fail.
+          <code>totaldigits</code> and <code>fractiondigits</code> constraints on values not derived from <code>xsd:decimal</code> fail.
         </p>
         <p>
           Let <m>num</m> be the numeric value of <m>n</m>.<br/>
@@ -666,8 +667,8 @@ _:User2
           <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, <m>v &lt; num</m>,</li>
           <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, <m>v =&gt; num</m>,</li>
           <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, <m>v &gt; num</m>,</li>
-	        <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the lexical form of <m>n</m>,</li>
-          <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <m>v</m> equals the number of digits to the right of the decimal place in the lexical form of <m>n</m>.</li>
+	        <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>,</li>
+          <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <m>v</m> is less than or equals the number of digits to the right of the decimal place in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>, ignoring trailing zeros.</li>
         </ul>
         <div class="example">
           <div class="example-title marker"><span>String Facets example 1</span></div>
@@ -687,11 +688,6 @@ _:User2
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
             </table>
           </div>
-        <p class="issue">
-          Is it more useful to measure digits on the <a href="https://www.w3.org/TR/xmlschema-2/#canonical-lexical-representation">canonical lexical representation</a> of <m>n</m>?
-          That would entail marginally more implementation and testing burden.
-          This affects leading/trailing zeros as well as xsd:decimals, e.g. "0e0"^^xsd:decimal.
-        </p>
       </section>
 
       <section id="values">
