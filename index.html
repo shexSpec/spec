@@ -829,7 +829,7 @@ _:User2
         The function <code>dereference(<span class="param">include</span>)</code> returns the shape's <span class="param">tripleExpr</span>.
       </p>
 
-      <div class="Example">
+      <div class="example">
         <p>
           Following is a valid inclusion:
         </p>
@@ -847,13 +847,13 @@ _:User2
         <p>
           This inclusion is invalid because there is no corresponding shape expression:
         </p>
-        <div class="json"><pre>{ "type":"Schema", "shapes": {
+        <div class="json error"><pre>{ "type":"Schema", "shapes": {
     "http://schema.example/S1": {
       "type":"Shape", "expression": {
         "type": "Inclusion", "include": "http://schema.example/MissingShape"
 } } } }</pre></div>
     <p>This inclusion is invalid because the referenced shape expression is not a simple shape with an <span class="param">expression</span>:</p>
-    <div class="json"><pre>{ "type":"Schema", "shapes": {
+    <div class="json error"><pre>{ "type":"Schema", "shapes": {
     "http://schema.example/CustomerShape": {
       "type":"ShapeAnd", "shapeExprs": [ <span class="comment">...</span> ]
     },
@@ -865,20 +865,103 @@ _:User2
 ] } } } }</pre></div>
       </div>
       <p id="negation-constraint">
-        <span class="label">negation constraint</span>: .
+        <span class="label">negation constraint</span>: A schema MUST NOT contain any shape expression <m>S</m> with negated references, either directly or transitively, to <m>S</m>.
+        A reference to <m>S</m> is negated if it containes an odd number of nested negations.
+        A nested negation is any of:
       </p>
-
-      <div class="issue">
-        <p>
-          This is <a href="orig.html#stratified-negation">Stratified negation</a>, a conservative protection from negation conundrums like:
-        </p>
-        <pre class="shex">&lt;S1&gt; { :p1 . } AND NOT @&lt;S2&gt;
-&lt;S2&gt; { :p1 . } AND NOT @&lt;S1&gt;</pre>
-        <p>
-          A more aggressive strategy would permit additional expressivity e.g.
-        </p>
-        <pre>&lt;S1&gt; NOT (NOT @&lt;S1&gt;)</pre>
-      </div>
+      <ul>
+        <li>
+          <p>a <span class="param">shapeExpr</span> in a <span class="jobjref"><a href="#dfn-ShapeNot">ShapeNot</a></span></p>
+          <div class="example">
+            <p>
+              This negated self-reference violates the negation constraint:
+            </p>
+            <div class="json error"><pre>{ "type": "Schema", "shapes": {
+    "http://schema.example/#S":
+    <span class="lookit">{ "type": "ShapeNot"></span>, "shapeExpr":
+      { "type": "ShapeRef",
+        "reference": "http://schema.example/#S"
+} <span class="lookit">}</span> } }</pre></div>
+            <p>
+              This negated, indirect self-reference violates the negation constraint:
+            </p>
+            <div class="json error"><pre>{ "type": "Schema", "shapes": {
+    "http://schema.example/#S":
+    { "type": "ShapeNot">, "shapeExpr":
+      { "type": "ShapeRef", "reference": "http://schema.example/#T" } },
+    "http://schema.example/#T":
+    { "type": "ShapeRef", "reference": "http://schema.example/#S" }
+} }</pre></div>
+            <p>
+              This doubly-negated self-reference does not violate the negation constraint:
+            </p>
+            <div class="json"><pre>{ "type": "Schema", "shapes": {
+    "http://schema.example/#S": {
+      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+        "type": "ShapeOr", "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri" },
+          { "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+              "type": "ShapeRef", "reference": "http://schema.example/#S" } }
+] } } } }</pre></div>
+          </div>
+        </li>
+        <li>
+          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">negated</span> = <code>true</code>
+          <div class="example">
+            <p>
+              This self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> violates the negation constraint:
+            </p>
+            <div class="json error"><pre>{ "type": "Schema", "shapes":
+  { "http://schema.example/#S":
+    { "type": "Shape", "expression":
+      { "type": "TripleConstraint",  <span class="lookit">"negated": true</span>,
+        "predicate": "http://schema.example/#p", "valueExpr":
+        { "type": "ShapeRef", "reference": "http://schema.example/#S"
+          } } } } }</pre></div>
+            <p>
+              This negated self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> does not violate the negation constraint:
+            </p>
+            <div class="json"><pre>{ "type": "Schema",
+  "shapes": {
+    "http://schema.example/#S": {
+      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+        "type": "Shape", "expression": {
+          "type": "TripleConstraint", <span class="lookit">"negated": true</span>,
+          "predicate": "http://schema.example/#p", "valueExpr": {
+            "type": "ShapeRef", "reference": "http://schema.example/#S"
+} } } } } }</pre></div>
+          </div>
+        </li>
+        <li>
+          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">predicate</span> <m>p</m> inside a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with <span class="param">extra</span> <m>p</m>
+          <div class="example">
+            <p>
+              This self-reference on a predicate designated as <span class="param">extra</span> violates the negation constraint:
+            </p>
+            <div class="json error"><pre>{ "type": "Schema", "shapes":
+  { "http://schema.example/#S":
+    { "type": "Shape",
+      "extra": [ <span class="lookit">"http://schema.example/#p"</span> ], "expression":
+      { "type": "TripleConstraint", "predicate": <span class="lookit">"http://schema.example/#p"</span>,
+        "valueExpr": { "type": "ShapeRef", "reference": "http://schema.example/#S" }
+} } } }</pre></div>
+            <p>
+              The same shape with a negated self-reference still violates the negation constraint because the reference occurs with a <span class="jobjref"><a href="#dfn-ShapeNot">ShapeNot</a></span>:
+            </p>
+            <div class="json error"><pre>{ "type": "Schema", "shapes": {
+    "http://schema.example/#S": {
+      "type": "Shape",
+      "extra": [ "http://schema.example/#p" ],
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/#p",
+        "valueExpr": {
+          "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+            "type": "ShapeRef", "reference": "http://schema.example/#S"
+} } } } } }</pre></div>
+          </div>
+        </li>
+      </ul>
 
       </section>
       
@@ -1039,10 +1122,16 @@ _:User2
           </div>
         </li>
         <li>
-          <p id="matches-TripleConstraint"><m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and:</p>
+          <p id="matches-TripleConstraint"><m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and either:</p>
+          <ul>
+            <li><m>expr</m>'s <span class="param">negated</span> is false and:
           <ul>
             <li>
-              <m>T</m> is a set of one triple <m>t</m> and <m>t</m>'s predicate equals <m>expr</m>'s predicate.<br/>
+              <m>T</m> is a set of one triple.<br/>
+              Let <span class="label">t</span> be the soul triple in <m>T</m>.
+            </li>
+            <li>
+              <m>t</m>'s <span class="param">predicate</span> equals <m>expr</m>'s predicate.<br/>
               Let <span class="label">value</span> be <m>t</m>'s subject if <span class="param">inverse</span> is true, else <m>t</m>'s object.
             </li>
             <li>either
@@ -1120,7 +1209,92 @@ _:User2
                 -->
               </li>
             </ul></li>
-          </ul>
+          </ul></li>
+            <li><m>expr</m>'s <span class="param">negated</span> is true and:
+          <ul>
+            <li>
+              <m>T</m> contains no triples.
+            </li>
+            <li>
+              There is no triple <m>t</m> in <code class="function">neigh(<span class="math">G</span>, <span class="math">n</span>)</code> such that:<br/>
+              <m>t</m>'s <span class="param">predicate</span> equals <m>expr</m>'s predicate.<br/>
+              Let <span class="label">value</span> be <m>t</m>'s subject if <span class="param">inverse</span> is true, else <m>t</m>'s object.
+            </li>
+            <li>either
+            <ul>
+              <li>
+                <p><m>expr</m> has no <span class="param">valueExpr</span></p>
+                <div class="example">
+                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "TripleExpression",
+  "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
+              m)</div>
+                  </m>
+                  <div style="clear:both;">holds if
+                  <ul class="tight">
+                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
+                  </ul></div>
+                </div>
+              </li>
+              <li>
+                <p>or <code class="function">satisfies(<m>value</m>, <span class="param">valueExpr</span>, <m>G</m>, <m>m</m>)</code>.</p>
+                <div class="example">
+                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "TripleConstraint", "inverse": true,
+  "predicate": "http://purl.org/dc/elements/1.1/author",
+  "valueExpr": { "type": "ShapeRef",
+    "reference": "http://schema.example/IssueShape" } }</pre></div>,<br/>
+              m)</div>
+                  </m>
+                  <div style="clear:both;">holds if
+                  <ul class="tight">
+                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
+                    <li><m>t</m> has a subject <m>n2</m></li>
+                    <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
+                    <li><m class="function">satisfies(n2, se2, G, m)</m></li>
+                  </ul></div>
+                </div>
+                <!--
+                <p class="issue">[Editorial] The following is a more verbose description of the above. Which is preferred?</p>
+                <div class="example">
+                  For the schema<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "Schema", "shapes": {
+  "http://schema.example/UserShape": {
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "inverse": true,
+      "predicate": "http://purl.org/dc/elements/1.1/author",
+      "valueExpr": {
+        "type": "ShapeAnd", "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri", "pattern": "http:.*" },
+          { "type": "ShapeRef",
+            "reference": "http://schema.example/IssueShape" }
+        ] } } },
+  "http://schema.example/IssueShape": { "type": "Shape" } } }</pre>
+                  </div><div style="clear:both;"></div>
+                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="inline json">
+                    <pre>{ "type": "TripleConstraint", "inverse": true,
+  "predicate": "http://purl.org/dc/elements/1.1/author",
+  "valueExpr": { … } }</pre></div>,<br/>
+              m)</div>
+                  </m>
+                  <div style="clear:both;">holds if
+                  <ul class="tight">
+                    <li><m>T</m> has exactly one triple <m>t</m>.</li>
+                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
+                    <li><m>t</m> has a subject <m>n2</m></li>
+                    <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
+                    <li><m class="function">satisfies(n2, se2, G, m)</m></li>
+                  </ul></div>
+                </div>
+                -->
+              </li>
+            </ul></li>
+          </ul></li>
+        </ul>
         </li>
         <li>
           <p id="matches-Inclusion"><m>expr</m> is an <span class="jobjref"><a href="#dfn-Inclusion" class="obj">Inclusion</a></span> and <code class="function">satisfies(<m>value</m>, dereference(<span class="param">include</span>), <m>G</m>, <m>m</m>)</code>.</p>

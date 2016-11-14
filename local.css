@@ -345,5 +345,14 @@ div.shexjTable th { text-align: right; }
 }
 
 .exsec, .validation span:nth-child(1) {
-    font-weight: bold
+    font-weight: bold;
+}
+
+.lookit {
+    font-weight: bold;
+}
+
+.json.error {
+    background-color: #fff7f7;
+    border: medium solid #efe7e7;
 }
