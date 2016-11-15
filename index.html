@@ -1045,10 +1045,10 @@ _:User2
     { "type": "ShapeRef", "reference": "http://schema.example/#S" }
 } }</pre>
                 <pre class="shexc">                                                                        
-    :S NOT @:T
+    ex:S NOT @ex:T
 
 
-    :T @:S
+    ex:T @ex:S
 
                 </pre>
               </div>
@@ -1065,7 +1065,7 @@ _:User2
               "type": "ShapeRef", "reference": "http://schema.example/#S" } }
 ] } } } }</pre>
                 <pre class="shexc">                                                                             
-    :S NOT (IRI OR NOT @:S)
+    ex:S NOT (IRI OR NOT @ex:S)
 
 
 
@@ -1090,8 +1090,8 @@ _:User2
         { "type": "ShapeRef", "reference": "http://schema.example/#S"
           } } } } }</pre>
               <pre class="shexc">                                                                     
-  :S { 
-    ! :p @:S
+  ex:S {
+    ! ex:p @ex:S
   }
 
 
@@ -1112,8 +1112,8 @@ _:User2
 } } } } } }</pre>
               <pre class="shexc">                                                                       
   
-    :S NOT {
-      :p @:S
+    ex:S NOT {
+      ex:p @ex:S
     }
 
 
@@ -1139,8 +1139,8 @@ _:User2
             "reference": "http://schema.example/#S" }
 } } } }</pre>
               <pre class="shexc">                                                            
-  :S EXTRA :p {
-    :p @:S
+  ex:S EXTRA ex:p {
+    ex:p @ex:S
   }
 
 
@@ -1164,8 +1164,8 @@ _:User2
             "type": "ShapeRef", "reference": "http://schema.example/#S"
 } } } } } }</pre>
               <pre class="shexc">                                                                       
-    :S EXTRA :p {
-      :p NOT @:S
+    ex:S EXTRA ex:p {
+      ex:p NOT @ex:S
     }
 
 
@@ -1580,7 +1580,8 @@ _:User2
           </p>
           <div class="example">
             <div class="example-title marker"><span>Semantic Actions example 1</span></div>
-            <pre class="schema">{ "type": "Schema", "shapes":{
+            <div class="repchoice">
+              <pre class="json">{ "type": "Schema", "shapes":{
     "http://a.example/S1": {
       "type": "Shape", "expression": {
         "type": "TripleConstraint", "predicate": "http://a.example/p1",
@@ -1590,6 +1591,17 @@ _:User2
           { "type": "SemAct", "code": " print(o) ",
             "name": "http://shex.io/extensions/Test/" } ] } } } }
 </pre>
+              <pre class="shexc">                                                                       
+    ex:S1 {
+      ex:p1 %Test:{ print(s) %} %Test:{ print(o) %}
+    }
+
+
+
+
+
+              </pre>
+            </div>
             <pre class="data">&lt;http://a.example/n1&gt; &lt;http://a.example/p1&gt; &lt;http://a.example/o1&gt; .
 &lt;http://a.example/n2&gt; &lt;http://a.example/p1&gt; "a", "b" .
 &lt;http://a.example/n3&gt; &lt;http://a.example/p2&gt; &lt;http://a.example/o2&gt; .</pre>
@@ -1622,10 +1634,12 @@ _:User2
           </p>
           <div class="example">
             <div class="example-title marker"><span>Annotations example 1</span></div>
-            <pre class="schema">{ "type": "Schema", "shapes":{
+            <div class="repchoice">
+              <pre class="json">{ "type": "Schema", "shapes":{
     "http://schema.example/IssueShape": {
       "type": "Shape", "expression": {
-        "type": "TripleConstraint", "predicate": "http://schema.example/status",
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/status",
         "annotations": [
            { "type": "Annotation",
              "predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
@@ -1633,6 +1647,18 @@ _:User2
            { "type": "Annotation",
              "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
              "object": "\"softare issue\"" } ] } } }</pre>
+              <pre class="shexc">                                                                         
+    ex:IssueShape {
+      ex:status .
+          // rdfs:comment "\"Represents reported software issues.\""
+          // rdfs:label "\"softare issue\""
+    }
+
+
+
+
+              </pre>
+            </div>
           </div>
         </section>
       </section>
