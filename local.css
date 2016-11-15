@@ -88,7 +88,7 @@
       }
 
 
-      .Example{
+      .example{
       margin-left: 0;
       margin-right: 2ex;
       margin-top: 0.1ex;
@@ -137,7 +137,7 @@
       }
       .shexj th { vertical-align: top; }
 
-      p .json, li .json {
+      p .json, li > .json {
       border: thin solid #E0F7E0;
       page-break-inside: avoid;
       background-color: #F0FFF0;
@@ -145,7 +145,7 @@
       color: black;
       }
 
-      div.json {
+      div.json, div.repchoice {
         margin-left: 0;
         margin-right: 2ex;
         margin-top: 0.1ex;
@@ -179,7 +179,7 @@
       border: thin solid #E8E8E0;
       }
 
-      .abstrsynt{
+      .abstrsynt {
       margin-left: 0;
       margin-right: 2ex;
       margin-top: 0.1ex;
@@ -191,13 +191,13 @@
       line-height: 1.5;
       }
      
-      .math{
+      .math {
       font-style: normal;
       font-family: sans-serif;
-      color: #003333;
+      color: #004444;
       }
 
-      .as{
+      .as {
       font-style: normal;
       font-family: sans-serif;
       color: #000066
@@ -261,7 +261,7 @@ div.shexjTable th { text-align: right; }
 .grammarTable tr.obj td:nth-child(2) { text-align: right; }
 .grammarTable tr.obj td:nth-child(3) { text-align: right; }
 
-.comment { color: #d30; }
+.comment { color: #e20; font-style: italic; }
 
 .grammarTable .grammarParagraph /* needs .grammarTable specificity for at least FF and chromium */
     { border-left:thin solid white; border-right:thin solid white; }
@@ -352,7 +352,26 @@ div.shexjTable th { text-align: right; }
     font-weight: bold;
 }
 
-.json.error {
+.repchoice.error {
     background-color: #fff7f7;
     border: medium solid #efe7e7;
 }
+
+.repchosen::before {
+    text-align: right;
+    display: block;
+    font-size: 67%;
+    margin-top: -1ex;
+    margin-bottom: -2ex;
+    margin-right: -.8em;
+}
+
+.repchosen.json::before {
+    content: "𝙅/c";
+}
+
+.repchosen.shexc::before {
+    content: "j/𝗖";
+}
+
+.rephidden { display: none; }
