@@ -38,16 +38,16 @@
   
   <body>
     <section id="abstract">
-			<p>
-				The Shape Expressions (ShEx) language describes RDF nodes and graph structures.
+      <p>
+        The Shape Expressions (ShEx) language describes RDF nodes and graph structures.
         A <m>node constraint</m> describes an RDF node (IRI, blank node or literal) and a <m>shape</m> describes the triples touching nodes in RDF graphs.
-				These descriptions identify predicates and their associated cardinalities and datatypes.
+        These descriptions identify predicates and their associated cardinalities and datatypes.
         ShEx shapes can be used to communicate data structures associated with some process or interface, generate or validate data, or drive user interfaces.
-			</p>
-			<p>
-				This document defines the ShEx language.
+      </p>
+      <p>
+        This document defines the ShEx language.
         See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of ShEx.
-			</p>  	
+      </p>
     </section>
 
     <section id="status">
@@ -63,16 +63,16 @@
     <section id="introduction">
       <h2>Introduction</h2>
       <p>
-				The Shape Expressions (ShEx) language provides a structural schema for RDF data.
+        The Shape Expressions (ShEx) language provides a structural schema for RDF data.
         This can be used to document APIs or datasets, aid in development of API-conformant messages, minimize defensive programming, guide user interfaces, or anything else that involves a machine-readable description of data organization and typing requirements.
       </p>
-			<p>
-				ShEx describes RDF graph structures as sets of potentially connected <code>shapes</code>.
+      <p>
+        ShEx describes RDF graph structures as sets of potentially connected <code>shapes</code>.
         These constrain the triples involving nodes in an RDF graph.
         <code>Node constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or Literal), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of Literals.
         Additionally, they constrain lexical forms of Literals, IRIs and labeled blank nodes.
         Shape Expressions schemas share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
-			</p>
+      </p>
     </section>
 
     <section id="notation">
@@ -703,7 +703,7 @@ _:User2
           <li><a href="#minexclusive">XML Schema Minexclusive Constraints</a></li>
           <li><a href="#maxinclusive">XML Schema Maxinclusive Constraints</a></li>
           <li><a href="#maxexclusive">XML Schema Maxexclusive Constraints</a></li>
-	        <li><a href="#totaldigits">XML Schema Totaldigits Constraints</a></li>
+          <li><a href="#totaldigits">XML Schema Totaldigits Constraints</a></li>
           <li><a href="#fractiondigits">XML Schema Fractiondigits Constraints</a></li>
         </ul -->
         <p>
@@ -721,7 +721,7 @@ _:User2
           <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, <m>v &lt; num</m>,</li>
           <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, <m>v =&gt; num</m>,</li>
           <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, <m>v &gt; num</m>,</li>
-	        <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>,</li>
+          <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>,</li>
           <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <m>v</m> is less than or equals the number of digits to the right of the decimal place in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>, ignoring trailing zeros.</li>
         </ul>
         <div class="example">
@@ -1684,15 +1684,20 @@ _:User2
               <pre class="line-labels">
 
 
-
 <span class="lineno schema">S1</span>
+
 </pre>
-            <div class="inline json">
-              <pre>{ "type": "Schema", "shapes":
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "Schema", "shapes":
   { "http://schema.example/IntConstraint":
     { "type": "NodeConstraint",
       "datatype": "http://www.w3.org/2001/XMLSchema#integer"
     } } }</pre>
+              <pre class="shexc">                                                            
+
+  ex:IntConstraint
+    xsd:integer
+              </pre>
             </div>
             <div style="clear:both;"></div>
 <!--             Data:<br/>
@@ -1743,13 +1748,19 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
 <span class="lineno schema">S1</span>
 <span class="lineno schema">tc1</span>
 </pre>
-            <div class="inline json">
-              <pre>{ "type": "Schema", "shapes": {
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "Schema", "shapes": {
   "http://schema.example/UserShape":
   { "type": "Shape", "expression":
     { "type": "TripleConstraint",
       "predicate": "http://schema.example/shoeSize"
       } } } }</pre>
+              <pre class="shexc">                                                   
+
+  ex:UserShape {
+    ex:shoeSize .
+  }
+              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
@@ -1803,8 +1814,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 
 <span class="lineno schema">nc1</span>
 </pre>
-            <div class="inline json">
-              <pre>{ "type": "Schema", "shapes": {
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "Schema", "shapes": {
   "http://schema.example/UserShape":
   { "type": "Shape", "expression":
     { "type": "TripleConstraint",
@@ -1814,6 +1825,16 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
       { "type": "NodeConstraint",
         "values": ["http://schema.example/Teacher"]
       } } } } }</pre>
+              <pre class="shexc">                                                                     
+
+  ex:UserShape EXTRA a {
+    a
+
+
+
+      [ex:Teacher]
+  }
+              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
@@ -1888,8 +1909,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 
 <span class="lineno schema">nc3</span>
 </pre>
-            <div class="inline json">
-              <pre>{ "type": "Schema", "shapes": {
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "Schema", "shapes": {
   "http://schema.example/UserShape":
   { "type": "Shape", "expression":
      {"type": "SomeOf", "expressions": [
@@ -1906,7 +1927,30 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               "predicate": "http://xmlns.com/foaf/0.1/familyName",
               "valueExpr":
                 { "type": "NodeConstraint", "nodeKind": "literal" } }
-          ] } ] } } } }
+        ] }
+     ] }
+ } } }
+</pre>
+              <pre class="shexc">                                                                      
+  ex:UserShape
+    {
+     (              <span class="comment"># extra ()s to clarify alignment with ShExJ</span>
+      foaf:name
+
+
+              LITERAL |
+      (             <span class="comment"># extra ()s to clarify alignment with ShExJ</span>
+       foaf:givenName
+
+
+               LITERAL+ ;
+       foaf:familyName
+
+
+               LITERAL
+      )
+     )
+    }
 </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
@@ -2698,6 +2742,8 @@ inst:Testgrammer23
       <h2>Parsing ShEx Compact syntax (ShExC)</h2>
 
       <div class="example">
+          <div class="example-title marker"><span>Values Constraint example 2</span></div>
+          <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
   <p>
     Following is a ShEx schema written in ShExC with line numbers added at the left for reference.
   </p>
@@ -2753,7 +2799,7 @@ inst:Testgrammer23
   </p>
 
   <p>
-    Then, the schema here above defines three shape labels: <span class="pre">&lt;IssueShape&gt;, &lt;UserShape&gt;, &lt;EmployeeShape&gt</span>.
+    Then, the schema here above defines three shape labels: <span class="pre">&lt;IssueShape&gt;, &lt;UserShape&gt;, &lt;EmployeeShape&gt;</span>.
   </p>
   <p>
     The shape expression that defines the shape label <span class="pre">&lt;IssueShape&gt;</span> starts on line 1 after the shape label, and ends with the curly bracket on line 13.
@@ -2782,22 +2828,17 @@ inst:Testgrammer23
 <pre>
 1     &lt;IssueShape&gt; CLOSED EXTRA rdf:type
 2     {                           
-3         rdf:type [ex:Issue];                            # the property is rdf:type, 
-                                                          # the value expression is a node constraint 
-                                                          #    that is a singleton set containing the IRI ex:Issue
+3         a [ex:Issue];                              <span class="comment"># rdf:type of ex:Issue</span>
+4         ex:state [ex:unassigned ex:assigned];      <span class="comment"># ex:state of ex:unassigned</span>
+                                                     <span class="comment">#          or ex:assigned</span>
+5
+6         ex:reportedBy @&lt;UserShape&gt;;                <span class="comment"># <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> to &lt;UserShape&gt;</span>
 
-4         ex:state [ex:unassigned ex:assigned];           # the property is ex:state
-5                                                         # the value expression is a set with two IRI,
-                                                          #    ex:unassigned and ex:assigned
-
-6         ex:reportedBy @&lt;UserShape&gt;;                     # the value expression is a ShapeExprRef 
-
-7         ex:reportedOn xsd:dateTime;                     # the value expression is a the set of literal values 
-                                                          #    that have XSD type xsd:dateTime
-8         (                                   
-9           ex:reproducedBy @&lt;EmployeeShape&gt;;  
-10          ex:reproducedOn xsd:dateTime OR xsd:date      # the value expression is DisjunctiveValueExpr,
-                                                          #    whose sub-expressions are sets of literal values
+7         ex:reportedOn xsd:dateTime;                <span class="comment"># literal with datatype xsd:dateTime</span>
+8         (
+9           ex:reproducedBy @&lt;EmployeeShape&gt;;        <span class="comment"># <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> to &lt;EmployeeShape&gt;</span>
+10          ex:reproducedOn xsd:dateTime OR xsd:date # literal with datatype xsd:dateTime
+                                                     <span class="comment">#                    or xsd:date</span>
 11        )?;
 12        ex:related @&lt;IssueShape&gt;*            
 13    }

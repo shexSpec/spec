@@ -151,7 +151,7 @@
         margin-top: 0.1ex;
         margin-bottom: 0.1ex;
         border: medium solid #E0F7E0;
-        padding: .5ex 2ex .5ex 2ex;
+        /* padding: .5ex 2ex .5ex 2ex; */ /* @@ disabled to align with line-lables */
         page-break-inside: avoid;
         background-color: #F0FFF0;
         line-height: 1.5;
@@ -352,6 +352,11 @@ div.shexjTable th { text-align: right; }
     font-weight: bold;
 }
 
+.repchoice pre {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .repchoice.error {
     background-color: #fff7f7;
     border: medium solid #efe7e7;
@@ -363,7 +368,12 @@ div.shexjTable th { text-align: right; }
     font-size: 67%;
     margin-top: -1ex;
     margin-bottom: -2ex;
-    margin-right: -.8em;
+    margin-right: -.5em; /* @@ would like it to stick out -1em but gives horiz scrollbars */
+}
+
+.inline .repchosen::before {
+    margin-top: -.2ex;
+    margin-right: 0;
 }
 
 .repchosen.json::before {
