@@ -912,7 +912,7 @@ _:User2
           This is used to indicate that a specific value is required, e.g. that an ex:state must equal &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
         </p>
       </section>
-
+    </section>
       <section id="shapes-and-TEs">
         <h3>Shapes and Triple Expressions</h3>
       
@@ -935,254 +935,6 @@ _:User2
   <tr class="obj"><th id="dfn-Inclusion" class="obj">Inclusion</th><td>{</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
         </table>
       </div>
-      <p id="inclusion-constraint">
-        <span class="label">inclusion constraint</span>: An <span class="jobjref"><a href="#dfn-Inclusion">Inclusion</a></span> object's <span class="param">include</span> property MUST appear in the schema's <span class="param">shapes</span> map and the corresponding triple expression MUST be a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with a <span class="param">tripleExpr</span>.
-        The function <code>dereference(<span class="param">include</span>)</code> returns the shape's <span class="param">tripleExpr</span>.
-      </p>
-
-      <div class="example">
-        <p>
-          Following is a valid inclusion:
-        </p>
-        <div class="repchoice">
-          <pre class="json">{ "type":"Schema", "shapes": {
-    "http://schema.example/PersonShape": {
-      "type":"Shape", "expression": {
-        "type": "TripleConstraint",
-        "predicate": "http://xmlns.com/foaf/0.1/name"
-      } },
-    "http://schema.example/EmployeeShape": {
-      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
-        { "type": "Inclusion", "include": "http://schema.example/PersonShape" }
-        { "type": "TripleConstraint",
-          "predicate": "http://schema.example/employeeNumber" }
-] } } } }</pre>
-          <pre class="shexc">                                                                               
-    ex:PersonShape {
-      foaf:name
-    }
-
-    ex:EmployeeShape {
-      &amp;ex:PersonShape ;
-      ex:employeeNumber .
-    }
-
-
-          </pre>
-        </div>
-        <p>
-          This inclusion is invalid because there is no corresponding shape expression:
-        </p>
-        <div class="repchoice error">
-          <pre class="json">{ "type":"Schema", "shapes": {
-    "http://schema.example/S1": {
-      "type":"Shape", "expression": {
-        "type": "Inclusion", "include": "http://schema.example/MissingShape"
-} } } }</pre>
-          <pre class="shexc">                                                                            
-    S1 {
-      &amp;MissingShape
-    }
-          </pre>
-        </div>
-        <p>This inclusion is invalid because the referenced shape expression is not a simple shape with an <span class="param">expression</span>:</p>
-        <div class="repchoice error">
-          <pre class="json">{ "type":"Schema", "shapes": {
-    "http://schema.example/CustomerShape": {
-      "type":"ShapeAnd", "shapeExprs": [ <span class="comment">…</span> ]
-    },
-    "http://schema.example/PreferredCustomerShape": {
-      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
-        { "type": "Inclusion",
-          "include": "http://schema.example/CustomerShape" }
-        { "type": "TripleConstraint",
-          "predicate": "http://schema.example/discount" }
-] } } } }</pre>
-          <pre class="shexc">                                                                        
-    ex:CustomerShape {
-      <span class="comment">…</span>; <span class="comment">…</span>
-    }
-    ex:PreferredCustomerShape {
-      &amp;ex:CustomerShape ;
-      ex:discount .
-    }
-
-
-          </pre>
-        </div>
-      </div>
-      <p id="negation-constraint">
-        <span class="label">negation constraint</span>: A schema MUST NOT contain any shape expression <m>S</m> with negated references, either directly or transitively, to <m>S</m>.
-        A reference to <m>S</m> is negated if it containes an odd number of nested negations.
-        A nested negation is any of:
-      </p>
-      <ul>
-        <li>
-          <p>a <span class="param">shapeExpr</span> in a <span class="jobjref"><a href="#dfn-ShapeNot">ShapeNot</a></span></p>
-          <div class="example">
-            <p>
-              This negated self-reference violates the negation constraint:
-            </p>
-            <div class="repchoice error">
-              <pre class="json">{ "type": "Schema", "shapes": {
-    "http://schema.example/#S":
-    <span class="lookit">{ "type": "ShapeNot"></span>, "shapeExpr":
-      { "type": "ShapeRef",
-        "reference": "http://schema.example/#S"
-} <span class="lookit">}</span> } }</pre>
-              <pre class="shexc">                                               
-    ex:S <span class="lookit">NOT</span> @ex:S
-
-
-
-                </pre>
-              </div>
-              <p>
-                This negated, indirect self-reference violates the negation constraint:
-              </p>
-              <div class="repchoice error">
-                <pre class="json">{ "type": "Schema", "shapes": {
-    "http://schema.example/#S":
-    { "type": "ShapeNot">, "shapeExpr":
-      { "type": "ShapeRef", "reference": "http://schema.example/#T" } },
-    "http://schema.example/#T":
-    { "type": "ShapeRef", "reference": "http://schema.example/#S" }
-} }</pre>
-                <pre class="shexc">                                                                        
-    ex:S NOT @ex:T
-
-
-    ex:T @ex:S
-
-                </pre>
-              </div>
-              <p>
-                This doubly-negated self-reference does not violate the negation constraint:
-              </p>
-              <div class="repchoice">
-                <pre class="json">{ "type": "Schema", "shapes": {
-    "http://schema.example/#S": {
-      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-        "type": "ShapeOr", "shapeExprs": [
-          { "type": "NodeConstraint", "nodeKind": "iri" },
-          { "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-              "type": "ShapeRef", "reference": "http://schema.example/#S" } }
-] } } } }</pre>
-                <pre class="shexc">                                                                             
-    ex:S NOT (IRI OR NOT @ex:S)
-
-
-
-
-
-                </pre>
-              </div>
-          </div>
-        </li>
-        <li>
-          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">negated</span> = <code>true</code>
-          <div class="example">
-            <p>
-              This self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> violates the negation constraint:
-            </p>
-            <div class="repchoice error">
-              <pre class="json">{ "type": "Schema", "shapes":
-  { "http://schema.example/#S":
-    { "type": "Shape", "expression":
-      { "type": "TripleConstraint",  <span class="lookit">"negated": true</span>,
-        "predicate": "http://schema.example/#p", "valueExpr":
-        { "type": "ShapeRef", "reference": "http://schema.example/#S"
-          } } } } }</pre>
-              <pre class="shexc">                                                                     
-  ex:S {
-    ! ex:p @ex:S
-  }
-
-
-              </pre>
-            </div>
-            <p>
-              This negated self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> does not violate the negation constraint:
-            </p>
-            <div class="repchoice">
-              <pre class="json">{ "type": "Schema",
-  "shapes": {
-    "http://schema.example/#S": {
-      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-        "type": "Shape", "expression": {
-          "type": "TripleConstraint", <span class="lookit">"negated": true</span>,
-          "predicate": "http://schema.example/#p", "valueExpr": {
-            "type": "ShapeRef", "reference": "http://schema.example/#S"
-} } } } } }</pre>
-              <pre class="shexc">                                                                       
-  
-    ex:S NOT {
-      ex:p @ex:S
-    }
-
-
-
-              </pre>
-            </div>
-          </div>
-        </li>
-        <li>
-          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">predicate</span> <m>p</m> inside a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with <span class="param">extra</span> <m>p</m>
-          <div class="example">
-            <p>
-              This self-reference on a predicate designated as <span class="param">extra</span> violates the negation constraint:
-            </p>
-            <div class="repchoice error">
-              <pre class="json">{ "type": "Schema", "shapes":
-  { "http://schema.example/#S":
-    { "type": "Shape",
-      "extra": [ <span class="lookit">"http://schema.example/#p"</span> ], "expression":
-      { "type": "TripleConstraint",
-        "predicate": <span class="lookit">"http://schema.example/#p"</span>,
-        "valueExpr": { "type": "ShapeRef",
-            "reference": "http://schema.example/#S" }
-} } } }</pre>
-              <pre class="shexc">                                                            
-  ex:S EXTRA ex:p {
-    ex:p @ex:S
-  }
-
-
-
-
-              </pre>
-            </div>
-            <p>
-              The same shape with a negated self-reference still violates the negation constraint because the reference occurs with a <span class="jobjref"><a href="#dfn-ShapeNot">ShapeNot</a></span>:
-            </p>
-            <div class="repchoice error">
-              <pre class="json">{ "type": "Schema", "shapes": {
-    "http://schema.example/#S": {
-      "type": "Shape",
-      "extra": [ "http://schema.example/#p" ],
-      "expression": {
-        "type": "TripleConstraint",
-        "predicate": "http://schema.example/#p",
-        "valueExpr": {
-          "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-            "type": "ShapeRef", "reference": "http://schema.example/#S"
-} } } } } }</pre>
-              <pre class="shexc">                                                                       
-    ex:S EXTRA ex:p {
-      ex:p NOT @ex:S
-    }
-
-
-
-
-
-
-              </pre>
-            </div>
-          </div>
-        </li>
-      </ul>
-
       </section>
       
       <section id="triple-expressions-semantics">
@@ -1517,7 +1269,10 @@ _:User2
         </ul>
         </li>
         <li>
-          <p id="matches-Inclusion"><m>expr</m> is an <span class="jobjref"><a href="#dfn-Inclusion" class="obj">Inclusion</a></span> and <code class="function">satisfies(<m>value</m>, dereference(<span class="param">include</span>), <m>G</m>, <m>m</m>)</code>.</p>
+          <p id="matches-Inclusion">
+            <m>expr</m> is an <span class="jobjref"><a href="#dfn-Inclusion" class="obj">Inclusion</a></span> and <code class="function">satisfies(<m>value</m>, dereference(<span class="param">include</span>), <m>G</m>, <m>m</m>)</code>.<br/>
+            The <code class="function">dereference</code> function is defined in <a href="#inclusion-requirement">Inclusion Requirement</a> below.
+          </p>
           <div class="example">
             For the schema<br/>
             <div class="inline json">
@@ -1551,8 +1306,271 @@ _:User2
         </li>
       </ul>
     </section>
-      
       </section>
+
+    <section id="schema-requirements">
+      <h3>Schema Requirements</h3>
+      <p>
+        The semantics defined above assume two structural requirements beyond those imposed by the grammar of the abstract syntax.
+        These ensure referential integrity and eliminate logical paradoxes such as those that arrise through the use of negation.
+        These are not constraints expressed by the schema but instead those imposed on the schema.
+      </p>
+      
+      <section id="inclusion-requirement">
+        <h4>Inclusion Requirement</h4>
+        <p>An <span class="jobjref"><a href="#dfn-Inclusion">Inclusion</a></span> object's <span class="param">include</span> property MUST appear in the schema's <span class="param">shapes</span> map and the corresponding triple expression MUST be a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with a <span class="param">tripleExpr</span>.
+        The function <code>dereference(<span class="param">include</span>)</code> returns the shape's <span class="param">tripleExpr</span>.
+      </p>
+
+      <div class="example">
+        <p>
+          Following is a valid inclusion:
+        </p>
+        <div class="repchoice">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/PersonShape": {
+      "type":"Shape", "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://xmlns.com/foaf/0.1/name"
+      } },
+    "http://schema.example/EmployeeShape": {
+      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
+        { "type": "Inclusion", "include": "http://schema.example/PersonShape" }
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/employeeNumber" }
+] } } } }</pre>
+          <pre class="shexc">                                                                               
+    ex:PersonShape {
+      foaf:name
+    }
+
+    ex:EmployeeShape {
+      &amp;ex:PersonShape ;
+      ex:employeeNumber .
+    }
+
+
+          </pre>
+        </div>
+        <p>
+          This inclusion is invalid because there is no corresponding shape expression:
+        </p>
+        <div class="repchoice error">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/S1": {
+      "type":"Shape", "expression": {
+        "type": "Inclusion", "include": "http://schema.example/MissingShape"
+} } } }</pre>
+          <pre class="shexc">                                                                            
+    S1 {
+      &amp;MissingShape
+    }
+          </pre>
+        </div>
+        <p>This inclusion is invalid because the referenced shape expression is not a simple shape with an <span class="param">expression</span>:</p>
+        <div class="repchoice error">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/CustomerShape": {
+      "type":"ShapeAnd", "shapeExprs": [ <span class="comment">…</span> ]
+    },
+    "http://schema.example/PreferredCustomerShape": {
+      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
+        { "type": "Inclusion",
+          "include": "http://schema.example/CustomerShape" }
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/discount" }
+] } } } }</pre>
+          <pre class="shexc">                                                                        
+    ex:CustomerShape {
+      <span class="comment">…</span>; <span class="comment">…</span>
+    }
+    ex:PreferredCustomerShape {
+      &amp;ex:CustomerShape ;
+      ex:discount .
+    }
+
+
+          </pre>
+        </div>
+      </div>
+      </section>
+
+      <section id="negation-requirement">
+        <h4>Negation Requirement</h4>
+        <p>
+          A schema MUST NOT contain any shape expression <m>S</m> with negated references, either directly or transitively, to <m>S</m>.
+        A reference to <m>S</m> is negated if it containes an odd number of nested negations.
+        A nested negation is any of:
+      </p>
+      <ul>
+        <li>
+          <p>a <span class="param">shapeExpr</span> in a <span class="jobjref"><a href="#dfn-ShapeNot">ShapeNot</a></span></p>
+          <div class="example">
+            <p>
+              This negated self-reference violates the negation requirement:
+            </p>
+            <div class="repchoice error">
+              <pre class="json">{ "type": "Schema", "shapes": {
+    "http://schema.example/#S":
+    <span class="lookit">{ "type": "ShapeNot"></span>, "shapeExpr":
+      { "type": "ShapeRef",
+        "reference": "http://schema.example/#S"
+} <span class="lookit">}</span> } }</pre>
+              <pre class="shexc">                                               
+    ex:S <span class="lookit">NOT</span> @ex:S
+
+
+
+                </pre>
+              </div>
+              <p>
+                This negated, indirect self-reference violates the negation requirement:
+              </p>
+              <div class="repchoice error">
+                <pre class="json">{ "type": "Schema", "shapes": {
+    "http://schema.example/#S":
+    { "type": "ShapeNot">, "shapeExpr":
+      { "type": "ShapeRef", "reference": "http://schema.example/#T" } },
+    "http://schema.example/#T":
+    { "type": "ShapeRef", "reference": "http://schema.example/#S" }
+} }</pre>
+                <pre class="shexc">                                                                        
+    ex:S NOT @ex:T
+
+
+    ex:T @ex:S
+
+                </pre>
+              </div>
+              <p>
+                This doubly-negated self-reference does not violate the negation requirement:
+              </p>
+              <div class="repchoice">
+                <pre class="json">{ "type": "Schema", "shapes": {
+    "http://schema.example/#S": {
+      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+        "type": "ShapeOr", "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri" },
+          { "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+              "type": "ShapeRef", "reference": "http://schema.example/#S" } }
+] } } } }</pre>
+                <pre class="shexc">                                                                             
+    ex:S NOT (IRI OR NOT @ex:S)
+
+
+
+
+
+                </pre>
+              </div>
+          </div>
+        </li>
+        <li>
+          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">negated</span> = <code>true</code>
+          <div class="example">
+            <p>
+              This self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> violates the negation requirement:
+            </p>
+            <div class="repchoice error">
+              <pre class="json">{ "type": "Schema", "shapes":
+  { "http://schema.example/#S":
+    { "type": "Shape", "expression":
+      { "type": "TripleConstraint",  <span class="lookit">"negated": true</span>,
+        "predicate": "http://schema.example/#p", "valueExpr":
+        { "type": "ShapeRef", "reference": "http://schema.example/#S"
+          } } } } }</pre>
+              <pre class="shexc">                                                                     
+  ex:S {
+    ! ex:p @ex:S
+  }
+
+
+              </pre>
+            </div>
+            <p>
+              This negated self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> does not violate the negation requirement:
+            </p>
+            <div class="repchoice">
+              <pre class="json">{ "type": "Schema",
+  "shapes": {
+    "http://schema.example/#S": {
+      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+        "type": "Shape", "expression": {
+          "type": "TripleConstraint", <span class="lookit">"negated": true</span>,
+          "predicate": "http://schema.example/#p", "valueExpr": {
+            "type": "ShapeRef", "reference": "http://schema.example/#S"
+} } } } } }</pre>
+              <pre class="shexc">                                                                       
+  
+    ex:S NOT {
+      ex:p @ex:S
+    }
+
+
+
+              </pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">predicate</span> <m>p</m> inside a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with <span class="param">extra</span> <m>p</m>
+          <div class="example">
+            <p>
+              This self-reference on a predicate designated as <span class="param">extra</span> violates the negation requirement:
+            </p>
+            <div class="repchoice error">
+              <pre class="json">{ "type": "Schema", "shapes":
+  { "http://schema.example/#S":
+    { "type": "Shape",
+      "extra": [ <span class="lookit">"http://schema.example/#p"</span> ], "expression":
+      { "type": "TripleConstraint",
+        "predicate": <span class="lookit">"http://schema.example/#p"</span>,
+        "valueExpr": { "type": "ShapeRef",
+            "reference": "http://schema.example/#S" }
+} } } }</pre>
+              <pre class="shexc">                                                            
+  ex:S EXTRA ex:p {
+    ex:p @ex:S
+  }
+
+
+
+
+              </pre>
+            </div>
+            <p>
+              The same shape with a negated self-reference still violates the negation requirement because the reference occurs with a <span class="jobjref"><a href="#dfn-ShapeNot">ShapeNot</a></span>:
+            </p>
+            <div class="repchoice error">
+              <pre class="json">{ "type": "Schema", "shapes": {
+    "http://schema.example/#S": {
+      "type": "Shape",
+      "extra": [ "http://schema.example/#p" ],
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/#p",
+        "valueExpr": {
+          "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+            "type": "ShapeRef", "reference": "http://schema.example/#S"
+} } } } } }</pre>
+              <pre class="shexc">                                                                       
+    ex:S EXTRA ex:p {
+      ex:p NOT @ex:S
+    }
+
+
+
+
+
+
+              </pre>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    </section>
 
       <section id="semantic-actions">
         <h3>Semantic Actions</h3>
@@ -1665,7 +1683,6 @@ _:User2
             </div>
           </div>
         </section>
-      </section>
     </section>
 
       <section id="validation-examples">
