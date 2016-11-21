@@ -931,7 +931,7 @@ _:User2
   <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th><td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-SomeOf">SomeOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-Inclusion">Inclusion</a> ;</td></tr>
   <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-SomeOf" class="obj">SomeOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">negated</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-Inclusion" class="obj">Inclusion</th><td>{</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
         </table>
       </div>
@@ -1094,9 +1094,7 @@ _:User2
           </div>
         </li>
         <li>
-          <p id="matches-TripleConstraint"><m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and either:</p>
-          <ul>
-            <li><m>expr</m>'s <span class="param">negated</span> is false and:
+          <p id="matches-TripleConstraint"><m>expr</m> is a <span class="jobjref"><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></span> and:</p>
           <ul>
             <li>
               <m>T</m> is a set of one triple.<br/>
@@ -1181,92 +1179,7 @@ _:User2
                 -->
               </li>
             </ul></li>
-          </ul></li>
-            <li><m>expr</m>'s <span class="param">negated</span> is true and:
-          <ul>
-            <li>
-              <m>T</m> contains no triples.
-            </li>
-            <li>
-              There is no triple <m>t</m> in <code class="function">neigh(<span class="math">G</span>, <span class="math">n</span>)</code> such that:<br/>
-              <m>t</m>'s <span class="param">predicate</span> equals <m>expr</m>'s predicate.<br/>
-              Let <span class="label">value</span> be <m>t</m>'s subject if <span class="param">inverse</span> is true, else <m>t</m>'s object.
-            </li>
-            <li>either
-            <ul>
-              <li>
-                <p><m>expr</m> has no <span class="param">valueExpr</span></p>
-                <div class="example">
-                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline json">
-                    <pre>{ "type": "TripleExpression",
-  "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
-              m)</div>
-                  </m>
-                  <div style="clear:both;">holds if
-                  <ul class="tight">
-                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
-                  </ul></div>
-                </div>
-              </li>
-              <li>
-                <p>or <code class="function">satisfies(<m>value</m>, <span class="param">valueExpr</span>, <m>G</m>, <m>m</m>)</code>.</p>
-                <div class="example">
-                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline json">
-                    <pre>{ "type": "TripleConstraint", "inverse": true,
-  "predicate": "http://purl.org/dc/elements/1.1/author",
-  "valueExpr": { "type": "ShapeRef",
-    "reference": "http://schema.example/IssueShape" } }</pre></div>,<br/>
-              m)</div>
-                  </m>
-                  <div style="clear:both;">holds if
-                  <ul class="tight">
-                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
-                    <li><m>t</m> has a subject <m>n2</m></li>
-                    <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
-                    <li><m class="function">satisfies(n2, se2, G, m)</m></li>
-                  </ul></div>
-                </div>
-                <!--
-                <p class="issue">[Editorial] The following is a more verbose description of the above. Which is preferred?</p>
-                <div class="example">
-                  For the schema<br/>
-                  <div class="inline json">
-                    <pre>{ "type": "Schema", "shapes": {
-  "http://schema.example/UserShape": {
-    "type": "Shape", "expression": {
-      "type": "TripleConstraint", "inverse": true,
-      "predicate": "http://purl.org/dc/elements/1.1/author",
-      "valueExpr": {
-        "type": "ShapeAnd", "shapeExprs": [
-          { "type": "NodeConstraint", "nodeKind": "iri", "pattern": "http:.*" },
-          { "type": "ShapeRef",
-            "reference": "http://schema.example/IssueShape" }
-        ] } } },
-  "http://schema.example/IssueShape": { "type": "Shape" } } }</pre>
-                  </div><div style="clear:both;"></div>
-                  <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline json">
-                    <pre>{ "type": "TripleConstraint", "inverse": true,
-  "predicate": "http://purl.org/dc/elements/1.1/author",
-  "valueExpr": { … } }</pre></div>,<br/>
-              m)</div>
-                  </m>
-                  <div style="clear:both;">holds if
-                  <ul class="tight">
-                    <li><m>T</m> has exactly one triple <m>t</m>.</li>
-                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
-                    <li><m>t</m> has a subject <m>n2</m></li>
-                    <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
-                    <li><m class="function">satisfies(n2, se2, G, m)</m></li>
-                  </ul></div>
-                </div>
-                -->
-              </li>
-            </ul></li>
-          </ul></li>
-        </ul>
+          </ul>
         </li>
         <li>
           <p id="matches-Inclusion">
@@ -1463,53 +1376,6 @@ _:User2
 
                 </pre>
               </div>
-          </div>
-        </li>
-        <li>
-          a <span class="param">valueExpr</span> in a <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> with <span class="param">negated</span> = <code>true</code>
-          <div class="example">
-            <p>
-              This self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> violates the negation requirement:
-            </p>
-            <div class="repchoice error">
-              <pre class="json">{ "type": "Schema", "shapes":
-  { "http://schema.example/#S":
-    { "type": "Shape", "expression":
-      { "type": "TripleConstraint",  <span class="lookit">"negated": true</span>,
-        "predicate": "http://schema.example/#p", "valueExpr":
-        { "type": "ShapeRef", "reference": "http://schema.example/#S"
-          } } } } }</pre>
-              <pre class="shexc">                                                                     
-  ex:S {
-    ! ex:p @ex:S
-  }
-
-
-              </pre>
-            </div>
-            <p>
-              This negated self-reference in a negated <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> does not violate the negation requirement:
-            </p>
-            <div class="repchoice">
-              <pre class="json">{ "type": "Schema",
-  "shapes": {
-    "http://schema.example/#S": {
-      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-        "type": "Shape", "expression": {
-          "type": "TripleConstraint", <span class="lookit">"negated": true</span>,
-          "predicate": "http://schema.example/#p", "valueExpr": {
-            "type": "ShapeRef", "reference": "http://schema.example/#S"
-} } } } } }</pre>
-              <pre class="shexc">                                                                       
-  
-    ex:S NOT {
-      ex:p @ex:S
-    }
-
-
-
-              </pre>
-            </div>
           </div>
         </li>
         <li>
@@ -2730,7 +2596,7 @@ inst:Testgrammer23
   <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-SomeOf" class="obj">SomeOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-Inclusion" class="obj">Inclusion</th><td>{</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
-  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">negated</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-NodeConstraint" class="obj">NodeConstraint</th><td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* <span class="param">values</span>:[<a class="nobref" href="#dfn-valueSetValue">valueSetValue</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-Annotation" class="obj">Annotation</th><td>{</td><td><span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">object</span>:<a class="nobref" href="#dfn-objectValue">objectValue</a> }</td></tr>
   <tr class="nob"><th id="dfn-xsFacet" class="nob">xsFacet</th><td>=</td><td><a class="nobref" href="#dfn-stringFacet">stringFacet</a> | <a class="nobref" href="#dfn-numericFacet">numericFacet</a> ;</td></tr>
@@ -3357,11 +3223,10 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-senseFlags">senseFlags</a></span>? <span class="prod"><a class="grammarRef" href="#prod-predicate">predicate</a></span> <span class="prod"><a class="grammarRef" href="#prod-inlineShapeExpression">inlineShapeExpression</a></span> <span class="prod"><a class="grammarRef" href="#prod-cardinality">cardinality</a></span>? <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
 </tr>
-<tr class="obj"><td></td><td><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></td><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">negated</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+<tr class="obj"><td></td><td><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></td><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
 
   <tr class="params"><td></td><td colspan="3"><ul>
   <li><span class="param">inverse</span> is true if the <span class="prod"><a class="grammarRef" href="#prod-senseFlags">senseFlags</a></span> matched "<code>^</code>".</li>
-  <li><span class="param">negated</span> is true if the <span class="prod"><a class="grammarRef" href="#prod-senseFlags">senseFlags</a></span> matched "<code>!</code>".</li>
   <li><span class="param">predicate</span> comes from the <a class="grammarRef" href="#prod-predicate">predicate</a> production.</li>
   <li><span class="param">valueExpr</span> comes from the <a class="grammarRef" href="#prod-inlineShapeExpression">inlineShapeExpression</a> production. It it is an empty shape <code>{"type": "Shape"}</code>, <span class="param">valueExpr</span> is not assigned.</li>
   <li><span class="param">min</span> comes from the <a class="grammarRef" href="#prod-cardinality">cardinality</a> production.</li>
@@ -3384,7 +3249,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-senseFlags">[<span class="prodNo">40</span>]   </td>
 <td><code class="production prod">senseFlags</code></td>
 <td>   ::=   </td>
-<td><code class="content">"!" "^"? | "^" "!"?</code></td>
+<td><code class="content">"^"</code></td>
 </tr>
 </tbody>
 
@@ -4281,7 +4146,7 @@ AND
 &lt;SomeShape&gt; 
 CLOSED {
     ex:p xsd:int* ;
-    (<span class="hl-negte lowlight4"> ! <span class="hl-prop lowlight2">ex:q</span> xsd:int </span> 
+    (<span class="hl-negte lowlight4"> <span class="hl-prop lowlight2">ex:q</span> xsd:int {0;0} </span> 
       | ex:r IRI )? 
 }
 </pre>
