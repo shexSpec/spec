@@ -1738,7 +1738,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;Alice&gt; a ex:Teacher .
 &lt;Alice&gt; a ex:Person .
 &lt;SomeHat&gt; ex:owner &lt;Alice&gt; .
-&lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt;
+&lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt; .
 </pre>
             </div>
             <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
@@ -2089,7 +2089,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
             <div class="inline json">
               <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
-inst:Issue1 ex:reproducedBy inst:Tester2 ;
+inst:Issue1 ex:reproducedBy inst:Tester2 .
 inst:Tester2 ex:role ex:testingRole .</pre>
             </div>
             <div style="clear:both;"></div>
@@ -2291,9 +2291,9 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
 PREFIX ex: &lt;http://schema.example/&gt;
-&lt;s&gt; ex:val "a" ;
-&lt;s&gt; ex:val "b" ;
-&lt;s&gt; ex:val "c" ;
+&lt;s&gt; ex:val "a" .
+&lt;s&gt; ex:val "b" .
+&lt;s&gt; ex:val "c" .
 &lt;s&gt; ex:val "d" .</pre>
             </div>
             <div style="clear:both;"></div>
