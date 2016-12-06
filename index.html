@@ -1254,7 +1254,7 @@ _:User2
 ] } } } }</pre>
           <pre class="shexc">                                                                               
     ex:PersonShape {
-      foaf:name
+      foaf:name .
     }
 
     ex:EmployeeShape {
@@ -1481,7 +1481,7 @@ _:User2
 </pre>
               <pre class="shexc">                                                                       
     ex:S1 {
-      ex:p1 %Test:{ print(s) %} %Test:{ print(o) %}
+      ex:p1 . %Test:{ print(s) %} %Test:{ print(o) %}
     }
 
 
@@ -2638,7 +2638,7 @@ inst:Testgrammer23
 
 <pre class="shex">
 
-      RREFIX ex:   &lt;http://ex.example/#&gt;
+      PREFIX ex:   &lt;http://ex.example/#&gt;
       PREFIX foaf: &lt;http://xmlns.com/foaf/&gt;
       PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
       PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
@@ -3870,7 +3870,7 @@ CLOSED {
     ^ex:related   @&lt;IssueShape&gt;*
 }</div>
 <span class="hl-usershape lowlight2">&lt;UserShape&gt;</span> {
-    PATTERN "http://example.org/User#.*"
+    a PATTERN "http://example.org/User#.*"
 }
 </pre>
 <pre class="shex" style="float:left">
@@ -4146,7 +4146,7 @@ AND
 &lt;SomeShape&gt; 
 CLOSED {
     ex:p xsd:int* ;
-    (<span class="hl-negte lowlight4"> <span class="hl-prop lowlight2">ex:q</span> xsd:int {0;0} </span> 
+    (<span class="hl-negte lowlight4"> <span class="hl-prop lowlight2">ex:q</span> xsd:int {0,0} </span> 
       | ex:r IRI )? 
 }
 </pre>
