@@ -225,7 +225,7 @@
   </p>
 
   <pre class="graph">
-PREFIX ex: http://ex.example/#
+PREFIX ex: http://schema.example/
 PREFIX inst: http://inst.example/#
 PREFIX foaf: http://xmlns.com/foaf/
 PREFIX xsd: http://www.w3.org/2001/XMLSchema#
@@ -1593,7 +1593,7 @@ _:User2
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://a.example/&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 ex:someNode ex:somePredicate "30"^^xsd:integer .
 </pre>
@@ -2087,7 +2087,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
 inst:Issue1 ex:reproducedBy inst:Tester2 ;
 inst:Tester2 ex:role ex:testingRole .</pre>
@@ -2290,7 +2290,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
 <span class="lineno data">t4</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
-PREFIX ex: &lt;http://a.example/ex#&gt;
+PREFIX ex: &lt;http://schema.example/&gt;
 &lt;s&gt; ex:val "a" ;
 &lt;s&gt; ex:val "b" ;
 &lt;s&gt; ex:val "c" ;
@@ -2487,7 +2487,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 <span class="lineno data">t4</span>
 <span class="lineno data">t5</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
 inst:Issue1
   ex:reproducedBy inst:Tester2 ;
@@ -2638,7 +2638,7 @@ inst:Testgrammer23
 
 <pre class="shex">
 
-      PREFIX ex:   &lt;http://ex.example/#&gt;
+      PREFIX ex:   &lt;http://schema.example/&gt;
       PREFIX foaf: &lt;http://xmlns.com/foaf/&gt;
       PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
       PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
