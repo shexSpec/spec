@@ -41,6 +41,7 @@
       <p>
         The Shape Expressions (ShEx) language describes RDF nodes and graph structures.
         A <m>node constraint</m> describes an RDF node (IRI, blank node or literal) and a <m>shape</m> describes the triples touching nodes in RDF graphs.
+        <!-- LABRA: The expression "touching" sounds a bit informal...maybe "describes the triples involving nodes" which you use later sounds better? -->
         These descriptions identify predicates and their associated cardinalities and datatypes.
         ShEx shapes can be used to communicate data structures associated with some process or interface, generate or validate data, or drive user interfaces.
       </p>
@@ -73,21 +74,25 @@
         Additionally, they constrain lexical forms of Literals, IRIs and labeled blank nodes.
         Shape Expressions schemas share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
       </p>
+      <!-- LABRA: I would add a paragraph talking about the ShExC compact syntax and the ShExJ Json so you can talk about them later in the notation section -->
     </section>
 
     <section id="notation">
       <h2>Notation</h2>
       <p>
+        <!-- Labra: I would probably add a paragraph saying something about the abstract syntax so you can later talk about JSON... -->
         The JSON[[!rfc6901]] Syntax serves as a serializable proxy for the ShEx abstract syntax.
         It consists of statements defining data structures and named members of those data structures.
         Each member has either a single type or two or more types that are a union (choice) of types.
-        Each type is either a reference to another statement, a primitive RDF type or  (e.g. <code>numeric</code>)[[!sparql11-query]], or the template type <code>Set</code>, which signifies a <a href="https://en.wikipedia.org/wiki/Set_(mathematics)">logical set</a> of a type.
+        <!-- Labra: Maybe add that choice is represented by | -->
+        Each type is either a reference to another statement, a primitive RDF type (e.g. <code>numeric</code>)[[!sparql11-query]], or the template type <code>Set</code>, which signifies a <a href="https://en.wikipedia.org/wiki/Set_(mathematics)">logical set</a> of a type.
       </p>
       <p>
         Optional parameters are suffixed with a "<code>?</code>".
         For brevity, empty maps and lists are elided in serializations of ShExJ.
         References may be suffixed with a "<code>*</code>" to indicate that there may be any number of them, c.f. "<a class="nobref" href="#dfn-xsFacet">xsFacet</a>*" below.
       </p>
+      <!-- Labra: I think an explanation of lists represented by brackets is missing -->
       <p>In this notation,</p>
 
       <div class="shexj">
@@ -100,11 +105,10 @@
       <ul>
         <li><code class="param">prefixes</code> is an optional map from <a class="trmref" href="#dfn-PREFIX">PREFIX</a> to <a class="trmref" href="#dfn-IRI">IRI</a>.</li>
         <li><code class="param">base</code> is an optional <code>IRI</code>.</li>
-        <li><code class="param">startActs</code> is an optional list of <a class="objref" href="#dfn-SemAct">SemAct</a>.</li>
+        <li><code class="param">startActs</code> is an optional list of <a class="objref" href="#dfn-SemAct">SemAct</a>.<!-- Labra: Maybe you can say here that lists are represented by square brackets ? --></li>
         <li><code class="param">start</code> is an optional <a class="objref" href="#dfn-shapeExpr">shapeExpr</a>.</li>
         <li><code class="param">shapes</code> is an optional map from <a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> to <a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>.</li>
       </ul>
-
       <div class="shexj">
         <pre><a href="#dfn-shapeExpr" class="nob">shapeExpr</a> = <a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a>
             | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</pre>
@@ -112,6 +116,7 @@
       <p>
         signifies that a <code>shapeExpr</code> is is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a>, …:
       </p>
+      <!-- Labra: The previous paragraph was a bit strange mixing | and comma. ... -->
 
       <div class="shexj">
         <pre><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a> { <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* }
@@ -132,10 +137,12 @@
       </p>
       <ul>
         <li>IRI: the lexical form of the IRI, e.g. <code class="json">"http://example.org/resource"</code></li>
-        <li>blank node: the contatonation of "<code>_:</code>" and a blank node label, e.g. <code class="json">"_:blank3"</code></li>
-        <li>literal: the concatonation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
+        <li>blank node: the concatenation of "<code>_:</code>" and a blank node label, e.g. <code class="json">"_:blank3"</code></li>
+        <li>literal: the concatenation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
         <ul>
           <li>literal with type <code>http://www.w3.org/2001/XMLSchema#</code>: empty string, e.g. <code class="json">"abc"</code>.</li>
+          <!-- Labra: I don't understand the previous sentence...should it be type <code>http://www.w3.org/2001/XMLSchema#string</code> ? 
+               What does it mean empty string there? -->
           <li>language tagged literal: U+0040 ('<code>@</code>') and the language tag, e.g. <code class="json">"\"hello world\"@en-US"</code></li>
           <li>datatyped literal: U+005E U+005E ('<code>^^</code>') and the lexical form of the datatype URI, e.g. <code class="json">"\"123\"^^http://www.w3.org/2001/XMLSchema#integer"</code></li>
         </ul></li>
@@ -176,6 +183,10 @@
         Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
         Pressing "j" or "c" converts all such examples to the JSON or compact form.
       </p>
+      <!-- Labra: I am not sure, but I think it would be more readable if you used the compact syntax by default and the Json as secondary. 
+          Also, I would prefer to see both at the same time as in the OWL Primer: https://www.w3.org/TR/owl2-primer/ where you can activate/deactiva 
+          each of the styles separately
+          Finally, I also think it would be nice to also include examples using the JSON-LD/RDF based serialization -->
       <!--
       <p>
         The following HTML tags and CSS classes are used to highlight the roles of text in this document:
@@ -199,13 +210,13 @@
   The following functions access the elements of an RDF graph <m>G</m> containing a node <m>n</m>:
   <ul>
     <li>
-      <m>arcsOut(G, n)</m> is the set of triples in a graph <m>G</m> the subject <m>n</m>.
+      <m>arcsOut(G, n)</m> is the set of triples in a graph <m>G</m> with subject <m>n</m>.
     </li>
     <li>
       <m>predicatesOut(G, n)</m> is the set of predicates in <m>arcsOut(G, n)</m>.
     </li>
     <li>
-      <m>arcsIn(G, n)</m> is the set of triples in a graph <m>G</m> the object <m>n</m>.
+      <m>arcsIn(G, n)</m> is the set of triples in a graph <m>G</m> with object <m>n</m>.
     </li>
     <li>
       <m>predicatesIn(G, n)</m> is the set of predicates in <m>arcsIn(G, n)</m>.
@@ -241,9 +252,12 @@ _:User2
         <p>
           <code>User2</code> is a blank node in this graph and is expressed here as <code>_:User2</code>.
         </p>
+        <!-- Labra: Is it really necessary to include the previous line? I found it quite basic...probably a reader of this document 
+             should know what a BNode is, and explaining it here could distract from the document's goal...' -->
   <p>
     There is one arc into <span class="pre">_:User2</span>; <m>arcsIn(G, <span class="pre">_:User2</span>)</m>:
   </p>
+  <!-- Labra: I think it would be more natural to follow the order of the definitions including first arcsOut and later arcsIn -->
   <pre>
     inst:Issue1 ex:reportedBy  _:User2 .
   </pre>
@@ -269,6 +283,8 @@ _:User2
       <h2>The Shape Expressions Language</h2>
       <p>
         A Shape Expressions (ShEx) schema is a collection of labeled constraints.
+        <!-- Labra: I am not sure if it is correct to use the word "constraints" here without defining what a constraint is... 
+           Maybe, we could say a collection of shapes and node constraints? -->
         These can be used to describe or test nodes in RDF graphs.
         ShEx does not prescribe a laguage for associating nodes with shapes but several approaches are <a href="../primer/index.html#associating-nodes-with-shapes">described in the ShEx Primer</a>.
       </p>
@@ -302,6 +318,8 @@ _:User2
 
       <section id="shape-map">
       <h3>Mapping From Nodes to Shapes</h3>
+      <!-- Labra: The title of this section seems strange: It looks like some process of mapping nodes to shapes...while it describes ShapeMap.
+         It would probably be better to simply use: "ShapeMap", or maybe "Validation result"? -->
 
       <p>
   A <span class="label">ShapeMap</span> is a set of node-label associations of the form <m>(node,S)</m> where <m>node</m> is an RDF node, and <m>S</m> is a shape label from a schema.
@@ -327,7 +345,7 @@ _:User2
     An example ShapeMap is:
   </p>
   <div class="json">
-    <pre>{ "http://inst.example/#Issue1": "http://schema.example/IssueShape,
+    <pre>{ "http://inst.example/#Issue1": "http://schema.example/IssueShape",
   "_:User2", "_:UserShape",
   "_:User2", "http://schema.example/EmployeeShape" }</pre>
   </div>
@@ -335,25 +353,29 @@ _:User2
 
       <p>
   Note that the validation problem does not necessarily require to compute <m>typing</m> entirely.
-  Only a portion of <m>ShapeMap</m> need be computed to validate a specific node, starting from the node and adding only the node-label associations that are necessary for proving, or disproving, the node-label name associations from that node.
+  <!-- Labra: The concept of typing has not been previously defined...are you talking about the shapeMap here? -->
+  Only a portion of <m>ShapeMap</m> needs be computed to validate a specific node, starting from the node and adding only the node-label associations that are necessary for proving, or disproving, the node-label name associations from that node.
       </p>
 
       <p>
-        Validation of node against a shape in a schema requires that there is a consistent mapping from node to shape for every node and shape visited during a validation process.
+        Validation of a node against a shape in a schema requires that there is a consistent mapping from node to shape for every node and shape visited during a validation process.
         The remainder of this document uses a ShapeMap <m>m</m> to indicate that universal mapping.
       </p>
+      <!-- Labra: Should we say "a consistent map from a node to --one or more shapes-- for every node and shape visited during..." -->
+      <!-- Labra: The concept of "universal" mapping has not been introduced and is not used in the rest of the document...maybe delete the word universal? --> 
       </section>
 
       <section id="shape-expressions">
         <h3>Shape Expressions</h3>
         <p>
-          A shape expression is composed of four kinds of objects combined with a algebraic operators And, Or and Not:
+          A shape expression is composed of four kinds of objects combined with the algebraic operators And, Or and Not:
         </p>
         <ul>
           <li>
             a node constraint (<span class="jobjref"><a href="#dfn-NodeConstraint">NodeConstraint</a></span>) that defines the set of allowed values of a node.
             In shapes schemas, a node constraint can be an arbitrary set that contains IRIs or Literal using different ways of restraining the type of a node: XML string and numeric facets, RDF node kind, and value sets.
           </li>
+          <!-- I think the notion of "shapes schemas" has not been defined previously...should you include some definition of what it is? -->
           <li>
             a shape constraint (<span class="jobjref"><a href="#dfn-Shape">Shape</a></span>) that defines a constraint on the allowed neighbourhood of a node, that is, the allowed triples that contain this node as subject or object.
           </li>
@@ -427,7 +449,7 @@ _:User2
 
       <div class="example">
   <p>
-    Given a three shape expressions <m>SE<sub>1</sub></m>, <m>SE<sub>2</sub></m>, <m>SE<sub>3</sub></m> in a <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span> <m>Sch</m>, such that:
+    Given the three shape expressions <m>SE<sub>1</sub></m>, <m>SE<sub>2</sub></m>, <m>SE<sub>3</sub></m> in a <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span> <m>Sch</m>, such that:
   </p>
   <ul>
     <li><code class="function">satisfies(<m>n</m>, <m>SE<sub>1</sub></m>, <m>G</m>, <m>m</m>)</code></li>
@@ -441,6 +463,7 @@ _:User2
   <ul>
     <li><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/><div class="inline json"><pre>{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span> ] }</pre></div>,<br/> <m>G</m>, <m>m</m>)</div></code><div style="clear:both;"></div></li>
     <li><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/><div class="inline json"><pre>{ "type": "ShapeOr", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>3</sub></span> ] }</pre></div>,<br/> <m>G</m>, <m>m</m>)</div></code><div style="clear:both;"></div></li>
+    <!-- Labra: Did you really wanted to use [SE1, SE1, SE3]? Or maybe [SE1, SE2, SE3]? --> 
     <li><code><div style="float:left;">notSatisfies(</div><div style="float:left;"><m>n</m>,<br/><div class="inline json"><pre>{ "type": "ShapeNot", "shapeExpr": {
     { "type": "ShapeOr", "shapeExprs": [
         <span class="comment">SE<sub>1</sub></span>,
@@ -499,7 +522,7 @@ _:User2
           <ul>
             <li><m>v</m> = "iri" and <m>n</m> is an IRI.</li>
             <li><m>v</m> = "bnode" and <m>n</m> is a blank node.</li>
-            <li><m>v</m> = "literal" and <m>n</m> is an Literal.</li>
+            <li><m>v</m> = "literal" and <m>n</m> is a Literal.</li>
             <li><m>v</m> = "nonliteral" and <m>n</m> is an IRI or blank node.</li>
           </ul>
           <div class="example">
@@ -524,6 +547,8 @@ _:User2
 &lt;issue1&gt; ex:state ex:HunkyDory .
 &lt;issue2&gt; <span style="border-bottom: thin solid red;">ex:taste</span> ex:GoodEnough .
 <span class="fail">&lt;issue3&gt; ex:state "just fine" .</span></pre>
+<!-- Labra: I think the second example could be omitted at this point because it requires talking about cardinality which has not
+  been introduced yet...-->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
@@ -533,6 +558,7 @@ _:User2
             <p>
               Note that &lt;issue2&gt; <span class="fail">fails</span> not because of a nodeKind violation but instead because of a <a href="#cardinality">Cardinality</a> violation.
             </p>
+            <!-- Labra: I would probably remove issue2 in the example to avoid this comment -->
           </div>
         </section>
 
@@ -564,6 +590,8 @@ _:User2
             <pre class="data">
 &lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
 <span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span></pre>
+<!-- Labra: I would probably use a different datatype to avoid confusion between date and dateTime...maybe xsd:float .... -->
+<!-- I think the spec should say something about what happens when a lexical form of a literal doesn't follow the datatype, for example: "23.78"^^xsd:date -->  
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
@@ -602,6 +630,7 @@ _:User2
             <pre class="data">
 &lt;issue3&gt; rdfs:label "emits dense black smoke"@en .
 <span class="fail">&lt;issue4&gt; rdfs:label "unexpected odor" .</span></pre>
+<!-- Labra: Should it be submittedOn instead of rdfs:label ? -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td></tr>
@@ -626,7 +655,9 @@ _:User2
         <ul>
           <li>if the value <m>n</m> is an RDF Literal, the lexical form of the literal.</li>
           <li>if the value <m>n</m> is an IRI, the lexical IRI string.</li>
+          <!-- Labra: Question, is there some definition for this that we should refer to? -->
           <li>if the value <m>n</m> is a blank node, the blank node label.</li>
+          <!-- Labra: Question, is there some definition for blank node label to include a pointer to it? -->
         </ul>
         <p>
           Let <m>len</m> = the number of unicode codepoints in <m>lex</m><br/>
@@ -636,6 +667,7 @@ _:User2
           <li id="nodeSatisfies-length">for "<code>length</code>" constraints, <m>v = len</m>,</li>
           <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, <m>v =&gt; len</m>,</li>
           <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <m>v &lt;= len</m>,</li>
+          <!-- Labra: I would put <= instead of => -->
           <li id="nodeSatisfies-pattern">for "<code>pattern</code>" constraints, <m>v</m> is a valid <a href="https://www.w3.org/TR/xpath-functions/#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-30]] and invoking <code class="function"><a href="https://www.w3.org/TR/xpath-functions-30/#func-matches">fn:matches</a>(<m>lex</m>, <m>v</m>)</code> returns <code>fn:true</code>.</li>
         </ul>
         <div class="example">
@@ -698,6 +730,7 @@ _:User2
             </table>
           </div>
         </div>
+        <!-- Labra: Maybe we should include flags in regex patterns or at least some issue in the spec ? -->
       </section>
 
       <section id="xs-numeric">
@@ -718,12 +751,14 @@ _:User2
         <p>
           Let <m>num</m> be the numeric value of <m>n</m>.<br/>
           Let <m>len</m> = the number of unicode codepoints in <m>lex</m>.<br/>
+          <!-- Labra: Are you using len in this section? You could probably remove it... -->
           For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code>:
         </p>
         <ul>
           <li id="nodeSatisfies-mininclusive">for "<code>mininclusive</code>" constraints, <m>v &lt;= num</m>,</li>
           <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, <m>v &lt; num</m>,</li>
           <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, <m>v =&gt; num</m>,</li>
+          <!-- Labra: I would put <= instead of => -->
           <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, <m>v &gt; num</m>,</li>
           <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>,</li>
           <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <m>v</m> is less than or equals the number of digits to the right of the decimal place in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>, ignoring trailing zeros.</li>
@@ -748,6 +783,7 @@ _:User2
 &lt;issue1&gt; ex:confirmations 1 .
 &lt;issue2&gt; ex:confirmations 0 .
 <span class="fail">&lt;issue3&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
+<!-- Labra: Maybe this example is not needed here because it is checking datatypes not numeric facets ... -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
@@ -814,6 +850,7 @@ _:User2
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
             <tr class="fail"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be <code>ex:Resolved</code>, <code>ex:Unresolved</code> found.</td></tr>
+            <!-- Labra: The explanation should probably be: ex:state expected to be ex:Resolved or ex:Rejected. ex:Unresolved found -->
           </table>
         </div>
 
@@ -909,7 +946,7 @@ _:User2
 
         <p>
           A value set can have a single value in it.
-          This is used to indicate that a specific value is required, e.g. that an ex:state must equal &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
+          This is used to indicate that a specific value is required, e.g. that an ex:state must be equal to &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
         </p>
       </section>
     </section>
@@ -926,6 +963,7 @@ _:User2
       <h4>JSON Syntax</h4>
 
       <div class="shexjTable">
+        <!-- Labra: The following line includes something strange after expression with two question marks. "expression: tripleExpr?]?" -->
         <table class="shexj">
   <tr class="obj"><th id="dfn-Shape" class="obj">Shape</th><td>{</td><td><!-- <span class="param">virtual</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>?  --><span class="param">closed</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">extra</span>:[<a class="trmref" href="#dfn-IRI">IRI</a>]? <span class="param">expression</span>:<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> -->]? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th><td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-OneOf">OneOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-Inclusion">Inclusion</a> ;</td></tr>
@@ -2576,6 +2614,7 @@ inst:Testgrammer23
       
     <section id="shexj">
       <h2>ShEx JSON Syntax (ShExJ)</h2>
+      <!-- Labra: I think some paragraph is missing here to introduce this section... -->
       <p>
         For instance, "<span class="param">prefixes</span>:{<a class="trmref" href="#dfn-PREFIX">PREFIX</a>-&gt;<a class="trmref" href="#dfn-IRI">IRI</a>}?" indicates that prefixes is optional and if present is a mapping from the terminal <a class="trmref" href="#dfn-PREFIX">PREFIX</a> to the terminal <a class="trmref" href="#dfn-IRI">IRI</a>.
         "<span class="param">base</span>:<a class="trmref" href="#dfn-IRI">IRI</a>?" indicates that <span class="param">base</span> is optional and, if present, is an <a class="trmref" href="#dfn-IRI">IRI</a>.
@@ -2627,6 +2666,8 @@ inst:Testgrammer23
 
     <section id="shexc">
       <h2>Parsing ShEx Compact syntax (ShExC)</h2>
+      <!-- Labra: It is strange to talk about parsing ShEx compact syntax without saying what it is...I think some paragraph or explanation is needed, 
+       or maybe title this section "ShEx Compact syntax" and include the grammar and then, how to parse it --> 
 
       <div class="example">
           <div class="example-title marker"><span>Values Constraint example 2</span></div>
@@ -3840,6 +3881,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       
     <section id="compilation-example">
       <h3>Examples of Compilating ShExC into ShExJ</h3>
+      <!-- Labra: I didn't quite understand what is the point of this section...is this obsolete? -->
   
   <section id="compilation-example-closed-shape">
     <h4>Closed shape expression</h4>
