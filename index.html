@@ -244,7 +244,7 @@
   </p>
 
   <pre class="graph">
-PREFIX ex: http://ex.example/#
+PREFIX ex: http://schema.example/
 PREFIX inst: http://inst.example/#
 PREFIX foaf: http://xmlns.com/foaf/
 PREFIX xsd: http://www.w3.org/2001/XMLSchema#
@@ -572,11 +572,11 @@ _:User2
       "type": "TripleConstraint", "predicate": "http://schema.example/submittedOn",
       "valueExpr": {
         "type": "NodeConstraint",
-        "datatype": "http://www.w3.org/2001/XMLSchema#dateTime"
+        "datatype": "http://www.w3.org/2001/XMLSchema#date"
       } } } } }</pre>
               <pre class="shexc">                                                                                   
     ex:IssueShape {                                                          
-      ex:submittedOn xsd:dateTime
+      ex:submittedOn xsd:date
     }
 
     
@@ -890,7 +890,7 @@ _:User2
 &lt;issue4&gt; foaf:mbox &lt;mailto:engineering-2112@a.example&gt; .
 &lt;issue5&gt; foaf:mbox &lt;mailto:sales-835@a.example&gt; .
 <span class="fail">&lt;issue6&gt; foaf:mbox "missing" .</span>
-<span class="fail">&lt;issue7&gt; foaf:mbox &lt;mailto:sales-contactus-999@a.example&gt; .</span></pre>
+<span class="fail">&lt;issue7&gt; foaf:mbox &lt;mailto:sales-contacts-999@a.example&gt; .</span></pre>
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td></tr>
@@ -1516,7 +1516,7 @@ _:User2
 </pre>
               <pre class="shexc">                                                                       
     ex:S1 {
-      ex:p1 . %Test:{ print(s) %} %Test:{ print(o) %}
+      ex:p1 .+ %Test:{ print(s) %} %Test:{ print(o) %}
     }
 
 
@@ -1628,7 +1628,7 @@ _:User2
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://a.example/&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 ex:someNode ex:somePredicate "30"^^xsd:integer .
 </pre>
@@ -1773,7 +1773,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;Alice&gt; a ex:Teacher .
 &lt;Alice&gt; a ex:Person .
 &lt;SomeHat&gt; ex:owner &lt;Alice&gt; .
-&lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt;
+&lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt; .
 </pre>
             </div>
             <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
@@ -2122,9 +2122,9 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
-inst:Issue1 ex:reproducedBy inst:Tester2 ;
+inst:Issue1 ex:reproducedBy inst:Tester2 .
 inst:Tester2 ex:role ex:testingRole .</pre>
             </div>
             <div style="clear:both;"></div>
@@ -2325,10 +2325,10 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
 <span class="lineno data">t4</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
-PREFIX ex: &lt;http://a.example/ex#&gt;
-&lt;s&gt; ex:val "a" ;
-&lt;s&gt; ex:val "b" ;
-&lt;s&gt; ex:val "c" ;
+PREFIX ex: &lt;http://schema.example/&gt;
+&lt;s&gt; ex:val "a" .
+&lt;s&gt; ex:val "b" .
+&lt;s&gt; ex:val "c" .
 &lt;s&gt; ex:val "d" .</pre>
             </div>
             <div style="clear:both;"></div>
@@ -2522,7 +2522,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 <span class="lineno data">t4</span>
 <span class="lineno data">t5</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://a.example/ex#&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
 inst:Issue1
   ex:reproducedBy inst:Tester2 ;
@@ -2676,7 +2676,7 @@ inst:Testgrammer23
 
 <pre class="shex">
 
-      PREFIX ex:   &lt;http://ex.example/#&gt;
+      PREFIX ex:   &lt;http://schema.example/&gt;
       PREFIX foaf: &lt;http://xmlns.com/foaf/&gt;
       PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
       PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
@@ -4177,7 +4177,7 @@ AND
 
       <p>
         The <span class="hl-negte lowlight4">negated triple constraint</span> is treated as if <span class="hl-prop lowlight2">its property</span> was an <span class="hl-prop lowlight2">extra property</span>.
-        The corresponding <span class="hl-negte lowlight4">triple constraint in the translation</span> has a <span class="hl-zerocard lowlight3">{0;0} cardinality</span>.
+        The corresponding <span class="hl-negte lowlight4">triple constraint in the translation</span> has a <span class="hl-zerocard lowlight3">{0,0} cardinality</span>.
       </p>
 
 <pre class="shex" style="float:left">
@@ -4199,7 +4199,7 @@ CLOSED {
 
 &lt;SomeShape&gt; := { 
     {ex:p}  &lt;SL_9&gt;* ;
-    (<span class="hl-negte lowlight4"> {ex:q}  &lt;SL_9&gt;<span class="hl-zerocard lowlight3">{0;0}</span> </span>
+    (<span class="hl-negte lowlight4"> {ex:q}  &lt;SL_9&gt;<span class="hl-zerocard lowlight3">{0,0}</span> </span>
       | {ex:r} &lt;SL_10&gt; )? ;
 
     <span class="hl-prop lowlight2">{ex:q}</span>  &lt;SL_Extra&gt;*
