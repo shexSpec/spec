@@ -1761,8 +1761,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               <pre class="json">{ "type": "Schema", "shapes": {
   "http://schema.example/UserShape":
   { "type": "Shape", "expression":
+    "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
     { "type": "TripleConstraint",
-      "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
       "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
       "valueExpr":
       { "type": "NodeConstraint",
