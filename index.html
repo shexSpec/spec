@@ -94,7 +94,7 @@
       <p>
         ShEx describes RDF graph structures as sets of potentially connected <code>Shapes</code>.
         These constrain the triples involving nodes in an RDF graph.
-        <code>Node Constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or Literal), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of Literals.
+        <code>Node Constraints</code> constraint RDF nodes present within an RDF graph by constraining their node kind (IRI, blank node or Literal), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of Literals.
         Additionally, they constrain lexical forms of Literals, IRIs and labeled blank nodes.
         Shape Expressions schemas share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
       </p>
@@ -343,7 +343,7 @@ _:User2
         Since a node may have multiple shapes, this should either be a mapping from a node to a set of shapes <span class="json">{ "n1": [ "S1", "S2"], "n2": [] }</span> or a list of node-shape pairs <span class="json">[ ["n1", "S1"], ["n1", "S2"] }</span>. Which is easier to understand?
       </p>
       <p>
-  A <span class="label">ShapeMap</span> is a set of node-label associations of the form <m>(node,S)</m> where <m>node</m> is an RDF node, and <m>S</m> is a shape label from a schema.
+  A <span class="label">ShapeMap</span> is a set of node-label associations of the form <m>(node,S)</m> where <m>node</m> is an RDF node present in an RDF graph, and <m>S</m> is a shape label from a schema.
   A node-label association in a <m>ShapeMap</m> indicates that the node <m>node</m> satisfies the constraint given by the definition of the shape label <m>S</m>.
       </p>
 
