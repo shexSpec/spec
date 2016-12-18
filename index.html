@@ -932,7 +932,8 @@ _:User2
       "predicate": "http://xmlns.com/foaf/0.1/mbox",
       "valueExpr": {
         "type": "NodeConstraint", "values": [
-          { "type": "Wildcard", "exclusions": [
+          { "type": "StemRange", "stem": {"type": "Wildcard"},
+            "exclusions": [
               { "type": "Stem", "stem": "mailto:engineering-" },
               { "type": "Stem", "stem": "mailto:sales-" }
             ] }
