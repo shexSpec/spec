@@ -1302,7 +1302,7 @@ _:User2
         "predicate": "http://xmlns.com/foaf/0.1/name"
       } },
     "http://schema.example/EmployeeShape": {
-      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
+      "type":"Shape", "expression": { "type":"EachOf", "shapeExprs": [
         { "type": "Inclusion", "include": "http://schema.example/PersonShape" }
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/employeeNumber" }
