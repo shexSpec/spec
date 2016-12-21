@@ -3177,11 +3177,11 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-tripleExpression">[<span class="prodNo">21</span>]   </td>
 <td><code class="production prod">tripleExpression</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-someOfTripleExpr">someOfTripleExpr</a></span></code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-oneOfTripleExpr">oneOfTripleExpr</a></span></code></td>
 </tr>
 <tr valign="baseline">
-<td id="prod-someOfTripleExpr">[<span class="prodNo">21</span>]   </td>
-<td><code class="production prod">someOfTripleExpr</code></td>
+<td id="prod-oneOfTripleExpr">[<span class="prodNo">21</span>]   </td>
+<td><code class="production prod">oneOfTripleExpr</code></td>
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a></span> | <span class="prod"><a class="grammarRef" href="#prod-multiElementOneOf">multiElementOneOf</a></span></code></td>
 </tr>
@@ -3861,7 +3861,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
     </p>
       <ul>
         <li><span class="hl-tc lowlight1">triple constraint</span> (<as><a href="#dfn-TripleConstraint">TripleConstraint</a></as>)</li>
-        <li><span class="hl-someof lowlight2">some-of triple expression</span> (<as><a href="#dfn-OneOfTripleExpr">OneOfTripleExpr</a></as>)</li>
+        <li><span class="hl-oneof lowlight2">one-of triple expression</span> (<as><a href="#dfn-OneOfTripleExpr">OneOfTripleExpr</a></as>)</li>
         <li><span class="hl-eachof lowlight2">each-of triple expression</span> (<as><a href="#dfn-EachOfTripleExpr">EachOfTripleExpr</a></as>)</li>
         <li><span class="hl-repet lowlight3">repeated triple expression</span> (<as><a href="#dfn-RepeatedTripleExpr">RepeatedTripleExpr</a></as>)</li>
         <li><span class="hl-inverse-tc lowlight1">triple constraint with an inverse property</span></li>
@@ -3877,7 +3877,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 
   <span class="hl-tc lowlight1">foaf:name <span class="hl-shref lowlight4">@&lt;SL_2&gt;</span></span> ;
 
-  <span class="hl-someof lowlight2">( <span class="hl-repet lowlight3"><span class="hl-tc lowlight1">foaf:mbox <span class="hl-shref lowlight4">@&lt;SL_3&gt;</span></span> {1,3}</span> | <span class="hl-tc lowlight1">foaf:adress <span class="hl-shref lowlight4">@&lt;SL_3&gt;</span></span> )</span> ;
+  <span class="hl-oneof lowlight2">( <span class="hl-repet lowlight3"><span class="hl-tc lowlight1">foaf:mbox <span class="hl-shref lowlight4">@&lt;SL_3&gt;</span></span> {1,3}</span> | <span class="hl-tc lowlight1">foaf:adress <span class="hl-shref lowlight4">@&lt;SL_3&gt;</span></span> )</span> ;
 
   <span class="hl-tc hl-inverse-tc lowlight1">^ex:leader &lt;SL_4&gt;</span> ;
 <!--
@@ -3891,7 +3891,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <script type="text/javascript">
     <!--
         prepareHighlight(["hl-tc", "hl-tc-cofinite", "hl-inverse-tc"], "highlight1", "lowlight1");
-        prepareHighlight(["hl-someof", "hl-eachof"], "highlight2", "lowlight2");
+        prepareHighlight(["hl-oneof", "hl-eachof"], "highlight2", "lowlight2");
         prepareHighlight(["hl-repet"], "highlight3", "lowlight3");
         prepareHighlight(["hl-shref"], "highlight4", "lowlight4");
       -->
