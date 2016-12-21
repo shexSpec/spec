@@ -385,3 +385,6 @@ div.shexjTable th { text-align: right; }
 }
 
 .rephidden { display: none; }
+
+.noreason { display: none; border-right: none; }
+

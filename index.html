@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
@@ -14,8 +14,11 @@
 
     <script class='remove'>
       var respecConfig = {
-      specStatus: "base",
-      shortName:  "shex-semantics",
+      specStatus:     "base",
+      shortName:      "shex-semantics",
+      testSuiteURI:   "https://github.com/shexSpec/shexTest",
+      issueBase:      "https://github.com/shexSpec/shex/issues",
+      githubAPI:      "https://api.github.com/repos/shexSpec/shex",
       editors: [
         { name:       "Eric Prud'hommeaux",
           url:        "http://www.w3.org/People/Eric/",
@@ -28,12 +31,30 @@
         { name:       "Jose Labra Gayo",
           url:        "http://di002.edv.uniovi.es/~labra/",
           company:    "University of Oviedo",
-          companyURL: "http://www.uniovi.es/" }
+          companyURL: "http://www.uniovi.es/" },
+        { name:       "Gregg Kellogg",
+          url:        "http://greggkellogg.net/",
+          company:    "Spec-Ops",
+          companyURL: "https://spec-ops.io/",
+          w3cid:      "44770" },
       ],
       // wg:           "Shape Expressions ",
       // wgURI:        "https://shex.io/",
       // wgPublicList: "public-shex-dev",
       // wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+
+      bugTracker:             {
+        open: "https://github.com/shexSpec/shex/issues",
+        new:  "https://github.com/shexSpec/shex/issues/new"
+      },
+
+      otherLinks: [{
+        key: "Version control",
+        data: [{
+          value: "Github Repository",
+          href: "https://github.com/shexSpec/spec"
+        }]
+      }],
       };
     </script>
 
@@ -73,7 +94,7 @@
       <p>
         ShEx describes RDF graph structures as sets of potentially connected <code>Shapes</code>.
         These constrain the triples involving nodes in an RDF graph.
-        <code>Node Constraints</code> constraint RDF nodes by constraining their node kind (IRI, blank node or Literal), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of Literals.
+        <code>Node Constraints</code> constrain RDF nodes by constraining their node kind (IRI, blank node or Literal), enumerating permissible values in value sets, specifying their datatype, and constraining value ranges of Literals.
         Additionally, they constrain lexical forms of Literals, IRIs and labeled blank nodes.
         Shape Expressions schemas share blank nodes with the constrained RDF graphs in the same way that graphs in <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset">RDF datasets</a>[[!rdf11-concepts]] share blank nodes.
       </p>
@@ -182,7 +203,7 @@
         </p>
       <table>
         <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-        <tr class="pass"><td>&lt;Shape1&gt;</td><td>&lt;node1&gt;</td><td>pass</td></tr>
+        <tr class="pass"><td>&lt;Shape1&gt;</td><td>&lt;node1&gt;</td><td>pass</td><td class="noreason"></td></tr>
         <tr class="fail"><td>&lt;Shape1&gt;</td><td>&lt;node2&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
       </table>
       </div>
@@ -215,7 +236,7 @@
         <li><a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-rdf-graph" class="math">Graph</a>: a set of <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-rdf-triple" class="math">Triples</a> of (<a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-subject" class="math">subject</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-predicate" class="math">predicate</a>, <a href="http://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#dfn-object" class="math">object</a>)</li>
       </ul>
       <p>
-  The following functions access the elements of an RDF graph <m>G</m> containing a node <m>n</m>:
+  The following functions access the elements of an RDF graph <m>G</m> containing a node <m>n</m>:</p>
   <ul>
     <li>
       <m>arcsOut(G, n)</m> is the set of triples in a graph <m>G</m> with subject <m>n</m>.
@@ -236,7 +257,6 @@
       <m>predicates(G, n)</m> is the set of predicates in <m>neigh(G, n)</m>.<br/><m>predicates(G, n) = predicatesOut(G, n) ∪ predicatesIn(G, n)</m>
     </li>
   </ul>
-      </p>
 
       <div class="example">
   <p>
@@ -434,14 +454,14 @@ _:User2
       </p>
 
       <ul>
-        <li id="satisfies-NodeConstraint"><m>S</m> is a <span class="jobjref"><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<m>n</m>, <m>se</m>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
+        <li id="satisfies-NodeConstraint"><m>Se</m> is a <span class="jobjref"><a href="#dfn-NodeConstraint" class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<m>n</m>, <m>se</m>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a graph or shapeMap.</li>
-        <li id="satisfies-Shape-proxy"><m>S</m> is a <span class="jobjref"><a href="#dfn-Shape" class="obj">Shape</a></span> and <code class="function">satisfies(<m>n</m>, <m>se</m>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
-        <li id="satisfies-ShapeOr"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeOr" class="obj">ShapeOr</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
-        <li id="satisfies-ShapeAnd"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeAnd" class="obj">ShapeAnd</a></span> and for every shape expression <m>se2</m> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
-        <li id="satisfies-ShapeNot"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeNot" class="obj">ShapeNot</a></span> and for the shape expression <m>se2</m> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
-        <li id="satisfies-ShapeRef"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> and the <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span>'s <span class="param">shapes</span> maps <span class="param">reference</span> to a shape expression <m>se2</m> and <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
-        <li id="satisfies-ShapeExternal"><m>S</m> is a <span class="jobjref"><a href="#dfn-ShapeExternal" class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
+        <li id="satisfies-Shape-proxy"><m>Se</m> is a <span class="jobjref"><a href="#dfn-Shape" class="obj">Shape</a></span> and <code class="function">satisfies(<m>n</m>, <m>se</m>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
+        <li id="satisfies-ShapeOr"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeOr" class="obj">ShapeOr</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
+        <li id="satisfies-ShapeAnd"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeAnd" class="obj">ShapeAnd</a></span> and for every shape expression <m>se2</m> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
+        <li id="satisfies-ShapeNot"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeNot" class="obj">ShapeNot</a></span> and for the shape expression <m>se2</m> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
+        <li id="satisfies-ShapeRef"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> and the <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span>'s <span class="param">shapes</span> maps <span class="param">reference</span> to a shape expression <m>se2</m> and <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
+        <li id="satisfies-ShapeExternal"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeExternal" class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
       </ul>
 
       <div class="example">
@@ -548,7 +568,7 @@ _:User2
 <!-- @@ericP: I believe that mentioning it here will reduce confusion for readers. -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail">expected 1 <code>ex:state</code> property.</td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be an IRI, literal found.</td></tr>
             </table>
@@ -590,7 +610,7 @@ _:User2
 <!-- @@ericP: I think that this example can eliminate readers' questions about whether date forms are somehow compatible. -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be an <code>xsd:date</code>, <code>xsd:dateTime</code> found.</td></tr>
             </table>
           </div>
@@ -630,7 +650,7 @@ _:User2
 <span class="fail">&lt;issue4&gt; rdfs:label "unexpected odor" .</span></pre>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue4&gt;</td><td>fail</td><td class="fail"><code>rdfs:label</code> expected to be an <code>rdf:langString</code>, <code>xsd:string</code> found.</td></tr>
             </table>
           </div>
@@ -690,7 +710,7 @@ _:User2
 <span class="fail">&lt;issue2&gt; ex:submittedBy "Bob" .</span> <span class="comment"># 3 characters</span></pre>
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
           </table>
         </div>
@@ -724,7 +744,7 @@ _:User2
 <span class="fail">&lt;issue7&gt; ex:submittedBy _:genContact817 .</span></pre>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genUser[0-9]+</code>.</td></tr>
             </table>
           </div>
@@ -785,7 +805,7 @@ _:User2
 <!-- @@ericP: I think it clarifies that min/max only work with recognized datatypes. -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>0</code> is less than <code>1</code>.</td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
             </table>
@@ -847,7 +867,7 @@ _:User2
 <span class="fail">&lt;issue2&gt; ex:state ex:Unresolved .</span></pre>
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be <code>ex:Resolved</code> or <code>ex:Rejected</code>, <code>ex:Unresolved</code> found.</td></tr>
           </table>
         </div>
@@ -893,11 +913,11 @@ _:User2
 <span class="fail">&lt;issue7&gt; foaf:mbox &lt;mailto:sales-contacts-999@a.example&gt; .</span></pre>
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue4&gt;</td><td>pass</td></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue5&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue4&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue5&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue6&gt;</td><td>fail</td><td class="fail"><code>"missing"</code> is not in value set.</td></tr>
-            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:sales-contactus-999@a.example&gt;</code> is excluded.</td></tr>
+            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:sales-contacts-999@a.example&gt;</code> is excluded.</td></tr>
           </table>
         </div>
 
@@ -912,7 +932,8 @@ _:User2
       "predicate": "http://xmlns.com/foaf/0.1/mbox",
       "valueExpr": {
         "type": "NodeConstraint", "values": [
-          { "type": "Wildcard", "exclusions": [
+          { "type": "StemRange", "stem": {"type": "Wildcard"},
+            "exclusions": [
               { "type": "Stem", "stem": "mailto:engineering-" },
               { "type": "Stem", "stem": "mailto:sales-" }
             ] }
@@ -936,8 +957,8 @@ _:User2
 <span class="fail">&lt;issue10&gt; foaf:mbox &lt;mailto:engineering-2112@a.example&gt; .</span></pre>
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue8&gt;</td><td>pass</td></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue9&gt;</td><td>pass</td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue8&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue9&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue10&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:engineering-2112@a.example&gt;</code> is excluded.</td></tr>
           </table>
         </div>
@@ -1153,7 +1174,7 @@ _:User2
                   <div style="clear:both;">holds if
                   <ul class="tight">
                     <li><m>T</m> has exactly one triple <m>t</m>.</li>
-                    <li><m>t</m> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
+                    <li><m>t</m> has the predicate "<code>http://xmlns.com/foaf/0.1/givenName</code>"</li>
                   </ul></div>
                 </div>
               </li>
@@ -1282,7 +1303,7 @@ _:User2
         "predicate": "http://xmlns.com/foaf/0.1/name"
       } },
     "http://schema.example/EmployeeShape": {
-      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
+      "type":"Shape", "expression": { "type":"EachOf", "shapeExprs": [
         { "type": "Inclusion", "include": "http://schema.example/PersonShape" }
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/employeeNumber" }
@@ -1533,7 +1554,7 @@ _:User2
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>print arguments</th></tr>
               <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
               <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n2&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
-              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td></tr>
+              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td><td class="noreason"></td></tr>
             </table>
           </div>
         </section>
@@ -1570,12 +1591,12 @@ _:User2
              "object": "\"Represents reported software issues.\"" },
            { "type": "Annotation",
              "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
-             "object": "\"softare issue\"" } ] } } }</pre>
+             "object": "\"software issue\"" } ] } } }</pre>
               <pre class="shexc">                                                                         
     ex:IssueShape {
       ex:status .
           // rdfs:comment "Represents reported software issues."
-          // rdfs:label "softare issue"
+          // rdfs:label "software issue"
     }
 
 
@@ -1741,8 +1762,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               <pre class="json">{ "type": "Schema", "shapes": {
   "http://schema.example/UserShape":
   { "type": "Shape", "expression":
+    "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
     { "type": "TripleConstraint",
-      "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
       "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
       "valueExpr":
       { "type": "NodeConstraint",
@@ -2668,7 +2689,7 @@ inst:Testgrammer23
        or maybe title this section "ShEx Compact syntax" and include the grammar and then, how to parse it --> 
 
       <div class="example">
-          <div class="example-title marker"><span>Values Constraint example 2</span></div>
+          <div class="example-title marker"><span>Parsing ShExC Example 1</span></div>
           <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
   <p>
     Following is a ShEx schema written in ShExC with line numbers added at the left for reference.
@@ -2737,6 +2758,7 @@ inst:Testgrammer23
     The triple expression in the shape definition is given between the curly braces on lines 2 and 13.
     It is an each-of expression composed of six sub-expressions, separated by semicolons. 
     The sub-expressions are as follows:
+  </p>
     <ul>
       <li>
         Four triple constraints on lines 3, 4, 6, 7.
@@ -2745,7 +2767,6 @@ inst:Testgrammer23
         Two repeated triple expressions, one on lines 8--11 with cardinality ? = [0;1], another one on line 12 with cardinality * = [0;*].
       </li>
     </ul>
-  </p>
 
   <p>
     We explain the different forms of triple constraint that appear in the definition of <span class="pre">&lt;IssueShape&gt;</span>, by explaining their property or their value expression.
@@ -3026,12 +3047,12 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
   <li>If the <span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span> production matches, the result is <span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span>.</li>
   <li>Otherwise, the result is a <a href="#dfn-ShapeRef" class="obj">ShapeRef</a> object with <span class="param">reference</span> being the matching characters after the initial "<code>@</code>".</li>
 </ul>
-  <tr class="obj"><td></td><td href="#dfn-ShapeRef" class="obj">ShapeRef</td><td>{</td><td><span class="param">reference</span>:<a class="trmref" href="#dfn-IRI">IRI</a> }</td></tr>
 </td></tr>
+  <tr class="obj"><td></td><td id="dfn-ShapeRef" class="obj">ShapeRef</td><td>{</td><td><span class="param">reference</span>:<a class="trmref" href="#dfn-IRI">IRI</a> }</td></tr>
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Node constraints identify a (possibly infinite) set of matching RDF nodes.
     </p>
@@ -3098,7 +3119,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 </tbody>
 
 <tbody class="grammarParagraph" style="border-left:thin solid white; border-right:thin solid white;">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Shape defintions associate a triple expression with a closed flag and a list of partially constrained (extra) predicates.
       Any predicate appearing in a triple expression is fully constrained unless it appears in the list of extras.
@@ -3144,7 +3165,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Triple expressions are arrangements of triple constraints.
     </p>
@@ -3248,7 +3269,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Triple constraints are matched against RDF triples.
     </p>
@@ -3293,7 +3314,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Value sets identify ranges of RDF nodes by explicit inclusion or by range (indicated by "<code>~</code>").
       Ranges may include exclusions, which may also be ranges but must not in turn contain exclusions.
@@ -3339,7 +3360,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Triple expressions can include the <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> in a <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span>.
     </p>
@@ -3358,7 +3379,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Triple expressions can include annotations in the form of a tuple of a <span class="prod"><a class="grammarRef" href="#prod-predicate">predicate</a></span> and an <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> or <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span>.
     </p>
@@ -3376,7 +3397,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       Triple expressions can include semantic actions consisting of an <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> and an optional code string.
     </p>
@@ -3411,7 +3432,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 -->
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <p>
       The remaining productions come from the specifications for SPARQL and Turtle.
     </p>
@@ -3521,7 +3542,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
-  <tr><td rowspan="2" colspan="4">
+  <tr><td colspan="4">
     <h3 id="terminals">Terminals</h3>
     <p>
       Terminals return:
@@ -3837,6 +3858,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <div class="with-highlight">
     <p>
       Moving the mouse over the elements of the list below will highlight the corresponding elements in the triple expression.
+    </p>
       <ul>
         <li><span class="hl-tc lowlight1">triple constraint</span> (<as><a href="#dfn-TripleConstraint">TripleConstraint</a></as>)</li>
         <li><span class="hl-someof lowlight2">some-of triple expression</span> (<as><a href="#dfn-OneOfTripleExpr">OneOfTripleExpr</a></as>)</li>
@@ -3846,7 +3868,6 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
         <!-- li><span class="hl-tc-cofinite lowlight1">triple constraint with a non-singleton co-finite set of properties</span></li -->
         <li><span class="hl-shref lowlight4">shape reference</span> (<as><a href="#dfn-ShapeRef">ShapeRef</a></as>)</li>
       </ul>
-    </p>
 <pre class="shex">
 # triple expression of the shapes language
 
