@@ -1,0 +1,17 @@
+PREFIX ex: <http://schema.example/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+# ShEx schema
+
+<IssueShape>
+
+CLOSED {                 
+    ex:state      [ex:unassigned ex:assigned] ; 
+    ex:reportedBy @<UserShape> ;   
+    ex:reportedOn xsd:dateTime OR xsd:date ;
+    ex:related    @<IssueShape>* ;
+    ^ex:related   @<IssueShape>*
+}
+
+<UserShape> {
+    a PATTERN "http://example.org/User#.*"
+}

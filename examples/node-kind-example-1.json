@@ -1,0 +1,16 @@
+{
+  "type": "Schema",
+  "prefixes": {"ex": "http://schema.example/"},
+  "shapes": {
+    "http://schema.example/IssueShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/state",
+        "valueExpr": {
+          "type": "NodeConstraint", "nodeKind": "iri"
+        }
+      }
+    }
+  }
+}

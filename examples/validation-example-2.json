@@ -1,0 +1,12 @@
+{ "type": "Schema",
+  "prefixes": {"ex": "http://schema.example/"},
+  "shapes": {
+    "http://schema.example/UserShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/shoeSize"
+      }
+    }
+  }
+}

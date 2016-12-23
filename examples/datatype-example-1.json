@@ -1,0 +1,20 @@
+{
+  "type": "Schema",
+  "prefixes": {
+    "ex": "http://schema.example/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "shapes": {
+    "http://schema.example/IssueShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/submittedOn",
+        "valueExpr": {
+          "type": "NodeConstraint",
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime"
+        }
+      }
+    }
+  }
+}

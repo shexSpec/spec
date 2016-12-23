@@ -1,0 +1,7 @@
+PREFIX ex: <http://schema.example/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+ex:IssueShape {
+  ex:status .
+      // rdfs:comment "Represents reported software issues."
+      // rdfs:label "software issue"
+}

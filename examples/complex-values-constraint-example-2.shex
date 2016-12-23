@@ -1,0 +1,38 @@
+PREFIX ex:   <http://schema.example/>
+PREFIX foaf: <http://xmlns.com/foaf/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+<IssueShape> CLOSED EXTRA rdf:type
+{                           
+    a [ex:Issue];
+    ex:state [ex:unassigned ex:assigned]; 
+                             
+    ex:reportedBy @<UserShape>;   
+    ex:reportedOn xsd:dateTime;         
+    (                                   
+      ex:reproducedBy @<EmployeeShape>;  
+      ex:reproducedOn xsd:dateTime OR xsd:date 
+    )?;
+    ^ex:related @<IssueShape>*            
+}
+
+<UserShape> PATTERN "^http:/example.org/.*" {                     
+    (                                   
+       foaf:name xsd:string             
+     |                                  
+       foaf:givenName xsd:string+;      
+       foaf:familyName xsd:string
+    );     
+    foaf:mbox IRI              
+}
+
+<EmployeeShape> {        
+    foaf:phone IRI*;          
+    foaf:mbox IRI             
+} AND {
+    ( foaf:phone PATTERN "^tel:\\\\+33"; 
+      foaf:mbox PATTERN "\\\\.fr$" )?;
+    ( foaf:phone PATTERN "^tel:\\\\+44"; 
+      foaf:mbox PATTERN "\\\\.uk$")?
+}

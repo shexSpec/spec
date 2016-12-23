@@ -1,0 +1,28 @@
+{
+  "type": "Schema",
+  "prefixes": {
+    "ex": "http://schema.example/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "shapes": {
+    "http://schema.example/EmployeeShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://xmlns.com/foaf/0.1/mbox",
+        "valueExpr": {
+          "type": "NodeConstraint",
+          "values": [
+            { "type": "StemRange",
+              "stem": {"type": "Wildcard"},
+              "exclusions": [
+                { "type": "Stem", "stem": "mailto:engineering-" },
+                { "type": "Stem", "stem": "mailto:sales-" }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{ "type": "Schema",
+          "prefixes": {"ex": "http://schema.example/"},
+          "shapes": {
+          "http://schema.example/IssueShape":
+          { "type": "Shape", "expression":
+            { "type": "TripleConstraint",
+              "predicate": "http://schema.example/related",
+              "valueExpr":
+              { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" },
+              "min": 0, "max": "*"
+            } } } })

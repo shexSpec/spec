@@ -1,0 +1,22 @@
+{
+  "type": "Schema",
+  "prefixes": {
+    "ex": "http://a.example/",
+    "Test": "http://shex.io/extensions/Test/"
+  },
+  "shapes":{
+    "http://a.example/S1": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://a.example/p1",
+        "semActs": [
+          { "type": "SemAct", "code": " print(s) ",
+            "name": "http://shex.io/extensions/Test/" },
+          { "type": "SemAct", "code": " print(o) ",
+            "name": "http://shex.io/extensions/Test/" }
+        ]
+      }
+    }
+  }
+}
