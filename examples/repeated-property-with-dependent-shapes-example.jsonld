@@ -1,0 +1,48 @@
+{
+  "@context": "https://shexspec.github.io/context.jsonld",
+  "type": "Schema",
+  "shapes": [{
+    "id": "http://schema.example/IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "EachOf",
+      "expressions": [{
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/reproducedBy",
+        "valueExpr": {
+          "type": "ShapeRef",
+          "reference": "http://schema.example/TesterShape"
+        }
+      }, {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/reproducedBy",
+        "valueExpr": {
+          "type": "ShapeRef",
+          "reference": "http://schema.example/ProgrammerShape"
+        }
+      }]
+    }
+  }, {
+    "id": "http://schema.example/TesterShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/role",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "values": [ "http://schema.example/testingRole" ]
+      }
+    }
+  }, {
+    "id": "http://schema.example/ProgrammerShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/department",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "values": [ "http://schema.example/ProgrammingDepartment" ]
+      }
+    }
+  }]
+}

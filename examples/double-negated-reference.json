@@ -1,0 +1,21 @@
+{
+  "type": "Schema",
+  "prefixes": {"ex": "http://schema.example/#"},
+  "shapes": {
+    "http://schema.example/#S": {
+      "type": "ShapeNot",
+      "shapeExpr": {
+        "type": "ShapeOr",
+        "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri" },
+          { "type": "ShapeNot",
+            "shapeExpr": {
+              "type": "ShapeRef",
+              "reference": "http://schema.example/#S"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

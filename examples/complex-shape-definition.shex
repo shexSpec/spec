@@ -1,0 +1,20 @@
+PREFIX ex: <http://schema.example/>
+PREFIX foaf: <http://xmlns.com/foaf/>
+# ShEx schema
+
+<EmployeeShape>
+PATTERN "^http:/example.org/.*"
+
+CLOSED {        
+    foaf:phone IRI*;          
+    foaf:mbox IRI             
+}
+
+AND 
+
+CLOSED {
+  ( foaf:phone PATTERN "^tel:\\\\+33"; 
+    foaf:mbox PATTERN "\\\\.fr$" )?;
+  ( foaf:phone PATTERN "^tel:\\\\+44"; 
+    foaf:mbox PATTERN "\\\\.uk$")?
+}

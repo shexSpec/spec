@@ -1,0 +1,11 @@
+PREFIX ex: <http://schema.example/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+ex:UserShape {
+ (              # extra ()s to clarify alignment with ShExJ
+  foaf:name LITERAL |
+  (             # extra ()s to clarify alignment with ShExJ
+   foaf:givenName LITERAL+ ;
+   foaf:familyName LITERAL
+  )
+ )
+}

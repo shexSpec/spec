@@ -1,0 +1,5 @@
+PREFIX ex: <http://a.example/>
+PREFIX Test: <http://shex.io/extensions/Test/>
+ex:S1 {
+  ex:p1 . %Test:{ print(s) %} %Test:{ print(o) %}
+}

@@ -1,0 +1,5 @@
+PREFIX ex: <http://schema.example/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+ex:EmployeeShape {
+  foaf:mbox [ . - <mailto:engineering->~ - <mailto:sales->~ ]
+}

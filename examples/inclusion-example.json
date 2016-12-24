@@ -1,0 +1,28 @@
+{
+  "type":"Schema",
+  "prefixes": {
+    "ex": "http://schema.example/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "shapes": {
+    "http://schema.example/PersonShape": {
+      "type":"Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://xmlns.com/foaf/0.1/name"
+      }
+    },
+    "http://schema.example/EmployeeShape": {
+      "type":"Shape",
+      "expression": {
+        "type":"EachOf",
+        "expressions": [
+          { "type": "Inclusion", "include": "http://schema.example/PersonShape" },
+          { "type": "TripleConstraint",
+            "predicate": "http://schema.example/employeeNumber"
+          }
+        ]
+      }
+    }
+  }
+}

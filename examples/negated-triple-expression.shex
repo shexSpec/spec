@@ -1,0 +1,10 @@
+PREFIX ex: <http://schema.example/>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+# ShEx schema
+
+<SomeShape> 
+CLOSED {
+    ex:p xsd:int* ;
+    ( ex:q xsd:int {0,0}  
+      | ex:r IRI )? 
+}
