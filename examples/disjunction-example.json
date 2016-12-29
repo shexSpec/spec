@@ -1,0 +1,30 @@
+{
+  "type": "Schema",
+  "prefixes": {
+    "ex": "http://schema.example/",
+    "foaf": "http://xmlns.com/foaf/0.1/"
+  },
+  "shapes": {
+    "http://schema.example/UserShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "OneOf",
+        "expressions": [
+          { "type": "TripleConstraint",
+            "predicate": "http://xmlns.com/foaf/0.1/name",
+            "valueExpr":
+              { "type": "NodeConstraint", "nodeKind": "literal" } },
+          { "type": "EachOf",
+            "expressions": [
+              { "type": "TripleConstraint",
+                "predicate": "http://xmlns.com/foaf/0.1/givenName",
+                "valueExpr":
+                  { "type": "NodeConstraint", "nodeKind": "literal" },
+                "min": 1, "max": "*"  },
+              { "type": "TripleConstraint",
+                "predicate": "http://xmlns.com/foaf/0.1/familyName",
+                "valueExpr":
+                  { "type": "NodeConstraint", "nodeKind": "literal" } }
+            ] }
+        ] }
+    } } }

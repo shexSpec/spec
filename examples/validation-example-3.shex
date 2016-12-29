@@ -1,0 +1,2 @@
+PREFIX ex: <http://schema.example/>
+ex:UserShape EXTRA a {a [ex:Teacher]}

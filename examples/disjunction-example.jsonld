@@ -1,0 +1,27 @@
+{
+  "@context": ["https://shexspec.github.io/context.jsonld", {"foaf": "http://xmlns.com/foaf/0.1/"}],
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/UserShape",
+    "type": "Shape",
+    "expression": {
+      "type": "OneOf",
+      "expressions": [
+        { "type": "TripleConstraint",
+          "predicate": "foaf:name",
+          "valueExpr":
+            { "type": "NodeConstraint", "nodeKind": "literal" } },
+        { "type": "EachOf",
+          "expressions": [
+            { "type": "TripleConstraint",
+              "predicate": "foaf:givenName",
+              "valueExpr":
+                { "type": "NodeConstraint", "nodeKind": "literal" },
+              "min": 1, "max": "*"  },
+            { "type": "TripleConstraint",
+              "predicate": "foaf:familyName",
+              "valueExpr":
+                { "type": "NodeConstraint", "nodeKind": "literal" } }
+          ] }
+      ] }
+  } }

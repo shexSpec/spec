@@ -1,0 +1,5 @@
+PREFIX ex: <http://schema.example/>
+ex:TestResultsShape {
+  ex:val ["a" "b" "c"]+;
+  ex:val ["b" "c" "d"]+
+}

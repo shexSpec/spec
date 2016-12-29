@@ -1,0 +1,16 @@
+{
+  "@context": "https://shexspec.github.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/submittedOn",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "datatype": "xsd:dateTime"
+      }
+    }
+  }
+}
