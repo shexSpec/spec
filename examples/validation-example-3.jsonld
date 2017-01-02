@@ -1,0 +1,17 @@
+{
+  "@context": "https://shexspec.github.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/UserShape",
+    "type": "Shape",
+    "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "values": ["http://schema.example/Teacher"]
+      }
+    }
+  }
+}

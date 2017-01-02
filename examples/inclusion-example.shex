@@ -1,0 +1,9 @@
+PREFIX ex: <http://schema.example/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+ex:PersonShape {
+  foaf:name .
+}
+ex:EmployeeShape {
+  &ex:PersonShape ;
+  ex:employeeNumber .
+}

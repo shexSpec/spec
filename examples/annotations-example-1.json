@@ -1,0 +1,24 @@
+{
+  "type": "Schema",
+  "prefixes": {
+    "ex": "http://schema.example/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+  },
+  "shapes":{
+    "http://schema.example/IssueShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/status",
+        "annotations": [
+           { "type": "Annotation",
+             "predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
+             "object": "\"Represents reported software issues.\"" },
+           { "type": "Annotation",
+             "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
+             "object": "\"software issue\"" } 
+        ]
+      }
+    }
+  }
+}

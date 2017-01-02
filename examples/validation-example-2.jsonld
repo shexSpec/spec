@@ -1,0 +1,12 @@
+{
+  "@context": "https://shexspec.github.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/UserShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/shoeSize"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "@context": "https://shexspec.github.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/TestResultsShape",
+    "type": "Shape",
+    "expression": {
+      "type": "EachOf",
+      "expressions": [{
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/val",
+        "valueExpr": {
+          "type": "NodeConstraint",
+          "values": [
+            {"@value": "a"},
+            {"@value": "b"},
+            {"@value": "c"}
+          ]
+        },
+        "min": 1, "max": "*"
+      }, {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/val",
+        "valueExpr": {
+          "type": "NodeConstraint",
+          "values": [
+            {"@value": "b"},
+            {"@value": "c"},
+            {"@value": "d"}
+          ]
+        },
+        "min": 1, "max": "*"
+      }]
+    }
+  }
+}

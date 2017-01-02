@@ -1,0 +1,14 @@
+{
+  "type": "Schema",
+  "prefixes": {"ex": "http://schema.example/"},
+  "shapes": {
+    "http://schema.example/IssueShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/confirmations",
+        "valueExpr": { "type": "NodeConstraint", "mininclusive": 1 }
+      }
+    }
+  }
+}
