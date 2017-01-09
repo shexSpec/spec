@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
-    <title>Shape Expressions Language</title>
+    <title>Shape Expressions Language 2.0</title>
     <!-- link rel="stylesheet" href="css/wgio.min.css"/ ask Iovka -->
     <link rel="stylesheet" href="local.css"/>
 
@@ -14,8 +14,11 @@
 
     <script class='remove'>
       var respecConfig = {
-      specStatus:     "base",
+      specStatus:     "CG-DRAFT",
       shortName:      "shex-semantics",
+      prevVersion:    "https://www.w3.org/Submission/2014/SUBM-shex-defn-20140602/",
+      previousPublishDate:  "2014-06-02",
+      previousMaturity:"Member-SUBM",
       testSuiteURI:   "https://github.com/shexSpec/shexTest",
       issueBase:      "https://github.com/shexSpec/shex/issues",
       githubAPI:      "https://api.github.com/repos/shexSpec/shex",
@@ -38,10 +41,10 @@
           companyURL: "https://spec-ops.io/",
           w3cid:      "44770" },
       ],
-      // wg:           "Shape Expressions ",
-      // wgURI:        "https://shex.io/",
-      // wgPublicList: "public-shex-dev",
-      // wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      wg:           "Shape Expressions Community Group",
+      wgURI:        "https://shexspec.github.io",
+      wgPublicList: "public-shex",
+      wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
 
       bugTracker:             {
         open: "https://github.com/shexSpec/shex/issues",
@@ -73,6 +76,13 @@
         This document defines the ShEx language.
         See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of ShEx.
       </p>
+    </section>
+
+    <section id="sotd">
+  <p>This document has been developed by the
+    <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>.
+    The specification has undergone
+    significant development since the 1.0 version.</p>
     </section>
 
     <section id="status">
@@ -145,7 +155,7 @@
             | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</pre>
       </div>
       <p>
-        signifies that a <code>shapeExpr</code> is is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | …:
+        signifies that a <code>shapeExpr</code> is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | …:
       </p>
 
       <div class="shexj">
@@ -306,7 +316,7 @@ _:User2
       <p>
         A Shape Expressions (ShEx) schema is a collection of labeled Shapes and Node Constraints.
         These can be used to describe or test nodes in RDF graphs.
-        ShEx does not prescribe a laguage for associating nodes with shapes but several approaches are <a href="../primer/index.html#associating-nodes-with-shapes">described in the ShEx Primer</a>.
+        ShEx does not prescribe a language for associating nodes with shapes but several approaches are <a href="../primer/index.html#associating-nodes-with-shapes">described in the ShEx Primer</a>.
       </p>
 
       <section id="shapes-schema">
@@ -391,7 +401,7 @@ _:User2
         <ul>
           <li>
             a node constraint (<span class="jobjref"><a href="#dfn-NodeConstraint">NodeConstraint</a></span>) that defines the set of allowed values of a node.
-            These include speficitation of RDF node kind, literal datatype, XML String and numeric facets and enumeration of value sets.
+            These include specification of RDF node kind, literal datatype, XML String and numeric facets and enumeration of value sets.
           </li>
           <li>
             a shape constraint (<span class="jobjref"><a href="#dfn-Shape">Shape</a></span>) that defines a constraint on the allowed neighbourhood of a node, that is, the allowed triples that contain this node as subject or object.
@@ -400,7 +410,7 @@ _:User2
             a shape reference (<span class="jobjref"><a href="#dfn-ShapeRef">ShapeRef</a></span>) identifies another shape in the schema.
           </li>
           <li>
-            an extermal shape (<span class="jobjref"><a href="#dfn-ShapeExternal">ShapeExternal</a></span>) which is an extension mechanism to externally define e.g. functional shapes or prohibitively large value sets.
+            an external shape (<span class="jobjref"><a href="#dfn-ShapeExternal">ShapeExternal</a></span>) which is an extension mechanism to externally define e.g. functional shapes or prohibitively large value sets.
           </li>
         </ul>
         <section id="shape-expressions-shexj">
