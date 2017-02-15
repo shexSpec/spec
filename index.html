@@ -120,34 +120,52 @@
       <p>
         <!-- @@Labra: I would probably add a paragraph saying something about the abstract syntax so you can later talk about JSON... -->
         <!-- @@ericP: I changed "the" to "an" below in hopes that suffices. I don't want to define an abstract syntax in addition to ShExJ if we can avoid it. -->
-        The JSON[[!rfc6901]] Syntax serves as a serializable proxy for an abstract syntax.
-        It consists of statements defining data structures and named members of those data structures.
-        Each member has either a single type or two or more types that are a union (choice) of types.
-        <!-- @@Labra: Maybe add that choice is represented by | -->
-        <!-- @@ericP: More work on this should come from a definition of JSG. -->
-        Each type is either a reference to another statement, a primitive RDF type (e.g. <code>numeric</code>)[[!sparql11-query]], or the template type <code>Set</code>, which signifies a <a href="https://en.wikipedia.org/wiki/Set_(mathematics)">logical set</a> of a type.
+        The JSON[[!rfc4627]] Syntax serves as a serializable proxy for an abstract syntax.
+        This specification uses a simple grammar to describe the set of JSON documents that can be interpreted as a ShEx schema.
       </p>
-      <p>
-        Optional parameters are suffixed with a "<code>?</code>".
-        For brevity, empty maps and lists are elided in serializations of ShExJ.
-        References may be suffixed with a "<code>*</code>" to indicate that there may be any number of them, c.f. "<a class="nobref" href="#dfn-xsFacet">xsFacet</a>*" below.
-      </p>
-      <!-- @@Labra: I think an explanation of lists represented by brackets is missing -->
+      <ul>
+        <li>Typed data structures are represented as JSON objects:
+        <span class="shexj">typeName { <a href="https://tools.ietf.org/html/rfc4627#section-2.2">member*</a> }</span><br/>
+        <a href="https://tools.ietf.org/html/rfc4627#section-2.2">RFC4627 Section 2.2</a> provides syntactic constraints for JSON — this grammar constrains those to valid ShExJ constructs. 
+        </li>
+        <li><code>typeName</code> is the name of the typed data structure.
+        Types are referenced in the definitions of object members and in the definitions of the semantics for those data structures.</li>
+        <li><code>member*</code> is a list of zero or more terminals or references to other typeExpressions.</li>
+        <li><code>Terminals</code> are JSON strings and are indicated by all-caps, e.g.  <a class="trmref" href="#dfn-IRI">IRI</a>.
+          For brevity, RDF nodes are represented as JSON strings composed as:
+        <ul>
+          <li><code>IRI</code>: the lexical form of the IRI, e.g. <code class="json">"http://example.org/resource"</code></li>
+          <li><code>BNODE</code>: the concatenation of "<code>_:</code>" and a blank node label, e.g. <code class="json">"_:blank3"</code></li>
+          <li><code>LITERAL</code>: the concatenation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
+          <ul>
+            <li>literal with type <code>http://www.w3.org/2001/XMLSchema#string</code>: empty string, e.g. <code class="json">"abc"</code>.</li>
+            <li>language tagged literal: U+0040 ('<code>@</code>') and the language tag, e.g. <code class="json">"\"hello world\"@en-US"</code></li>
+            <li>datatyped literal: U+005E U+005E ('<code>^^</code>') and the lexical form of the datatype URI, e.g. <code class="json">"\"123\"^^http://www.w3.org/2001/XMLSchema#integer"</code></li>
+          </ul></li>
+        </ul>
+        </li>
+        <li>A <code>typeExpression</code> is one of:
+        <ul>
+          <li><code>typeName</code> — an object of corresponding type</li>
+          <li><code>array</code>: <span class="shexj">[ typeExpression+ ]</span>— an array of one or more JSON values matching the typeExpression.</li>
+          <li><code>choice</code>: <span class="shexj">typeExpression1 | typeExpression2 | …</span>— a choice between two or more typeExressions.</li>
+        </ul>
+        </li>
+        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> per <a href="https://www.w3.org/TR/xml/#sec-notation">XML notation</a> or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
+      </ul>
+
       <p>In this notation,</p>
 
       <div class="shexj">
-        <pre><a href="#dfn-Schema" class="obj">Schema</a> { <span class="param">prefixes</span>:{<a class="trmref" href="#dfn-PREFIX">PREFIX</a>-&gt;<a class="trmref" href="#dfn-IRI">IRI</a>}? <span class="param">base</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]?
-         <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">shapes</span>:{<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>-&gt;<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>}? }</pre>
+        <pre><a href="#dfn-Schema" class="obj">Schema</a> { <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }</pre>
       </div>
       <p>
-        signifies that a <code>Schema</code> has five components called <code class="param">prefixes</code>, <code class="param">base</code>, <code class="param">startActs</code>, <code class="param">start</code>, <code class="param">shapes</code>:
+        signifies that a <code>Schema</code> has three optional components called <code class="param">startActs</code>, <code class="param">start</code> and <code class="param">shapes</code>:
       </p>
       <ul>
-        <li><code class="param">prefixes</code> is an optional map from <a class="trmref" href="#dfn-PREFIX">PREFIX</a> to <a class="trmref" href="#dfn-IRI">IRI</a>.</li>
-        <li><code class="param">base</code> is an optional <code>IRI</code>.</li>
-        <li><code class="param">startActs</code> is an optional list of <a class="objref" href="#dfn-SemAct">SemAct</a>.<!-- @@Labra: Maybe you can say here that lists are represented by square brackets ? --></li>
-        <li><code class="param">start</code> is an optional <a class="objref" href="#dfn-shapeExpr">shapeExpr</a>.</li>
-        <li><code class="param">shapes</code> is an optional map from <a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> to <a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>.</li>
+        <li><code class="param">startActs</code> is a list of <a class="objref" href="#dfn-SemAct">SemAct</a>.<!-- @@Labra: Maybe you can say here that lists are represented by square brackets ? --></li>
+        <li><code class="param">start</code> is a <a class="objref" href="#dfn-shapeExpr">shapeExpr</a>.</li>
+        <li><code class="param">shapes</code> is an array of <a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>.</li>
       </ul>
 
       <div class="shexj">
@@ -155,7 +173,7 @@
             | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</pre>
       </div>
       <p>
-        signifies that a <code>shapeExpr</code> is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | …:
+        signifies that a <code>shapeExpr</code> is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | ….
       </p>
 
       <div class="shexj">
@@ -166,25 +184,34 @@
         signifies that a <code>NodeConstraint</code> has a <code class="param">nodeKind</code> of one of the four literals followed by any number of <a class="objref .shexj" href="#dfn-xsFacet">xsFacet</a> and an <a class="objref .shexj" href="#dfn-xsFacet">xsFacet</a> is either a <a class="objref .shexj" href="#dfn-stringFacet">stringFacet</a> or a <a class="objref .shexj" href="#dfn-numericFacet">numericFacet</a>.
       </p>
 
-      <p>
-        JSON examples are rendered in a <span class="json">.json</span> CSS style.
-        Partial examples include ranges in a <span class="comment">.comment</span> CSS style to indicate text which would be substituted in a complete example.
-        For example  <span class="json">{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">…</span> ] }</span> indicates that both <span class="comment">SE<sub>1</sub></span> and <span class="comment">…</span> would be substituted in a complete example.
-      </p>
-      <p>
-        Terminals are JSON strings and are indicated by all-caps, e.g. <a class="trmref" href="#dfn-PREFIX">PREFIX</a> and <a class="trmref" href="#dfn-IRI">IRI</a>.
-        For brevity RDF nodes are represented as JSON strings composed as:
-      </p>
-      <ul>
-        <li>IRI: the lexical form of the IRI, e.g. <code class="json">"http://example.org/resource"</code></li>
-        <li>blank node: the concatenation of "<code>_:</code>" and a blank node label, e.g. <code class="json">"_:blank3"</code></li>
-        <li>literal: the concatenation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
-        <ul>
-          <li>literal with type <code>http://www.w3.org/2001/XMLSchema#string</code>: empty string, e.g. <code class="json">"abc"</code>.</li>
-          <li>language tagged literal: U+0040 ('<code>@</code>') and the language tag, e.g. <code class="json">"\"hello world\"@en-US"</code></li>
-          <li>datatyped literal: U+005E U+005E ('<code>^^</code>') and the lexical form of the datatype URI, e.g. <code class="json">"\"123\"^^http://www.w3.org/2001/XMLSchema#integer"</code></li>
-        </ul></li>
-      </ul>
+      <section id="references">
+        <h3>References</h3>
+        <p>
+          ShExJ is a dialect of JSON-LD[[!JSON-LD]] and the member <code>id</code> is used as a <a href="https://www.w3.org/TR/json-ld/#node-identifiers">node identifier</a>.
+          An object may be represented inline or referenced by its <code>id</code> which may be either a blank node or an IRI.
+        </p>
+        <div class="shexj">
+          <pre> <a href="#dfn-shapeRef" class="nob">shapeRef</a> = <a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</pre>
+        </div>
+        <p>
+          An object with a circular reference must be referenced by id.
+          This example uses a nested shape reference on a value expression (<a href="#dfn-TripleConstraint">defined below</a>).
+        </p>
+        <div class="shexj">
+          <pre>{ "type": "Schema", "shapes": {
+      "http://schema.example/IssueShape": {
+      "type": "Shape", "expression": {
+        "type": "TripleConstraint", "predicate": "http://schema.example/related",
+        "valueExpr": "http://schema.example/IssueShape", min: 0 } } } }</pre>
+        </div>
+      </section>  
+      <section id="style">
+        <h3>Document style</h3>
+        <p>
+          JSON examples are rendered in a <span class="json">.json</span> CSS style.
+          Partial examples include ranges in a <span class="comment">.comment</span> CSS style to indicate text which would be substituted in a complete example.
+          For example  <span class="json">{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">…</span> ] }</span> indicates that both <span class="comment">SE<sub>1</sub></span> and <span class="comment">…</span> would be substituted in a complete example.
+        </p>
       <!--div class="issue">
         <p id="json-triples">
           When stable, consider switching to the rdfjs task force's <a href="https://github.com/rdfjs/representation-task-force/blob/master/interface-spec.md#term">JSON representation</a> i.e.
@@ -200,42 +227,48 @@
           </ul></li>
         </ul>
       </div-->
+      </section>
+      <section id="graphAccess">
+        <h3>Graph access</h3>
       <p>
-        The term definitions given in this document rely on matching triple patterns in the form <code>(subject, predicate, object)</code> where each position may be supplied by a constant, a previously defined term, or the underscore "<code>_</code>", which represents a previously undefined element or wildcard.
+        The validation process defined in this document relies on matching triple patterns in the form <code>(subject, predicate, object)</code> where each position may be supplied by a constant, a previously defined term, or the underscore "<code>_</code>", which represents a previously undefined element or wildcard.
         This corresponds to a <a href="http://www.w3.org/TR/sparql11-query/#defn_TriplePattern">SPARQL Triple Pattern</a> where each "_" is replaced by a unique blank node.
         Matching such a triple pattern against a graph is defined by <a href="http://www.w3.org/TR/sparql11-query/#BGPsparql">SPARQL Basic Graph Pattern Matching</a> (BFP) with a BGP containing only that triple pattern.
       </p>
+      </section>
       <!-- button id="toggleRDF">Toggle RDF ("r")</button> <button id="toggleExamples">Toggle Examples ("e")</button> <button id="toggleSquished">Render only abstract syntax ("a")</button -->
 
-      <div class="example">
+      <section id="results">
+        <h3>Results</h3>
+        <div class="example">
+          <p>
+            Results of validation are represented in a table associating node/shape pairs with a pass or fail and a reason for failure:
+          </p>
+        <table>
+          <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+          <tr class="pass"><td>&lt;Shape1&gt;</td><td>&lt;node1&gt;</td><td>pass</td><td class="noreason"></td></tr>
+          <tr class="fail"><td>&lt;Shape1&gt;</td><td>&lt;node2&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
+        </table>
+        </div>
         <p>
-          Results of validation are represented in a table associating node/shape pairs with a pass or fail and a reason for failure:
+          Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
+          Pressing "j" or "c" converts all such examples to the JSON or compact form.
         </p>
-      <table>
-        <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-        <tr class="pass"><td>&lt;Shape1&gt;</td><td>&lt;node1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-        <tr class="fail"><td>&lt;Shape1&gt;</td><td>&lt;node2&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
-      </table>
-      </div>
-      <p>
-        Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
-        Pressing "j" or "c" converts all such examples to the JSON or compact form.
-      </p>
+        </section>
       <!-- @@Labra: I am not sure, but I think it would be more readable if you used the compact syntax by default and the Json as secondary. 
           Also, I would prefer to see both at the same time as in the OWL Primer: https://www.w3.org/TR/owl2-primer/ where you can activate/deactiva 
           each of the styles separately
           Finally, I also think it would be nice to also include examples using the JSON-LD/RDF based serialization -->
       <!-- @@ericP: I think we have to use ShExJ as the default syntax as it's the foundation for the definitions of the semantics.
            Let's see if we can get ShExR done in time, though it will be more chatty than ShExJ. -->
-      <p>
-        The following HTML tags and CSS classes are used to highlight the roles of text in this document:
-      </p>
-      <ul>
-        <li>&lt;dfn&gt;<dfn id="dfn-shacl-defined-term">defined term</dfn>&lt;dfn&gt;</li>
-        <li>&lt;a class="internalDFN"&gt;<a title="SHACL defined term" href="#dfn-shacl-defined-term" class="internalDFN">defined term</a>&lt;/a&gt;</li>
-        <li><sup class="eval">eval</sup> &mdash; link to evaluation semantics</li>
-        </ul>
-      -->
+      <!-- <p> -->
+      <!--   The following HTML tags and CSS classes are used to highlight the roles of text in this document: -->
+      <!-- </p> -->
+      <!-- <ul> -->
+      <!--   <li>&lt;dfn&gt;<dfn id="dfn-shacl-defined-term">defined term</dfn>&lt;dfn&gt;</li> -->
+      <!--   <li>&lt;a class="internalDFN"&gt;<a title="SHACL defined term" href="#dfn-shacl-defined-term" class="internalDFN">defined term</a>&lt;/a&gt;</li> -->
+      <!--   <li><sup class="eval">eval</sup> &mdash; link to evaluation semantics</li> -->
+      <!-- </ul> -->
     </section>
 
     <section id="terminology">
@@ -326,8 +359,7 @@ _:User2
       </p>
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th id="dfn-Schema" class="obj">Schema</th><td>{</td><td><span class="param">prefixes</span>:{<a class="trmref" href="#dfn-PREFIX">PREFIX</a>-&gt;<a class="trmref" href="#dfn-IRI">IRI</a>}? <span class="param">base</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">shapes</span>:{<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>-&gt;<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>}? }</td></tr>
-  <tr class="nob"><th id="dfn-shapeLabel" class="nob">shapeLabel</th><td>=</td><td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
+  <tr class="obj"><th id="dfn-Schema" class="obj">Schema</th><td>{</td><td><span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }</td></tr>
         </table>
       </div>
       <p>
@@ -390,7 +422,7 @@ _:User2
       <p>
   Note that validation of a graph <m>G</m> does not necessarily require the construction of a ShapeMap with every node in <m>G</m>.
   The validation semantics defined below imply a set of dependencies for validating some node as a shape.
-  A validation process that is tests every node in a graph against every shape in a schema can be consiered to have an input ShapeMap associating each node with the set of all shapes in the schema.
+  A validation process that tests every node in a graph against every shape in a schema can be considered to have an input ShapeMap associating each node with the set of all shapes in the schema.
       </p>
 
       <p>
@@ -424,12 +456,13 @@ _:User2
 
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="nob"><th id="dfn-shapeExpr" class="nob">shapeExpr</th><td>=</td><td><a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a> | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</td></tr>
-  <tr class="obj"><th id="dfn-ShapeOr" class="obj">ShapeOr</th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
-  <tr class="obj"><th id="dfn-ShapeAnd" class="obj">ShapeAnd</th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
-  <tr class="obj"><th id="dfn-ShapeNot" class="obj">ShapeNot</th><td>{</td><td><span class="param">shapeExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a> }</td></tr>
-  <tr class="obj"><th id="dfn-ShapeRef" class="obj">ShapeRef</th><td>{</td><td><span class="param">reference</span>:<a class="trmref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
-  <tr class="obj"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
+  <tr class="nob"><th id="dfn-shapeExpr" class="nob">shapeExpr</th>         <td>=</td> <td><a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a> | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</td></tr>
+  <tr class="obj"><th id="dfn-ShapeOr" class="obj">ShapeOr</th>             <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
+  <tr class="obj"><th id="dfn-ShapeAnd" class="obj">ShapeAnd</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
+  <tr class="obj"><th id="dfn-ShapeNot" class="obj">ShapeNot</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a> }</td></tr>
+  <tr class="obj"><th id="dfn-ShapeRef" class="obj">ShapeRef</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">reference</span>:<a class="trmref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
+  <tr class="obj"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th> <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? }</td></tr>
+  <tr class="nob"><th id="dfn-shapeLabel" class="nob">shapeLabel</th>       <td>=</td> <td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
       </div>
       <div class="example">
