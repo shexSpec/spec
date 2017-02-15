@@ -154,7 +154,11 @@
         <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> per <a href="https://www.w3.org/TR/xml/#sec-notation">XML notation</a> or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
       </ul>
 
-      <p>In this notation,</p>
+      <p>
+        Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
+        Pressing "j" or "c" converts all such examples to the JSON or compact form.
+        In the JSON notation,
+      </p>
 
       <div class="shexj">
         <pre><a href="#dfn-Schema" class="obj">Schema</a> { <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }</pre>
@@ -170,7 +174,7 @@
 
       <div class="shexj">
         <pre><a href="#dfn-shapeExpr" class="nob">shapeExpr</a> = <a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a>
-            | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</pre>
+            | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-shapeRef">shapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</pre>
       </div>
       <p>
         signifies that a <code>shapeExpr</code> is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | ….
@@ -197,8 +201,8 @@
           An object with a circular reference must be referenced by id.
           This example uses a nested shape reference on a value expression (<a href="#dfn-TripleConstraint">defined below</a>).
         </p>
-        <div class="shexj">
-          <pre>{ "type": "Schema", "shapes": {
+        <div class="json">
+          <pre class="json">{ "type": "Schema", "shapes": {
       "http://schema.example/IssueShape": {
       "type": "Shape", "expression": {
         "type": "TripleConstraint", "predicate": "http://schema.example/related",
@@ -240,20 +244,17 @@
 
       <section id="results">
         <h3>Results</h3>
-        <div class="example">
+        <div>
           <p>
-            Results of validation are represented in a table associating node/shape pairs with a pass or fail and a reason for failure:
+            ShEx does not prescribe a report format.
+            For illustration purposes in this specification, results of validation are represented in a table associating node/shape pairs with a pass or fail and a reason for failure:
           </p>
-        <table>
+        <table class="example">
           <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
           <tr class="pass"><td>&lt;Shape1&gt;</td><td>&lt;node1&gt;</td><td>pass</td><td class="noreason"></td></tr>
           <tr class="fail"><td>&lt;Shape1&gt;</td><td>&lt;node2&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
         </table>
         </div>
-        <p>
-          Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
-          Pressing "j" or "c" converts all such examples to the JSON or compact form.
-        </p>
         </section>
       <!-- @@Labra: I am not sure, but I think it would be more readable if you used the compact syntax by default and the Json as secondary. 
           Also, I would prefer to see both at the same time as in the OWL Primer: https://www.w3.org/TR/owl2-primer/ where you can activate/deactiva 
@@ -445,7 +446,7 @@ _:User2
             a shape constraint (<span class="jobjref"><a href="#dfn-Shape">Shape</a></span>) that defines a constraint on the allowed neighbourhood of a node, that is, the allowed triples that contain this node as subject or object.
           </li>
           <li>
-            a shape reference (<span class="jobjref"><a href="#dfn-ShapeRef">ShapeRef</a></span>) identifies another shape in the schema.
+            a shape reference (<span class="jobjref"><a href="#dfn-shapeRef">shapeRef</a></span>) identifies another shape in the schema.
           </li>
           <li>
             an external shape (<span class="jobjref"><a href="#dfn-ShapeExternal">ShapeExternal</a></span>) which is an extension mechanism to externally define e.g. functional shapes or prohibitively large value sets.
@@ -456,11 +457,11 @@ _:User2
 
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="nob"><th id="dfn-shapeExpr" class="nob">shapeExpr</th>         <td>=</td> <td><a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a> | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeRef">ShapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</td></tr>
+  <tr class="nob"><th id="dfn-shapeExpr" class="nob">shapeExpr</th>         <td>=</td> <td><a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a> | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-shapeRef">shapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</td></tr>
   <tr class="obj"><th id="dfn-ShapeOr" class="obj">ShapeOr</th>             <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th id="dfn-ShapeAnd" class="obj">ShapeAnd</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th id="dfn-ShapeNot" class="obj">ShapeNot</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a> }</td></tr>
-  <tr class="obj"><th id="dfn-ShapeRef" class="obj">ShapeRef</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">reference</span>:<a class="trmref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
+  <tr class="obj"><th id="dfn-shapeRef" class="nob">shapeRef</th>           <td>=</td> <td><a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
   <tr class="obj"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th> <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? }</td></tr>
   <tr class="nob"><th id="dfn-shapeLabel" class="nob">shapeLabel</th>       <td>=</td> <td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
@@ -479,7 +480,7 @@ _:User2
     <pre class="json">{ "type": "ShapeAnd", "shapeExprs": [
   { "type": "NodeConstraint", <span class="comment">…</span> },
   { "type": "ShapeOr", "shapeExprs": [
-    { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" }
+    "http://schema.example/IssueShape",
     { "type": "ShapeNot", "shapeExpr": { "type": "ShapeExternal" } }
     ] } ] }</pre>
     <!-- pre class="shexc">                                                    
@@ -488,6 +489,7 @@ _:User2
     { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" }
     { "type": "ShapeNot", "shapeExpr": { "type": "ShapeExternal" } }
     ] } ] }</pre -->
+    In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the shape expression with the id "http://schema.example/IssueShape".
   </div>
       </div>
       </section>
@@ -509,7 +511,7 @@ _:User2
         <li id="satisfies-ShapeOr"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeOr" class="obj">ShapeOr</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeAnd"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeAnd" class="obj">ShapeAnd</a></span> and for every shape expression <m>se2</m> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeNot"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeNot" class="obj">ShapeNot</a></span> and for the shape expression <m>se2</m> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
-        <li id="satisfies-ShapeRef"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> and the <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span>'s <span class="param">shapes</span> maps <span class="param">reference</span> to a shape expression <m>se2</m> and <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
+        <li id="satisfies-shapeRef"><m>Se</m> is a <span class="jobjref"><a href="#dfn-shapeRef" class="obj">shapeRef</a></span> and the <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span>'s <span class="param">shapes</span> maps that <span class="param">id</span> to a shape expression <m>se2</m> and <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeExternal"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeExternal" class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
       </ul>
 
@@ -541,7 +543,7 @@ _:User2
       If <m>Sch</m>'s <span class="param">shapes</span> maps "<code>http://schema.example/shape1</code>" to <m>SE<sub>1</sub></m> then the following holds:
     </p>
   <ul>
-    <li><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/><div class="inline json"><pre>{ "type": "ShapeReference", "reference": "http://schema.example/shape1" }</pre></div>,<br/> <m>G</m>, <m>m</m>)</div></code><div style="clear:both;"></div></li>
+    <li><code><div style="float:left;">satisfies(</div><div style="float:left;"><m>n</m>,<br/><div class="inline json"><pre>http://schema.example/shape1"</pre></div>,<br/> <m>G</m>, <m>m</m>)</div></code><div style="clear:both;"></div></li>
     </ul>
       </div>
       </section>
@@ -1025,7 +1027,7 @@ _:User2
       <p>
         Triple expressions are used for defining patterns composed of triple constraints.
         Shapes associate triple expressions with flags indicating whether triples match if they do not correspond to triple constraints in the triple expression.
-        A triple expression is composed of <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> and <span class="jobjref"><a href="#dfn-Inclusion">Inclusion</a></span> objects composed with grouping and choice operators.
+        A triple expression is composed of <span class="jobjref"><a href="#dfn-TripleConstraint">TripleConstraint</a></span> and <span class="jobjref"><a href="#dfn-inclusion">inclusion</a></span> objects composed with grouping and choice operators.
       </p>
       
       <section id="triple-expressions-abstract-syntax">
@@ -1034,11 +1036,11 @@ _:User2
       <div class="shexjTable">
         <table class="shexj">
   <tr class="obj"><th id="dfn-Shape" class="obj">Shape</th><td>{</td><td><!-- <span class="param">virtual</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>?  --><span class="param">closed</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">extra</span>:[<a class="trmref" href="#dfn-IRI">IRI</a>]? <span class="param">expression</span>:<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? }</td></tr>
-  <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th><td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-OneOf">OneOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-Inclusion">Inclusion</a> ;</td></tr>
+  <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th><td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-OneOf">OneOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-inclusion">inclusion</a> ;</td></tr>
   <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-Inclusion" class="obj">Inclusion</th><td>{</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
+  <tr class="obj"><th id="dfn-inclusion" class="nob">inclusion</th><td>=</td><td><a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
       </div>
       </section>
@@ -1238,8 +1240,7 @@ _:User2
                   <div class="inline json">
                     <pre>{ "type": "TripleConstraint", "inverse": true,
   "predicate": "http://purl.org/dc/elements/1.1/author",
-  "valueExpr": { "type": "ShapeRef",
-    "reference": "http://schema.example/IssueShape" } }</pre></div>,<br/>
+  "valueExpr": "http://schema.example/IssueShape" }</pre></div>,<br/>
               m)</div>
                   </m>
                   <div style="clear:both;">holds if
@@ -1264,8 +1265,7 @@ _:User2
       "valueExpr": {
         "type": "ShapeAnd", "shapeExprs": [
           { "type": "NodeConstraint", "nodeKind": "iri", "pattern": "http:.*" },
-          { "type": "ShapeRef",
-            "reference": "http://schema.example/IssueShape" }
+          "http://schema.example/IssueShape"
         ] } } },
   "http://schema.example/IssueShape": { "type": "Shape" } } }</pre>
                   </div><div style="clear:both;"></div>
@@ -1291,9 +1291,9 @@ _:User2
           </ul>
         </li>
         <li>
-          <p id="matches-Inclusion">
-            <m>expr</m> is an <span class="jobjref"><a href="#dfn-Inclusion" class="obj">Inclusion</a></span> and <code class="function">satisfies(<m>value</m>, dereference(<span class="param">include</span>), <m>G</m>, <m>m</m>)</code>.<br/>
-            The <code class="function">dereference</code> function is defined in <a href="#inclusion-requirement">Inclusion Requirement</a> below.
+          <p id="matches-inclusion">
+            <m>expr</m> is an <span class="jobjref"><a href="#dfn-inclusion" class="obj">inclusion</a></span> and <code class="function">satisfies(<m>value</m>, tripleExprWithId(<span class="param">inclusion</span>), <m>G</m>, <m>m</m>)</code>.<br/>
+            The <code class="function">tripleExprWithId</code> function is defined in <a href="#inclusion-requirement">Inclusion Requirement</a> below.
           </p>
           <div class="example">
             For the schema<br/>
@@ -1302,26 +1302,25 @@ _:User2
   "http://schema.example/EmployeeShape": {
     "type": "Shape", "expression": {
       "type": "EachOf", "expressions": [
-        { "type": "Inclusion",
-          "include": "http://schema.example/PersonShape" },
+        "http://schema.example/nameExpr",
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/empID",
           "valueExpr": { "type": "NodeConstraint",
             "datatype": "http://www.w3.org/2001/XMLSchema#integer" } } ] } },
   "http://schema.example/PersonShape": {
     "type": "Shape", "expression": {
+      "id": "http://schema.example/nameExpr",
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/name" } } } }</pre>
             </div><div style="clear:both;"></div>
             <m><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "Inclusion",
-  "include": "http://schema.example/PersonShape" }</pre></div>,<br/>
+              <pre>"http://schema.example/PersonShape"</pre></div>,<br/>
               m)</div>
             </m>
             <div style="clear:both;">holds if
             <ul class="tight">
-              <li>The schema's <span class="param">shapes</span> maps "<code>http://schema.example/IssueShape</code>" to <m>se2</m></li>
+              <li>The schema has a shape <m>se2</m> with the <span class="param">id</span> "<code>http://schema.example/PersonShape</code>"</li>
               <li><m class="function">satisfies(n, se2, G, m)</m></li>
             </ul></div>
           </div>
@@ -1338,10 +1337,114 @@ _:User2
         These are not constraints expressed by the schema but instead those imposed on the schema.
       </p>
       
+
+      <section id="shapeRef-requirement">
+        <h4>ShapeRef Requirement</h4>
+        <p>An <span class="jobjref"><a href="#dfn-shapeRef">shapeRef</a></span> MUST appear in the schema's <span class="param">shapes</span> map and the corresponding triple expression MUST be a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with a <span class="param">shapeExpr</span>.
+        The function <code>shapeExprWithId(<span class="param">shapeRef</span>)</code> returns the shape's <span class="param">shapeExpr</span>.
+      </p>
+
+      <div class="example">
+        <p>
+          Following are two valid shapeRefs:
+        </p>
+        <div class="repchoice">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/PersonShape": {
+      "type":"Shape", "expression": {
+        "id": "http://schema.example/nameExpr",
+        "type": "TripleConstraint",
+        "predicate": "http://xmlns.com/foaf/0.1/name"
+      } },
+    "http://schema.example/EmployeeShape": { "type":"EachOf", "shapeExprs": [
+        "http://schema.example/nameExpr",
+        {
+      "type":"Shape", "expression": { "type": "TripleConstraint",
+          "predicate": "http://schema.example/employeeNumber" }
+} ] } } }</pre>
+          <pre class="shexc">                                                                             
+    ex:PersonShape {
+      foaf:name .
+    }
+
+    ex:EmployeeShape ex:PersonShape AND {
+      ex:employeeNumber .
+    }
+
+
+
+
+          </pre>
+        </div>
+        <div class="repchoice">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/PersonShape": {
+      "type":"Shape", "expression": {
+        "id": "http://schema.example/nameExpr",
+        "type": "TripleConstraint",
+        "predicate": "http://xmlns.com/foaf/0.1/name"
+      } },
+    "http://schema.example/EmployeeShape": {
+      "type":"Shape", "expression": { "type": "TripleConstraint",
+          "predicate": "http://schema.example/dependent",
+          "valueExpr": "http://schema.example/PersonShape" } } } }</pre>
+          <pre class="shexc">                                                                  
+    ex:PersonShape {
+      foaf:name .
+    }
+
+
+
+    ex:EmployeeShape {
+      ex:dependent ex:PersonShape*
+    }
+          </pre>
+        </div>
+        <p>
+          This shapeRef is invalid because there is no corresponding shape expression:
+        </p>
+        <div class="repchoice error">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/S1": {
+      "type":"Shape", "expression":
+        "http://schema.example/MissingShapeExpr"
+} } }</pre>
+          <pre class="shexc">                                                
+    S1 {
+      &amp;MissingShapeExpr
+    }
+          </pre>
+        </div>
+        <p>This shapeRef is invalid because the referenced object is a triple expression instead of a shape expression:</p>
+        <div class="repchoice error">
+          <pre class="json">{ "type":"Schema", "shapes": {
+    "http://schema.example/CustomerShape": {
+      "type":"Shape", "expression": { "type": "TripleConstraint",
+          "id": "http://schema.example/discountExpr",
+          "predicate": "http://schema.example/discount" } },
+    "http://schema.example/EmployeeShape": {
+      "type":"Shape", "expression": { "type": "TripleConstraint",
+        "predicate": "http://schema.example/contactFor",
+        "valueExpr": "http://schema.example/CustomerShape"
+} } } }</pre>
+          <pre class="shexc">                                                                 
+    ex:CustomerShape {
+      $ex:discountExpr ex:discount .
+    }
+
+    ex:EmployeeShape {
+      ex:contactFor @ex:CustomerShape
+    }
+
+          </pre>
+        </div>
+      </div>
+      </section>
+
       <section id="inclusion-requirement">
         <h4>Inclusion Requirement</h4>
-        <p>An <span class="jobjref"><a href="#dfn-Inclusion">Inclusion</a></span> object's <span class="param">include</span> property MUST appear in the schema's <span class="param">shapes</span> map and the corresponding triple expression MUST be a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with a <span class="param">tripleExpr</span>.
-        The function <code>dereference(<span class="param">include</span>)</code> returns the shape's <span class="param">tripleExpr</span>.
+        <p>An <span class="jobjref"><a href="#dfn-inclusion">inclusion</a></span> MUST identify a triple expression in the schema.
+        The function <code>tripleExprWithId(<span class="param">inclusion</span>)</code> returns the triple expression with the id <span class="param">inclusion</span>.
       </p>
 
       <div class="example">
@@ -1352,57 +1455,58 @@ _:User2
           <pre class="json">{ "type":"Schema", "shapes": {
     "http://schema.example/PersonShape": {
       "type":"Shape", "expression": {
+        "id": "http://schema.example/nameExpr",
         "type": "TripleConstraint",
         "predicate": "http://xmlns.com/foaf/0.1/name"
       } },
     "http://schema.example/EmployeeShape": {
       "type":"Shape", "expression": { "type":"EachOf", "shapeExprs": [
-        { "type": "Inclusion", "include": "http://schema.example/PersonShape" }
+        "http://schema.example/nameExpr",
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/employeeNumber" }
 ] } } } }</pre>
-          <pre class="shexc">                                                                               
+          <pre class="shexc">                                                                      
     ex:PersonShape {
       foaf:name .
     }
+
+
 
     ex:EmployeeShape {
       &amp;ex:PersonShape ;
       ex:employeeNumber .
     }
 
-
           </pre>
         </div>
         <p>
-          This inclusion is invalid because there is no corresponding shape expression:
+          This inclusion is invalid because there is no corresponding triple expression:
         </p>
         <div class="repchoice error">
           <pre class="json">{ "type":"Schema", "shapes": {
     "http://schema.example/S1": {
-      "type":"Shape", "expression": {
-        "type": "Inclusion", "include": "http://schema.example/MissingShape"
-} } } }</pre>
-          <pre class="shexc">                                                                            
+      "type":"Shape", "expression":
+        "http://schema.example/missingTripleExpr"
+} } }</pre>
+          <pre class="shexc">                                                 
     S1 {
-      &amp;MissingShape
+      &amp;missingTripleExpr
     }
           </pre>
         </div>
-        <p>This inclusion is invalid because the referenced shape expression is not a simple shape with an <span class="param">expression</span>:</p>
+        <p>This inclusion is invalid because the referenced object is a shape expression instead of a triple expression:</p>
         <div class="repchoice error">
           <pre class="json">{ "type":"Schema", "shapes": {
     "http://schema.example/CustomerShape": {
       "type":"ShapeAnd", "shapeExprs": [ <span class="comment">…</span> ]
     },
     "http://schema.example/PreferredCustomerShape": {
-      "type":"Shape", "expression": { "type":"ShapeAnd", "shapeExprs": [
-        { "type": "Inclusion",
-          "include": "http://schema.example/CustomerShape" }
+      "type":"Shape", "expression": { "type":"EachOf", "expressions": [
+        "http://schema.example/CustomerShape",
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/discount" }
 ] } } } }</pre>
-          <pre class="shexc">                                                                        
+          <pre class="shexc">                                                                       
     ex:CustomerShape {
       <span class="comment">…</span>; <span class="comment">…</span>
     }
@@ -1410,7 +1514,6 @@ _:User2
       &amp;ex:CustomerShape ;
       ex:discount .
     }
-
 
           </pre>
         </div>
@@ -1435,12 +1538,10 @@ _:User2
               <pre class="json">{ "type": "Schema", "shapes": {
     "http://schema.example/#S":
     <span class="lookit">{ "type": "ShapeNot"></span>, "shapeExpr":
-      { "type": "ShapeRef",
-        "reference": "http://schema.example/#S"
-} <span class="lookit">}</span> } }</pre>
-              <pre class="shexc">                                               
+      "http://schema.example/#S"
+<span class="lookit">}</span> } }</pre>
+              <pre class="shexc">                                       
     ex:S <span class="lookit">NOT</span> @ex:S
-
 
 
                 </pre>
@@ -1452,16 +1553,14 @@ _:User2
                 <pre class="json">{ "type": "Schema", "shapes": {
     "http://schema.example/#S":
     { "type": "ShapeNot">, "shapeExpr":
-      { "type": "ShapeRef", "reference": "http://schema.example/#T" } },
-    "http://schema.example/#T":
-    { "type": "ShapeRef", "reference": "http://schema.example/#S" }
+      "http://schema.example/#T" },
+    "http://schema.example/#T": "http://schema.example/#S"
 } }</pre>
-                <pre class="shexc">                                                                        
+                <pre class="shexc">                                                          
     ex:S NOT @ex:T
 
 
     ex:T @ex:S
-
                 </pre>
               </div>
               <p>
@@ -1473,10 +1572,10 @@ _:User2
       "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
         "type": "ShapeOr", "shapeExprs": [
           { "type": "NodeConstraint", "nodeKind": "iri" },
-          { "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-              "type": "ShapeRef", "reference": "http://schema.example/#S" } }
+          { "type": <span class="lookit">"ShapeNot"</span>,
+            "shapeExpr": "http://schema.example/#S" }
 ] } } } }</pre>
-                <pre class="shexc">                                                                             
+                <pre class="shexc">                                                          
     ex:S NOT (IRI OR NOT @ex:S)
 
 
@@ -1500,14 +1599,12 @@ _:User2
       "extra": [ <span class="lookit">"http://schema.example/#p"</span> ], "expression":
       { "type": "TripleConstraint",
         "predicate": <span class="lookit">"http://schema.example/#p"</span>,
-        "valueExpr": { "type": "ShapeRef",
-            "reference": "http://schema.example/#S" }
+        "valueExpr": "http://schema.example/#S"
 } } } }</pre>
               <pre class="shexc">                                                            
   ex:S EXTRA ex:p {
     ex:p @ex:S
   }
-
 
 
 
@@ -1525,14 +1622,12 @@ _:User2
         "type": "TripleConstraint",
         "predicate": "http://schema.example/#p",
         "valueExpr": {
-          "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
-            "type": "ShapeRef", "reference": "http://schema.example/#S"
-} } } } } }</pre>
-              <pre class="shexc">                                                                       
+          "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": "http://schema.example/#S"
+} } } } }</pre>
+              <pre class="shexc">                                                                     
     ex:S EXTRA ex:p {
       ex:p NOT @ex:S
     }
-
 
 
 
@@ -2180,8 +2275,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     { "type": "TripleConstraint",
       "predicate": "http://schema.example/reproducedBy",
       "valueExpr":
-      { "type": "ShapeRef",
-        "reference": "http://schema.example/TesterShape" } } },
+      "http://schema.example/TesterShape" } },
   "http://schema.example/TesterShape":
   { "type": "Shape", "expression":
     { "type": "TripleConstraint",
@@ -2271,7 +2365,7 @@ PREFIX ex: <http://schema.example/>
     { "type": "TripleConstraint", "min": 0, "max": "*",
       "predicate": "http://schema.example/related",
       "valueExpr":
-      { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" }
+      "http://schema.example/IssueShape"
     } } } }</pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
@@ -2559,13 +2653,11 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/reproducedBy",
           "valueExpr":
-          { "type": "ShapeRef",
-            "reference": "http://schema.example/TesterShape" } },
+          "http://schema.example/TesterShape" },
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/reproducedBy",
           "valueExpr":
-          { "type": "ShapeRef",
-            "reference": "http://schema.example/ProgrammerShape" } }
+          "http://schema.example/ProgrammerShape" }
       ] } },
   "http://schema.example/TesterShape":
   { "type": "Shape", "expression":
