@@ -420,11 +420,17 @@ _:User2
         <code class="function">satisfies</code> is defined below for each form of shape expression.
       </p>
 
+      <div class="note">
       <p>
-  Note that validation of a graph <m>G</m> does not necessarily require the construction of a ShapeMap with every node in <m>G</m>.
+  Validation of a graph <m>G</m> does not necessarily require the construction of a ShapeMap with every node in <m>G</m>.
   The validation semantics defined below imply a set of dependencies for validating some node as a shape.
   A validation process that tests every node in a graph against every shape in a schema can be considered to have an input ShapeMap associating each node with the set of all shapes in the schema.
       </p>
+      <p>
+        The semantics of ShEx are independent from the construction of an input ShapeMap.
+        <a href="https://www.w3.org/2001/sw/wiki/ShEx/ShapeMap">https://www.w3.org/2001/sw/wiki/ShEx/ShapeMap</a> has list of popular methods for constructing ShapeMaps.
+      </p>
+      </div>
 
       <p>
         Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <!-- @@set of --> shape for every node and shape visited during a validation process.
@@ -632,8 +638,10 @@ _:User2
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
-            For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if <m>n</m> is an Literal with the datatype <m>v</m>.
+            For a node <m>n</m> and constraint value <m>v</m>, <code class="function">nodeSatisfies(<m>n</m>, <m>v</m>)</code> if <m>n</m> is an Literal with the datatype <m>v</m> and, if <m>v</m> is in the set of <a href="https://www.w3.org/TR/sparql11-query/#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <m>n</m> can be cast to the target type <m>v</m> per <a href="https://www.w3.org/TR/xpath-functions/#casting">XPath 2.0 section 17, Casting</a>[[!xpath-functions]].
+            Only datatypes supported by SPARQL MUST be tested but ShEx extensions MAY add support for other datatypes.
           </p>
+
           <div class="example">
             <div class="example-title marker"><span>Datatype example 1</span></div>
             <div class="repchoice">
@@ -656,24 +664,28 @@ _:User2
             </div>
             <pre class="data">
 &lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
-<span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span></pre>
+<span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span>
+<span class="fail">&lt;issue3&gt; ex:submittedOn "2016-07"^^xsd:date .</span></pre>
 <!-- @@Labra: I would probably use a different datatype to avoid confusion between date and dateTime...maybe xsd:float .... -->
 <!-- @@ericP: I think that this example can eliminate readers' questions about whether date forms are somehow compatible. -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be an <code>xsd:date</code>, <code>xsd:dateTime</code> found.</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>2016-07</code> is not a valid <code>xsd:date</code>.</td></tr>
             </table>
           </div>
+
           <div class="note">
-          <p>
-            In RDF 1.1, <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-language-tagged-string">language-tagged strings</a>[[!rdf11-concepts]] have the datatype <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#langString</code>.
-          </p>
-          <p>
-            RDF 1.0 included RDF literals with no datatype or language tag.
-            These are called "<a href="https://www.w3.org/TR/sparql11-query/#simple_literal">simple literals</a>" in SPARQL11[[!sparql11-query]].
-            In RDF 1.1, these literals have the datatype <code>http://www.w3.org/2001/XMLSchema#string</code>.
-          </p>
+            <p>
+              In RDF 1.1, <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-language-tagged-string">language-tagged strings</a>[[!rdf11-concepts]] have the datatype <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#langString</code>.
+            </p>
+            <p>
+              RDF 1.0 included RDF literals with no datatype or language tag.
+              These are called "<a href="https://www.w3.org/TR/sparql11-query/#simple_literal">simple literals</a>" in SPARQL11[[!sparql11-query]].
+              In RDF 1.1, these literals have the datatype <code>http://www.w3.org/2001/XMLSchema#string</code>.
+            </p>
+          </div>
           <div class="example">
             <div class="example-title marker"><span>Datatype example 2</span></div>
             <div class="repchoice">
@@ -705,12 +717,6 @@ _:User2
               <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue4&gt;</td><td>fail</td><td class="fail"><code>rdfs:label</code> expected to be an <code>rdf:langString</code>, <code>xsd:string</code> found.</td></tr>
             </table>
           </div>
-          </div>
-
-          <p class="issue">
-            The RDF Data Shapes Working Group decided that validation should test the lexical form of literals when testing the datatype (<a href="https://www.w3.org/2016/10/26-shapes-minutes.html#resolution04">resolution</a>).
-            Should ShEx do that?
-          </p>
         </section>
       
       <section id="xs-string">
