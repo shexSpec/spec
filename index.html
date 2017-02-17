@@ -2991,11 +2991,9 @@ inst:Testgrammer23
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
 <tr class="obj"><td></td><td><a href="#dfn-Schema" class="obj">Schema</a></td><td>{</td><td>
-<span class="param">prefixes</span>:{<a class="trmref" href="#dfn-PREFIX">PREFIX</a>-&gt;<a class="trmref" href="#dfn-IRI">IRI</a>}?
-<span class="param">base</span>:<a class="trmref" href="#dfn-IRI">IRI</a>?
 <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]?
 <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>?
-<span class="param">shapes</span>:{<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>-&gt;<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>}? }
+<span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }
 </td></tr>
   <tr class="params"><td></td><td colspan="3"><ul>
   <li><span class="param">prefixes</span> comes from the <a class="grammarRef" href="#prod-prefixDecl">prefixDecl</a> production with the map key of <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> and the value of <span class="prod"><a class="grammarRef" href="#term-IRIREF">IRIREF</a></span>.</li>
