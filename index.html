@@ -3040,8 +3040,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
   <li>Otherwise, the result is a <a href="#dfn-shapeExprRef" class="obj">shapeExprRef</a> to <a href="#dfn-shapeExprLabel" class="obj">shapeExprLabel</a>.</li>
 </ul>
 </td></tr>
-  <tr class="obj"><td></td><td id="dfn-shapeExprRef" class="nob">shapeExprRef</td>           <td>=</td> <td><a class="objref" href="#dfn-shapeExprLabel">shapeExprLabel</a> ;</td></tr>
-  <tr class="obj"><td></td><td id="dfn-shapeExprLabel" class="nob">shapeExprLabel</td>       <td>=</td> <td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
+  <tr class="obj"><td></td><td><a href="#dfn-shapeExprRef" class="nob">shapeExprRef</a></td>           <td>=</td> <td><a class="objref" href="#dfn-shapeExprLabel">shapeExprLabel</a> ;</td></tr>
 </tbody>
 
 <tbody class="grammarParagraph">
@@ -3362,7 +3361,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td><code class="content">"&amp;" <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span></code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-constraint">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <span class="param">shapes</span> map and the corresponding triple expression MUST be a <span class="jobjref"><a href="#dfn-Shape">Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
-<tr class="obj"><td></td><td><a href="#dfn-TripleExprRef" class="obj">TripleExprRef</a></td><td>{</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a> }</td></tr>
+<tr class="obj"><td></td><td><a href="#dfn-tripleExprRef" class="obj">tripleExprRef</a></td><td>=</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a> ;</td></tr>
 </tbody>
 
 <tbody class="grammarParagraph">
