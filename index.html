@@ -195,8 +195,19 @@
           An object may be represented inline or referenced by its <code>id</code> which may be either a blank node or an IRI.
         </p>
         <div class="shexj">
-          <pre> <a href="#dfn-shapeExprRef" class="nob">shapeExprRef</a> = <a class="objref" href="#dfn-shapeExprLabel">shapeExprLabel</a> ;
- <a href="#dfn-shapeExprLabel" class="nob">shapeExprLabel</a> = <a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</pre>
+          <pre> <a href="#dfn-ShapeOr" class="obj">ShapeOr</a>         { id:shapeExprLabel? shapeExprs:[shapeExpr] }
+ <a href="#dfn-shapeExprLabel" class="nob">shapeExprLabel</a>  = <a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;
+ <a href="#dfn-EachOf" class="obj">EachOf</a>          { id:tripleExprLabel? expressions:[tripleExpr] ... }
+ <a href="#dfn-tripleExprLabel" class="nob">tripleExprLabel</a> = <a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</pre>
+        </div>
+        <p>
+          The JSON structure may include references to shapes and triples:
+        </p>
+        <div class="shexj">
+          <pre> shapeExpr     = ShapeOr | ... | shapeExprRef ;
+ <a href="#dfn-shapeExprRef" class="nob">shapeExprRef</a>  = <a class="objref" href="#dfn-shapeExprLabel">shapeExprLabel</a> ;
+ tripleExpr    = EachOf | ... | tripleExprRef ;
+ <a href="#dfn-tripleExprRef" class="nob">tripleExprRef</a> = <a class="objref" href="#dfn-tripleExprLabel">tripleExprLabel</a> ;</pre>
         </div>
         <p>
           An object with a circular reference must be referenced by id.
@@ -204,10 +215,10 @@
         </p>
         <div class="json">
           <pre class="json">{ "type": "Schema", "shapes": {
-      "http://schema.example/IssueShape": {
+      "<span class="lookit">http://schema.example/IssueShape</span>": {
       "type": "Shape", "expression": {
         "type": "TripleConstraint", "predicate": "http://schema.example/related",
-        "valueExpr": "http://schema.example/IssueShape", min: 0 } } } }</pre>
+        "valueExpr": "<span class="lookit">http://schema.example/IssueShape</span>", min: 0 } } } }</pre>
         </div>
       </section>  
       <section id="style">
@@ -560,7 +571,7 @@ _:User2
         <h3>Node Constraints</h3>
         <div class="shexjTable">
           <table class="shexj">
-  <tr class="obj"><th id="dfn-NodeConstraint" class="obj">NodeConstraint</th> <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* <span class="param">values</span>:[<a class="nobref" href="#dfn-valueSetValue">valueSetValue</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-NodeConstraint" class="obj">NodeConstraint</th> <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeExprLabel">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* <span class="param">values</span>:[<a class="nobref" href="#dfn-valueSetValue">valueSetValue</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-xsFacet" class="nob">xsFacet</th>               <td>=</td><td><a class="nobref" href="#dfn-stringFacet">stringFacet</a> | <a class="nobref" href="#dfn-numericFacet">numericFacet</a> ;</td></tr>
   <tr class="nob"><th id="dfn-stringFacet" class="nob">stringFacet</th>       <td>=</td><td>(<span class="param">"length"</span>|<span class="param">"minlength"</span>|<span class="param">"maxlength"</span>):<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="param">pattern</span>:<a class="trmref" href="#dfn-STRING">STRING</a> ;</td></tr>
   <tr class="nob"><th id="dfn-numericFacet" class="nob">numericFacet</th>     <td>=</td><td>(<span class="param">"mininclusive"</span>|<span class="param">"minexclusive"</span>|<span class="param">"maxinclusive"</span>|<span class="param">"maxexclusive"</span>):<a class="nobref" href="#dfn-numericLiteral">numericLiteral</a> </td></tr>
