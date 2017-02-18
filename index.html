@@ -151,7 +151,7 @@
           <li><code>choice</code>: <span class="shexj">typeExpression1 | typeExpression2 | …</span>— a choice between two or more typeExressions.</li>
         </ul>
         </li>
-        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> per <a href="https://www.w3.org/TR/xml/#sec-notation">XML notation</a> or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
+        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> following the <a href="https://www.w3.org/TR/xml/#sec-notation">notation in the XML specification</a>[[!XML]] or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
       </ul>
 
       <p>
@@ -2846,9 +2846,12 @@ inst:Testgrammer23
 <tbody class="grammarParagraph">
   <tr><td rowspan="2" colspan="4">
     <p>
-      A ShEx document produces a schema.
-      Semantic actions before the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span> are <span class="param"><a href="#dfn-Schema">startActs</a></span>.
-      After the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span>, semantic actions are associated with the previous declaration.
+      Parsing ShExC transforms a ShExC document into an equivalent ShExJ structure.
+      This is defined as a BNF which accepts ShExC followed by instructions for tranlating the rules in the BNF production into their corresponding ShExJ objects.
+      For example, <code>shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></code> indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
+    </p>
+    <p>
+      Below is the ShExC grammar following the <a href="https://www.w3.org/TR/xml/#sec-notation">notation in the XML specification</a>[[!XML]]:
     </p>
   </td></tr>
 </tbody>
@@ -2860,16 +2863,38 @@ inst:Testgrammer23
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
+</tbody>
+</table>
+<p>
+  followed by the associated ShExJ object:
+</p>
+<table>
+  <tbody>
 <tr class="obj"><td></td><td><a href="#dfn-Schema" class="obj">Schema</a></td><td>{</td><td>
 <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]?
 <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>?
 <span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }
 </td></tr>
+</tbody>
+</table>
+<p>
+  and a description of the mapping of rules in the production to elements of the ShExJ object:
+</p>
+<table>
+  <tbody>
   <tr class="params"><td></td><td colspan="3"><ul>
 <li><span class="param">startActs</span> comes from <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span> production.</li>
 <li><span class="param">start</span> comes from the <span class="prod"><a class="grammarRef" href="#prod-start">start</a></span> production.</li>
 <li><span class="param">shapes</span> come from the <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> production.</li>
   </ul></td></tr>
+</tbody>
+</table>
+    <p>
+      Semantic actions before the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span> are <span class="param"><a href="#dfn-Schema">startActs</a></span>.
+      After the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span>, semantic actions are associated with the previous declaration.
+    </p>
+<table>
+  <tbody>
 <tr valign="baseline">
 <td id="prod-directive">[<span class="prodNo">2</span>]   </td>
 <td><code class="production prod">directive</code></td>
