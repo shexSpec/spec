@@ -2789,48 +2789,36 @@ inst:Testgrammer23
 
       <div>
       <div class="grammarTable">
-<table border="0">
+<table border="0" style="border-top: thick solid white; ">
 
 <tbody class="grammarParagraph">
   <tr><td rowspan="2" colspan="4">
     <p>
       Parsing ShExC transforms a ShExC document into an equivalent ShExJ structure.
       This is defined as a BNF which accepts ShExC followed by instructions for tranlating the rules in the BNF production into their corresponding ShExJ objects.
-      For example, <code>shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></code> indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
+      For example, "<span style="font-family: monospace; ">shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></span>" indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
     </p>
     <p>
-      Below is the ShExC grammar following the <a href="https://www.w3.org/TR/xml/#sec-notation">notation in the XML specification</a>[[!XML]]:
     </p>
   </td></tr>
 </tbody>
 
-<tbody class="prod">
+<tbody class="prod" style="">
+  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the ShExC grammar following the <a href="https://www.w3.org/TR/xml/#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
 <tr valign="baseline">
 <td id="prod-shexDoc">[<span class="prodNo">1</span>]   </td>
 <td><code class="production prod">shexDoc</code></td>
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
-</tbody>
-</table>
-<p>
-  followed by the associated ShExJ object:
-</p>
-<table>
-  <tbody>
-<tr class="obj"><td></td><td><a href="#dfn-Schema" class="obj">Schema</a></td><td>{</td><td>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated ShExJ object:</td></tr>
+<tr class="obj"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td><a href="#dfn-Schema" class="obj">Schema</a></td><td>{</td><td>
 <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]?
 <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>?
 <span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }
 </td></tr>
-</tbody>
-</table>
-<p>
-  and a description of the mapping of rules in the production to elements of the ShExJ object:
-</p>
-<table>
-  <tbody>
-  <tr class="params"><td></td><td colspan="3"><ul>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the ShExJ object:</td></tr>
+  <tr class="params"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td colspan="3"><ul>
 <li><span class="param">startActs</span> comes from <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span> production.</li>
 <li><span class="param">start</span> comes from the <span class="prod"><a class="grammarRef" href="#prod-start">start</a></span> production.</li>
 <li><span class="param">shapes</span> come from the <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> production.</li>
