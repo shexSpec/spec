@@ -2839,137 +2839,7 @@ inst:Testgrammer23
       <!-- @@Labra: It is strange to talk about parsing ShEx compact syntax without saying what it is...I think some paragraph or explanation is needed, 
        or maybe title this section "ShEx Compact syntax" and include the grammar and then, how to parse it --> 
 
-      <div class="example">
-          <div class="example-title marker"><span>Parsing ShExC Example 1</span></div>
-          <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
-  <p>
-    Following is a ShEx schema written in ShExC with line numbers added at the left for reference.
-  </p>
-
-
-<pre class="shex">
-
-      PREFIX ex:   &lt;http://schema.example/&gt;
-      PREFIX foaf: &lt;http://xmlns.com/foaf/&gt;
-      PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
-      PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
-
-1     &lt;IssueShape&gt; CLOSED EXTRA rdf:type
-2     {                           
-3         rdf:type [ex:Issue];
-4         ex:state [ex:unassigned ex:assigned]; 
-5                                            
-6         ex:reportedBy @&lt;UserShape&gt;;   
-7         ex:reportedOn xsd:dateTime;         
-8         (                                   
-9           ex:reproducedBy @&lt;EmployeeShape&gt;;  
-10          ex:reproducedOn xsd:dateTime OR xsd:date 
-11        )?;
-12        ^ex:related @&lt;IssueShape&gt;*            
-13    }
-14
-15    &lt;UserShape&gt; PATTERN "^http:/example.org/.*" {                     
-16        (                                   
-17           foaf:name xsd:string             
-18         |                                  
-19           foaf:givenName xsd:string+;      
-20           foaf:familyName xsd:string
-21        );     
-22        foaf:mbox IRI              
-23    }
-24
-25    &lt;EmployeeShape&gt; {        
-26        foaf:phone IRI*;          
-27        foaf:mbox IRI             
-28    } AND {
-29        ( foaf:phone PATTERN "^tel:\\+33"; 
-30          foaf:mbox PATTERN "\\.fr$" )?;
-31        ( foaf:phone PATTERN "^tel:\\+44"; 
-32          foaf:mbox PATTERN "\\.uk$")?
-33    }
-</pre>
-  <p>
-    We first explain some elements of the concrete syntax. 
-    A triple expression is surrounded by curly braces { and }.
-    The square braces delimit sets of values.
-    Parentheses are used as usual for defining the structre of an expression.
-    We use abbreviations for some intervals of min and max cardinality, namely, '+' is the interval [1;*], '*' is the interval [0;*], and '?' is the interval [0;1].
-  </p>
-
-  <p>
-    Then, the schema here above defines three shape labels: <span class="pre">&lt;IssueShape&gt;, &lt;UserShape&gt;, &lt;EmployeeShape&gt;</span>.
-  </p>
-  <p>
-    The shape expression that defines the shape label <span class="pre">&lt;IssueShape&gt;</span> starts on line 1 after the shape label, and ends with the curly bracket on line 13.
-    It has an empty list of node constraints, and a single shape definition.
-    The shape definition has two modifiers, <m>CLOSED</m>, and <m>EXTRA</m>. 
-    The parameter of the <m>EXTRA</m> modifier is a singleton set that contains the property <span class="pre">rdf:type</span>.
-  </p>
-  <p>
-    The triple expression in the shape definition is given between the curly braces on lines 2 and 13.
-    It is an each-of expression composed of six sub-expressions, separated by semicolons. 
-    The sub-expressions are as follows:
-  </p>
-    <ul>
-      <li>
-        Four triple constraints on lines 3, 4, 6, 7.
-      </li>
-      <li>
-        Two repeated triple expressions, one on lines 8--11 with cardinality ? = [0;1], another one on line 12 with cardinality * = [0;*].
-      </li>
-    </ul>
-
-  <p>
-    We explain the different forms of triple constraint that appear in the definition of <span class="pre">&lt;IssueShape&gt;</span>, by explaining their property or their value expression.
-  </p>
-
-<pre>
-1     &lt;IssueShape&gt; CLOSED EXTRA rdf:type
-2     {                           
-3         a [ex:Issue];                              <span class="comment"># rdf:type of ex:Issue</span>
-4         ex:state [ex:unassigned ex:assigned];      <span class="comment"># ex:state of ex:unassigned</span>
-                                                     <span class="comment">#          or ex:assigned</span>
-5
-6         ex:reportedBy @&lt;UserShape&gt;;                <span class="comment"># <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> to &lt;UserShape&gt;</span>
-
-7         ex:reportedOn xsd:dateTime;                <span class="comment"># literal with datatype xsd:dateTime</span>
-8         (
-9           ex:reproducedBy @&lt;EmployeeShape&gt;;        <span class="comment"># <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> to &lt;EmployeeShape&gt;</span>
-10          ex:reproducedOn xsd:dateTime OR xsd:date # literal with datatype xsd:dateTime
-                                                     <span class="comment">#                    or xsd:date</span>
-11        )?;
-12        ex:related @&lt;IssueShape&gt;*            
-13    }
-</pre>
-
-  <p>
-    We now explain a few other elements of the syntax.
-  </p>
-
-<pre>
-15    &lt;UserShape&gt; PATTERN "^http:/example.org/.*" {                     
-         …
-23    }
-</pre>  
-
-  <p>
-    The shape expression that defines <span class="pre">&lt;UserShape&gt;</span> is composed of one node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> and one shape definition between the curly braces lines 15 to 23.
-    The node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> defines the set of IRI that satisfy a pattern given by a regular expression.
-  </p>
-
-<pre>
-25    &lt;EmployeeShape&gt; {        
-        …
-28    } AND {
-        …
-33    }
-</pre>
-
-  <p>
-    The shape expression that defines <span class="pre">&lt;EmployeeShape&gt;</span> is composed of zero node constrainst, and two shape definitions, separated by an <span class="pre">AND</span>.
-  </p>
-      </div>
-
+      <div>
       <div class="grammarTable">
 <table border="0">
 
@@ -3999,6 +3869,138 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 </table>
+      </div>
+    </div>
+
+      <div class="example">
+          <div class="example-title marker"><span>Parsing ShExC Example 1</span></div>
+          <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
+  <p>
+    Following is a ShEx schema written in ShExC with line numbers added at the left for reference.
+  </p>
+
+
+<pre class="shex">
+
+      PREFIX ex:   &lt;http://schema.example/&gt;
+      PREFIX foaf: &lt;http://xmlns.com/foaf/&gt;
+      PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+      PREFIX rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+
+1     &lt;IssueShape&gt; CLOSED EXTRA rdf:type
+2     {                           
+3         rdf:type [ex:Issue];
+4         ex:state [ex:unassigned ex:assigned]; 
+5                                            
+6         ex:reportedBy @&lt;UserShape&gt;;   
+7         ex:reportedOn xsd:dateTime;         
+8         (                                   
+9           ex:reproducedBy @&lt;EmployeeShape&gt;;  
+10          ex:reproducedOn xsd:dateTime OR xsd:date 
+11        )?;
+12        ^ex:related @&lt;IssueShape&gt;*            
+13    }
+14
+15    &lt;UserShape&gt; PATTERN "^http:/example.org/.*" {                     
+16        (                                   
+17           foaf:name xsd:string             
+18         |                                  
+19           foaf:givenName xsd:string+;      
+20           foaf:familyName xsd:string
+21        );     
+22        foaf:mbox IRI              
+23    }
+24
+25    &lt;EmployeeShape&gt; {        
+26        foaf:phone IRI*;          
+27        foaf:mbox IRI             
+28    } AND {
+29        ( foaf:phone PATTERN "^tel:\\+33"; 
+30          foaf:mbox PATTERN "\\.fr$" )?;
+31        ( foaf:phone PATTERN "^tel:\\+44"; 
+32          foaf:mbox PATTERN "\\.uk$")?
+33    }
+</pre>
+  <p>
+    We first explain some elements of the concrete syntax. 
+    A triple expression is surrounded by curly braces { and }.
+    The square braces delimit sets of values.
+    Parentheses are used as usual for defining the structre of an expression.
+    We use abbreviations for some intervals of min and max cardinality, namely, '+' is the interval [1;*], '*' is the interval [0;*], and '?' is the interval [0;1].
+  </p>
+
+  <p>
+    Then, the schema here above defines three shape labels: <span class="pre">&lt;IssueShape&gt;, &lt;UserShape&gt;, &lt;EmployeeShape&gt;</span>.
+  </p>
+  <p>
+    The shape expression that defines the shape label <span class="pre">&lt;IssueShape&gt;</span> starts on line 1 after the shape label, and ends with the curly bracket on line 13.
+    It has an empty list of node constraints, and a single shape definition.
+    The shape definition has two modifiers, <m>CLOSED</m>, and <m>EXTRA</m>. 
+    The parameter of the <m>EXTRA</m> modifier is a singleton set that contains the property <span class="pre">rdf:type</span>.
+  </p>
+  <p>
+    The triple expression in the shape definition is given between the curly braces on lines 2 and 13.
+    It is an each-of expression composed of six sub-expressions, separated by semicolons. 
+    The sub-expressions are as follows:
+  </p>
+    <ul>
+      <li>
+        Four triple constraints on lines 3, 4, 6, 7.
+      </li>
+      <li>
+        Two repeated triple expressions, one on lines 8--11 with cardinality ? = [0;1], another one on line 12 with cardinality * = [0;*].
+      </li>
+    </ul>
+
+  <p>
+    We explain the different forms of triple constraint that appear in the definition of <span class="pre">&lt;IssueShape&gt;</span>, by explaining their property or their value expression.
+  </p>
+
+<pre>
+1     &lt;IssueShape&gt; CLOSED EXTRA rdf:type
+2     {                           
+3         a [ex:Issue];                              <span class="comment"># rdf:type of ex:Issue</span>
+4         ex:state [ex:unassigned ex:assigned];      <span class="comment"># ex:state of ex:unassigned</span>
+                                                     <span class="comment">#          or ex:assigned</span>
+5
+6         ex:reportedBy @&lt;UserShape&gt;;                <span class="comment"># <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> to &lt;UserShape&gt;</span>
+
+7         ex:reportedOn xsd:dateTime;                <span class="comment"># literal with datatype xsd:dateTime</span>
+8         (
+9           ex:reproducedBy @&lt;EmployeeShape&gt;;        <span class="comment"># <span class="jobjref"><a href="#dfn-ShapeRef" class="obj">ShapeRef</a></span> to &lt;EmployeeShape&gt;</span>
+10          ex:reproducedOn xsd:dateTime OR xsd:date # literal with datatype xsd:dateTime
+                                                     <span class="comment">#                    or xsd:date</span>
+11        )?;
+12        ex:related @&lt;IssueShape&gt;*            
+13    }
+</pre>
+
+  <p>
+    We now explain a few other elements of the syntax.
+  </p>
+
+<pre>
+15    &lt;UserShape&gt; PATTERN "^http:/example.org/.*" {                     
+         …
+23    }
+</pre>  
+
+  <p>
+    The shape expression that defines <span class="pre">&lt;UserShape&gt;</span> is composed of one node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> and one shape definition between the curly braces lines 15 to 23.
+    The node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> defines the set of IRI that satisfy a pattern given by a regular expression.
+  </p>
+
+<pre>
+25    &lt;EmployeeShape&gt; {        
+        …
+28    } AND {
+        …
+33    }
+</pre>
+
+  <p>
+    The shape expression that defines <span class="pre">&lt;EmployeeShape&gt;</span> is composed of zero node constrainst, and two shape definitions, separated by an <span class="pre">AND</span>.
+  </p>
       </div>
 
       <div class="example">
