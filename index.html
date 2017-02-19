@@ -203,10 +203,10 @@
         </p>
         <div class="json">
           <pre class="json">{ "type": "Schema", "shapes": {
-      "http://schema.example/IssueShape": {
+      "<span class="lookit">http://schema.example/IssueShape</span>": {
       "type": "Shape", "expression": {
         "type": "TripleConstraint", "predicate": "http://schema.example/related",
-        "valueExpr": "http://schema.example/IssueShape", min: 0 } } } }</pre>
+        "valueExpr": "<span class="lookit">http://schema.example/IssueShape</span>", min: 0 } } } }</pre>
         </div>
       </section>  
       <section id="style">
@@ -468,7 +468,7 @@ _:User2
   <tr class="obj"><th id="dfn-ShapeAnd" class="obj">ShapeAnd</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th id="dfn-ShapeNot" class="obj">ShapeNot</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a> }</td></tr>
   <tr class="obj"><th id="dfn-shapeRef" class="nob">shapeRef</th>           <td>=</td> <td><a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
-  <tr class="obj"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th> <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? }</td></tr>
+  <tr class="nob"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th> <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? }</td></tr>
   <tr class="nob"><th id="dfn-shapeLabel" class="nob">shapeLabel</th>       <td>=</td> <td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
       </div>
