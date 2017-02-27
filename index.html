@@ -386,9 +386,9 @@ _:User2
         Since a node may have multiple shapes, this should either be a mapping from a node to a set of shapes <span class="json">{ "n1": [ "S1", "S2"], "n2": [] }</span> or a list of node-shape pairs <span class="json">[ ["n1", "S1"], ["n1", "S2"] }</span>. Which is easier to understand?
       </p>
       <p>
-  A <span class="label">ShapeMap</span> is a mapping from node to a set of shapes <m>(Node1: [Shape2, Shape3, …])</m> where <m>node</m> is an RDF node, and <m>S</m> is a shape label from a schema.
-  A node-label association in a <m>ShapeMap</m> indicates that the node <m>Node1</m> satisfies the constraint given by the definition of the shape expressions labeled <m>Shape2</m> and  <m>Shape3</m>.
-  We use the JSON list notation <m>[Shape2, Shape3, …]</m> for sets with the additional understanding that the list neither order nor repetition have any semantic impact.
+  A <span class="label">ShapeMap</span> is a mapping from node to a set of shapes <m>(Node1: [Shape<sub>2</sub>, Shape<sub>3</sub>, …])</m> where <m>node</m> is an RDF node, and <m>Shape<sub>n</sub></m> is a shape label from a schema.
+  A node-label association in a <m>ShapeMap</m> indicates that the node <m>Node1</m> satisfies the constraint given by the definition of the shape expressions labeled <m>Shape<sub>2</sub></m> and  <m>Shape<sub>3</sub></m>.
+  We use the JSON list notation <m>[Shape<sub>2</sub>, Shape<sub>3</sub>, …]</m> for sets with the additional understanding that the list neither order nor repetition have any semantic impact.
       </p>
 
       <div class="example">
