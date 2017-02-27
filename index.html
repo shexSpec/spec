@@ -174,7 +174,7 @@
 
       <div class="shexj">
         <pre><a href="#dfn-shapeExpr" class="nob">shapeExpr</a> = <a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a>
-            | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-shapeRef">shapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</pre>
+            | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> | <a class="objref" href="#dfn-shapeRef">shapeRef</a> ;</pre>
       </div>
       <p>
         signifies that a <code>shapeExpr</code> is one of seven object types: <a class="objref .shexj" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | ….
@@ -203,10 +203,10 @@
         </p>
         <div class="json">
           <pre class="json">{ "type": "Schema", "shapes": {
-      "http://schema.example/IssueShape": {
+      "<span class="lookit">http://schema.example/IssueShape</span>": {
       "type": "Shape", "expression": {
         "type": "TripleConstraint", "predicate": "http://schema.example/related",
-        "valueExpr": "http://schema.example/IssueShape", min: 0 } } } }</pre>
+        "valueExpr": "<span class="lookit">http://schema.example/IssueShape</span>", min: 0 } } } }</pre>
         </div>
       </section>  
       <section id="style">
@@ -452,10 +452,10 @@ _:User2
             a shape constraint (<span class="jobjref"><a href="#dfn-Shape">Shape</a></span>) that defines a constraint on the allowed neighbourhood of a node, that is, the allowed triples that contain this node as subject or object.
           </li>
           <li>
-            a shape reference (<span class="jobjref"><a href="#dfn-shapeRef">shapeRef</a></span>) identifies another shape in the schema.
+            an external shape (<span class="jobjref"><a href="#dfn-ShapeExternal">ShapeExternal</a></span>) which is an extension mechanism to externally define e.g. functional shapes or prohibitively large value sets.
           </li>
           <li>
-            an external shape (<span class="jobjref"><a href="#dfn-ShapeExternal">ShapeExternal</a></span>) which is an extension mechanism to externally define e.g. functional shapes or prohibitively large value sets.
+            a shape reference (<span class="jobjref"><a href="#dfn-shapeRef">shapeRef</a></span>) identifies another shape in the schema.
           </li>
         </ul>
         <section id="shape-expressions-shexj">
@@ -463,12 +463,12 @@ _:User2
 
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="nob"><th id="dfn-shapeExpr" class="nob">shapeExpr</th>         <td>=</td> <td><a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a> | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-shapeRef">shapeRef</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> ;</td></tr>
+  <tr class="nob"><th id="dfn-shapeExpr" class="nob">shapeExpr</th>         <td>=</td> <td><a class="objref" href="#dfn-ShapeOr">ShapeOr</a> | <a class="objref" href="#dfn-ShapeAnd">ShapeAnd</a> | <a class="objref" href="#dfn-ShapeNot">ShapeNot</a> | <a class="objref" href="#dfn-NodeConstraint">NodeConstraint</a> | <a class="objref" href="#dfn-Shape">Shape</a> | <a class="objref" href="#dfn-ShapeExternal">ShapeExternal</a> | <a class="objref" href="#dfn-shapeRef">shapeRef</a> ;</td></tr>
   <tr class="obj"><th id="dfn-ShapeOr" class="obj">ShapeOr</th>             <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th id="dfn-ShapeAnd" class="obj">ShapeAnd</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th id="dfn-ShapeNot" class="obj">ShapeNot</th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a> }</td></tr>
-  <tr class="obj"><th id="dfn-shapeRef" class="nob">shapeRef</th>           <td>=</td> <td><a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
   <tr class="obj"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th> <td>{</td> <td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? }</td></tr>
+  <tr class="nob"><th id="dfn-shapeRef" class="nob">shapeRef</th>           <td>=</td> <td><a class="objref" href="#dfn-IRI">IRI</a> | <a class="objref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
   <tr class="nob"><th id="dfn-shapeLabel" class="nob">shapeLabel</th>       <td>=</td> <td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
       </div>
@@ -517,8 +517,8 @@ _:User2
         <li id="satisfies-ShapeOr"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeOr" class="obj">ShapeOr</a></span> and there is some shape expression <m>se2</m> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeAnd"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeAnd" class="obj">ShapeAnd</a></span> and for every shape expression <m>se2</m> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeNot"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeNot" class="obj">ShapeNot</a></span> and for the shape expression <m>se2</m> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
-        <li id="satisfies-shapeRef"><m>Se</m> is a <span class="jobjref"><a href="#dfn-shapeRef" class="obj">shapeRef</a></span> and the <span class="jobjref"><a href="#dfn-Schema" class="obj">Schema</a></span>'s <span class="param">shapes</span> maps that <span class="param">id</span> to a shape expression <m>se2</m> and <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
         <li id="satisfies-ShapeExternal"><m>Se</m> is a <span class="jobjref"><a href="#dfn-ShapeExternal" class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
+        <li id="satisfies-shapeRef"><m>Se</m> is a <span class="jobjref"><a href="#dfn-shapeRef" class="obj">shapeRef</a></span> and there exists in the schema a shape expression <m>se2</m> with that <span class="param">id</span> and <code class="function">satisfies(<m>n</m>, <m>se2</m>, <m>G</m>, <m>m</m>)</code>.</li>
       </ul>
 
       <div class="example">
@@ -1048,9 +1048,9 @@ _:User2
         <table class="shexj">
   <tr class="obj"><th id="dfn-Shape" class="obj">Shape</th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <!-- <span class="param">virtual</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>?  --><span class="param">closed</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">extra</span>:[<a class="trmref" href="#dfn-IRI">IRI</a>]? <span class="param">expression</span>:<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th>             <td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-OneOf">OneOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-inclusion">inclusion</a> ;</td></tr>
-  <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th>                     <td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th>                       <td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th> <td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th> <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a>? <span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-inclusion" class="nob">inclusion</th>               <td>=</td><td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
       </div>
@@ -2794,48 +2794,36 @@ inst:Testgrammer23
 
       <div>
       <div class="grammarTable">
-<table border="0">
+<table border="0" style="border-top: thick solid white; ">
 
 <tbody class="grammarParagraph">
   <tr><td rowspan="2" colspan="4">
     <p>
       Parsing ShExC transforms a ShExC document into an equivalent ShExJ structure.
       This is defined as a BNF which accepts ShExC followed by instructions for tranlating the rules in the BNF production into their corresponding ShExJ objects.
-      For example, <code>shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></code> indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
+      For example, "<span style="font-family: monospace; ">shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></span>" indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
     </p>
     <p>
-      Below is the ShExC grammar following the <a href="https://www.w3.org/TR/xml/#sec-notation">notation in the XML specification</a>[[!XML]]:
     </p>
   </td></tr>
 </tbody>
 
-<tbody class="prod">
+<tbody class="prod" style="">
+  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the ShExC grammar following the <a href="https://www.w3.org/TR/xml/#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
 <tr valign="baseline">
 <td id="prod-shexDoc">[<span class="prodNo">1</span>]   </td>
 <td><code class="production prod">shexDoc</code></td>
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
-</tbody>
-</table>
-<p>
-  followed by the associated ShExJ object:
-</p>
-<table>
-  <tbody>
-<tr class="obj"><td></td><td><a href="#dfn-Schema" class="obj">Schema</a></td><td>{</td><td>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated ShExJ object:</td></tr>
+<tr class="obj"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td><a href="#dfn-Schema" class="obj">Schema</a></td><td>{</td><td>
 <span class="param">startActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]?
 <span class="param">start</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>?
 <span class="param">shapes</span>:[<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>+]? }
 </td></tr>
-</tbody>
-</table>
-<p>
-  and a description of the mapping of rules in the production to elements of the ShExJ object:
-</p>
-<table>
-  <tbody>
-  <tr class="params"><td></td><td colspan="3"><ul>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the ShExJ object:</td></tr>
+  <tr class="params"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td colspan="3"><ul>
 <li><span class="param">startActs</span> comes from <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span> production.</li>
 <li><span class="param">start</span> comes from the <span class="prod"><a class="grammarRef" href="#prod-start">start</a></span> production.</li>
 <li><span class="param">shapes</span> come from the <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> production.</li>
