@@ -850,6 +850,9 @@ _:User2
           <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <m>v</m> equals the number of digits in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>,</li>
           <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <m>v</m> is less than or equals the number of digits to the right of the decimal place in the <a href="https://www.w3.org/TR/xmlschema-2/#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <m>n</m>, ignoring trailing zeros.</li>
         </ul>
+        <p>
+          The operators <m>&lt;=</m>, <m>&lt;</m>, <m>&gt;=</m> and <m>&gt;</m> are evaluated after performing <a href="https://www.w3.org/TR/xpath20/#promotion">numeric type promotion</a>[[!xpath20]].
+        </p>
         <div class="example">
           <div class="example-title marker"><span>Numeric Facets example 1</span></div>
           <div class="repchoice">
@@ -868,15 +871,17 @@ _:User2
           </div>
             <pre class="data">
 &lt;issue1&gt; ex:confirmations 1 .
-&lt;issue2&gt; ex:confirmations 0 .
-<span class="fail">&lt;issue3&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
+&lt;issue2&gt; ex:confirmations 2^^xsd:byte .
+<span class="fail">&lt;issue3&gt; ex:confirmations 0 .</span>
+<span class="fail">&lt;issue4&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
 <!-- @@Labra: Maybe this example is not needed here because it is checking datatypes not numeric facets ... -->
 <!-- @@ericP: I think it clarifies that min/max only work with recognized datatypes. -->
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>0</code> is less than <code>1</code>.</td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
+              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>pass</td><td class="noreason"></td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>0</code> is less than <code>1</code>.</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue4&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
             </table>
           </div>
       </section>
