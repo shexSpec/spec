@@ -1060,9 +1060,9 @@ _:User2
         <table class="shexj">
   <tr class="obj"><th id="dfn-Shape" class="obj">Shape</th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeExprLabel">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>?  --><span class="param">closed</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">extra</span>:[<a class="trmref" href="#dfn-IRI">IRI</a>]? <span class="param">expression</span>:<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref" href="#dfn-shapeExprLabel">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th>             <td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-OneOf">OneOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-tripleExprRef">tripleExprRef</a> ;</td></tr>
-  <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th> <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a>? <span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th> <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-tripleExprLabel">tripleExprLabel</a>? <span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-tripleExprRef" class="nob">tripleExprRef</th>       <td>=</td><td><a class="objref" href="#dfn-tripleExprLabel">tripleExprLabel</a> ;</td></tr>
   <tr class="nob"><th id="dfn-tripleExprLabel" class="nob">tripleExprLabel</th>   <td>=</td><td><a class="trmref" href="#dfn-IRI">IRI</a> | <a class="trmref" href="#dfn-BNODE">BNODE</a> ;</td></tr>
         </table>
@@ -1174,7 +1174,7 @@ _:User2
             <div class="inline json">
               <pre>{ "type": "OneOf", "shapeExprs": [
   { "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] },
-  { "type": "TripleExpression", "min": 1, "max": "*",
+  { "type": "TripleExpression", "min": 1, "max": "unbounded",
     "predicate": "http://xmlns.com/foaf/0.1/name" }
 ] }</pre></div>,<br/>
               m)</div>
@@ -1188,7 +1188,7 @@ _:User2
             <div style="clear:both;"></div>
             <m><div style="float:left;">or matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "TripleExpression", "min": 1, "max": "*",
+              <pre>{ "type": "TripleExpression", "min": 1, "max": "unbounded",
     "predicate": "http://xmlns.com/foaf/0.1/name" }</pre></div>,<br/>
               m)</div>
             </m>
@@ -1701,7 +1701,7 @@ _:User2
     "http://a.example/S1": {
       "type": "Shape", "expression": {
         "type": "TripleConstraint", "predicate": "http://a.example/p1",
-        "min": 1, "max": "*",
+        "min": 1, "max": "unbounded",
         "semActs": [
           { "type": "SemAct", "code": " print(s) ",
             "name": "http://shex.io/extensions/Test/" },
@@ -2035,7 +2035,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
           "valueExpr":
             { "type": "NodeConstraint", "nodeKind": "literal" } },
         { "type": "EachOf", "expressions": [
-            { "type": "TripleConstraint", "min": 1, "max": "*" ,
+            { "type": "TripleConstraint", "min": 1, "max": "unbounded" ,
               "predicate": "http://xmlns.com/foaf/0.1/givenName",
               "valueExpr":
                 { "type": "NodeConstraint", "nodeKind": "literal" } },
@@ -2386,7 +2386,7 @@ PREFIX ex: <http://schema.example/>
               <pre>{ "type": "Schema", "shapes": {
   "http://schema.example/IssueShape":
   { "type": "Shape", "expression":
-    { "type": "TripleConstraint", "min": 0, "max": "*",
+    { "type": "TripleConstraint", "min": 0, "max": "unbounded",
       "predicate": "http://schema.example/related",
       "valueExpr":
       "http://schema.example/IssueShape"
@@ -2496,12 +2496,12 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
     "http://schema.example/TestResultsShape":
     { "type": "Shape", "expression": {
         "type": "EachOf", "expressions": [
-          { "type": "TripleConstraint", "min": 1, "max": "*",
+          { "type": "TripleConstraint", "min": 1, "max": "unbounded",
             "predicate": "http://schema.example/val",
             "valueExpr":
             { "type": "NodeConstraint",
               "values": [ "\"a\"", "\"b\"", "\"c\"" ] } },
-          { "type": "TripleConstraint", "min": 1, "max": "*",
+          { "type": "TripleConstraint", "min": 1, "max": "unbounded",
             "predicate": "http://schema.example/val",
             "valueExpr":
             { "type": "NodeConstraint",
@@ -3273,7 +3273,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-senseFlags">senseFlags</a></span>? <span class="prod"><a class="grammarRef" href="#prod-predicate">predicate</a></span> <span class="prod"><a class="grammarRef" href="#prod-inlineShapeExpression">inlineShapeExpression</a></span> <span class="prod"><a class="grammarRef" href="#prod-cardinality">cardinality</a></span>? <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
 </tr>
-<tr class="obj"><td></td><td><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></td><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+<tr class="obj"><td></td><td><a href="#dfn-TripleConstraint" class="obj">TripleConstraint</a></td><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
 
   <tr class="params"><td></td><td colspan="3"><ul>
   <li><span class="param">inverse</span> is true if the <span class="prod"><a class="grammarRef" href="#prod-senseFlags">senseFlags</a></span> matched "<code>^</code>".</li>
@@ -3290,7 +3290,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-cardinality">[<span class="prodNo">53</span>]   </td>
 <td><code class="production prod">cardinality</code></td>
 <td>   ::=   </td>
-<td><code class="content">"*" | "+" | "?" | <span class="prod"><a class="grammarRef" href="#term-REPEAT_RANGE">REPEAT_RANGE</a></span></code></td>
+<td><code class="content">"unbounded" | "+" | "?" | <span class="prod"><a class="grammarRef" href="#term-REPEAT_RANGE">REPEAT_RANGE</a></span></code></td>
 </tr>
 </tbody>
 
@@ -3566,7 +3566,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="term-REPEAT_RANGE">[<span class="prodNo">66</span>]   </td>
 <td>&lt;<code class="production term">REPEAT_RANGE</code>&gt;</td>
 <td>   ::=   </td>
-<td><code class="content">"{" <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> ( "," (<span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> | "*")? )? "}"</code></td>
+<td><code class="content">"{" <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> ( "," (<span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> | "unbounded")? )? "}"</code></td>
 </tr>
     <tr id="handle-IRIREF" class="params"><td></td><td>returns: repeat range</td><td></td><td>The base-10 numeric values of <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> are taken or a non-negative integer and an <code>Unbounded</code> token if "<code>*</code>" was matched.</td></tr>
 </tbody>
@@ -4390,10 +4390,10 @@ CLOSED {
   <tr class="obj"><th id="dfn-ShapeExternal" class="obj">ShapeExternal</th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
   <tr class="obj"><th id="dfn-SemAct" class="obj">SemAct</th><td>{</td><td><span class="param">name</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">code</span>:<a class="trmref" href="#dfn-STRING">STRING</a>? }</td></tr>
   <tr class="nob"><th id="dfn-tripleExpr" class="nob">tripleExpr</th><td>=</td><td><a class="objref" href="#dfn-EachOf">EachOf</a> | <a class="objref" href="#dfn-OneOf">OneOf</a> | <a class="objref" href="#dfn-TripleConstraint">TripleConstraint</a> | <a class="objref" href="#dfn-Inclusion">Inclusion</a> ;</td></tr>
-  <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-EachOf" class="obj">EachOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-OneOf" class="obj">OneOf</th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref" href="#dfn-tripleExpr">tripleExpr</a>] <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-Inclusion" class="obj">Inclusion</th><td>{</td><td><span class="param">include</span>:<a class="nobref" href="#dfn-shapeLabel">shapeLabel</a> }</td></tr>
-  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"*"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
+  <tr class="obj"><th id="dfn-TripleConstraint" class="obj">TripleConstraint</th><td>{</td><td><span class="param">inverse</span>:<a class="trmref" href="#dfn-BOOL">BOOL</a>? <span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">valueExpr</span>:<a class="nobref" href="#dfn-shapeExpr">shapeExpr</a>? <span class="param">min</span>:<a class="trmref" href="#dfn-INTEGER">INTEGER</a>? <span class="param">max</span>:(<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref" href="#dfn-SemAct">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref" href="#dfn-Annotation">Annotation</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-NodeConstraint" class="obj">NodeConstraint</th><td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* <span class="param">values</span>:[<a class="nobref" href="#dfn-valueSetValue">valueSetValue</a>]? }</td></tr>
   <tr class="obj"><th id="dfn-Annotation" class="obj">Annotation</th><td>{</td><td><span class="param">predicate</span>:<a class="trmref" href="#dfn-IRI">IRI</a> <span class="param">object</span>:<a class="nobref" href="#dfn-objectValue">objectValue</a> }</td></tr>
   <tr class="nob"><th id="dfn-xsFacet" class="nob">xsFacet</th><td>=</td><td><a class="nobref" href="#dfn-stringFacet">stringFacet</a> | <a class="nobref" href="#dfn-numericFacet">numericFacet</a> ;</td></tr>
