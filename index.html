@@ -2849,10 +2849,152 @@ inst:Testgrammer23
 
         <section id="example-negation">
           <h4>Negation Example</h4>
-          <p class="issue">
-            Negation is a ShEx 2.1 milestone (see the <a href="https://github.com/shexSpec/shex/issues/11">related issue</a>). 
-            The spec could include here a form of negation that comes of having a {0,0} cardinality on a triple expression.
+          <p>
+            Setting the maximum cardinality of a TripleConstraint with predicate <m>p</m> to zero (i.e. <span>"max": 0</span> in ShExJ or <code>{0}</code> or <code>{0, 0}</code> in ShExC) asserts that matching nodes must have no triples with predicate <m>p</m>.
           </p>
+          <!--
+              BASE <http://schema.example/>
+              PREFIX ex: <http://schema.example/>
+              PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+              PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+              PREFIX dc: <http://purl.org/dc/elements/1.1/>
+              <S1> {
+                ex:p1 ["a" "b"];
+                ex:p2 . {0}
+              }
+          -->
+          <div class="example">
+              <div class="exsec">Schema:</div>
+              <pre class="line-labels"> 
+
+<span class="lineno schema">S1</span>
+<span class="lineno schema">te1</span>
+<span class="lineno schema">tc1</span>
+
+
+<span class="lineno schema">nc1</span>
+
+<span class="lineno schema">tc2</span>
+
+
+</pre>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "Schema", "shapes": [
+    { "id": "http://schema.example/TestResultsShape",
+      "type": "Shape", "expression": {
+        "type": "EachOf", "expressions": [
+          { "type": "TripleConstraint", "min": 1, "max": "unbounded",
+            "predicate": "http://schema.example/p1",
+            "valueExpr":
+            { "type": "NodeConstraint",
+              "values": [ {"value": "a"}, {"value": "b"} ] } },
+          { "type": "TripleConstraint", "min": 1, "max": "unbounded",
+            "predicate": "http://schema.example/p2", "min": 0, "max": 0 }
+        ] } } ] }</pre>
+              <pre class="shexc">                                                                         
+            &lt;http://schema.example/TestResultsShape&gt;
+{
+
+
+                         &lt;http://schema.example/p1&gt;
+
+
+                         ["a" "b"] ;
+
+                         &lt;http://schema.example/p2&gt; . {0}
+}              </pre>
+            </div>
+            <div style="clear:both;" class="exsec">Data:</div>
+            <pre class="line-labels">
+
+
+<span class="lineno data">t1</span></pre>
+            <div class="inline json">
+              <pre>BASE &lt;http://a.example/&gt;
+PREFIX ex: &lt;http://schema.example/&gt;
+&lt;s&gt; ex:p1 "a" .</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <p class="leadup">&lt;s&gt; satisfies <span class="lineno schema">S1</span> with:</p>
+            <pre class="line-labels">m:</pre>
+            <div class="inline json">
+              <pre>{ "http://a.example/s": "http://a.example/S1" }</pre>
+            </div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/TestResultShape</span>:</div>
+            <p class="leadup followup">If <m><span class="lineno schema">tc1</span></m> consumes as many triples as it can, it consumes three and <m><span class="lineno schema">tc2</span></m> consumes one:</p>
+            <ul class="trace followup">
+              <li>G = [<span class="lineno data">t1</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;s&gt;, <span class="lineno schema">S1</span>, G, m)
+              <ul>
+                <li>neigh(G, &lt;s&gt;) = [<span class="lineno data">t1</span>], matched = [<span class="lineno data">t1</span>], remainder = Ø</li>
+                <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">te1</span>, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
+                  <ul style="border-left:solid thin brown">
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
+                    <ul>
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>, G, m)
+                      <ul>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>)</li>
+                    </ul></li></ul></li>
+                  </ul></li>
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data"></span>], <span class="lineno schema">tc2</span>, m)
+                  <ul style="border-left:solid thin brown">
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data"></span>], <span class="lineno schema">tc2</span>, m)</li>
+                  </ul></li>
+                </ul></li>
+                <li>outs = Ø</li>
+                <li>matchables = Ø, unmatchables = Ø, <span class="parameter">closed</span> is false</li>
+              </ul>
+              </li>
+            </ul>
+            <div style="clear:both;"></div>
+
+            <p class="leadup">If we add a <m><span class="lineno data">t2</span></m> which matches <m><span class="lineno schema">tc2</span></m>:</p>
+            <div style="clear:both;" class="exsec">Data:</div>
+            <pre class="line-labels">
+
+
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span></pre>
+            <div class="inline json">
+              <pre>BASE &lt;http://a.example/&gt;
+PREFIX ex: &lt;http://schema.example/&gt;
+&lt;s&gt; ex:p1 "a" .
+&lt;s&gt; ex:p2 5 .</pre>
+            </div>
+            <div style="clear:both;"></div>
+            <p>
+              every partition fails, either because matchables is non-empty or because the maximum cardinality on <span class="lineno schema">tc2</span> is exceeded:
+            </p>
+            <ul class="trace followup">
+              <li>G = [<span class="lineno data">t1</span>]</li>
+              <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;s&gt;, <span class="lineno schema">S1</span>, G, m)
+              <ul>
+                <li>neigh(G, &lt;s&gt;) = [<span class="lineno data">t1</span>], matched = [<span class="lineno data">t1</span>], remainder = Ø</li>
+                <li><a href="#matches-EachOf">matches EachOf</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">te1</span>, m)
+                <ul style="border-left:solid thin brown">
+                  <li><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
+                  <ul style="border-left:solid thin brown">
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t1</span>], <span class="lineno schema">tc1</span>, m)
+                    <ul>
+                      <li><a href="#satisfies-NodeConstraint">satisfies NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>, G, m)
+                      <ul>
+                        <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("a", <span class="lineno schema">nc1</span>)</li>
+                    </ul></li></ul></li>
+                  </ul></li>
+                  <li><span class="fail"><a href="#matches-cardinality">matches cardinality</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc2</span>, m)</span>
+                  <ul style="border-left:solid thin brown">
+                    <li><a href="#matches-TripleConstraint">matches TripleConstraint</a> ([<span class="lineno data">t2</span>], <span class="lineno schema">tc2</span>, m)</li>
+                  </ul></li>
+                </ul></li>
+                <li>outs = Ø</li>
+                <li>matchables = Ø, unmatchables = Ø, <span class="parameter">closed</span> is false</li>
+              </ul>
+              </li>
+            </ul>
+            <div style="clear:both;"></div>
+          </div>
         </section>
 
       </section>
