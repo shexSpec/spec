@@ -573,7 +573,7 @@ _:User2
           <table class="shexj">
   <tr class="obj"><th id="dfn-NodeConstraint" class="obj">NodeConstraint</th> <td>{</td><td><span class="param">id</span>:<a class="nobref" href="#dfn-shapeExprLabel">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a class="trmref" href="#dfn-IRI">IRI</a>? <a class="nobref" href="#dfn-xsFacet">xsFacet</a>* <span class="param">values</span>:[<a class="nobref" href="#dfn-valueSetValue">valueSetValue</a>]? }</td></tr>
   <tr class="nob"><th id="dfn-xsFacet" class="nob">xsFacet</th>               <td>=</td><td><a class="nobref" href="#dfn-stringFacet">stringFacet</a> | <a class="nobref" href="#dfn-numericFacet">numericFacet</a> ;</td></tr>
-  <tr class="nob"><th id="dfn-stringFacet" class="nob">stringFacet</th>       <td>=</td><td>(<span class="param">"length"</span>|<span class="param">"minlength"</span>|<span class="param">"maxlength"</span>):<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="param">pattern</span>:<a class="trmref" href="#dfn-STRING">STRING</a> ;</td></tr>
+  <tr class="nob"><th id="dfn-stringFacet" class="nob">stringFacet</th>       <td>=</td><td>(<span class="param">"length"</span>|<span class="param">"minlength"</span>|<span class="param">"maxlength"</span>):<a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <span class="param">pattern</span>:<a class="trmref" href="#dfn-STRING">STRING</a> <span class="param">flags</span>:<a class="trmref" href="#dfn-STRING">STRING</a>? ;</td></tr>
   <tr class="nob"><th id="dfn-numericFacet" class="nob">numericFacet</th>     <td>=</td><td>(<span class="param">"mininclusive"</span>|<span class="param">"minexclusive"</span>|<span class="param">"maxinclusive"</span>|<span class="param">"maxexclusive"</span>):<a class="nobref" href="#dfn-numericLiteral">numericLiteral</a> </td></tr>
     <tr><th></th><td>|</td><td>(<span class="param">"totaldigits"</span>|<span class="param">"fractiondigits"</span>):<a class="trmref" href="#dfn-INTEGER">INTEGER</a> ;</td></tr>
   <tr class="nob"><th id="dfn-numericLiteral" class="nob">numericLiteral</th> <td>=</td><td><a class="trmref" href="#dfn-INTEGER">INTEGER</a> | <a class="trmref" href="#dfn-DECIMAL">DECIMAL</a> | <a class="trmref" href="#dfn-DOUBLE">DOUBLE</a> ;</td></tr>
@@ -756,7 +756,10 @@ _:User2
           <li id="nodeSatisfies-length">for "<code>length</code>" constraints, <m>v = len</m>,</li>
           <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, <m>v &gt;= len</m>,</li>
           <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <m>v &lt;= len</m>,</li>
-          <li id="nodeSatisfies-pattern">for "<code>pattern</code>" constraints, <m>v</m> is a valid <a href="https://www.w3.org/TR/xpath-functions/#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-30]] and invoking <code class="function"><a href="https://www.w3.org/TR/xpath-functions-30/#func-matches">fn:matches</a>(<m>lex</m>, <m>v</m>)</code> returns <code>fn:true</code>.</li>
+          <li id="nodeSatisfies-pattern">
+            for "<code>pattern</code>" constraints, <m>v</m> is a valid <a href="https://www.w3.org/TR/xpath-functions/#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-30]] and invoking <code class="function"><a href="https://www.w3.org/TR/xpath-functions-30/#func-matches">fn:matches</a>(<m>lex</m>, <m>v</m>)</code> returns <code>fn:true</code>.
+            If the <span class="param">flags</span> parameter is present, is it passed as a second argument to <code class="function">fn:matches</code>.
+          </li>
         </ul>
         <div class="example">
           <div class="example-title marker"><span>String Facets example 1</span></div>
@@ -790,6 +793,7 @@ _:User2
             For instance, the SPARQL Query and SPARQL Update languages treat blank nodes in the query, labeled or otherwise, as variables.
             Lexical constraints on blank node labels can only be implemented in systems which preserve such labels on data import.
           </p>
+        </div>
           <div class="example">
             <div class="example-title marker"><span>String Facets example 2</span></div>
             <div class="repchoice">
@@ -798,12 +802,14 @@ _:User2
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
       "predicate": "http://schema.example/submittedBy",
-      "valueExpr": { "type": "NodeConstraint", "pattern": "genUser[0-9]+" }
+      "valueExpr": { "type": "NodeConstraint",
+                     "pattern": "genuser[0-9]+", "flags": "i" }
 } } ] }</pre>
-              <pre class="shexc">                                                                           
+              <pre class="shexc">                                                               
   ex:IssueShape {
-    ex:submittedBy PATTERN "genUser[0-9]+"
+    ex:submittedBy ~/genuser[0-9]+/i
   }
+
 
 
               </pre>
@@ -814,13 +820,9 @@ _:User2
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genUser[0-9]+</code>.</td></tr>
+              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genuser[0-9]+</code>.</td></tr>
             </table>
           </div>
-        </div>
-        <p class="issue">
-          Neither ShExC or ShExJ provide for regex flags.
-        </p>
       </section>
 
       <section id="xs-numeric">
