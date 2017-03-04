@@ -504,7 +504,7 @@ _:User2
     <!-- pre class="shexc">                                                    
   { "type": "NodeConstraint", <span class="comment">…</span> },
   { "type": "ShapeOr", "shapeExprs": [
-    { "type": "ShapeRef", "reference": "http://schema.example/IssueShape" }
+    { "type": "ShapeExprRef", "reference": "http://schema.example/IssueShape" }
     { "type": "ShapeNot", "shapeExpr": { "type": "ShapeExternal" } }
     ] } ] }</pre -->
     In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the shape expression with the id "http://schema.example/IssueShape".
@@ -4146,11 +4146,11 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 4         ex:state [ex:unassigned ex:assigned];      <span class="comment"># ex:state of ex:unassigned</span>
                                                      <span class="comment">#          or ex:assigned</span>
 5
-6         ex:reportedBy @&lt;UserShape&gt;;                <span class="comment"># <span class="jobjref"><a class="obj">ShapeRef</a></span> to &lt;UserShape&gt;</span>
+6         ex:reportedBy @&lt;UserShape&gt;;                <span class="comment"># <span class="jobjref"><a class="obj">ShapeExprRef</a></span> to &lt;UserShape&gt;</span>
 
 7         ex:reportedOn xsd:dateTime;                <span class="comment"># literal with datatype xsd:dateTime</span>
 8         (
-9           ex:reproducedBy @&lt;EmployeeShape&gt;;        <span class="comment"># <span class="jobjref"><a class="obj">ShapeRef</a></span> to &lt;EmployeeShape&gt;</span>
+9           ex:reproducedBy @&lt;EmployeeShape&gt;;        <span class="comment"># <span class="jobjref"><a class="obj">ShapeExprRef</a></span> to &lt;EmployeeShape&gt;</span>
 10          ex:reproducedOn xsd:dateTime OR xsd:date # literal with datatype xsd:dateTime
                                                      <span class="comment">#                    or xsd:date</span>
 11        )?;
@@ -4199,7 +4199,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
         <li><span class="hl-repet lowlight3">repeated triple expression</span> (<as>RepeatedTripleExpr</as>)</li>
         <li><span class="hl-inverse-tc lowlight1">triple constraint with an inverse property</span></li>
         <!-- li><span class="hl-tc-cofinite lowlight1">triple constraint with a non-singleton co-finite set of properties</span></li -->
-        <li><span class="hl-shref lowlight4">shape reference</span> (<as><a>ShapeRef</a></as>)</li>
+        <li><span class="hl-shref lowlight4">shape reference</span> (<as><a>ShapeExprRef</a></as>)</li>
       </ul>
 <pre class="shex">
 # triple expression of the shapes language
@@ -4584,20 +4584,20 @@ CLOSED {
       </p>
       <div class="shexjTable">
 <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix">prefixes</dfn>:{<a>PREFIX</a>-&gt;<a>IRI</a>}? <span class="param">base</span>:<a>IRI</a>? <span class="param">startActs</span>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:{<a class="nobref">shapeLabel</a>-&gt;<a class="nobref">shapeExpr</a>}? }</td></tr>
-  <tr class="nob"><th class="nob"><dfn>shapeLabel</dfn></th><td>=</td><td><a>IRI</a> | <a>BNODE</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><a>shapeExpr</a></th><td>=</td><td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeRef</a> | <a class="objref">ShapeExternal</a> ;</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix">prefixes</dfn>:{<a>PREFIX</a>-&gt;<a>IRI</a>}? <span class="param">base</span>:<a>IRI</a>? <span class="param">startActs</span>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:{<a class="nobref">shapeExprLabel</a>-&gt;<a class="nobref">shapeExpr</a>}? }</td></tr>
+  <tr class="nob"><th class="nob"><a>shapeExprLabel</a></th><td>=</td><td><a>IRI</a> | <a>BNODE</a> ;</td></tr>
+  <tr class="nob"><th class="nob"><a>shapeExpr</a></th><td>=</td><td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExprRef</a> | <a class="objref">ShapeExternal</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeOr</a></th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeAnd</a></th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeNot</a></th><td>{</td><td><span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th><td>{</td><td><span class="param">virtual</span>:<a>BOOL</a>? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRI</a>]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>? <span class="param">inherit</span>:[<a class="nobref">shapeLabel</a>]? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>ShapeRef</dfn></th><td>{</td><td><span class="param">reference</span>:<a>shapeLabel</a> }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th><td>{</td><td><span class="param">virtual</span>:<a>BOOL</a>? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRI</a>]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>? <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>ShapeExprRef</a></th><td>{</td><td><span class="param">reference</span>:<a>shapeExprLabel</a> }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeExternal</a></th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
   <tr class="obj"><th class="obj"><a>SemAct</a></th><td>{</td><td><span class="param">name</span>:<a>IRI</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
-  <tr class="nob"><th class="nob"><a>tripleExpr</a></th><td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">Inclusion</a> ;</td></tr>
+  <tr class="nob"><th class="nob"><a>tripleExpr</a></th><td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>EachOf</a></th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:(<a>INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>]? }</td></tr>
   <tr class="obj"><th class="obj"><a>OneOf</a></th><td>{</td><td><span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:(<a>INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>]? }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>Inclusion</dfn></th><td>{</td><td><span class="param">include</span>:<a class="nobref">shapeLabel</a> }</td></tr>
+  <tr class="obj"><th class="obj"><a>tripleExprRef</a></th><td>{</td><td><span class="param">include</span>:<a class="nobref">shapeExprLabel</a> }</td></tr>
   <tr class="obj"><th class="obj"><a>TripleConstraint</a></th><td>{</td><td><span class="param">inverse</span>:<a>BOOL</a>? <a class="param">predicate</a>:<a>IRI</a> <span class="param">valueExpr</span>:<a class="nobref">shapeExpr</a>? <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:(<a>INTEGER</a> | <span class="literal">"unbounded"</span>)? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>]? }</td></tr>
   <tr class="obj"><th class="obj"><a>NodeConstraint</a></th><td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRI</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>]? }</td></tr>
   <tr class="obj"><th class="obj"><a>Annotation</a></th><td>{</td><td><a class="param">predicate</a>:<a>IRI</a> <span class="param">object</span>:<a class="nobref">objectValue</a> }</td></tr>
