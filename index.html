@@ -118,8 +118,8 @@
     <section id="notation">
       <h2>Notation</h2>
       <p>
-        <!-- @@Labra: I would probably add a paragraph saying something about the abstract syntax so you can later talk about JSON... -->
-        <!-- @@ericP: I changed "the" to "an" below in hopes that suffices. I don't want to define an abstract syntax in addition to ShExJ if we can avoid it. -->
+        <p class="ednote">@@Labra: I would probably add a paragraph saying something about the abstract syntax so you can later talk about JSON...</p>
+        <p class="ednote">@@ericP: I changed "the" to "an" below in hopes that suffices. I don't want to define an abstract syntax in addition to <a>ShExJ</a> if we can avoid it.</p>
         The JSON[[!rfc4627]] Syntax serves as a serializable proxy for an abstract syntax.
         This specification uses a simple grammar to describe the set of JSON documents that can be interpreted as a ShEx schema.
       </p>
@@ -167,7 +167,7 @@
         signifies that a <code>Schema</code> has three optional components called <a class="param">startActs</a>, <a class="param">start</a> and <a class="param">shapes</a>:
       </p>
       <ul>
-        <li><dfn class="param">startActs</dfn> is a list of <a class="objref">SemAct</a>.<!-- @@Labra: Maybe you can say here that lists are represented by square brackets ? --></li>
+        <li><dfn class="param">startActs</dfn> is a list of <a class="objref">SemAct</a>.<span class="ednote">@@Labra: Maybe you can say here that lists are represented by square brackets ?</span></li>
         <li><dfn class="param">start</dfn> is a <a class="objref">shapeExpr</a>.</li>
         <li><dfn class="param">shapes</dfn> is an array of <a class="nobref">shapeExpr</a>.</li>
       </ul>
@@ -268,12 +268,12 @@
         </table>
         </div>
         </section>
-      <!-- @@Labra: I am not sure, but I think it would be more readable if you used the compact syntax by default and the Json as secondary. 
+      <p class="ednote">@@Labra: I am not sure, but I think it would be more readable if you used the compact syntax by default and the Json as secondary. 
           Also, I would prefer to see both at the same time as in the OWL Primer: https://www.w3.org/TR/owl2-primer/ where you can activate/deactiva 
           each of the styles separately
-          Finally, I also think it would be nice to also include examples using the JSON-LD/RDF based serialization -->
-      <!-- @@ericP: I think we have to use ShExJ as the default syntax as it's the foundation for the definitions of the semantics.
-           Let's see if we can get ShExR done in time, though it will be more chatty than ShExJ. -->
+          Finally, I also think it would be nice to also include examples using the JSON-LD/RDF based serialization</p>
+      <p class="ednote">@@ericP: I think we have to use <a>ShExJ</a> as the default syntax as it's the foundation for the definitions of the semantics.
+           Let's see if we can get ShExR done in time, though it will be more chatty than <a>ShExJ</a>.</p>
       <!-- <p> -->
       <!--   The following HTML tags and CSS classes are used to highlight the roles of text in this document: -->
       <!-- </p> -->
@@ -651,9 +651,9 @@ _:User2
 &lt;issue1&gt; ex:state ex:HunkyDory .
 &lt;issue2&gt; <span style="border-bottom: thin solid red;">ex:taste</span> ex:GoodEnough .
 <span class="fail">&lt;issue3&gt; ex:state "just fine" .</span></pre>
-<!-- @@Labra: I think the second example could be omitted at this point because it requires talking about cardinality which has not
-     been introduced yet...-->
-<!-- @@ericP: I believe that mentioning it here will reduce confusion for readers. -->
+<p class="ednote">@@Labra: I think the second example could be omitted at this point because it requires talking about cardinality which has not
+     been introduced yet...</p>
+<p class="ednote">@@ericP: I believe that mentioning it here will reduce confusion for readers.</p>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -698,8 +698,8 @@ _:User2
 &lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
 <span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span>
 <span class="fail">&lt;issue3&gt; ex:submittedOn "2016-07"^^xsd:date .</span></pre>
-<!-- @@Labra: I would probably use a different datatype to avoid confusion between date and dateTime...maybe xsd:float .... -->
-<!-- @@ericP: I think that this example can eliminate readers' questions about whether date forms are somehow compatible. -->
+<p class="ednote">@@Labra: I would probably use a different datatype to avoid confusion between date and dateTime...maybe xsd:float ....</p>
+<p class="ednote">@@ericP: I think that this example can eliminate readers' questions about whether date forms are somehow compatible.</p>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -896,8 +896,8 @@ _:User2
 &lt;issue2&gt; ex:confirmations 2^^xsd:byte .
 <span class="fail">&lt;issue3&gt; ex:confirmations 0 .</span>
 <span class="fail">&lt;issue4&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
-<!-- @@Labra: Maybe this example is not needed here because it is checking datatypes not numeric facets ... -->
-<!-- @@ericP: I think it clarifies that min/max only work with recognized datatypes. -->
+<p class="ednote">@@Labra: Maybe this example is not needed here because it is checking datatypes not numeric facets ...</p>
+<p class="ednote">@@ericP: I think it clarifies that min/max only work with recognized datatypes.</p>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -3025,8 +3025,8 @@ PREFIX ex: &lt;http://schema.example/&gt;
       
     <section id="shexc">
       <h2>ShEx Compact syntax (ShExC)</h2>
-      <!-- @@Labra: It is strange to talk about parsing ShEx compact syntax without saying what it is...I think some paragraph or explanation is needed, 
-       or maybe title this section "ShEx Compact syntax" and include the grammar and then, how to parse it --> 
+      <p class="ednote"> @@Labra: It is strange to talk about parsing ShEx compact syntax without saying what it is...I think some paragraph or explanation is needed, 
+       or maybe title this section "ShEx Compact syntax" and include the grammar and then, how to parse it.</p>
 
       <div>
       <div class="grammarTable">
@@ -4252,8 +4252,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       
     <section id="compilation-example">
       <h3>Examples of Compilating <a>ShExC</a> into <a>ShExJ</a></h3>
-      <!-- @@Labra: I didn't quite understand what is the point of this section...is this obsolete? -->
-      <!-- @@ericP: yes, needs review for salvagable bits -->
+      <p class="ednote">@@Labra: I didn't quite understand what is the point of this section...is this obsolete?</p>
+      <p class="ednote">@@ericP: yes, needs review for salvagable bits</p>
   
   <section id="compilation-example-closed-shape">
     <h4>Closed shape expression</h4>
