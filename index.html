@@ -105,9 +105,9 @@
         Shape Expressions schemas share blank nodes with the constrained <a>RDF graphs</a> in the same way that graphs in <a data-cite="rdf11-concepts#dfn-rdf-dataset">RDF datasets</a> [[!rdf11-concepts]] share blank nodes.
       </p>
       <p>
-        ShEx can be represented in JSON structures (ShExJ) or a compact syntax (ShExC).
+        ShEx can be represented in JSON structures (<a>ShExJ</a>) or a compact syntax (<a>ShExC</a>).
         The compact syntax is intended for human consumption; the JSON structure for machine processing.
-        This document defines ShEx in terms of ShExJ and includes a <a href="#shexc">section on the ShEx Compact Syntax (ShEx)</a>.
+        This document defines ShEx in terms of <a>ShExJ</a> and includes a <a href="#shexc">section on the ShEx Compact Syntax (ShEx)</a>.
       </p>
       <p>To understand the programatic interface described in this specification and how it is
         intended to operate in a programming environment, it is useful to have working
@@ -126,7 +126,7 @@
       <ul>
         <li>Typed data structures are represented as JSON objects:
         <span class="shexj">typeName { <a data-cite="rfc4627#section-2.2">member*</a> }</span><br/>
-        <a data-cite="rfc4627#section-2.2">RFC4627 Section 2.2</a> provides syntactic constraints for JSON — this grammar constrains those to valid ShExJ constructs. 
+        <a data-cite="rfc4627#section-2.2">RFC4627 Section 2.2</a> provides syntactic constraints for JSON — this grammar constrains those to valid <a>ShExJ</a> constructs. 
         </li>
         <li><code>typeName</code> is the name of the typed data structure.
         Types are referenced in the definitions of object members and in the definitions of the semantics for those data structures.</li>
@@ -191,7 +191,7 @@
       <section id="shex-references">
         <h3>References</h3>
         <p>
-          ShExJ is a dialect of JSON-LD [[!JSON-LD]] and the member <code>id</code> is used as a <a data-cite="JSON-LD#node-identifiers">node identifier</a>.
+          <a>ShExJ</a> is a dialect of JSON-LD [[!JSON-LD]] and the member <code>id</code> is used as a <a data-cite="JSON-LD#node-identifiers">node identifier</a>.
           An object may be represented inline or referenced by its <code>id</code> which may be either a <a>blank node</a> or an <a>IRI</a>.
         </p>
         <div class="shexj">
@@ -357,6 +357,25 @@ _:User2
       </div>
     </section>
 
+    <section id="conformance">
+      <p>Conformance criteria are relevant to authors and authoring tool implementers. As well
+        as sections marked as non-normative, all authoring guidelines, diagrams, examples,
+        and notes in this specification are non-normative. Everything else in this
+        specification is normative.</p>
+
+      <ul>
+        <li>A <a>ShExC</a> document complies with this specification if it
+          conforms to the grammar described in <a href="#shexc" class="sectionRef"></a> resulting
+          in a valid <a>ShExJ</a> document.</li>
+        <li>A <a>ShExJ</a> document complies with this specification if it is a valid
+          JSON-LD document [[!json-ld]], and conforms to the <a>ShExJ</a> syntax, as described in <a href="#shexj" class="sectionRef"></a>.</li>
+        <li>JSON documents can be interpreted as <a>ShExJ</a> by following the normative statements in
+          <a data-cite="JSON-LD#interpreting-json-as-json-ld">Section 4.8 Interpreting JSON as JSON-LD</a> in [[!JSON-LD]].</li>
+        <li>Other RDF documents comply with this specification, if they can be transformed into conforming
+          <a>ShExJ</a> documents.</li>
+      </ul>
+    </section>
+
     <section id="shapes-language">
       <h2>The Shape Expressions Language</h2>
       <p>
@@ -480,7 +499,7 @@ _:User2
   <tr class="obj"><th class="obj"><dfn>ShapeAnd</dfn></th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
   <tr class="obj"><th class="obj"><dfn>ShapeNot</dfn></th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
   <tr class="obj"><th class="obj"><dfn>ShapeExternal</dfn></th> <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? }</td></tr>
-  <tr class="nob"><th class="nob"><dfn>shapeExprRef</dfn></th>           <td>=</td> <td><a class="objref">shapeExprLabel</a> ;</td></tr>
+  <tr class="nob"><th class="nob"><dfn data-lt="shapeExprRefs">shapeExprRef</dfn></th>           <td>=</td> <td><a class="objref">shapeExprLabel</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>shapeExprLabel</dfn></th>       <td>=</td> <td><a>IRI</a> | <a>BNODE</a> ;</td></tr>
         </table>
       </div>
@@ -2054,12 +2073,12 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               <pre class="shexc">                                                                      
   ex:UserShape
     {
-     (              <span class="comment"># extra ()s to clarify alignment with ShExJ</span>
+     (              <span class="comment"># extra ()s to clarify alignment with <a>ShExJ</a></span>
       foaf:name
 
 
               LITERAL |
-      (             <span class="comment"># extra ()s to clarify alignment with ShExJ</span>
+      (             <span class="comment"># extra ()s to clarify alignment with <a>ShExJ</a></span>
        foaf:givenName
 
 
@@ -2854,7 +2873,7 @@ inst:Testgrammer23
         <section id="example-negation">
           <h4>Negation Example</h4>
           <p>
-            Setting the maximum cardinality of a TripleConstraint with <a>predicate</a> <m>p</m> to zero (i.e. <span>"max": 0</span> in ShExJ or <code>{0}</code> or <code>{0, 0}</code> in ShExC) asserts that matching nodes must have no triples with <a>predicate</a> <m>p</m>.
+            Setting the maximum cardinality of a TripleConstraint with <a>predicate</a> <m>p</m> to zero (i.e. <span>"max": 0</span> in <a>ShExJ</a> or <code>{0}</code> or <code>{0, 0}</code> in <a>ShExC</a>) asserts that matching nodes must have no triples with <a>predicate</a> <m>p</m>.
           </p>
           <!--
               BASE <http://schema.example/>
@@ -3016,8 +3035,8 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <tbody class="grammarParagraph">
   <tr><td rowspan="2" colspan="4">
     <p>
-      Parsing ShExC transforms a ShExC document into an equivalent ShExJ structure.
-      This is defined as a BNF which accepts ShExC followed by instructions for tranlating the rules in the BNF production into their corresponding ShExJ objects.
+      Parsing <dfn>ShExC</dfn> transforms a <a>ShExC</a> document into an equivalent <a>ShExJ</a> structure.
+      This is defined as a BNF which accepts <a>ShExC</a> followed by instructions for tranlating the rules in the BNF production into their corresponding <a>ShExJ</a> objects.
       For example, "<span style="font-family: monospace; ">shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></span>" indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
     </p>
     <p>
@@ -3026,20 +3045,20 @@ PREFIX ex: &lt;http://schema.example/&gt;
 </tbody>
 
 <tbody class="prod" style="">
-  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the ShExC grammar following the <a data-cite="xml#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
+  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="xml#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
 <tr valign="baseline">
 <td id="prod-shexDoc">[<span class="prodNo">1</span>]   </td>
 <td><code class="production prod">shexDoc</code></td>
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
-  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated ShExJ object:</td></tr>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated <a>ShExJ</a> object:</td></tr>
 <tr class="obj"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td><a class="obj">Schema</a></td><td>{</td><td>
 <a class="param">startActs</a>:[<a class="objref">SemAct</a>]?
 <a class="param">start</a>:<a class="nobref">shapeExpr</a>?
 <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }
 </td></tr>
-  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the ShExJ object:</td></tr>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the <a>ShExJ</a> object:</td></tr>
   <tr class="params"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td colspan="3"><ul>
 <li><a class="param">startActs</a> comes from <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span> production.</li>
 <li><a class="param">start</a> comes from the <span class="prod"><a class="grammarRef" href="#prod-start">start</a></span> production.</li>
@@ -4059,7 +4078,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
           <div class="example-title marker"><span>Parsing ShExC Example 1</span></div>
           <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
   <p>
-    Following is a ShEx schema written in ShExC with line numbers added at the left for reference.
+    Following is a ShEx schema written in <a>ShExC</a> with line numbers added at the left for reference.
   </p>
 
 
@@ -4232,7 +4251,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       </div>
       
     <section id="compilation-example">
-      <h3>Examples of Compilating ShExC into ShExJ</h3>
+      <h3>Examples of Compilating <a>ShExC</a> into <a>ShExJ</a></h3>
       <!-- @@Labra: I didn't quite understand what is the point of this section...is this obsolete? -->
       <!-- @@ericP: yes, needs review for salvagable bits -->
   
@@ -4580,7 +4599,7 @@ CLOSED {
     <section id="shexj" class="appendix">
       <h2>ShEx JSON Syntax (ShExJ)</h2>
       <p>
-        This is the complete grammar for ShExJ.
+        This is the complete grammar for <dfn>ShExJ</dfn>.
       </p>
       <div class="shexjTable">
 <table class="shexj">
