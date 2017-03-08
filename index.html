@@ -3781,7 +3781,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"{" ([^%\\] | "\\" [%\\] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* "%" "}"</code></td>
 </tr>
-    <tr id="handle-IRIREF" class="params"><td></td><td>returns: a string of unicode codepoints</td><td></td><td>The characters between "%" and "%}" are taken, with the <a data-cite="turtle#numeric">numeric escape sequences</a> unescaped, to form the unicode string of the IRI.</td></tr>
+    <tr id="handle-IRIREF-2" class="params"><td></td><td>returns: a string of unicode codepoints</td><td></td><td>The characters between "%" and "%}" are taken, with the <a data-cite="turtle#numeric">numeric escape sequences</a> unescaped, to form the unicode string of the IRI.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3791,7 +3791,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"{" <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> ( "," (<span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> | "unbounded")? )? "}"</code></td>
 </tr>
-    <tr id="handle-IRIREF" class="params"><td></td><td>returns: repeat range</td><td></td><td>The base-10 numeric values of <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> are taken or a non-negative integer and an <code>Unbounded</code> token if "<code>*</code>" was matched.</td></tr>
+    <tr id="handle-REPEAT_RANGE" class="params"><td></td><td>returns: repeat range</td><td></td><td>The base-10 numeric values of <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> are taken or a non-negative integer and an <code>Unbounded</code> token if "<code>*</code>" was matched.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3801,7 +3801,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"a"</code></td>
 </tr>
-    <tr id="handle-PNAME_NS2" class="params"><td></td><td> returns: <a>      IRI </a></td><td></td><td>The <code>iri</code> <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code> is returned.</td></tr>
+    <tr id="handle-RDF_TYPE" class="params"><td></td><td> returns: <a>      IRI </a></td><td></td><td>The <code>iri</code> <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code> is returned.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3842,7 +3842,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PN_PREFIX">PN_PREFIX</a></span>? ":"</code></td>
 </tr>
-    <tr id="handle-PNAME_NS2" class="params"><td></td><td> returns: <a>      IRI </a></td><td></td><td>The <code>iri</code> is the value in the <a>prefixes map</a> corresponding to the second token of the rule.</td></tr>
+    <tr id="handle-ATPNAME_NS" class="params"><td></td><td> returns: <a>      IRI </a></td><td></td><td>The <code>iri</code> is the value in the <a>prefixes map</a> corresponding to the second token of the rule.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3852,7 +3852,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL">PN_LOCAL</a></span></code></td>
 </tr>
-    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="#reserved">reserved characters</a> in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
+    <tr id="handle-ATPNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="#reserved">reserved characters</a> in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3862,7 +3862,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"_:" (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | [0-9]) ((<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | ".")* <span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span>)?</code></td>
 </tr>
-    <tr id="handle-LANGTAG" class="params"><td></td><td>returns: <a>BNode</a></td><td></td><td>The characters following the "<code>_:</code>" form a <a>blank node identifier</a>. This corresponds to any <a>blank node</a> in the input dataset that had the same label.</td></tr>
+    <tr id="handle-BLANK_NODE_LABEL" class="params"><td></td><td>returns: <a>BNode</a></td><td></td><td>The characters following the "<code>_:</code>" form a <a>blank node identifier</a>. This corresponds to any <a>blank node</a> in the input dataset that had the same label.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3892,7 +3892,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">[+-]? [0-9]* "." [0-9]+</code></td>
 </tr>
-    <tr id="handle-DOUBLE" class="params"><td></td><td>returns: <a>            literal     </a></td><td></td><td>The literal has a lexical form of the input string, and a datatype of <code>xsd:double</code>.</td></tr>
+    <tr id="handle-DECIMAL" class="params"><td></td><td>returns: <a>            literal     </a></td><td></td><td>The literal has a lexical form of the input string, and a datatype of <code>xsd:double</code>.</td></tr>
 </tbody>
 
 <tbody class="term">
