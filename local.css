@@ -87,7 +87,6 @@
       border-bottom: 5px solid transparent;         
       }
 
-
       .example{
       margin-left: 0;
       margin-right: 2ex;
@@ -282,6 +281,15 @@ div.shexjTable th { text-align: right; }
 }
 
 .label { font-weight: bold; }
+
+
+.code {
+  color: #C83500;
+  font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
+  font-size: .9em;
+  page-break-inside: avoid;
+  text-transform: none;
+}
 
 .function { white-space: nowrap; }
 
