@@ -14,12 +14,6 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
   })
 }
 
-function wrapTags () {
-  $("m").wrapInner("<span class='math'/>").children(0).unwrap();
-  $("as").wrapInner("<span class='as'/>").children(0).unwrap();
-  $("parm").wrapInner("<span class='param'/>").children(0).unwrap();
-}
-
 function chooseRep (elts, cls) {
   elts.each(function (idx, container) {
     container = $(container);
@@ -37,7 +31,6 @@ function chooseRep (elts, cls) {
 }
 
 $(document).ready(function () {
-  wrapTags();
   chooseRep($(".repchoice"), "json");
   $("body").keydown(function (evt) {
     var toHide, toShow;
