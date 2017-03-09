@@ -3328,13 +3328,13 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span> | <span class="prod"><a class="grammarRef" href="#prod-numericFacet">numericFacet</a></span></code></td>
 </tr>
+<tr class="obj"><td></td><td><a class="nob">xsFacet</a></td><td>=</td><td><a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</td></tr>
 <tr style="vertical-align: baseline">
 <td id="prod-stringFacet">[<span class="prodNo">34</span>]   </td>
 <td><code class="production prod">stringFacet</code></td>
 <td>   ::=   </td>
 <td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-stringLength">stringLength</a></span> <span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span><br/>
-| "PATTERN" <span class="prod"><a class="grammarRef" href="#prod-string">string</a></span><br/>
-| "~" <span class="prod"><a class="grammarRef" href="#prod-string">string</a></span></code></td>
+| <span class="prod"><a class="grammarRef" href="#term-REGEXP">REGEXP</a></span></code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-stringLength">[<span class="prodNo">35</span>]   </td>
@@ -3342,6 +3342,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td>   ::=   </td>
 <td><code class="content">"LENGTH" | "MINLENGTH" | "MAXLENGTH"</code></td>
 </tr>
+<tr class="obj"><td></td><td><a class="nob">stringFacet</a></td><td>=</td><td>(<span class="param">"length"</span>|<span class="param">"minlength"</span>|<span class="param">"maxlength"</span>):<a>INTEGER</a> | <span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? ;</td></tr>
 <tr style="vertical-align: baseline">
 <td id="prod-numericFacet">[<span class="prodNo">36</span>]   </td>
 <td><code class="production prod">numericFacet</code></td>
@@ -3361,6 +3362,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td>   ::=   </td>
 <td><code class="content">"TOTALDIGITS" | "FRACTIONDIGITS"</code></td>
 </tr>
+<tr class="obj"><td></td><td><a class="obj">numericFacet</a></td><td>{</td><td>(<span class="param">"mininclusive"</span>|<span class="param">"minexclusive"</span>|<span class="param">"maxinclusive"</span>|<span class="param">"maxexclusive"</span>):<a class="nobref">numericLiteral</a> | (<span class="param">"totaldigits"</span>|<span class="param">"fractiondigits"</span>):<a>INTEGER</a> ;</td></tr>
 </tbody>
 
 <tbody class="grammarParagraph" style="border-left:thin solid white; border-right:thin solid white;">
@@ -3807,7 +3809,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"{" ([^%\\] | "\\" [%\\] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* "%" "}"</code></td>
 </tr>
-    <tr id="handle-IRIREF-2" class="params"><td></td><td>returns: a string of unicode codepoints</td><td></td><td>The characters between "%" and "%}" are taken, with the <a data-cite="turtle#numeric">numeric escape sequences</a> unescaped, to form the unicode string of the IRI.</td></tr>
+    <tr id="handle-IRIREF-2" class="params"><td></td><td>returns: a string of unicode codepoints</td><td></td><td>The characters between "{" and "%}" are taken, with the <a data-cite="turtle#numeric">numeric escape sequences</a> unescaped, to form the unicode string of the IRI.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3883,6 +3885,18 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 
 <tbody class="term">
 <tr style="vertical-align: baseline">
+<td id="term-REGEXP">[<span class="prodNo">63</span>]   </td>
+<td>&lt;<code class="production term">REGEXP</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'/' ([^/\\\n\r] | '\\' [.\\?*+{}()|^$\[\]/tbnrf] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)+ '/' [smix]*</code></td>
+</tr>
+<tr class="obj"><td></td><td><a class="nob"></a></td><td>{</td><td><span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? }</td></tr>
+    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>JSON object</a></td><td></td><td><span class="param">pattern</span> is a unicode string formed from the characters between the outermost '/'s by unescaping all <a data-cite="turtle#numeric">numeric escape sequences</a> matched by <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span> and only the <a data-cite="turtle#string">string escape sequenes</a> for the characters [tbnrf/].<br/>
+<span class="param">flags</span> is a sequence of the characters [smix] if any were matched. Otherwise no <span class="param">flags</span> attribute is returned.</td></tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
 <td id="term-BLANK_NODE_LABEL">[<span class="prodNo">73</span>]   </td>
 <td>&lt;<code class="production term">BLANK_NODE_LABEL</code>&gt;</td>
 <td>   ::=   </td>
@@ -3947,7 +3961,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"'" ([^'\\\n\r] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* "'"</code></td>
 </tr>
-    <tr id="handle-STRING_LITERAL1" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost "'"s   are taken, with <a href="#numeric">numeric</a> and <a href="#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
+    <tr id="handle-STRING_LITERAL1" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost "'"s   are taken, with <a data-cite="turtle#numeric">numeric</a> and <a data-cite="turtle#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3957,7 +3971,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">'"' ([^\"\\\n\r] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* '"'</code></td>
 </tr>
-    <tr id="handle-STRING_LITERAL2" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost '"'s   are taken, with <a href="#numeric">numeric</a> and <a href="#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
+    <tr id="handle-STRING_LITERAL2" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost '"'s   are taken, with <a data-cite="turtle#numeric">numeric</a> and <a data-cite="turtle#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3967,7 +3981,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"'''" ( ("'" | "''")? ([^\\'\\] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>) )* "'''"</code></td>
 </tr>
-    <tr id="handle-STRING_LITERAL_LONG1" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost "'''"s are taken, with <a href="#numeric">numeric</a> and <a href="#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
+    <tr id="handle-STRING_LITERAL_LONG1" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost "'''"s are taken, with <a data-cite="turtle#numeric">numeric</a> and <a data-cite="turtle#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -3977,7 +3991,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">'"""' ( ('"' | '""')? ([^\"\\] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>) )* '"""'</code></td>
 </tr>
-    <tr id="handle-STRING_LITERAL_LONG2" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost '"""'s are taken, with <a href="#numeric">numeric</a> and <a href="#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
+    <tr id="handle-STRING_LITERAL_LONG2" class="params"><td></td><td>returns: <a data-cite="rdf11-concepts#dfn-lexical-form">                         lexical form</a></td><td></td><td>The characters between the outermost '"""'s are taken, with <a data-cite="turtle#numeric">numeric</a> and <a data-cite="turtle#string">string</a> escape sequences unescaped, to form the unicode string of a lexical form.</td></tr>
 </tbody>
 
 <tbody class="term">
