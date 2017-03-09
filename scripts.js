@@ -30,6 +30,14 @@ function chooseRep (elts, cls) {
   });
 }
 
+
+function unComment(doc, content) {
+  // perform transformations to make it render and prettier
+  content = content.replace(/<!--/, '');
+  content = content.replace(/-->/, '');
+  return content ;
+}
+
 $(document).ready(function () {
   chooseRep($(".repchoice"), "json");
   $("body").keydown(function (evt) {

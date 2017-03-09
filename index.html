@@ -94,7 +94,7 @@
     <section id="introduction">
       <h2>Introduction</h2>
       <p>
-        The Shape Expressions (ShEx) language provides a structural schema for RDF data.
+        The Shape Expressions (<dfn>ShEx</dfn>) language provides a structural schema for RDF data.
         This can be used to document APIs or datasets, aid in development of API-conformant messages, minimize defensive programming, guide user interfaces, or anything else that involves a machine-readable description of data organization and typing requirements.
       </p>
       <p>
@@ -249,7 +249,7 @@
       <p>
         The validation process defined in this document relies on matching <a>triple patterns</a> in the form <code>(subject, predicate, object)</code> where each position may be supplied by a constant, a previously defined term, or the underscore "<code>_</code>", which represents a previously undefined element or wildcard.
         This corresponds to a <dfn data-cite="sparql11-query#defn_TriplePattern" data-lt="triple pattern|triple patterns">SPARQL Triple Pattern</dfn> where each "_" is replaced by a unique <a>blank node</a>.
-        Matching such a <a>triple pattern</a> against a <a>graph</a> is defined by <a data-cite="sparql11-query#BGPsparql">SPARQL Basic Graph Pattern Matching</a> (BFP) with a BGP containing only that <a>triple pattern</a>.
+        Matching such a <a>triple pattern</a> against a <a>graph</a> is defined by <a data-cite="sparql11-query#BGPsparql">SPARQL Basic Graph Pattern Matching</a> (BGP) with a BGP containing only that <a>triple pattern</a>.
       </p>
       </section>
       <!-- button id="toggleRDF">Toggle RDF ("r")</button> <button id="toggleExamples">Toggle Examples ("e")</button> <button id="toggleSquished">Render only abstract syntax ("a")</button -->
@@ -291,6 +291,10 @@
         <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <a>IRI</a>, <dfn data-cite="rdf11-concepts#dfn-blank-node">blank node</dfn>, <a>Literal</a></li>
         <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
       </ul>
+      <p>For the purposes of the <a>ShExProcessor</a> interface,
+        a <dfn data-cite="ECMASCRIPT-6.0#sec-promise-objects" data-lt="promises">promise</dfn>
+        is an object that represents the eventual result of a single asynchronous operation.
+        Promises are defined in [[ECMASCRIPT-6.0]].</p>
       <p>
   The following functions access the elements of an <a>RDF graph</a> <span class="math">G</span> containing a node <span class="math">n</span>:</p>
   <ul>
@@ -672,7 +676,7 @@ _:User2
             For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is an Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions#casting">XPath 2.0 section 17, Casting</a>[[!xpath-functions]].
             Only datatypes supported by SPARQL MUST be tested but ShEx extensions MAY add support for other datatypes.
           </p>
-          <p class="ednote">Should we reference <a data-cite="xpath-functions-31#casting">Section 19 Casting in XPath Functions 3.1 instead?</a></p>
+          <p class="ednote">@@gkellogg: Should we reference <a data-cite="xpath-functions-31#casting">Section 19 Casting in XPath Functions 3.1 instead?</a></p>
 
           <div class="example">
             <div class="example-title marker"><span>Datatype example 1</span></div>
@@ -1383,7 +1387,29 @@ _:User2
         These ensure referential integrity and eliminate logical paradoxes such as those that arrise through the use of negation.
         These are not constraints expressed by the schema but instead those imposed on the schema.
       </p>
-      
+
+      <section id="validation-requirement">
+        <h4>Schema Validation Requirement</h4>
+
+        <p>A <a>graph</a> <span class="math">G</span> is said to <dfn data-lt="conforms|conformance">conform</dfn> with
+          a <a>schema</a> <span class="math">S</span> with a <a>ShapeMap</a> <span class="math">m</span> when:</p>
+        <ol class="algorithm">
+          <li>Every, <a>SemAct</a> in the <a>startActs</a> of <span class="math">S</span>
+            has a successful evaluation of <a href="#sumActsSatisfied">semActsSatisfied</a>.</li>
+          <li>Every <a>node</a> <span class="math">n</span> in <span class="math">m</span> <a>conforms</a> to its associated
+            <a>shapeExprRefs</a> <span class="math">se<sub>n</sub></span> where
+            for each <a>shapeExprRef</a> <span class="math">se<sub>i</sub></span> in <span class="math">se<sub>n</sub></span>:
+            <ol class="algorithm">
+              <li><span class="math">se<sub>i</sub></span> references a <a>ShapeExpr</a> in <a>shapes</a>, and</li>
+              <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">se<sub>i</sub></span>, <span class="math">G</span>, <span class="math">m</span>)</code>
+                for each <a>shape</a> <span class="math">se<sub>i</sub></span> in <span class="math">se<sub>n</sub></span>.</li>
+            </ol>
+          </li>
+          <li>Each optional focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>,
+            <span class="math">m</span> has a <a>start</a> <a>shapeExpr</a> <span class="math">se</span>, and
+            <code class="function">satisfies(<span class="math">f<sub>i</sub></span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
+        </ol>
+      </section>
 
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
@@ -4210,7 +4236,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
     <p>
       Moving the mouse over the elements of the list below will highlight the corresponding elements in the triple expression.
     </p>
-    <p class="ednote">There is a reference to  <span class="as">EachOfTripleExpr</span> and <span class="as">RepeatedTripleExpr</span>, which do not appear in the grammar.</p>
+    <p class="ednote">@@gkellogg: There is a reference to  <span class="as">EachOfTripleExpr</span> and <span class="as">RepeatedTripleExpr</span>, which do not appear in the grammar.</p>
       <ul>
         <li><span class="hl-tc lowlight1">triple constraint</span> (<span class="as"><a>TripleConstraint</a></span>)</li>
         <li><span class="hl-oneof lowlight2">one-of triple expression</span> (<span class="as"><a href="#prod-oneOfTripleExpr">OneOfTripleExpr</a></span>)</li>
@@ -4596,6 +4622,241 @@ CLOSED {
     </section>
     </section>
 
+    <section class="informative appendix">
+      <h2>The Application Programming Interface</h2>
+
+      <p>This API provides a clean mechanism that enables developers to determine
+        conformance of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
+
+      <p>The JSON-LD API uses <a>Promises</a> to represent
+        the result of the various asynchronous operations.
+        <a data-cite="ECMASCRIPT-6.0#sec-promise-objects">Promises</a> are defined in [[ECMASCRIPT-6.0]].
+        General use within specifications can be found in [[promises-guide]].</p>
+      <p class="ednote">@@gkellogg: Promises seem to the the bomb now, but we could define a synchronous interface instead.</p>
+
+      <section class="informative">
+        <h3>The <dfn>ShExProcessor</dfn> Interface</h3>
+
+        <p>The <a>ShExProcessor</a> interface is the high-level programming structure
+          that developers use to access the JSON-LD transformation methods.</p>
+
+          <p>The <a>ShExProcessor</a> interface is the high-level programming structure
+            that developers use to determine
+          conformance of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
+
+          <p>It is important to highlight that implementations do not modify the input parameters.
+            If an error is detected, the <a>Promise</a> is
+            rejected passing a <a>ShExError</a> with the corresponding error
+            <a data-link-for="ShExError">code</a>
+            after all <a>Start</a> and <a>ShapeMap</a> entries have been run.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          [Constructor]
+          interface ShExProcessor {
+            Promise<ShapeResults> validate(
+              (USVString or RDFGraph) schema,
+              (USVString or RDFGraph) graph,
+              ShapeMap shapeMap,
+              optional ShExOptions? options);
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-lt="ShExProcessor.validate" data-lt-noDefault>validate</dfn></dt><dd>
+            Checks <a>conformance</a> of the given <a data-lt="ShExProcessor.validate.graph">validate.graph</a>
+            with <a data-lt="ShExProcessor.validate.schema">validate.schema</a> using
+            <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a> according to
+            <a href="#validation-requirement" class="sectionRef"></a>.
+
+            <ol class="algorithm">
+              <li>Create a new <a>Promise</a> <em>promise</em> and return it. The
+                following steps are then executed asynchronously.</li>
+              <li>If <a data-lt="ShExProcessor.validate.schema">validate.schema</a> has the form of
+                an <a>IRI</a>, set <em>schema</em> to the result of dereferencing
+                the IRI, treating the result as <a>ShExC</a>, <a>ShExJ</a>, or some
+                other RDF serialization, depending on the content-type of the result, and transforming
+                into the <a>ShExJ</a> abstract syntax for processing.
+                <span class="ednote">@@gkellogg: Need to separate
+                  ShExJ as a syntax from the abstract form used by algorithms.</span></li>
+              <li>Otherwise, if a <a data-cite="WebIDL#idl-USVString">USVString</a>, <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is treated
+                as a string, and parsed into the <a>ShExJ</a> abstract syntax, using
+                <a data-link-for="ShExOptions">format</a> as a hint to determine the
+                content-type.</li>
+              <li>Otherwise, if an <a>RDF Graph</a>, <a>schema</a> is transforming
+                into the <a>ShExJ</a> abstract syntax for processing.</li>
+              <li>If a transformation to the <a>ShExJ</a> abstract syntax does not result in valid ShExJ,
+                an <a data-link-for="ShExErrorCode">invalid schema</a> error has been detetected, and
+                processing is rejected.</li>
+              <li>Process according to the requirements in
+                <a href="#validation-requirement" class="sectionRef"></a>, creating <span class="math">shapeResults</span>,
+                a <a>ShapeResults</a> dictionary based on a copy of <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>
+                with entries added, as necessary, for each focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>
+                associated with <code>http://shex.io/ns/start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
+                conforms with the referenced <a data-link-for="" data-lt="shape">shape(s)</a>, and an optional message, describing details conformance.</li>
+              <li>If <a data-lt="ShExProcessor.validate.graph">validate.graph</a> is found not to <a>conform</a> using
+                <a data-lt="ShExProcessor.validate.schema">validate.schema</a> and <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>,
+                a <a data-link-for="ShExErrorCode">non-conforming graph</a> error has been detected,
+                and processing is rejected along with <span class="math">shapeResults</span>.</li>
+            </ol>
+
+            <dl class="parameters">
+              <dt><dfn data-lt="ShExProcessor.validate.schema" data-lt-noDefault>schema</dfn></dt>
+              <dd>The ShEx Schema, either as a dereferencable <a>IRI</a> (URL), an inline data string, or an <a>RDF Graph</a>
+               which is transformed into the <a>ShExJ</a> abstract syntax.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.graph" data-lt-noDefault>graph</dfn></dt>
+              <dd>The graph to check <a>conformance</a> with, either as a a dereferencable <a>IRI</a> to some RDF serialization,
+                or as an accessable <a>RDF Graph</a>.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.shapeMap" data-lt-noDefault>shapeMap</dfn></dt>
+              <dd>A dictionary mapping a <a>node</a> in <a data-lt="ShExProcessor.validate.graph">validate.graph</a>
+                to one ore more <a>shapeExprLabel</a>.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.options" data-lt-noDefault>options</dfn></dt>
+              <dd>A set of options to configure the algorithms.</dd>
+            </dl>
+          </dd>
+        </dl>
+      </section> <!-- end of ShExProcessor -->
+
+      <section class="informative">
+        <h3>The RDFGraph Type</h3>
+
+        <p>The <dfn>RDFGraph</dfn> type is describe an <a>RDF Graph</a> accessed
+          as described in <a href="#graph-access" class="sectionRef">Graph access</a>.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          interface RDFGraph {
+            void bgp();
+          };
+        --></pre>
+
+        <dl data-dfn-for="RDFGraph">
+          <dt><dfn>bgp</dfn></dt><dd>
+            Performs a <a data-cite="sparql11-query#BGPsparql">SPARQL Basic Graph Pattern</a> query on the graph.
+          </dd>
+        </dl>
+      </section> <!-- end RDFGraph -->
+
+      <section class="informative">
+        <h3>The ShExOptions Type</h3>
+
+        <p>The <dfn>ShExOptions</dfn> type is used to pass various options to the
+          <a>ShExProcessor</a> methods.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          dictionary ShExOptions {
+            USVString?             base;
+            sequence<USVString>?   focusNodes;
+            USVString              format = "ShExC";
+            USVString              processingMode = "shex-2.0";
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-dfn-for="ShExOptions">base</dfn></dt>
+          <dd>The base IRI to use when parsing <a data-lt="ShExProcessor.validate.schema">validate.schema</a>. If set, this overrides
+            the <a data-lt="ShExProcessor.validate.schema">validate.schema</a>'s IRI.</dd>
+          <dt><dfn data-dfn-for="ShExOptions">focusNodes</dfn></dt>
+          <dd>One or more <a>nodes</a> in
+            <a data-lt="ShExProcessor.validate.graph">validate.graph</a> which
+            are are checked for <a>conformance</a> against <a>start</a>.</dd>
+          <dt><dfn data-dfn-for="ShExOptions">format</dfn></dt>
+          <dd>One of <code>ShExC</code> or <code>ShExJ</code>.</dd>
+          <dt><dfn data-dfn-for="ShExOptions">processingMode</dfn></dt>
+          <dd>If set to <code>shex-2.0</code>, the implementation has to produce
+            exactly the same results as the algorithms defined in this specification.
+            If set to another value, the ShEx processor is allowed to extend
+            or modify the algorithms defined in this specification to enable
+            application-specific optimizations. The definition of such
+            optimizations is beyond the scope of this specification and thus
+            not defined. Consequently, different implementations may implement
+            different optimizations. Developers must not define modes beginning
+            with <code>shex</code> as they are reserved for future versions
+            of this specification.</dd>
+        </dl>
+      </section> <!-- end ShExOptions -->
+      <section class="informative">
+        <h3>The ShapeResults Type</h3>
+
+        <p>The <dfn>ShapeResults</dfn> type is used for reporting the result of
+          <a>conformance</a> checking of an <a>RDF Graph</a> against a <a>schema</a>.</p>
+
+        <p><a>ShapeResults</a> is a dictionary mapping a <a>node</a> in
+          <a data-lt="ShExProcessor.validate.graph">validate.graph</a> to a sequence of <dfn>ShapeResult</dfn> entries.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          typedef dictionary ShapeResults;
+
+          dictionary ShapeResult {
+            USVString  label;
+            boolean    result;
+            USVString? message;
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-dfn-for="ShapeResult">label</dfn></dt>
+          <dd>A <a>shapeExprLabel</a> in <a data-lt="ShExProcessor.validate.schema">validate.schema</a>
+            against which <a>node</a> <a>conformance</a> was checked.</dd>
+          <dt><dfn data-dfn-for="ShapeResult">result</dfn></dt>
+          <dd>The result of the <a>conformance</a> check.</dd>
+          <dt><dfn data-dfn-for="ShapeResult">message</dfn></dt>
+          <dd>An optional message describing the result of the <a>conformance</a> check.</dd>
+        </dl>
+      </section> <!-- end ShExOptions -->
+
+      <section class="informative">
+        <h3>Error Handling</h3>
+
+        <p>This section describes the datatype definitions used within the
+          ShEx API for error handling.</p>
+
+        <section>
+          <h4>ShExError</h4>
+
+          <p>The <dfn>ShExError</dfn> type is used to report processing errors.</p>
+
+          <pre class="idl" data-transform="unComment"><!--
+            dictionary ShExError {
+              ShExErrorCode code;
+              DOMString?      message = null;
+            };
+          --></pre>
+
+          <dl>
+            <dt><dfn data-dfn-for="ShExError">code</dfn></dt>
+            <dd>a string representing the particular error type, as described in
+              the various algorithms in this document.</dd>
+            <dt><dfn data-dfn-for="ShExError">message</dfn></dt>
+            <dd>an optional error message containing additional debugging information.
+              The specific contents of error messages are outside the scope of this
+              specification.</dd>
+          </dl>
+        </section>
+
+        <section class="informative">
+          <h4>ShExErrorCode</h4>
+          <p>The <dfn>ShExErrorCode</dfn> represents the collection of valid ShEx error
+            codes.</p>
+
+          <pre class="idl" data-transform="unComment"><!--
+            enum ShExErrorCode {
+                "invalid schema",
+                "non-conforming graph"
+            };
+          --></pre>
+
+          <dl data-dfn-for="ShExErrorCode">
+            <dt><dfn>invalid schema</dfn></dt>
+            <dd>The <a data-lt="ShExProcessor.validate.schema">validate.schema</a> argument to <a data-lt="ShExProcessor.validate">validate</a> is invalid.
+              <span class="ednote">@gkellogg: This could use some improvement.</span></dd>
+            <dt><dfn>non-conforming graph</dfn></dt>
+            <dd>The <a data-lt="ShExProcessor.validate.graph">validate.graph</a> is found not to <a>conform</a> with
+              <a data-lt="ShExProcessor.validate.schema">validate.schema</a>.
+              Processing is rejected along with <span class="math">shapeResults</span>.</dd>
+          </dl>
+        </section>
+      </section> <!-- end of Error Handling -->
+    </section>
+
     <section id="shexj" class="appendix">
       <h2>ShEx JSON Syntax (ShExJ)</h2>
       <p>
@@ -4708,7 +4969,7 @@ CLOSED {
 
     <section id="security">
       <h3>Security Considerations</h3>
-      <p class="ednote">Consider requirements from <a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a>.</p>
+      <p class="ednote">@@gkellogg: Consider requirements from <a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a>.</p>
       <p>Since <a>ShEx</a> is intended to be a pure data exchange format for
         validating <a>RDF graphs</a>, the <a>ShExJ</a> serialization SHOULD NOT be passed through a
         code execution mechanism such as JavaScript's <code>eval()</code>
