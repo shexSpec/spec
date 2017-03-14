@@ -781,8 +781,10 @@ _:User2
           <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, <span class="math">v &gt;= len</span>,</li>
           <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <span class="math">v &lt;= len</span>,</li>
           <li id="nodeSatisfies-pattern">
-            for "<code>pattern</code>" constraints, <span class="math">v</span> is a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">v</span>)</code> returns <code>fn:true</code>.
+            for "<code>pattern</code>" constraints, <span class="math">v</span> is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] <span class="math">re</span> and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">re</span>)</code> returns <code>fn:true</code>.
             If the <span class="param">flags</span> parameter is present, is it passed as a second argument to <code class="function">fn:matches</code>.
+            The pattern may have XPath 3.1 regular expression escape sequences per the modified production [10] in <a href="https://www.w3.org/TR/xpath-functions-31/#matching-start-and-end">section 5.6.1.1</a> as well as numeric escape sequences of the form 'u' HEX HEX HEX HEX or 'U' HEX HEX HEX HEX HEX HEX HEX HEX.
+            Unescaping replaces numeric escape sequences with the corresponding unicode codepoint.
           </li>
         </ul>
         <div class="example">
@@ -818,10 +820,10 @@ _:User2
             Lexical constraints on <a>blank node identifiers</a> can only be implemented in systems which preserve such labels on data import.
           </p>
         </div>
-          <div class="example">
-            <div class="example-title marker"><span>String Facets example 2</span></div>
-            <div class="repchoice">
-              <pre class="json">{ "type": "Schema", "shapes": [
+        <div class="example">
+          <div class="example-title marker"><span>String Facets example 2</span></div>
+          <div class="repchoice">
+            <pre class="json">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/IssueShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
@@ -829,24 +831,60 @@ _:User2
       "valueExpr": { "type": "NodeConstraint",
                      "pattern": "genuser[0-9]+", "flags": "i" }
 } } ] }</pre>
-              <pre class="shexc">                                                               
+            <pre class="shexc">                                                               
   ex:IssueShape {
     ex:submittedBy ~/genuser[0-9]+/i
   }
 
 
 
-              </pre>
-            </div>
-            <pre class="data">
+            </pre>
+          </div>
+          <pre class="data">
 &lt;issue6&gt; ex:submittedBy _:genUser218 .
 <span class="fail">&lt;issue7&gt; ex:submittedBy _:genContact817 .</span></pre>
-            <table>
-              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genuser[0-9]+</code>.</td></tr>
-            </table>
+          <table>
+            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genuser[0-9]+</code>.</td></tr>
+          </table>
+        </div>
+
+        <p>
+          When expressed as JSON strings, regular expressions are subject to the JSON string escaping rules.
+        </p>
+
+        <div class="example">
+          <div class="example-title marker"><span>String Facets example 3</span></div>
+          <div class="repchoice">
+            <pre class="json">{ "type": "Schema", "shapes": [
+  { "id": "http://schema.example/ProductShape",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/trademark",
+      "valueExpr": { "type": "NodeConstraint",
+                     "pattern": "^/\\t\\\\\\U0001D4B8\\?$" }
+} } ] }</pre>
+            <pre class="shexc">                                                            
+  ex:ProductShape {
+    ex:trademark /^\/\t\\\U0001D4B8\?$/
+  }
+
+
+
+            </pre>
           </div>
+          <pre class="data">
+&lt;product6&gt; ex:trademark "	\\𝒸?" .
+&lt;product7&gt; ex:trademark "\t\\\U0001D4B8?" . <span class="comment"># Turtle literals have escape characters <a href="https://www.w3.org/TR/turtle/#grammar-production-ECHAR">[tbnrf"'\]</a>.</span>
+<span class="fail">&lt;product8&gt; ex:trademark "\t\\\\U0001D4B8?" .</span></pre>
+          <table>
+            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;ProductShape&gt;</td><td>&lt;product6&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;ProductShape&gt;</td><td>&lt;product7&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;ProductShape&gt;</td><td>&lt;product8&gt;</td><td>fail</td><td class="fail">found "<code>\U0001D4B8</code>" instead of "<code>𝒸</code>" (codepoint U+1D4B8).</td></tr>
+          </table>
+        </div>
       </section>
 
       <section id="xs-numeric">
@@ -3888,10 +3926,11 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="term-REGEXP">[<span class="prodNo">63</span>]   </td>
 <td>&lt;<code class="production term">REGEXP</code>&gt;</td>
 <td>   ::=   </td>
-<td><code class="content">'/' ([^/\\\n\r] | '\\' [.\\?*+{}()|^$\[\]/tbnrf] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)+ '/' [smix]*</code></td>
+<td><code class="content">'/' ([^/\\\n\r] | '\\' [nrt\\|.?*+(){}$-\[\]^/] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)+ '/' [smix]*</code></td>
 </tr>
 <tr class="obj"><td></td><td><a class="nob"></a></td><td>{</td><td><span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? }</td></tr>
-    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>JSON object</a></td><td></td><td><span class="param">pattern</span> is a unicode string formed from the characters between the outermost '/'s by unescaping all <a data-cite="turtle#numeric">numeric escape sequences</a> matched by <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span> and only the <a data-cite="turtle#string">string escape sequenes</a> for the characters [tbnrf/].<br/>
+    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>JSON object</a></td><td></td><td><span class="param">pattern</span> is a unicode string formed from the characters between the outermost '/'s by unescaping matches of '\\' '/' in the terminal pattern as well as the <a data-cite="turtle#numeric">numeric escape sequences</a> matched by <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>.
+    The remaining escape sequences are included verbatim in <span class="param">pattern</span>, e.g. <div class="inline shexc"><pre>^\/\t\\\U0001D4B8$</pre></div> would become <div class="inline json"><pre>^/\t\\\U0001D4B8$</pre></div>.<br/>
 <span class="param">flags</span> is a sequence of the characters [smix] if any were matched. Otherwise no <span class="param">flags</span> attribute is returned.</td></tr>
 </tbody>
 

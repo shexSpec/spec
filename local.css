@@ -144,7 +144,7 @@
       color: black;
       }
 
-      div.json, div.repchoice {
+      div.json, div.shexc, div.repchoice {
         margin-left: 0;
         margin-right: 2ex;
         margin-top: 0.1ex;
@@ -156,11 +156,11 @@
         line-height: 1.5;
 	display: inline-block;
       }
-      div.json pre {
+      div.json pre, div.shexc pre {
 	  margin: 0
       }
 
-      .inline.json {
+      .inline.json,.inline.shexc {
 	  padding: 0; /* .5ex 0ex .5ex 0ex; */
 	  margin: 0;
       }
