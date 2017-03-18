@@ -3976,8 +3976,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">'/' ([^/\\\n\r] | '\\' [nrt\\|.?*+(){}$-\[\]^/] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)+ '/' [smix]*</code></td>
 </tr>
-<tr class="obj"><td></td><td><a class="nob"></a></td><td>{</td><td><span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? }</td></tr>
-    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>JSON object</a></td><td></td><td><span class="param">pattern</span> is a unicode string formed from the characters between the outermost '/'s by unescaping matches of '\\' '/' in the terminal pattern as well as the <a data-cite="turtle#numeric">numeric escape sequences</a> matched by <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>.
+<tr class="obj"><td></td><td></td><td>{</td><td><span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? }</td></tr>
+    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a data-cite="ECMASCRIPT-6.0#sec-terms-and-definitions-object">JSON object</a></td><td></td><td><span class="param">pattern</span> is a unicode string formed from the characters between the outermost '/'s by unescaping matches of '\\' '/' in the terminal pattern as well as the <a data-cite="turtle#numeric">numeric escape sequences</a> matched by <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>.
     The remaining escape sequences are included verbatim in <span class="param">pattern</span>, e.g. <div class="inline shexc"><pre>^\/\t\\\U0001D4B8$</pre></div> would become <div class="inline json"><pre>^/\t\\\U0001D4B8$</pre></div>.<br/>
 <span class="param">flags</span> is a sequence of the characters [smix] if any were matched. Otherwise no <span class="param">flags</span> attribute is returned.</td></tr>
 </tbody>
