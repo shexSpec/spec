@@ -167,7 +167,7 @@
         signifies that a <code>Schema</code> has three optional components called <a class="param">startActs</a>, <a class="param">start</a> and <a class="param">shapes</a>:
       </p>
       <ul>
-        <li><dfn class="param">startActs</dfn> is a list of <a class="objref">SemAct</a>.<span class="ednote">@@Labra: Maybe you can say here that lists are represented by square brackets ?</span></li>
+        <li><dfn class="param">startActs</dfn> is a list of <a class="objref">SemAct</a>.</li>
         <li><dfn class="param">start</dfn> is a <a class="objref">shapeExpr</a>.</li>
         <li><dfn class="param">shapes</dfn> is an array of <a class="nobref">shapeExpr</a>.</li>
       </ul>
@@ -375,8 +375,7 @@ _:User2
           JSON-LD document [[!json-ld]], and conforms to the <a>ShExJ</a> syntax, as described in <a href="#shexj" class="sectionRef"></a>.</li>
         <li>JSON documents can be interpreted as <a>ShExJ</a> by following the normative statements in
           <a data-cite="JSON-LD#interpreting-json-as-json-ld">Section 4.8 Interpreting JSON as JSON-LD</a> in [[!JSON-LD]].</li>
-        <li>Other RDF documents comply with this specification, if they can be transformed into conforming
-          <a>ShExJ</a> documents.</li>
+        <li>Other RDF documents comply with this specification, if they are <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-graph-isomorphism">graph isomorphic</a>[[!rdf11-concepts]] to the RDF interpretation of some <a>ShExJ</a> document.</li>
       </ul>
     </section>
 
@@ -417,9 +416,6 @@ _:User2
       <section id="shape-map">
       <h3>ShapeMap Definition</h3>
 
-      <p class="issue">
-        Since a node may have multiple shapes, this should either be a mapping from a node to a set of shapes <span class="json">{ "n1": [ "S1", "S2"], "n2": [] }</span> or a list of node-shape pairs <span class="json">[ ["n1", "S1"], ["n1", "S2"] }</span>. Which is easier to understand?
-      </p>
       <p>
   A <dfn class="label">ShapeMap</dfn> is a mapping from node to a set of shapes <span class="math">(Node1: [Shape<sub>2</sub>, Shape<sub>3</sub>, …])</span> where <span class="math">node</span> is an RDF node, and <span class="math">Shape<sub>n</sub></span> is a shape label from a schema.
   A node-label association in a <span class="math"><a>ShapeMap</a></span> indicates that the node <span class="math">Node1</span> satisfies the constraint given by the definition of the shape expressions labeled <span class="math">Shape<sub>2</sub></span> and  <span class="math">Shape<sub>3</sub></span>.
@@ -435,7 +431,7 @@ _:User2
   { "id": "http://schema.example/IssueShape", <span class="comment">…</span> },
   { "id": "_:UserShape", <span class="comment">…</span> },
   { "id": "http://schema.example/EmployeeShape", <span class="comment">…</span> } ] }</pre>
-        <pre class="shexc">                                                    
+        <pre class="shexc">                                                        
     ex:IssueShape { … }
     _:UserShape { … }
     ex:EmployeeShape { … }
@@ -469,7 +465,7 @@ _:User2
 
       <p>
         Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <!-- @@set of --> shape for every node and shape visited during a validation process.
-        The remainder of this document uses a <a>ShapeMap</a> <span class="math">m</span> to indicate that mapping.
+        The remainder of this document uses <span class="math">m</span> to indicate such a mapping.
       </p>
       </section>
 
@@ -512,24 +508,24 @@ _:User2
     Examples of shape expressions:
   </p>
 
-  <div class="json">
+  <div class="repchoice">
     <pre class="json">{ "type": "Shape", <span class="comment">…</span> }  </pre>
-    <!-- pre class="shexc">{ <span class="comment">…</span> }                   </pre -->
+    <pre class="shexc">{ <span class="comment">…</span> }                   </pre>
   </div>
   <div style="clear:both;"> </div>
-  <div class="json">
+  <div class="repchoice">
     <pre class="json">{ "type": "ShapeAnd", "shapeExprs": [
-  { "type": "NodeConstraint", <span class="comment">…</span> },
+  { "type": "NodeConstraint", "nodeKind": "iri" },
   { "type": "ShapeOr", "shapeExprs": [
     "http://schema.example/IssueShape",
-    { "type": "ShapeNot", "shapeExpr": { "type": "ShapeExternal" } }
+    { "type": "ShapeNot", "shapeExpr": { "type": "Shape", <span class="comment">…</span> } }
     ] } ] }</pre>
-    <!-- pre class="shexc">                                                    
-  { "type": "NodeConstraint", <span class="comment">…</span> },
-  { "type": "ShapeOr", "shapeExprs": [
-    { "type": "ShapeExprRef", "reference": "http://schema.example/IssueShape" }
-    { "type": "ShapeNot", "shapeExpr": { "type": "ShapeExternal" } }
-    ] } ] }</pre -->
+    <pre class="shexc">                                                    
+  <span class="keyword">IRI</span> AND
+  (
+    @&lt;http://schema.example/IssueShape&gt;
+    OR NOT { <span class="comment">…</span> }
+  )</pre>
     In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the shape expression with the id "http://schema.example/IssueShape".
   </div>
       </div>
@@ -673,10 +669,9 @@ _:User2
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
-            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is an Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions#casting">XPath 2.0 section 17, Casting</a>[[!xpath-functions]].
+            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is an Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
             Only datatypes supported by SPARQL MUST be tested but ShEx extensions MAY add support for other datatypes.
           </p>
-          <p class="ednote">@@gkellogg: Should we reference <a data-cite="xpath-functions-31#casting">Section 19 Casting in XPath Functions 3.1 instead?</a></p>
 
           <div class="example">
             <div class="example-title marker"><span>Datatype example 1</span></div>
@@ -1168,15 +1163,21 @@ _:User2
           <p id="matches-semActs"><span class="math">expr</span> has <span class="param">semActs</span> and <code class="function">matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3,
-  "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3,
+  "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre>
+              <pre class="shexc">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                
+        %&lt;SemAct<sub>1</sub>&gt;% %&lt;SemAct2&gt;% …
+</pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }</pre>
+              <pre class="shexc">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                 </pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;"></div>
@@ -1187,14 +1188,18 @@ _:User2
           <p id="matches-cardinality"><span class="math">expr</span> has a <span class="label">cardinality</span> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1 and <span class="math">T</span> can be partitioned into <span class="math">k</span> subsets <span class="math function" >T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,…<span class="math">T<sub>k</sub></span> such that <span class="math">min ≤ k ≤ max</span> and for each <span class="math">T<sub>n</sub></span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }</pre>
+              <pre class="shexc">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                 </pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">Let e = </div><div style="float:left;">
-            <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div></div>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre>
+              <pre class="shexc">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>)                                   </pre>
+            </div></div>
             <div style="clear:both;"></div>
             (<span class="math function" >matches(T<sub>1</sub>, e, m)</span> and
              <span class="math function" >matches(T<sub>2</sub>, e, m)</span><br/>
@@ -1236,25 +1241,36 @@ _:User2
           <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some shape expression <span class="math">se2</span> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "OneOf", "shapeExprs": [
   { "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] },
   { "type": "TripleExpression", "min": 1, "max": "unbounded",
     "predicate": "http://xmlns.com/foaf/0.1/name" }
-] }</pre></div>,<br/>
+] }</pre>
+              <pre class="shexc">                                                             
+  (<span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>)
+  | &lt;http://xmlns.com/foaf/0.1/name&gt; . +
+
+ </pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }</pre>
+              <pre class="shexc"><span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>                                    </pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;"></div>
             <div class="math"><div style="float:left;">or matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "TripleExpression", "min": 1, "max": "unbounded",
-    "predicate": "http://xmlns.com/foaf/0.1/name" }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "TripleExpression", "min": 1, "max": "unbounded",
+    "predicate": "http://xmlns.com/foaf/0.1/name" }</pre>
+              <pre class="shexc">&lt;http://xmlns.com/foaf/0.1/name&gt; . +                       
+ </pre>
+              </div>,<br/>
               m)</div>
             </div>
           </div>
@@ -1263,27 +1279,40 @@ _:User2
           <p id="matches-EachOf"><span class="math">expr</span> is an <span class="jobjref"><a class="obj">EachOf</a></span> and there is some partition of <span class="math">T</span> into <span class="math">T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,… such that for every expression <span class="function"><span class="math">expr<sub>1</sub></span>, <span class="math">expr<sub>2</sub></span>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr<sub>n</sub></span>, <span class="math">m</span>)</code>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline json">
-              <pre>{ "type": "EachOf", "shapeExprs": [
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "EachOf", "shapeExprs": [
   { "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/givenName" },
   { "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/familyName" }
-] }</pre></div>,<br/>
+] }</pre>
+              <pre class="shexc">                                                         
+&lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;
+
+&lt;http://xmlns.com/foaf/0.1/familyName&gt; .
+
+ </pre>
+             </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T<sub>1</sub>,<br/>
-            <div class="inline json">
-              <pre>{ "type": "TripleExpression",
-    "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
+              <pre class="shexc">&lt;http://xmlns.com/foaf/0.1/givenName&gt; .                 
+ </pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;"></div>
             <div class="math"><div style="float:left;">and matches(</div><div style="float:left;">T<sub>2</sub>,<br/>
-            <div class="inline json">
-              <pre>{ "type": "TripleExpression",
-    "predicate": "http://xmlns.com/foaf/0.1/familyName" }</pre></div>,<br/>
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "TripleExpression",
+    "predicate": "http://xmlns.com/foaf/0.1/familyName" }</pre>
+              <pre class="shexc">&lt;http://xmlns.com/foaf/0.1/familyName&gt; .                 
+ </pre>
+              </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;"></div>
@@ -1310,9 +1339,12 @@ _:User2
                 <p><span class="math">expr</span> has no <span class="param">valueExpr</span></p>
                 <div class="example">
                   <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline json">
-                    <pre>{ "type": "TripleExpression",
-  "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre></div>,<br/>
+                  <div class="inline repchoice">
+                    <pre class="json">{ "type": "TripleExpression",
+  "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
+                    <pre class="shexc">&lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;             
+ </pre>
+                  </div>,<br/>
               m)</div>
                   </div>
                   <div style="clear:both;">holds if
@@ -1326,10 +1358,14 @@ _:User2
                 <p>or <code class="function">satisfies(<span class="math">value</span>, <span class="param">valueExpr</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</p>
                 <div class="example">
                   <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline json">
-                    <pre>{ "type": "TripleConstraint", "inverse": true,
+                  <div class="inline repchoice">
+                    <pre class="json">{ "type": "TripleConstraint", "inverse": true,
   "predicate": "http://purl.org/dc/elements/1.1/author",
-  "valueExpr": "http://schema.example/IssueShape" }</pre></div>,<br/>
+  "valueExpr": "http://schema.example/IssueShape" }</pre>
+                    <pre class="shexc">                                                        
+^&lt;http://purl.org/dc/elements/1.1/author&gt;
+        @&lt;http://schema.example/IssueShape&gt;</pre>
+                  </div>,<br/>
               m)</div>
                   </div>
                   <div style="clear:both;">holds if
@@ -1386,8 +1422,8 @@ _:User2
           </p>
           <div class="example">
             For the schema<br/>
-            <div class="inline json">
-              <pre>{ "type": "Schema", "shapes": [
+            <div class="inline repchoice">
+              <pre class="json">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/EmployeeShape",
     "type": "Shape", "expression": {
       "type": "EachOf", "expressions": [
@@ -1401,6 +1437,20 @@ _:User2
       "id": "http://schema.example/nameExpr",
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/name" } } ] }</pre>
+              <pre class="shexc">                                                                             
+&lt;http://schema.example/EmployeeShape&gt; {
+    &amp;<span class="lookit">&lt;http://schema.example/nameExpr&gt;</span> ;
+    &lt;http://schema.example/empID&gt;
+          &lt;http://www.w3.org/2001/XMLSchema#integer&gt;
+
+
+
+}
+&lt;http://schema.example/PersonShape&gt; {
+
+  <span class="lookit">$&lt;http://schema.example/nameExpr&gt;</span>
+    &lt;http://xmlns.com/foaf/0.1/name&gt; ;
+}</pre>
             </div><div style="clear:both;"></div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
@@ -3089,9 +3139,6 @@ PREFIX ex: &lt;http://schema.example/&gt;
       
     <section id="shexc">
       <h2>ShEx Compact syntax (ShExC)</h2>
-      <p class="ednote"> @@Labra: It is strange to talk about parsing ShEx compact syntax without saying what it is...I think some paragraph or explanation is needed, 
-       or maybe title this section "ShEx Compact syntax" and include the grammar and then, how to parse it.</p>
-
       <div>
       <div class="grammarTable">
 <table style="border: 0; border-top: thick solid white; ">
@@ -3099,6 +3146,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <tbody class="grammarParagraph">
   <tr><td colspan="4">
     <p>
+      The ShEx Compact Syntax expresses ShEx schemas in a compact, human-friendly form.
       Parsing <dfn>ShExC</dfn> transforms a <a>ShExC</a> document into an equivalent <a>ShExJ</a> structure.
       This is defined as a BNF which accepts <a>ShExC</a> followed by instructions for tranlating the rules in the BNF production into their corresponding <a>ShExJ</a> objects.
       For example, "<span style="font-family: monospace; ">shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></span>" indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
