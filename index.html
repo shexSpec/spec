@@ -4748,8 +4748,7 @@ CLOSED {
           <p>It is important to highlight that implementations do not modify the input parameters.
             If an error is detected, the <a>Promise</a> is
             rejected passing a <a>ShExError</a> with the corresponding error
-            <a data-link-for="ShExError">code</a>
-            after all <a>Start</a> and <a>ShapeMap</a> entries have been run.</p>
+            <a data-link-for="ShExError">code</a>.</p>
 
         <pre class="idl" data-transform="unComment"><!--
           [Constructor]
@@ -4785,19 +4784,27 @@ CLOSED {
                 content-type.</li>
               <li>Otherwise, if an <a>RDF Graph</a>, <a>schema</a> is transforming
                 into the <a>ShExJ</a> abstract syntax for processing.</li>
+              <li>If <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is parsed
+                as <a>ShExC</a>, and a syntax error is found, reject <em>promise</em>
+                passing <a data-link-for="ShExErrorCode">syntax error</a>.</li>
               <li>If a transformation to the <a>ShExJ</a> abstract syntax does not result in valid ShExJ,
-                an <a data-link-for="ShExErrorCode">invalid schema</a> error has been detetected, and
-                processing is rejected.</li>
-              <li>Process according to the requirements in
+                reject <em>promise</em>, passing <a data-link-for="ShExErrorCode">invalid schema</a>.</li>
+              <li>If <a data-lt="ShExProcessor.validate.graph">validate.graph</a> has the form of
+                an <a>IRI</a>, set <em>graph</em> to the result of dereferencing
+                the IRI, treating the result an <a>RDF Graph</a> serialization, depending on the content-type of the result.
+                Otherwise, <a data-lt="ShExProcessor.validate.graph">validate.graph</a> either is
+                an <a>RDF Graph</a>, or a processor should use other means to transform it into an <a>RDF Graph</a>.</li>
+              <li>Process <em>schema</em> and <em>graph</em> according to the requirements in
                 <a href="#validation-requirement" class="sectionRef"></a>, creating <span class="math">shapeResults</span>,
                 a <a>ShapeResults</a> dictionary based on a copy of <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>
                 with entries added, as necessary, for each focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>
-                associated with <code>http://shex.io/ns/start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
-                conforms with the referenced <a data-link-for="" data-lt="shape">shape(s)</a>, and an optional message, describing details conformance.</li>
-              <li>If <a data-lt="ShExProcessor.validate.graph">validate.graph</a> is found not to <a>conform</a> using
-                <a data-lt="ShExProcessor.validate.schema">validate.schema</a> and <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>,
-                a <a data-link-for="ShExErrorCode">non-conforming graph</a> error has been detected,
-                and processing is rejected along with <span class="math">shapeResults</span>.</li>
+                associated with <code>http://shex.io/ns/Start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
+                conforms with the referenced <a data-link-for="" data-lt="shape">shape(s)</a>, and an optional message, describing details conformance,
+                and <em>promise</em> is fulfilled using <span class="math">shapeResults</span>.</li>
+              <li>If <em>graph</em> is found not to <a>conform</a> using
+                <em>schema</em> and <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>,
+                reject <em>promise</em>, passing <a data-link-for="ShExErrorCode">non-conforming graph</a>
+                along with <span class="math">shapeResults</span>.</li>
             </ol>
 
             <dl class="parameters">
@@ -4941,7 +4948,8 @@ CLOSED {
           <pre class="idl" data-transform="unComment"><!--
             enum ShExErrorCode {
                 "invalid schema",
-                "non-conforming graph"
+                "non-conforming graph",
+                "syntax error"
             };
           --></pre>
 
@@ -4951,8 +4959,10 @@ CLOSED {
               <span class="ednote">@gkellogg: This could use some improvement.</span></dd>
             <dt><dfn>non-conforming graph</dfn></dt>
             <dd>The <a data-lt="ShExProcessor.validate.graph">validate.graph</a> is found not to <a>conform</a> with
-              <a data-lt="ShExProcessor.validate.schema">validate.schema</a>.
-              Processing is rejected along with <span class="math">shapeResults</span>.</dd>
+              <a data-lt="ShExProcessor.validate.schema">validate.schema</a>.</dd>
+            <dt><dfn>syntax error</dfn></dt>
+            <dd>Parsing <a data-lt="ShExProcessor.validate.schema">validate.schema</a> as
+              <a>ShExC</a> failed with a syntax error.</dd>
           </dl>
         </section>
       </section> <!-- end of Error Handling -->
