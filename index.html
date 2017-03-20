@@ -14,6 +14,13 @@
 
     <script class='remove'>
       var respecConfig = {
+      localBiblio: {
+        "shex-vocab": {
+          "authors": ["Gregg Kellogg"],
+          "title": "Shape Expression Vocabulary",
+          "href":  "http://shex.io/ns/"
+        }
+      },
       specStatus:     "CG-DRAFT",
       shortName:      "shex-semantics",
       prevVersion:    "https://www.w3.org/Submission/2014/SUBM-shex-defn-20140602/",
@@ -291,6 +298,21 @@
         <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <a>IRI</a>, <dfn data-cite="rdf11-concepts#dfn-blank-node">blank node</dfn>, <a>Literal</a></li>
         <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
       </ul>
+
+      <p>This specification makes use of the following namespaces:</p>
+      <dl>
+        <dt><code>foaf</code>:</dt>
+        <dd><code>http://xmlns.com/foaf/0.1/</code></dd>
+        <dt><code>rdf</code>:</dt>
+        <dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd>
+        <dt><code>rdfs</code>:</dt>
+        <dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd>
+        <dt><code>shex</code>:</dt>
+        <dd><code>http://shex.io/ns/</code></dd>
+        <dt><code>xsd</code>:</dt>
+        <dd><code>http://www.w3.org/2001/XMLSchema#</code></dd>
+      </dl>
+
       <p>For the purposes of the <a>ShExProcessor</a> interface,
         a <dfn data-cite="ECMASCRIPT-6.0#sec-promise-objects" data-lt="promises">promise</dfn>
         is an object that represents the eventual result of a single asynchronous operation.
@@ -398,7 +420,7 @@ _:User2
         </table>
       </div>
       <p>
-        where <a class="param">shapes</a> is a mapping from shape label to shape expression.
+        where <a class="param">shapes</a> is a mapping from shape label to <a>shape expression</a>.
       </p>
       <div class="repchoice">
         <pre class="json">{ "type": "Schema", "shapes": [
@@ -418,7 +440,7 @@ _:User2
 
       <p>
   A <dfn class="label">ShapeMap</dfn> is a mapping from node to a set of shapes <span class="math">(Node1: [Shape<sub>2</sub>, Shape<sub>3</sub>, …])</span> where <span class="math">node</span> is an RDF node, and <span class="math">Shape<sub>n</sub></span> is a shape label from a schema.
-  A node-label association in a <span class="math"><a>ShapeMap</a></span> indicates that the node <span class="math">Node1</span> satisfies the constraint given by the definition of the shape expressions labeled <span class="math">Shape<sub>2</sub></span> and  <span class="math">Shape<sub>3</sub></span>.
+  A node-label association in a <span class="math"><a>ShapeMap</a></span> indicates that the node <span class="math">Node1</span> satisfies the constraint given by the definition of the <a>shape expressions</a> labeled <span class="math">Shape<sub>2</sub></span> and  <span class="math">Shape<sub>3</sub></span>.
   We use the JSON list notation <span class="math">[Shape<sub>2</sub>, Shape<sub>3</sub>, …]</span> for sets with the additional understanding that the list neither order nor repetition have any semantic impact.
       </p>
 
@@ -447,8 +469,8 @@ _:User2
       </div>
 
       <p>
-        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every node/shape pair <span class="math">(n, s)</span> in <span class="math">m</span>, <span class="math">s</span> has a corresponding shape expression <span class="math">se</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.
-        <code class="function">satisfies</code> is defined below for each form of shape expression.
+        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every node/shape pair <span class="math">(n, s)</span> in <span class="math">m</span>, <span class="math">s</span> has a corresponding <a>shape expression</a> <span class="math">se</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.
+        <code class="function">satisfies</code> is defined below for each form of <a>shape expression</a>.
       </p>
 
       <div class="note">
@@ -472,7 +494,7 @@ _:User2
       <section id="shape-expressions">
         <h3>Shape Expressions</h3>
         <p>
-          A shape expression is composed of four kinds of objects combined with the algebraic operators And, Or and Not:
+          A <dfn data-lt="shape expressions">shape expression</dfn> is composed of four kinds of objects combined with the algebraic operators And, Or and Not:
         </p>
         <ul>
           <li>
@@ -526,14 +548,14 @@ _:User2
     @&lt;http://schema.example/IssueShape&gt;
     OR NOT { <span class="comment">…</span> }
   )</pre>
-    In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the shape expression with the id "http://schema.example/IssueShape".
+    In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the <a>shape expression</a> with the id "http://schema.example/IssueShape".
   </div>
       </div>
       </section>
       <section id="shape-expression-semantics">
       <h4>Semantics</h4>
       <p>
-        <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that a node <span class="math">n</span> and <a>graph</a> <span class="math">G</span> satisfy a shape expression <span class="math">se</span> with <a>shapeMap</a> <span class="math">m</span>.<br/>
+        <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that a node <span class="math">n</span> and <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>shapeMap</a> <span class="math">m</span>.<br/>
         <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that <span class="math">n</span> and <span class="math">G</span> do not satisfy <span class="math">se</span> with the given <a>shapeMap</a> <span class="math">m</span>.
         <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">_</span>)</code> indicates that no <a>shapeMap</a> would allow <span class="math">n</span> and <span class="math">G</span> to satisfy <span class="math">se</span>.
       </p>
@@ -545,11 +567,11 @@ _:User2
         <li id="satisfies-NodeConstraint"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<span class="math">n</span>, <span class="math">se</span>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>shapeMap</a>.</li>
         <li id="satisfies-Shape-proxy"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">Shape</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
-        <li id="satisfies-ShapeOr"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some shape expression <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
-        <li id="satisfies-ShapeAnd"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every shape expression <span class="math">se2</span> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
-        <li id="satisfies-ShapeNot"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the shape expression <span class="math">se2</span> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
+        <li id="satisfies-ShapeOr"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
+        <li id="satisfies-ShapeAnd"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
+        <li id="satisfies-ShapeNot"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> <span class="math">se2</span> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
         <li id="satisfies-ShapeExternal"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
-        <li id="satisfies-shapeExprRef"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and there exists in the schema a shape expression <span class="math">se2</span> with that <span class="param">id</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
+        <li id="satisfies-shapeExprRef"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and there exists in the schema a <a>shape expression</a> <span class="math">se2</span> with that <span class="param">id</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
       </ul>
 
       <div class="example">
@@ -1108,8 +1130,8 @@ _:User2
       
       <p>
         Triple expressions are used for defining patterns composed of triple constraints.
-        Shapes associate triple expressions with flags indicating whether triples match if they do not correspond to triple constraints in the triple expression.
-        A triple expression is composed of <span class="jobjref"><a>TripleConstraint</a></span> and <span class="jobjref"><a>tripleExprRef</a></span> objects composed with grouping and choice operators.
+        Shapes associate <a>triple expressions</a> with flags indicating whether triples match if they do not correspond to triple constraints in the <a>triple expression</a>.
+        A <dfn data-lt="triple expressions">triple expression</dfn> is composed of <span class="jobjref"><a>TripleConstraint</a></span> and <span class="jobjref"><a>tripleExprRef</a></span> objects composed with grouping and choice operators.
       </p>
       
       <section id="triple-expressions-abstract-syntax">
@@ -1155,7 +1177,7 @@ _:User2
           <li><span class="param">closed</span> is false or <span class="math">unmatchables</span> is empty.</li>
         </ul>
       <p>
-        <span class="label" id="matches">matches</span>: asserts that a triple expression is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
+        <span class="label" id="matches">matches</span>: asserts that a <a>triple expression</a> is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
         The expression <code>matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> indicates that a set of triples <span class="math">T</span> can satisfy these rules:
       </p>
       <ul>
@@ -1238,7 +1260,7 @@ _:User2
           </div -->
         </li>
         <li>
-          <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some shape expression <span class="math">se2</span> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
+          <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline repchoice">
@@ -1501,7 +1523,7 @@ _:User2
 
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
-        <p>An <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map and the corresponding triple expression MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
+        <p>An <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
         The function <code>shapeExprWithId(<span class="param">shapeExprRef</span>)</code> returns the shape's <span class="param">shapeExpr</span>.
       </p>
 
@@ -1562,7 +1584,7 @@ _:User2
           </pre>
         </div>
         <p>
-          This shapeExprRef is invalid because there is no corresponding shape expression:
+          This shapeExprRef is invalid because there is no corresponding <a>shape expression</a>:
         </p>
         <div class="repchoice error">
           <pre class="json">{ "type":"Schema", "shapes": [
@@ -1576,7 +1598,7 @@ _:User2
     }
           </pre>
         </div>
-        <p>This shapeExprRef is invalid because the referenced object is a triple expression instead of a shape expression:</p>
+        <p>This shapeExprRef is invalid because the referenced object is a <a>triple expression</a> instead of a <a>shape expression</a>:</p>
         <div class="repchoice error">
           <pre class="json">{ "type":"Schema", "shapes": [
     { "id": "http://schema.example/CustomerShape",
@@ -1604,13 +1626,13 @@ _:User2
 
       <section id="tripleExprRef-requirement">
         <h4>Triple Expression Reference Requirement</h4>
-        <p>An <span class="jobjref"><a>tripleExprRef</a></span> MUST identify a triple expression in the schema.
-        The function <code>tripleExprWithId(<span class="param">tripleExprRef</span>)</code> returns the triple expression with the id <span class="param">tripleExprRef</span>.
+        <p>An <span class="jobjref"><a>tripleExprRef</a></span> MUST identify a <a>triple expression</a> in the schema.
+        The function <code>tripleExprWithId(<span class="param">tripleExprRef</span>)</code> returns the <a>triple expression</a> with the id <span class="param">tripleExprRef</span>.
       </p>
 
       <div class="example">
         <p>
-          Following is a valid triple expression reference:
+          Following is a valid <a>triple expression</a> reference:
         </p>
         <div class="repchoice">
           <pre class="json">{ "type":"Schema", "shapes": [
@@ -1641,7 +1663,7 @@ _:User2
           </pre>
         </div>
         <p>
-          This triple expression reference is invalid because there is no corresponding triple expression:
+          This <a>triple expression</a> reference is invalid because there is no corresponding triple expression:
         </p>
         <div class="repchoice error">
           <pre class="json">{ "type":"Schema", "shapes": [
@@ -1655,7 +1677,7 @@ _:User2
     }
           </pre>
         </div>
-        <p>This triple expression reference is invalid because the referenced object is a shape expression instead of a triple expression:</p>
+        <p>This triple expression reference is invalid because the referenced object is a <a>shape expression</a> instead of a triple expression:</p>
         <div class="repchoice error">
           <pre class="json">{ "type":"Schema", "shapes": [
     { "id": "http://schema.example/CustomerShape",
@@ -1684,7 +1706,7 @@ _:User2
       <section id="negation-requirement">
         <h4>Negation Requirement</h4>
         <p>
-          A schema MUST NOT contain any shape expression <span class="math">S</span> with negated references, either directly or transitively, to <span class="math">S</span>.
+          A schema MUST NOT contain any <a>shape expression</a> <span class="math">S</span> with negated references, either directly or transitively, to <span class="math">S</span>.
         A reference to <span class="math">S</span> is negated if it containes an odd number of nested negations.
         A nested negation is any of:
       </p>
@@ -1966,7 +1988,7 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
             </div>
             <div style="clear:both;"></div> -->
             <p>
-              Here the shape identified by <code>http://schema.example/IntConstraint</code> is a shape expression consisting of a single <span class="jobjref"><a class="obj">NodeConstraint</a></span>.
+              Here the shape identified by <code>http://schema.example/IntConstraint</code> is a <a>shape expression</a> consisting of a single <span class="jobjref"><a class="obj">NodeConstraint</a></span>.
               Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, "30"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; satisfies <span class="lineno schema">IntConstraint</span>.
             </p>
             <p>
@@ -1984,7 +2006,7 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
           </div>
 
           <p class="leadup">
-            Validating a shape requires evaluating it's triple expression as well as the variables and functions <span class="math"><a>neigh</a>(G, n)</span>, <span class="math">matched</span>, <span class="math">remainder</span>, <span class="math">outs</span>, <span class="math">matchables</span> and <span class="math">unmatchables</span>:<br/>
+            Validating a shape requires evaluating it's <a>triple expression</a> as well as the variables and functions <span class="math"><a>neigh</a>(G, n)</span>, <span class="math">matched</span>, <span class="math">remainder</span>, <span class="math">outs</span>, <span class="math">matchables</span> and <span class="math">unmatchables</span>:<br/>
           </p>
           <div class="example">
             <!--
@@ -2313,7 +2335,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </ul>
 
             <p class="leadup">
-              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that's not used in the triple expression <span class="lineno schema">te1</span>.
+              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that's not used in the <a>triple expression</a> <span class="lineno schema">te1</span>.
             </p>
             <div class="exsec">Data:</div>
             <pre class="line-labels">
@@ -3241,7 +3263,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
   <tr><td colspan="4">
     <p>
       Shape expressions are logical combinations of shape atoms.
-      Inline variants of shape expressions are used in <span class="prod"><a class="grammarRef" href="#prod-tripleConstraint">tripleConstraint</a></span>s and are not permitted to have annotations or semantic actions.
+      Inline variants of <a>shape expressions</a> are used in <span class="prod"><a class="grammarRef" href="#prod-tripleConstraint">tripleConstraint</a></span>s and are not permitted to have annotations or semantic actions.
     </p>
   </td></tr>
 </tbody>
@@ -3454,8 +3476,8 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <tbody class="grammarParagraph" style="border-left:thin solid white; border-right:thin solid white;">
   <tr><td colspan="4">
     <p>
-      Shape defintions associate a triple expression with a closed flag and a list of partially constrained (extra) <a data-lt="predicate">predicates</a>.
-      Any <a>predicate</a> appearing in a triple expression is fully constrained unless it appears in the list of extras.
+      Shape defintions associate a <a>triple expression</a> with a closed flag and a list of partially constrained (extra) <a data-lt="predicate">predicates</a>.
+      Any <a>predicate</a> appearing in a <a>triple expression</a> is fully constrained unless it appears in the list of extras.
     </p>
   </td></tr>
 </tbody>
@@ -3701,7 +3723,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"&amp;" <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span></code></td>
 </tr>
-  <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-constraint">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <a class="param">shapes</a> map and the corresponding triple expression MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
+  <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-constraint">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
 <tr class="obj"><td></td><td><a class="obj">tripleExprRef</a></td><td>=</td><td><span class="param">include</span>:<a class="nobref">tripleExprLabel</a> ;</td></tr>
 </tbody>
 
@@ -4252,7 +4274,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </pre>
   <p>
     We first explain some elements of the concrete syntax. 
-    A triple expression is surrounded by curly braces { and }.
+    A <a>triple expression</a> is surrounded by curly braces { and }.
     The square braces delimit sets of values.
     Parentheses are used as usual for defining the structre of an expression.
     We use abbreviations for some intervals of min and max cardinality, namely, '+' is the interval [1;*], '*' is the interval [0;*], and '?' is the interval [0;1].
@@ -4262,13 +4284,13 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
     Then, the schema here above defines three shape labels: <span class="pre">&lt;IssueShape&gt;, &lt;UserShape&gt;, &lt;EmployeeShape&gt;</span>.
   </p>
   <p>
-    The shape expression that defines the shape label <span class="pre">&lt;IssueShape&gt;</span> starts on line 1 after the shape label, and ends with the curly bracket on line 13.
+    The <a>shape expression</a> that defines the shape label <span class="pre">&lt;IssueShape&gt;</span> starts on line 1 after the shape label, and ends with the curly bracket on line 13.
     It has an empty list of node constraints, and a single shape definition.
     The shape definition has two modifiers, <span class="math">CLOSED</span>, and <span class="math">EXTRA</span>. 
     The parameter of the <span class="math">EXTRA</span> modifier is a singleton set that contains the property <span class="pre">rdf:type</span>.
   </p>
   <p>
-    The triple expression in the shape definition is given between the curly braces on lines 2 and 13.
+    The <a>triple expression</a> in the shape definition is given between the curly braces on lines 2 and 13.
     It is an each-of expression composed of six sub-expressions, separated by semicolons. 
     The sub-expressions are as follows:
   </p>
@@ -4277,7 +4299,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
         Four triple constraints on lines 3, 4, 6, 7.
       </li>
       <li>
-        Two repeated triple expressions, one on lines 8--11 with cardinality ? = [0;1], another one on line 12 with cardinality * = [0;*].
+        Two repeated <a>triple expressions</a>, one on lines 8--11 with cardinality ? = [0;1], another one on line 12 with cardinality * = [0;*].
       </li>
     </ul>
 
@@ -4315,7 +4337,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </pre>  
 
   <p>
-    The shape expression that defines <span class="pre">&lt;UserShape&gt;</span> is composed of one node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> and one shape definition between the curly braces lines 15 to 23.
+    The <a>shape expression</a> that defines <span class="pre">&lt;UserShape&gt;</span> is composed of one node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> and one shape definition between the curly braces lines 15 to 23.
     The node constraint <span class="pre">PATTERN "^http:/example.org/.*"</span> defines the set of IRI that satisfy a pattern given by a regular expression.
   </p>
 
@@ -4328,21 +4350,21 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </pre>
 
   <p>
-    The shape expression that defines <span class="pre">&lt;EmployeeShape&gt;</span> is composed of zero node constrainst, and two shape definitions, separated by an <span class="pre">AND</span>.
+    The <a>shape expression</a> that defines <span class="pre">&lt;EmployeeShape&gt;</span> is composed of zero node constrainst, and two shape definitions, separated by an <span class="pre">AND</span>.
   </p>
       </div>
 
       <div class="example">
   <div class="with-highlight">@
     <p>
-      Moving the mouse over the elements of the list below will highlight the corresponding elements in the triple expression.
+      Moving the mouse over the elements of the list below will highlight the corresponding elements in the <a>triple expression</a>.
     </p>
     <p class="ednote">@@gkellogg: There is a reference to  <span class="as">EachOfTripleExpr</span> and <span class="as">RepeatedTripleExpr</span>, which do not appear in the grammar.</p>
       <ul>
         <li><span class="hl-tc lowlight1">triple constraint</span> (<span class="as"><a>TripleConstraint</a></span>)</li>
-        <li><span class="hl-oneof lowlight2">one-of triple expression</span> (<span class="as"><a href="#prod-oneOfTripleExpr">OneOfTripleExpr</a></span>)</li>
-        <li><span class="hl-eachof lowlight2">each-of triple expression</span> (<span class="as">EachOfTripleExpr</span>)</li>
-        <li><span class="hl-repet lowlight3">repeated triple expression</span> (<span class="as">RepeatedTripleExpr</span>)</li>
+        <li><span class="hl-oneof lowlight2">one-of <a>triple expression</a></span> (<span class="as"><a href="#prod-oneOfTripleExpr">OneOfTripleExpr</a></span>)</li>
+        <li><span class="hl-eachof lowlight2">each-of <a>triple expression</a></span> (<span class="as">EachOfTripleExpr</span>)</li>
+        <li><span class="hl-repet lowlight3">repeated <a>triple expression</a></span> (<span class="as">RepeatedTripleExpr</span>)</li>
         <li><span class="hl-inverse-tc lowlight1">triple constraint with an inverse property</span></li>
         <!-- li><span class="hl-tc-cofinite lowlight1">triple constraint with a non-singleton co-finite set of properties</span></li -->
         <li><span class="hl-shref lowlight4">shape reference</span> (<span class="as"><a>ShapeExprRef</a></span>)</li>
@@ -4458,7 +4480,7 @@ CLOSED {
       </p>
       <p>
         The <span class="hl-shapexpr lowlight3">triple expression</span> from the ShEx schema is translated into a <span class="hl-shapexpr lowlight3">triple expression</span> in the shapes schema.
-        <span class="hl-samete lowlight1">One part of that triple expression</span> is a direct translation of <span class="hl-samete lowlight1">the triple expression from the ShEx schema</span>.
+        <span class="hl-samete lowlight1">One part of that triple expression</span> is a direct translation of <span class="hl-samete lowlight1">the <a>triple expression</a> from the ShEx schema</span>.
       </p>
       <p>
         The <span class="hl-extra lowlight1">EXTRA modifier</span> results in <span class="hl-extra lowlight1">additional triple constraints</span> in the shapes schema. 
@@ -4970,6 +4992,26 @@ CLOSED {
 
     <section id="shexj" class="appendix">
       <h2>ShEx JSON Syntax (ShExJ)</h2>
+
+      <p>
+        This section defines a set of properties and permitted values for describing Shape Expressions in JSON [[!RFC7159]], and how these properties should be interpreted by applications.
+      </p>
+
+      <p>
+        A ShExJ document is a JSON-LD [[!!JSON-LD]] document uses
+        a proscribed structure which holds an object at the top level. This object describes a <a>schema</a> containing
+        <a>shape expressions</a> and <a>triple expressions</a>. A ShExJ document
+        MUST include a <code>@context</code> property referencing <code>http://shex.io/context.jsonld</code>, and MAY include additional contexts
+        and term definitions. In the absense of a top-level <code>@context</code>, ShEx Processors MUST act as if a <code>@context</code> property is present with the value <code>http://shex.io/context.jsonld</code>.
+      </p>
+
+      <p>A ShExJ document can also be thought of as the serialization of an <a>RDF Graph</a> using
+        the Shape Expression Vocabulary [[shex-vocab]] which conforms to the shape
+        defined in <a href="#shexr" class="secionRef"></a>. Processors MAY choose to interpret a ShExJ
+        document as an RDF Graph and process using RDF Graph semantics. Processors may also transform
+        arbitrary RDF Graphs conforming to <a href="#shexr" class="secionRef"></a> into ShExJ using a mechanism not
+        described within this specification.</p>
+
       <p>
         This is the complete grammar for <dfn>ShExJ</dfn>.
       </p>
@@ -5018,6 +5060,15 @@ CLOSED {
 
     </section>
 
+
+<section id="shexr" class="appendix informative">
+  <h2>ShEx Shape</h2>
+
+  <p>The following schema describes the form of an <a>RDF Graph</a> conforming to a
+    Shape Expression <a>schema</a>, consisten with the description of <a>ShExJ</a>.</p>
+
+  <pre class="example" title="ShExR Shape Expression Schema" data-include="ShExR.shex" data-oninclude="updateExample"></pre>
+</section>
 
 <section class="appendix normative">
   <h2>IANA Considerations</h2>

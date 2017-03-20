@@ -38,6 +38,12 @@ function unComment(doc, content) {
   return content ;
 }
 
+function updateExample(doc, content) {
+  var utils = require("core/utils");
+// perform transformations to make it render and prettier
+  return utils.xmlEscape(content);
+}
+
 $(document).ready(function () {
   chooseRep($(".repchoice"), "json");
   $("body").keydown(function (evt) {
