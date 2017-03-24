@@ -124,8 +124,6 @@
 
     <section id="notation">
       <h2>Notation</h2>
-      <p class="ednote">@@Labra: I would probably add a paragraph saying something about the abstract syntax so you can later talk about JSON...</p>
-      <p class="ednote">@@ericP: I changed "the" to "an" below in hopes that suffices. I don't want to define an abstract syntax in addition to <a>ShExJ</a> if we can avoid it.</p>
       <p>
         The JSON[[!rfc4627]] Syntax serves as a serializable proxy for an abstract syntax.
         This specification uses a simple grammar to describe the set of JSON documents that can be interpreted as a ShEx schema.
@@ -275,12 +273,6 @@
         </table>
         </div>
         </section>
-      <p class="ednote">@@Labra: I am not sure, but I think it would be more readable if you used the compact syntax by default and the Json as secondary. 
-          Also, I would prefer to see both at the same time as in the OWL Primer: https://www.w3.org/TR/owl2-primer/ where you can activate/deactiva 
-          each of the styles separately
-          Finally, I also think it would be nice to also include examples using the JSON-LD/RDF based serialization</p>
-      <p class="ednote">@@ericP: I think we have to use <a>ShExJ</a> as the default syntax as it's the foundation for the definitions of the semantics.
-           Let's see if we can get ShExR done in time, though it will be more chatty than <a>ShExJ</a>.</p>
       <!-- <p> -->
       <!--   The following HTML tags and CSS classes are used to highlight the roles of text in this document: -->
       <!-- </p> -->
@@ -673,9 +665,6 @@ _:User2
 &lt;issue1&gt; ex:state ex:HunkyDory .
 &lt;issue2&gt; <span style="border-bottom: thin solid red;">ex:taste</span> ex:GoodEnough .
 <span class="fail">&lt;issue3&gt; ex:state "just fine" .</span></pre>
-<p class="ednote">@@Labra: I think the second example could be omitted at this point because it requires talking about cardinality which has not
-     been introduced yet...</p>
-<p class="ednote">@@ericP: I believe that mentioning it here will reduce confusion for readers.</p>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -719,8 +708,6 @@ _:User2
 &lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
 <span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span>
 <span class="fail">&lt;issue3&gt; ex:submittedOn "2016-07"^^xsd:date .</span></pre>
-<p class="ednote">@@Labra: I would probably use a different datatype to avoid confusion between date and dateTime...maybe xsd:float ....</p>
-<p class="ednote">@@ericP: I think that this example can eliminate readers' questions about whether date forms are somehow compatible.</p>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -955,8 +942,6 @@ _:User2
 &lt;issue2&gt; ex:confirmations 2^^xsd:byte .
 <span class="fail">&lt;issue3&gt; ex:confirmations 0 .</span>
 <span class="fail">&lt;issue4&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
-<p class="ednote">@@Labra: Maybe this example is not needed here because it is checking datatypes not numeric facets ...</p>
-<p class="ednote">@@ericP: I think it clarifies that min/max only work with recognized datatypes.</p>
             <table>
               <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -1207,7 +1192,7 @@ _:User2
           </div>
         </li>
         <li>
-          <p id="matches-cardinality"><span class="math">expr</span> has a <span class="label">cardinality</span> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1, where a <span class="param">max</span> of -1 is treated as unbounded, and <span class="math">T</span> can be partitioned into <span class="math">k</span> subsets <span class="math function" >T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,…<span class="math">T<sub>k</sub></span> such that <span class="math">min ≤ k ≤ max</span> and for each <span class="math">T<sub>n</sub></span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list.</p>
+          <p id="matches-cardinality"><span class="math">expr</span> has a <dfn>cardinality</dfn> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1, where a <span class="param">max</span> of -1 is treated as unbounded, and <span class="math">T</span> can be partitioned into <span class="math">k</span> subsets <span class="math function" >T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,…<span class="math">T<sub>k</sub></span> such that <span class="math">min ≤ k ≤ max</span> and for each <span class="math">T<sub>n</sub></span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline repchoice">
@@ -4362,16 +4347,15 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
     <p>
       Moving the mouse over the elements of the list below will highlight the corresponding elements in the <a>triple expression</a>.
     </p>
-    <p class="ednote">@@gkellogg: There is a reference to  <span class="as">EachOfTripleExpr</span> and <span class="as">RepeatedTripleExpr</span>, which do not appear in the grammar.</p>
-      <ul>
-        <li><span class="hl-tc lowlight1">triple constraint</span> (<span class="as"><a>TripleConstraint</a></span>)</li>
-        <li><span class="hl-oneof lowlight2">one-of <a>triple expression</a></span> (<span class="as"><a href="#prod-oneOfTripleExpr">OneOfTripleExpr</a></span>)</li>
-        <li><span class="hl-eachof lowlight2">each-of <a>triple expression</a></span> (<span class="as">EachOfTripleExpr</span>)</li>
-        <li><span class="hl-repet lowlight3">repeated <a>triple expression</a></span> (<span class="as">RepeatedTripleExpr</span>)</li>
-        <li><span class="hl-inverse-tc lowlight1">triple constraint with an inverse property</span></li>
-        <!-- li><span class="hl-tc-cofinite lowlight1">triple constraint with a non-singleton co-finite set of properties</span></li -->
-        <li><span class="hl-shref lowlight4">shape reference</span> (<span class="as"><a>ShapeExprRef</a></span>)</li>
-      </ul>
+    <ul>
+      <li><span class="hl-tc lowlight1">triple constraint</span> (<span class="as"><a>TripleConstraint</a></span>)</li>
+      <li><span class="hl-oneof lowlight2">one-of <a>triple expression</a></span> (<span class="as"><a href="#prod-oneOfTripleExpr">OneOfTripleExpr</a></span>)</li>
+      <li><span class="hl-eachof lowlight2">each-of <a>triple expression</a></span> (<span class="as"><a href="#prod-singleElementGroup">SingleElementGroup</a></span>)</li>
+      <li><span class="hl-repet lowlight3">repeated <a>triple expression</a></span> (<span class="as"><a href="#prod-cardinality">Cardinality</a></span>)</li>
+      <li><span class="hl-inverse-tc lowlight1">triple constraint with an inverse property</span></li>
+      <!-- li><span class="hl-tc-cofinite lowlight1">triple constraint with a non-singleton co-finite set of properties</span></li -->
+      <li><span class="hl-shref lowlight4">shape reference</span> (<span class="as"><a>ShapeExprRef</a></span>)</li>
+    </ul>
 <pre class="shex">
 # triple expression of the shapes language
 
@@ -4758,7 +4742,6 @@ CLOSED {
         the result of the various asynchronous operations.
         <a data-cite="ECMASCRIPT-6.0#sec-promise-objects">Promises</a> are defined in [[ECMASCRIPT-6.0]].
         General use within specifications can be found in [[promises-guide]].</p>
-      <p class="ednote">@@gkellogg: Promises seem to the the bomb now, but we could define a synchronous interface instead.</p>
 
       <section class="informative">
         <h3>The <dfn>ShExProcessor</dfn> Interface</h3>
@@ -4800,9 +4783,7 @@ CLOSED {
                 an <a>IRI</a>, set <em>schema</em> to the result of dereferencing
                 the IRI, treating the result as <a>ShExC</a>, <a>ShExJ</a>, or some
                 other RDF serialization, depending on the content-type of the result, and transforming
-                into the <a>ShExJ</a> abstract syntax for processing.
-                <span class="ednote">@@gkellogg: Need to separate
-                  ShExJ as a syntax from the abstract form used by algorithms.</span></li>
+                into the <a>ShExJ</a> abstract syntax for processing.</li>
               <li>Otherwise, if a <a data-cite="WebIDL#idl-USVString">USVString</a>, <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is treated
                 as a string, and parsed into the <a>ShExJ</a> abstract syntax, using
                 <a data-link-for="ShExOptions">format</a> as a hint to determine the
@@ -5136,7 +5117,7 @@ CLOSED {
 
     <section id="security">
       <h3>Security Considerations</h3>
-      <p class="ednote">@@gkellogg: Consider requirements from <a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a>.</p>
+      <p class="issue">Consider requirements from <a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a>.</p>
       <p>Since <a>ShEx</a> is intended to be a pure data exchange format for
         validating <a>RDF graphs</a>, the <a>ShExJ</a> serialization SHOULD NOT be passed through a
         code execution mechanism such as JavaScript's <code>eval()</code>
