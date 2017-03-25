@@ -4900,19 +4900,19 @@ CLOSED {
           typedef dictionary ShapeResults;
 
           dictionary ShapeResult {
-            USVString  label;
+            USVString  shape;
             boolean    result;
-            USVString? message;
+            USVString? reason;
           };
         --></pre>
 
         <dl>
-          <dt><dfn data-dfn-for="ShapeResult">label</dfn></dt>
+          <dt><dfn data-dfn-for="ShapeResult">shape</dfn></dt>
           <dd>A <a>shapeExprLabel</a> in <a data-lt="ShExProcessor.validate.schema">validate.schema</a>
             against which <a>node</a> <a>conformance</a> was checked.</dd>
           <dt><dfn data-dfn-for="ShapeResult">result</dfn></dt>
           <dd>The result of the <a>conformance</a> check.</dd>
-          <dt><dfn data-dfn-for="ShapeResult">message</dfn></dt>
+          <dt><dfn data-dfn-for="ShapeResult">reason</dfn></dt>
           <dd>An optional message describing the result of the <a>conformance</a> check.</dd>
         </dl>
       </section> <!-- end ShExOptions -->
