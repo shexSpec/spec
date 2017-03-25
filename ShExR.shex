@@ -1,7 +1,7 @@
-PREFIX sx: <http://shex.io/ns/shex#>
+PREFIX sx: <http://www.w3.org/ns/shex#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-BASE <http://shex.io/ns/ShExR#>
+BASE <http://shex.io/ShExR#>
 start=@<Schema>
 
 <Schema> CLOSED {

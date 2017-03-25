@@ -18,7 +18,7 @@
         "shex-vocab": {
           "authors": ["Gregg Kellogg"],
           "title": "Shape Expression Vocabulary",
-          "href":  "http://shex.io/ns/"
+          "href":  "http://www.w3.org/ns/shex#"
         }
       },
       specStatus:     "CG-DRAFT",
@@ -300,7 +300,7 @@
         <dt><code>rdfs</code>:</dt>
         <dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd>
         <dt><code>shex</code>:</dt>
-        <dd><code>http://shex.io/ns/</code></dd>
+        <dd><code>http://www.w3.org/ns/shex#</code></dd>
         <dt><code>xsd</code>:</dt>
         <dd><code>http://www.w3.org/2001/XMLSchema#</code></dd>
       </dl>
@@ -4802,7 +4802,7 @@ CLOSED {
                 <a href="#validation-requirement" class="sectionRef"></a>, creating <span class="math">shapeResults</span>,
                 a <a>ShapeResults</a> dictionary based on a copy of <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>
                 with entries added, as necessary, for each focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>
-                associated with <code>http://shex.io/ns/Start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
+                associated with <code>http://www.w3.org/ns/shex#Start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
                 conforms with the referenced <a data-link-for="" data-lt="shape">shape(s)</a>, and an optional message, describing details conformance,
                 and <em>promise</em> is fulfilled using <span class="math">shapeResults</span>.</li>
               <li>If <em>graph</em> is found not to <a>conform</a> using
