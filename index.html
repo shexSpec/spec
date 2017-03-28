@@ -972,17 +972,17 @@ _:User2
         </p>
         <ul>
           <li><span class="math" id="nodeSatisfies-objectValue">vsv</span> is an <a class="nobref">objectValue</a> and <span class="math">n = vsv</span>.</li>
-          <li><span class="math" id="nodeSatisfies-Stem">vsv</span> is a <a class="nobref">Stem</a> with <span class="param">stem</span> <span class="math">st</span> and <span class="math">nodeIn(n, st)</span>.</li>
-          <li><span class="math" id="nodeSatisfies-StemRange">vsv</span> is a <a class="nobref">StemRange</a> with <span class="param">stem</span> <span class="math">st</span> and <span class="param">exclusions</span> <span class="math">excls</span> and <span class="math function" >nodeIn(n, st)</span> and there is no <span class="math">x</span> in <span class="math">excls</span> such that <span class="math function" >nodeIn(n, excl)</span>.</li>
+          <li><span class="math" id="nodeSatisfies-Stem">vsv</span> is a <a class="nobref">IriStem</a>, <a class="nobref">LiteralStem</a> or <a class="nobref">LangaugeStem</a> with <span class="param">stem</span> <span class="math">st</span> and <span class="math">nodeIn(n, st)</span>.</li>
+          <li><span class="math" id="nodeSatisfies-StemRange">vsv</span> is a <a class="nobref">IriStemRange</a>, <a class="nobref">LiteralStemRange</a> or <a class="nobref">LanguageStemRange</a> with <span class="param">stem</span> <span class="math">st</span> and <span class="param">exclusions</span> <span class="math">excls</span> and <span class="math function" >nodeIn(n, st)</span> and there is no <span class="math">x</span> in <span class="math">excls</span> such that <span class="math function" >nodeIn(n, excl)</span>.</li>
           <li><span class="math" id="nodeSatisfies-Wildcard">vsv</span> is a <a class="nobref">Wildcard</a> with <span class="param">exclusions</span> <span class="math">excls</span> and there is no <span class="math">x</span> in <span class="math">excls</span> such that <span class="math function" >nodeIn(n, excl)</span>.</li>
         </ul>
         <p>
-          <span class="label" id="nodeIn">nodeIn</span>: asserts that an RDF node <span class="math">n</span> is equal to an IRI or is in a set defined by a <span class="jobjref"><a class="obj">Stem</a></span>.<br/>
+          <span class="label" id="nodeIn">nodeIn</span>: asserts that an RDF node <span class="math">n</span> is equal to an IRI or is in a set defined by a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span>.<br/>
           The expression <code class="function">nodeIn(<span class="math">n</span>, <span class="math">s</span>)</code> is satisfied if:
         </p>
         <ul>
           <li><span class="math">s</span> is an IRI and <span class="math">n = s</span>.</li>
-          <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">Stem</a></span> with <span class="param">stem</span> <span class="math">st</span> and:
+          <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span> with <span class="param">stem</span> <span class="math">st</span> and:
           <ul>
             <li><span class="math">n</span> is an IRI and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(n, st)</span>.</li>
             <li><span class="math">n</span> is a <a>blank node</a> with identifier <span class="math">l</span> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(l, st)</span>.</li>
