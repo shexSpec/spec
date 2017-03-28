@@ -614,10 +614,15 @@ _:User2
   <tr class="nob"><th class="nob"><dfn>numericFacet</dfn></th>     <td>=</td><td>(<span class="param">"mininclusive"</span>|<span class="param">"minexclusive"</span>|<span class="param">"maxinclusive"</span>|<span class="param">"maxexclusive"</span>):<a class="nobref">numericLiteral</a> </td></tr>
     <tr><th></th><td>|</td><td>(<span class="param">"totaldigits"</span>|<span class="param">"fractiondigits"</span>):<a>INTEGER</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>numericLiteral</dfn></th> <td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><dfn>objectValue</dfn></th>       <td>=</td><td><a>IRI</a> | <a>STRING</a> | <a>DATATYPE_STRING</a> | <a>LANG_STRING</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><dfn>valueSetValue</dfn></th>   <td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">Stem</a> | <a class="objref">StemRange</a> ;</td></tr>
-  <tr class="obj"><th class="obj"><dfn>Stem</dfn></th>                     <td>{</td><td><span class="param">stem</span>:<a>IRI</a> }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>StemRange</dfn></th>           <td>{</td><td><span class="param">stem</span>:(<a>IRI</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">objectValue</a>|<a class="nobref">Stem</a>]? }</td></tr>
+  <tr class="nob"><th class="nob"><dfn>valueSetValue</dfn></th><td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">IRIStem</a> | <a class="objref">IRIStemRange</a> | <a class="objref">LiteralStem</a> | <a class="objref">LiteralStemRange</a> | <a class="objref">LanguageStem</a> | <a class="objref">LanguageStemRange</a> ;</td></tr>
+  <tr class="nob"><th class="nob"><dfn>objectValue</dfn></th><td>=</td><td><a>IRI</a> | <a class="objref">ObjectLiteral</a> ;</td></tr>
+  <tr class="obj"><th class="obj"><dfn>IRIStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>IRI</a> }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>IRIStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>IRI</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">objectValue</a>|<a class="objref">IRIStem</a> +]? }</td></tr>
+                                   dfn
+  <tr class="obj"><th class="obj"><dfn>LiteralStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>ObjectLiteral</a> }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>LiteralStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>ObjectLiteral</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">objectValue</a>|<a class="objref">LiteralStem</a> +]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>LanguageStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>ObjectLiteral</a> }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>LanguageStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>ObjectLiteral</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">objectValue</a>|<a class="objref">LanguageStem</a> +]? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>Wildcard</dfn></th>             <td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
           </table>
         </div>
@@ -4634,7 +4639,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <tr class="obj"><th class="obj"><a>TripleConstraint</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">inverse</span>:<a>BOOL</a>? <a class="param">predicate</a>:<a>IRI</a> <span class="param">valueExpr</span>:<a class="nobref">shapeExpr</a>? <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>xsFacet</a></th><td>=</td><td><a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>stringFacet</a></th><td>=</td><td>(<span class="param">"length"</span>|<span class="param">"minlength"</span>|<span class="param">"maxlength"</span>):<a>INTEGER</a> | <span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><a>numericFacet</a></th><td>=</td><td>(<span class="param">"mininclusive"</span>|<span class="param">"minexclusive"</span>|<span class="param">"maxinclusive"</span>|<span class="param">"maxexclusive"</span>):<a class="nobref">numericLiteral</a> </td></tr>
+  <tr class="nob"><th class="nob"><a>numericFacet</a></th><td>=</td><td>(<span class="param">"mininclusive"</span>|<span class="param">"minexclusive"</span>|<span class="param">"maxinclusive"</span>|<span class="param">"maxexclusive"</span>):<a class="nobref">numericLiteral</a></td></tr>
+  <tr><th></th><td>|</td><td>(<span class="param">"totaldigits"</span>|<span class="param">"fractiondigits"</span>):<a>INTEGER</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>valueSetValue</a></th><td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">IRIStem</a> | <a class="objref">IRIStemRange</a> | <a class="objref">LiteralStem</a> | <a class="objref">LiteralStemRange</a> | <a class="objref">LanguageStem</a> | <a class="objref">LanguageStemRange</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>objectValue</a></th><td>=</td><td><a>IRI</a> | <a class="objref">ObjectLiteral</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>IRIStem</a></th><td>{</td><td><span class="param">stem</span>:<a>IRI</a> }</td></tr>
@@ -4650,7 +4656,6 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <tr class="obj"><th class="obj"><a>Annotation</a></th><td>{</td><td><a class="param">predicate</a>:<a>IRI</a> <span class="param">object</span>:<a class="nobref">objectValue</a> }</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExprLabel</a></th><td>=</td><td><a>IRI</a> | <a>BNODE</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExprLabel</a></th><td>=</td><td><a>IRI</a> | <a>BNODE</a> ;</td></tr>
-  <tr><th></th><td>|</td><td>(<span class="param">"totaldigits"</span>|<span class="param">"fractiondigits"</span>):<a>INTEGER</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>numericLiteral</a></th><td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
 
