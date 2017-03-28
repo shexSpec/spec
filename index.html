@@ -3223,7 +3223,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td id="prod-start">[<span class="prodNo">6</span>]   </td>
 <td><code class="production prod">start</code></td>
 <td>   ::=   </td>
-<td><code class="content">"start" "=" <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></code></td>
+<td><code class="content">"start" '=' <span class="prod"><a class="grammarRef" href="#prod-inlineShapeExpression">inlineShapeExpression</a></span></code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-startActions">[<span class="prodNo">7</span>]   </td>
@@ -3262,7 +3262,9 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td id="prod-shapeExpression">[<span class="prodNo">10</span>]   </td>
 <td><code class="production prod">shapeExpression</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span></code></td>
+<td><code class="content">  "NOT"? <span class="prod"><a class="grammarRef" href="#prod-shapeAtomNoRef">shapeAtomNoRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span>?<br/>
+                                | "NOT" <span class="prod"><a class="grammarRef" href="#prod-shapeRef">shapeRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span>?<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-shapeRef">shapeRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span></code></td>
 </tr>
 </tbody>
 
@@ -3280,7 +3282,8 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td id="prod-shapeOr">[<span class="prodNo">11</span>]   </td>
 <td><code class="production prod">shapeOr</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span> ("OR" <span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span>)*</code></td>
+<td><code class="content">  ("OR" <span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span>)+<br/>
+                                | ("AND" <span class="prod"><a class="grammarRef" href="#prod-shapeNot">shapeNot</a></span>)+ ("OR" <span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span>)*</code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-inlineShapeOr">[<span class="prodNo">15</span>]   </td>
@@ -3347,19 +3350,33 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-shapeAtom">[<span class="prodNo">29</span>]   </td>
 <td><code class="production prod">shapeAtom</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nodeConstraint">nodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>?<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span><br/>
-| "(" <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ")"<br/>
-| "."</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>?<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-litNodeConstraint">litNodeConstraint</a></span><br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span>?
+| '(' <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ')'<br/>
+| '.'</code></td>
 </tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-shapeAtomNoRef">[<span class="prodNo">29</span>]   </td>
+<td><code class="production prod">shapeAtomNoRef</code></td>
+<td>   ::=   </td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>?<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-litNodeConstraint">litNodeConstraint</a></span><br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span> <span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span>?<br/>
+                                | '(' <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ')'<br/>
+                                | '.'</code></td>
+</tr>
+
 <tr style="vertical-align: baseline">
 <td id="prod-inlineShapeAtom">[<span class="prodNo">30</span>]   </td>
 <td><code class="production prod">inlineShapeAtom</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nodeConstraint">nodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-inlineShapeOrRef">inlineShapeOrRef</a></span>?<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-inlineShapeOrRef">inlineShapeOrRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-nodeConstraint">nodeConstraint</a></span>?<br/>
-| "(" <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ")"<br/>
-| "."</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-inlineShapeOrRef">inlineShapeOrRef</a></span>?<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-litNodeConstraint">litNodeConstraint</a></span><br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-inlineShapeOrRef">inlineShapeOrRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span>?<br/>
+                                | '(' <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ')'<br/>
+                                | '.'</code></td>
 </tr>
 <tr class="params"><td></td><td colspan="3">
 <ul>
@@ -3372,18 +3389,24 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-shapeOrRef">[<span class="prodNo">46</span>]   </td>
 <td><code class="production prod">shapeOrRef</code></td>
 <td>   ::=   </td>
-<td>   <code class="content">
-<span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span><br/>
-| <span class="prod"><a class="grammarRef" href="#term-ATPNAME_LN">ATPNAME_LN</a></span> | <span class="prod"><a class="grammarRef" href="#term-ATPNAME_NS">ATPNAME_NS</a></span> | "@" <span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span><br/>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span> | <span class="prod"><a class="grammarRef" href="#prod-shapeRef">shapeRef</a></span>
 </code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-inlineShapeOrRef">[<span class="prodNo">47</span>]   </td>
 <td><code class="production prod">inlineShapeOrRef</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-inlineShapeDefinition">inlineShapeDefinition</a></span><br/>
-| <span class="prod"><a class="grammarRef" href="#term-ATPNAME_LN">ATPNAME_LN</a></span> | <span class="prod"><a class="grammarRef" href="#term-ATPNAME_NS">ATPNAME_NS</a></span> | "@" <span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span><br/></code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-inlineShapeDefinition">inlineShapeDefinition</a></span> | <span class="prod"><a class="grammarRef" href="#prod-shapeRef">shapeRef</a></span>
+</code></td>
 </tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-shapeRef">[<span class="prodNo">47</span>]   </td>
+<td><code class="production prod">shapeRef</code></td>
+<td>   ::=   </td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#term-ATPNAME_LN">ATPNAME_LN</a></span> | <span class="prod"><a class="grammarRef" href="#term-ATPNAME_NS">ATPNAME_NS</a></span> | '@' <span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span></code></td>
+</tr>
+
 <tr class="params"><td></td><td colspan="3">
 <ul>
   <li>If the <span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span> production matches, the result is <span class="prod"><a class="grammarRef" href="#prod-shapeDefinition">shapeDefinition</a></span>.</li>
@@ -3403,15 +3426,24 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 
 <tbody class="prod">
 <tr style="vertical-align: baseline">
-<td id="prod-nodeConstraint">[<span class="prodNo">31</span>]   </td>
-<td><code class="production prod">nodeConstraint</code></td>
+<td id="prod-litNodeConstraint">[<span class="prodNo">31</span>]   </td>
+<td><code class="production prod">litNodeConstraint</code></td>
 <td>   ::=   </td>
 <td>   <code class="content">"LITERAL" <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
 | <span class="prod"><a class="grammarRef" href="#prod-nonLiteralKind">nonLiteralKind</a></span> <span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span>*<br/>
 | <span class="prod"><a class="grammarRef" href="#prod-datatype">datatype</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
 | <span class="prod"><a class="grammarRef" href="#prod-valueSet">valueSet</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>+</code></td>
+| <span class="prod"><a class="grammarRef" href="#prod-numericFacet">numericFacet</a></span>+</code></td>
 </tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-nonLitNodeConstraint">[<span class="prodNo">31</span>]   </td>
+<td><code class="production prod">nonLitNodeConstraint</code></td>
+<td>   ::=   </td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLiteralKind">nonLiteralKind</a></span> <span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span>*<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span>+</code></td>
+</tr>
+
 <tr class="obj"><td></td><td><a class="obj">NodeConstraint</a></td><td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRI</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>]? }</td></tr>
 <tr style="vertical-align: baseline">
 <td id="prod-nonLiteralKind">[<span class="prodNo">32</span>]   </td>
@@ -3476,13 +3508,13 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-shapeDefinition">[<span class="prodNo">18</span>]   </td>
 <td><code class="production prod">shapeDefinition</code></td>
 <td>   ::=   </td>
-<td><code class="content">(<!-- <span class="prod"><a class="grammarRef" href="#prod-includeSet">includeSet</a></span> | --><span class="prod"><a class="grammarRef" href="#prod-extraPropertySet">extraPropertySet</a></span> | "CLOSED")* "{" <span class="prod"><a class="grammarRef" href="#prod-tripleExpression">tripleExpression</a></span>? "}" <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
+<td><code class="content">(<!-- <span class="prod"><a class="grammarRef" href="#prod-includeSet">includeSet</a></span> | --><span class="prod"><a class="grammarRef" href="#prod-extraPropertySet">extraPropertySet</a></span> | "CLOSED")* '{' <span class="prod"><a class="grammarRef" href="#prod-tripleExpression">tripleExpression</a></span>? '}' <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-inlineShapeDefinition">[<span class="prodNo">19</span>]   </td>
 <td><code class="production prod">inlineShapeDefinition</code></td>
 <td>   ::=   </td>
-<td><code class="content">(<!-- <span class="prod"><a class="grammarRef" href="#prod-includeSet">includeSet</a></span> | --><span class="prod"><a class="grammarRef" href="#prod-extraPropertySet">extraPropertySet</a></span> | "CLOSED")* "{" <span class="prod"><a class="grammarRef" href="#prod-tripleExpression">tripleExpression</a></span>? "}"</code></td>
+<td><code class="content">(<!-- <span class="prod"><a class="grammarRef" href="#prod-includeSet">includeSet</a></span> | --><span class="prod"><a class="grammarRef" href="#prod-extraPropertySet">extraPropertySet</a></span> | "CLOSED")* '{' <span class="prod"><a class="grammarRef" href="#prod-tripleExpression">tripleExpression</a></span>? '}'</code></td>
 </tr>
 <tr class="obj"><td></td><td><a class="obj">Shape</a></td><td>{</td><td>
 <!-- <span class="param">virtual</span>:<a>BOOL</a>? -->
@@ -3536,7 +3568,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-multiElementOneOf">[<span class="prodNo">22</span>]   </td>
 <td><code class="production prod">multiElementOneOf</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a></span> ("|" <span class="prod"><a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a></span>)+</code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a></span> ('|' <span class="prod"><a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a></span>)+</code></td>
 </tr>
 <tr class="params"><td></td><td colspan="3">
 If the right <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a> matches one or more times, the result is a <a class="obj">OneOf</a> object with <span class="param">expressions</span> containing the first <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a> followed by the ordered list from the second <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a>:
@@ -3570,7 +3602,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-groupTripleEx
 <td id="prod-singleElementGroup">[<span class="prodNo">25</span>]   </td>
 <td><code class="production prod">singleElementGroup</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a></span> ";"?</code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a></span> ';'?</code></td>
 </tr>
 </tbody>
 
@@ -3579,7 +3611,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-groupTripleEx
 <td id="prod-multiElementGroup">[<span class="prodNo">26</span>]   </td>
 <td><code class="production prod">multiElementGroup</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a></span> (";" <span class="prod"><a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a></span>)+ ";"?</code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a></span> (';' <span class="prod"><a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a></span>)+ ';'?</code></td>
 </tr>
 <tr class="params"><td></td><td colspan="3">
 If the right <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a> matches one or more times, the result is a <a class="obj">EachOf</a> object with <span class="param">expressions</span> containing the first <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a> followed by the ordered list from the second <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a>:
@@ -3595,14 +3627,14 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-unaryTripleExpr">[<span class="prodNo">27</span>]   </td>
 <td><code class="production prod">unaryTripleExpr</code></td>
 <td>   ::=   </td>
-<td>   <code class="content">("$" <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span>)? (<span class="prod"><a class="grammarRef" href="#prod-tripleConstraint">tripleConstraint</a></span> | <span class="prod"><a class="grammarRef" href="#prod-bracketedTripleExpr">bracketedTripleExpr</a></span>)<br/>
+<td>   <code class="content">('$' <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span>)? (<span class="prod"><a class="grammarRef" href="#prod-tripleConstraint">tripleConstraint</a></span> | <span class="prod"><a class="grammarRef" href="#prod-bracketedTripleExpr">bracketedTripleExpr</a></span>)<br/>
 | <span class="prod"><a class="grammarRef" href="#prod-include">include</a></span></code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-bracketedTripleExpr">[<span class="prodNo">28</span>]   </td>
 <td><code class="production prod">bracketedTripleExpr</code></td>
 <td>   ::=   </td>
-<td><code class="content">"(" <span class="prod"><a class="grammarRef" href="#prod-innerTripleExpr">innerTripleExpr</a></span> ")" <span class="prod"><a class="grammarRef" href="#prod-cardinality">cardinality</a></span>? <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
+<td><code class="content">'(' <span class="prod"><a class="grammarRef" href="#prod-innerTripleExpr">innerTripleExpr</a></span> ')' <span class="prod"><a class="grammarRef" href="#prod-cardinality">cardinality</a></span>? <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
 </tr>
 </tbody>
 
@@ -3638,7 +3670,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-cardinality">[<span class="prodNo">53</span>]   </td>
 <td><code class="production prod">cardinality</code></td>
 <td>   ::=   </td>
-<td><code class="content">"*" | "+" | "?" | <span class="prod"><a class="grammarRef" href="#term-REPEAT_RANGE">REPEAT_RANGE</a></span></code></td>
+<td><code class="content">'*' | '+' | '?' | <span class="prod"><a class="grammarRef" href="#term-REPEAT_RANGE">REPEAT_RANGE</a></span></code></td>
 </tr>
 <tr class="params"><td></td><td colspan="3">
   In <a>ShExJ</a>, <code>"*"</code> is represented as <code>-1</code>, standing for the unbounded cardinality..
@@ -3650,7 +3682,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-senseFlags">[<span class="prodNo">40</span>]   </td>
 <td><code class="production prod">senseFlags</code></td>
 <td>   ::=   </td>
-<td><code class="content">"^"</code></td>
+<td><code class="content">'^'</code></td>
 </tr>
 </tbody>
 
@@ -3669,7 +3701,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-valueSet">[<span class="prodNo">41</span>]   </td>
 <td><code class="production prod">valueSet</code></td>
 <td>   ::=   </td>
-<td><code class="content">"[" <span class="prod"><a class="grammarRef" href="#prod-valueSetValue">valueSetValue</a></span>* "]"</code></td>
+<td><code class="content">'[' <span class="prod"><a class="grammarRef" href="#prod-valueSetValue">valueSetValue</a></span>* ']'</code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-valueSetValue">[<span class="prodNo">42</span>]   </td>
@@ -3681,8 +3713,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-iriRange">[<span class="prodNo">43</span>]   </td>
 <td><code class="production prod">iriRange</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> ("~" <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>*)?<br/>
-| "." <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>+</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>*)?<br/>
+| '.' <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>+</code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> matches with no "<code>~</code>", iriRange returns <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span>.</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>, iriRange returns a <a class="obj">Stem</a> object:</td></tr>
@@ -3696,7 +3728,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-exclusion">[<span class="prodNo">44</span>]   </td>
 <td><code class="production prod">exclusion</code></td>
 <td>   ::=   </td>
-<td><code class="content">"-" <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> "~"?</code></td>
+<td><code class="content">'-' <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> '~'?</code></td>
 </tr>
 </tbody>
 
@@ -3713,7 +3745,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-include">[<span class="prodNo">48</span>]   </td>
 <td><code class="production prod">include</code></td>
 <td>   ::=   </td>
-<td><code class="content">"&amp;" <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span></code></td>
+<td><code class="content">'&amp;' <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span></code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-constraint">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
 <tr class="obj"><td></td><td><a class="obj">tripleExprRef</a></td><td>=</td><td><span class="param">include</span>:<a class="nobref">tripleExprLabel</a> ;</td></tr>
@@ -3756,7 +3788,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-codeDecl">[<span class="prodNo">62</span>]   </td>
 <td><code class="production prod">codeDecl</code></td>
 <td>   ::=   </td>
-<td><code class="content">"%" <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> (<span class="prod"><a class="grammarRef" href="#term-CODE">CODE</a></span> | "%")</code></td>
+<td><code class="content">'%' <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> (<span class="prod"><a class="grammarRef" href="#term-CODE">CODE</a></span> | '%')</code></td>
 </tr>
   <tr class="obj"><td></td><td><a class="obj">SemAct</a></td><td>{</td><td><span class="param">name</span>:<a>IRI</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
 </tbody>
@@ -3767,7 +3799,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-includeSet">[<span class="prodNo">64</span>]   </td>
 <td><code class="production prod">includeSet</code></td>
 <td>   ::=   </td>
-<td><code class="content">"&amp;" <span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span>+</code></td>
+<td><code class="content">'&amp;' <span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span>+</code></td>
 </tr>
 </tbody>
 -->
