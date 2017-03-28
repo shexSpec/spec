@@ -145,7 +145,7 @@
         <ul>
           <li><dfn data-cite="rdf11-concepts#dfn-iri" data-lt="iris">IRI</dfn>: the lexical form of the IRI, e.g. <code class="json">"http://example.org/resource"</code></li>
           <li><dfn data-cite="rdf11-concepts#blank-node" data-lt="bnodes">BNODE</dfn>: the concatenation of "<code>_:</code>" and a <dfn data-cite="rdf11-concepts#dfn-blank-node-identifier" data-lt="blank node identifiers|labeled blank nodes">blank node identifier</dfn>, e.g. <code class="json">"_:blank3"</code></li>
-          <li><dfn data-cite="rdf11-concepts#dfn-literal" data-lt="literals|RDF Literal|RDF Literals">LITERAL</dfn>: the concatenation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
+          <li><dfn data-cite="rdf11-concepts#dfn-literal" data-lt="literal|literals|RDF Literal|RDF Literals">OBJECTLITERAL</dfn>: the concatenation of a U+0022 ('<code>"</code>'), the lexical form of the literal, U+0022, and the first matching of:
           <ul>
             <li>literal with type <code>http://www.w3.org/2001/XMLSchema#string</code>: empty string, e.g. <code class="json">"abc"</code>.</li>
             <li><a>language-tagged string</a>: U+0040 ('<code>@</code>') and the <a>language tag</a>, e.g. <code class="json">"\"hello world\"@en-US"</code></li>
@@ -4652,7 +4652,6 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <tr class="nob"><th class="nob"><a>tripleExprLabel</a></th><td>=</td><td><a>IRI</a> | <a>BNODE</a> ;</td></tr>
   <tr><th></th><td>|</td><td>(<span class="param">"totaldigits"</span>|<span class="param">"fractiondigits"</span>):<a>INTEGER</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>numericLiteral</a></th><td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><a>RDFLiteral</a></th><td>=</td><td><a>SIMPLE_LITERAL</a> | <a>DATATYPE_LITERAL</a> | <a>LANG_LITERAL</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
 
   <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;">Terminals</th><td></td><td>constrained by the <a href="#terminals">terminal rules in the compact syntax</a></td></tr>
