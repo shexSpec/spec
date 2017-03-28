@@ -1069,7 +1069,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
         "w3cid": "44770"
       }],
       "wg": "Shape Expressions Community Group",
-      "wgURI": "https://shexspec.github.io",
+      "wgURI": "https://www.w3.org/community/shex/",
       "wgPublicList": "public-shex",
       "bugTracker":
       {
@@ -1132,7 +1132,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
     </dl>
     <p class="copyright">
       <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2017 the Contributors to the Shape Expressions Language 2.0 Specification, published by the
-      <a href="https://shexspec.github.io">Shape Expressions Community Group</a> under the
+      <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a> under the
       <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
     </p>
     <hr title="Separator for header">
@@ -1151,7 +1151,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   <section id="sotd" class="introductory">
     <h2 id="h-sotd" resource="#h-sotd"><span property="xhv:role" resource="xhv:heading">Status of This Document</span></h2>
     <p>
-      This specification was published by the <a href="https://shexspec.github.io">Shape Expressions Community Group</a>. It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under the
+      This specification was published by the <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>. It is not a W3C Standard nor is it on the W3C Standards Track. Please note that under the
       <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a> there is a limited opt-out and other conditions apply. Learn more about
       <a href="https://www.w3.org/community/">W3C Community and Business Groups</a>.
     </p>
@@ -6651,7 +6651,7 @@ interface <span class="idlInterfaceID"><a data-lt="ShExProcessor" href="#dom-she
     <p>
       A ShExJ document is a JSON-LD [[!!JSON-LD]] document uses a proscribed structure which holds an object at the top level. This object describes a <a href="#dfn-schema" class="internalDFN" data-link-type="dfn">schema</a> containing
       <a href="#dfn-shape-expression" class="internalDFN" data-link-type="dfn">shape expressions</a> and <a href="#dfn-triple-expression" class="internalDFN" data-link-type="dfn">triple expressions</a>. A ShExJ document
-      <em class="rfc2119" title="MUST">MUST</em> include a <code>@context</code> property referencing <code>http://shex.io/context.jsonld</code>, and <em class="rfc2119" title="MAY">MAY</em> include additional contexts and term definitions. In the absense of a top-level <code>@context</code>, ShEx Processors <em class="rfc2119" title="MUST">MUST</em> act as if a <code>@context</code> property is present with the value <code>http://shex.io/context.jsonld</code>.
+      <em class="rfc2119" title="MUST">MUST</em> include a <code>@context</code> property referencing <code>http://www.w3.org/ns/shex.jsonld</code>, and <em class="rfc2119" title="MAY">MAY</em> include additional contexts and term definitions. In the absense of a top-level <code>@context</code>, ShEx Processors <em class="rfc2119" title="MUST">MUST</em> act as if a <code>@context</code> property is present with the value <code>http://www.w3.org/ns/shex.jsonld</code>.
     </p>
 
     <p>A ShExJ document can also be thought of as the serialization of an <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">RDF Graph</a> using the Shape Expression Vocabulary [<cite><a class="bibref" href="#bib-shex-vocab">shex-vocab</a></cite>] which conforms to the shape defined in <a href="#shexr" class="secionRef sec-ref"><span class="secno">C.</span> <span class="sec-title">ShEx Shape</span></a>. Processors <em class="rfc2119" title="MAY">MAY</em> choose to interpret a ShExJ document as an RDF Graph and process using RDF Graph semantics. Processors may also transform arbitrary RDF Graphs conforming to <a href="#shexr" class="secionRef sec-ref"><span class="secno">C.</span> <span class="sec-title">ShEx Shape</span></a> into ShExJ using a mechanism not described within this specification.</p>
@@ -6667,7 +6667,7 @@ interface <span class="idlInterfaceID"><a data-lt="ShExProcessor" href="#dom-she
           <tr class="obj">
             <th class="obj"><a href="#dfn-schema" class="internalDFN" data-link-type="dfn">Schema</a></th>
             <td>{</td>
-            <td><dfn class="param" data-dfn-type="dfn" id="dfn-prefixes-map"></dfn>"@context": "https://shexspec.github.io/context.jsonld"<br><span class="param">startActs</span>:[<a class="objref internalDFN" href="#dfn-semact" data-link-type="dfn">SemAct</a>+]? <a class="param internalDFN" href="#dfn-start" data-link-type="dfn">start</a>:<a class="nobref internalDFN" href="#dfn-shapeexpr" data-link-type="dfn">shapeExpr</a>? <a class="param internalDFN" href="#dfn-shapes" data-link-type="dfn">shapes</a>:[<a class="nobref internalDFN" href="#dfn-shapeexpr" data-link-type="dfn">shapeExpr</a>+]? }</td>
+            <td><dfn class="param" data-dfn-type="dfn" id="dfn-prefixes-map"></dfn>"@context": "http://www.w3.org/ns/shex.jsonld"<br><span class="param">startActs</span>:[<a class="objref internalDFN" href="#dfn-semact" data-link-type="dfn">SemAct</a>+]? <a class="param internalDFN" href="#dfn-start" data-link-type="dfn">start</a>:<a class="nobref internalDFN" href="#dfn-shapeexpr" data-link-type="dfn">shapeExpr</a>? <a class="param internalDFN" href="#dfn-shapes" data-link-type="dfn">shapes</a>:[<a class="nobref internalDFN" href="#dfn-shapeexpr" data-link-type="dfn">shapeExpr</a>+]? }</td>
           </tr>
           <tr class="nob">
             <th class="nob"><a href="#dfn-shapeexpr" class="internalDFN" data-link-type="dfn">shapeExpr</a></th>

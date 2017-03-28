@@ -52,7 +52,7 @@
           w3cid:      "44770" },
       ],
       wg:           "Shape Expressions Community Group",
-      wgURI:        "https://shexspec.github.io",
+      wgURI:        "https://www.w3.org/community/shex/",
       wgPublicList: "public-shex",
       //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
 
@@ -4607,8 +4607,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
         A ShExJ document is a JSON-LD [[!!JSON-LD]] document uses
         a proscribed structure which holds an object at the top level. This object describes a <a>schema</a> containing
         <a>shape expressions</a> and <a>triple expressions</a>. A ShExJ document
-        MUST include a <code>@context</code> property referencing <code>http://shex.io/context.jsonld</code>, and MAY include additional contexts
-        and term definitions. In the absense of a top-level <code>@context</code>, ShEx Processors MUST act as if a <code>@context</code> property is present with the value <code>http://shex.io/context.jsonld</code>.
+        MUST include a <code>@context</code> property referencing <code>http://www.w3.org/ns/shex.jsonld</code>, and MAY include additional contexts
+        and term definitions. In the absense of a top-level <code>@context</code>, ShEx Processors MUST act as if a <code>@context</code> property is present with the value <code>http://www.w3.org/ns/shex.jsonld</code>.
       </p>
 
       <p>A ShExJ document can also be thought of as the serialization of an <a>RDF Graph</a> using
@@ -4625,7 +4625,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       </p>
       <div class="shexjTable">
 <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix"></dfn>"@context": "https://shexspec.github.io/context.jsonld"<br/><span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix"></dfn>"@context": "http://www.w3.org/ns/shex.jsonld"<br/><span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExpr</a></th><td>=</td><td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="nobref">shapeExprRef</a> | <a class="objref">ShapeExternal</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeOr</a></th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeAnd</a></th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
