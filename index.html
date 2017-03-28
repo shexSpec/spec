@@ -1033,10 +1033,10 @@ _:User2
       "valueExpr": {
         "type": "NodeConstraint", "values": [
           {"value": "N/A"},
-          { "type": "StemRange", "stem": "mailto:engineering-" },
-          { "type": "StemRange", "stem": "mailto:sales-", "exclusions": [
-              { "type": "Stem", "stem": "mailto:sales-contacts" },
-              { "type": "Stem", "stem": "mailto:sales-interns" }
+          { "type": "IriStemRange", "stem": "mailto:engineering-" },
+          { "type": "IriStemRange", "stem": "mailto:sales-", "exclusions": [
+              { "type": "IriStem", "stem": "mailto:sales-contacts" },
+              { "type": "IriStem", "stem": "mailto:sales-interns" }
             ] }
         ] } } } ] }</pre>
             <pre class="shexc">                                                                         
@@ -1081,10 +1081,10 @@ _:User2
       "predicate": "http://xmlns.com/foaf/0.1/mbox",
       "valueExpr": {
         "type": "NodeConstraint", "values": [
-          { "type": "StemRange", "stem": {"type": "Wildcard"},
+          { "type": "IriStemRange", "stem": {"type": "Wildcard"},
             "exclusions": [
-              { "type": "Stem", "stem": "mailto:engineering-" },
-              { "type": "Stem", "stem": "mailto:sales-" }
+              { "type": "IriStem", "stem": "mailto:engineering-" },
+              { "type": "IriStem", "stem": "mailto:sales-" }
             ] }
         ] } } } ] }</pre>
             <pre class="shexc">                                                                
