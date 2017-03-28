@@ -1363,7 +1363,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
       <h3 id="h-shex-references" resource="#h-shex-references"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.1 </span>References</span>
       </h3>
       <p>
-        <a href="#dfn-shexj" class="internalDFN" data-link-type="dfn">ShExJ</a> is a dialect of JSON-LD [<cite><a class="bibref" href="#bib-JSON-LD">JSON-LD</a></cite>] and the member <code>id</code> is used as a <a href="https://www.w3.org/TR/json-ld/#node-identifiers">node identifier</a>. An object may be represented inline or referenced by its <code>id</code> which may be either a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node">blank node</a> or an <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a>.
+        <a href="#dfn-shexj" class="internalDFN" data-link-type="dfn">ShExJ</a> is a dialect of JSON-LD [<cite><a class="bibref" href="#bib-JSON-LD">JSON-LD</a></cite>] and the member <code>id</code> is used as a <a href="https://www.w3.org/TR/json-ld/#node-identifiers">node identifier</a>. An object may be represented inline or referenced by its <code>id</code> which may be either a <a href="#dfn-blank-node" class="internalDFN" data-link-type="dfn">blank node</a> or an <a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a>.
       </p>
       <div class="shexj">
         <pre aria-busy="false" aria-live="polite" class="hljs undefined"> ShapeOr         { id:shapeExprLabel? shapeExprs:[shapeExpr] }
@@ -1372,7 +1372,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
  tripleExprLabel = IRI | BNODE ;</pre>
       </div>
       <p>
-        The JSON structure may include references to <a data-lt="shape" href="#dfn-shapes" class="internalDFN" data-link-type="dfn">shapes</a> and <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-triple">triples</a>:
+        The JSON structure may include references to <a data-lt="shape" href="#dfn-shapes" class="internalDFN" data-link-type="dfn">shapes</a> and <a href="#dfn-triples" class="internalDFN" data-link-type="dfn">triples</a>:
       </p>
       <div class="shexj">
         <pre aria-busy="false" aria-live="polite" class="hljs undefined"> shapeExpr     = ShapeOr | ... | shapeExprRef ;
@@ -1419,7 +1419,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
       <h3 id="h-graphaccess" resource="#h-graphaccess"><span property="xhv:role" resource="xhv:heading"><span class="secno">2.3 </span>Graph access</span>
       </h3>
       <p>
-        The validation process defined in this document relies on matching <a data-link-type="dfn" href="https://www.w3.org/TR/sparql11-query/#defn_TriplePattern">triple patterns</a> in the form <code>(subject, predicate, object)</code> where each position may be supplied by a constant, a previously defined term, or the underscore "<code>_</code>", which represents a previously undefined element or wildcard. This corresponds to a <dfn data-dfn-type="dfn" id="dfn-sparql-triple-pattern"><a href="https://www.w3.org/TR/sparql11-query/#defn_TriplePattern">SPARQL Triple Pattern</a></dfn> where each "_" is replaced by a unique <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node">blank node</a>. Matching such a <a data-link-type="dfn" href="https://www.w3.org/TR/sparql11-query/#defn_TriplePattern">triple pattern</a> against a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> is defined by <a href="https://www.w3.org/TR/sparql11-query/#BGPsparql">SPARQL Basic Graph Pattern Matching</a> (BGP) with a BGP containing only that <a data-link-type="dfn" href="https://www.w3.org/TR/sparql11-query/#defn_TriplePattern">triple pattern</a>.
+        The validation process defined in this document relies on matching <a href="#dfn-sparql-triple-pattern" class="internalDFN" data-link-type="dfn">triple patterns</a> in the form <code>(subject, predicate, object)</code> where each position may be supplied by a constant, a previously defined term, or the underscore "<code>_</code>", which represents a previously undefined element or wildcard. This corresponds to a <dfn data-dfn-type="dfn" id="dfn-sparql-triple-pattern"><a href="https://www.w3.org/TR/sparql11-query/#defn_TriplePattern">SPARQL Triple Pattern</a></dfn> where each "_" is replaced by a unique <a href="#dfn-blank-node" class="internalDFN" data-link-type="dfn">blank node</a>. Matching such a <a href="#dfn-sparql-triple-pattern" class="internalDFN" data-link-type="dfn">triple pattern</a> against a <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> is defined by <a href="https://www.w3.org/TR/sparql11-query/#BGPsparql">SPARQL Basic Graph Pattern Matching</a> (BGP) with a BGP containing only that <a href="#dfn-sparql-triple-pattern" class="internalDFN" data-link-type="dfn">triple pattern</a>.
       </p>
     </section>
     <!-- button id="toggleRDF">Toggle RDF ("r")</button> <button id="toggleExamples">Toggle Examples ("e")</button> <button id="toggleSquished">Render only abstract syntax ("a")</button -->
@@ -1471,7 +1471,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
     </h2>
     <p>Shape expressions are defined using terms from RDF semantics[<cite><a class="bibref" href="#bib-rdf11-mt">rdf11-mt</a></cite>]:</p>
     <ul>
-      <li><dfn data-dfn-type="dfn" id="dfn-node"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-node">Node</a></dfn>: one of <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a>, <dfn data-dfn-type="dfn" id="dfn-blank-node"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node">blank node</a></dfn>, <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-literal">Literal</a></li>
+      <li><dfn data-dfn-type="dfn" id="dfn-node"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-node">Node</a></dfn>: one of <a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a>, <dfn data-dfn-type="dfn" id="dfn-blank-node"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-blank-node">blank node</a></dfn>, <a href="#dfn-objectliteral" class="internalDFN" data-link-type="dfn">Literal</a></li>
       <li><dfn data-dfn-type="dfn" id="dfn-graph"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">Graph</a></dfn>: a set of <dfn data-dfn-type="dfn" id="dfn-triples"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-triple">Triples</a></dfn> of (<dfn data-dfn-type="dfn" id="dfn-subject"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-subject">subject</a></dfn>, <dfn data-dfn-type="dfn" id="dfn-predicate"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-predicate">predicate</a></dfn>, <dfn data-dfn-type="dfn" id="dfn-object"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-object">object</a></dfn>)</li>
     </ul>
 
@@ -1491,22 +1491,22 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
     <p>For the purposes of the <a href="#dom-shexprocessor" class="internalDFN" data-link-type="dfn"><code>ShExProcessor</code></a> interface, a <dfn data-dfn-type="dfn" id="dfn-promise"><a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-promise-objects">promise</a></dfn> is an object that represents the eventual result of a single asynchronous operation. Promises are defined in [<cite><a class="bibref" href="#bib-ECMASCRIPT-6.0">ECMASCRIPT-6.0</a></cite>].</p>
     <p>
-      The following functions access the elements of an <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">RDF graph</a> <span class="math">G</span> containing a node <span class="math">n</span>:</p>
+      The following functions access the elements of an <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">RDF graph</a> <span class="math">G</span> containing a node <span class="math">n</span>:</p>
     <ul>
       <li>
-        <span class="math"><dfn data-dfn-type="dfn" id="dfn-arcsout">arcsOut</dfn>(G, n)</span> is the set of <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-triple">triples</a> in a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> <span class="math">G</span> with <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-subject">subject</a> <span class="math">n</span>.
+        <span class="math"><dfn data-dfn-type="dfn" id="dfn-arcsout">arcsOut</dfn>(G, n)</span> is the set of <a href="#dfn-triples" class="internalDFN" data-link-type="dfn">triples</a> in a <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> <span class="math">G</span> with <a href="#dfn-subject" class="internalDFN" data-link-type="dfn">subject</a> <span class="math">n</span>.
       </li>
       <li>
         <span class="math"><dfn data-dfn-type="dfn" id="dfn-predicatesout">predicatesOut</dfn>(G, n)</span> is the set of <a data-lt="predicate" href="#dfn-predicates" class="internalDFN" data-link-type="dfn">predicates</a> in <span class="math"><a href="#dfn-arcsout" class="internalDFN" data-link-type="dfn">arcsOut</a>(G, n)</span>.
       </li>
       <li>
-        <span class="math"><dfn data-dfn-type="dfn" id="dfn-arcsin">arcsIn</dfn>(G, n)</span> is the set of <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-triple">triples</a> in a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> <span class="math">G</span> with <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-object">object</a> <span class="math">n</span>.
+        <span class="math"><dfn data-dfn-type="dfn" id="dfn-arcsin">arcsIn</dfn>(G, n)</span> is the set of <a href="#dfn-triples" class="internalDFN" data-link-type="dfn">triples</a> in a <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> <span class="math">G</span> with <a href="#dfn-object" class="internalDFN" data-link-type="dfn">object</a> <span class="math">n</span>.
       </li>
       <li>
         <span class="math"><dfn data-dfn-type="dfn" id="dfn-predicatesin">predicatesIn</dfn>(G, n)</span> is the set of <a data-lt="predicate" href="#dfn-predicates" class="internalDFN" data-link-type="dfn">predicates</a> in <span class="math"><a href="#dfn-arcsin" class="internalDFN" data-link-type="dfn">arcsIn</a>(G, n)</span>.
       </li>
       <li>
-        <span class="math"><dfn data-dfn-type="dfn" id="dfn-neigh">neigh</dfn>(G, n)</span> is the neighbourhood of the <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-node">node</a> <span class="math">n</span> in the <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> <span class="math">G</span>.<br><span class="math"><a href="#dfn-neigh" class="internalDFN" data-link-type="dfn">neigh</a>(G, n) = <a href="#dfn-arcsout" class="internalDFN" data-link-type="dfn">arcsOut</a>(G, n) ∪ <a href="#dfn-arcsin" class="internalDFN" data-link-type="dfn">arcsIn</a>(G, n)</span>
+        <span class="math"><dfn data-dfn-type="dfn" id="dfn-neigh">neigh</dfn>(G, n)</span> is the neighbourhood of the <a href="#dfn-node" class="internalDFN" data-link-type="dfn">node</a> <span class="math">n</span> in the <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> <span class="math">G</span>.<br><span class="math"><a href="#dfn-neigh" class="internalDFN" data-link-type="dfn">neigh</a>(G, n) = <a href="#dfn-arcsout" class="internalDFN" data-link-type="dfn">arcsOut</a>(G, n) ∪ <a href="#dfn-arcsin" class="internalDFN" data-link-type="dfn">arcsIn</a>(G, n)</span>
       </li>
       <li>
         <span class="math"><dfn data-dfn-type="dfn" id="dfn-predicates">predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate" href="#dfn-predicates" class="internalDFN" data-link-type="dfn">predicates</a> in <span class="math"><a href="#dfn-neigh" class="internalDFN" data-link-type="dfn">neigh</a>(G, n)</span>.<br><span class="math"><a href="#dfn-predicates" class="internalDFN" data-link-type="dfn">predicates</a>(G, n) = <a href="#dfn-predicatesout" class="internalDFN" data-link-type="dfn">predicatesOut</a>(G, n) ∪ <a href="#dfn-predicatesin" class="internalDFN" data-link-type="dfn">predicatesIn</a>(G, n)</span>
@@ -1515,7 +1515,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
     <div class="example">
       <p>
-        Consider the <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">RDF graph</a> <span class="math">G</span> represented in Turtle:
+        Consider the <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">RDF graph</a> <span class="math">G</span> represented in Turtle:
       </p>
 
       <pre class="graph hljs undefined" aria-busy="false" aria-live="polite">PREFIX ex: http://schema.example/
@@ -1578,7 +1578,7 @@ _:User2
     <h2 id="h-shapes-language" resource="#h-shapes-language"><span property="xhv:role" resource="xhv:heading"><span class="secno">5. </span>The Shape Expressions Language</span>
     </h2>
     <p>
-      A Shape Expressions (ShEx) schema is a collection of labeled <a data-lt="shape" href="#dfn-shapes" class="internalDFN" data-link-type="dfn">Shapes</a> and <a href="#node-constraints">Node Constraints</a>. These can be used to describe or test nodes in <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">RDF graphs</a>. ShEx does not prescribe a language for associating <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-node">nodes</a> with <a data-lt="shape" href="#dfn-shapes" class="internalDFN" data-link-type="dfn">shapes</a> but several approaches are <a href="../primer/index.html#associating-nodes-with-shapes">described in the ShEx Primer</a>.
+      A Shape Expressions (ShEx) schema is a collection of labeled <a data-lt="shape" href="#dfn-shapes" class="internalDFN" data-link-type="dfn">Shapes</a> and <a href="#node-constraints">Node Constraints</a>. These can be used to describe or test nodes in <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">RDF graphs</a>. ShEx does not prescribe a language for associating <a href="#dfn-node" class="internalDFN" data-link-type="dfn">nodes</a> with <a data-lt="shape" href="#dfn-shapes" class="internalDFN" data-link-type="dfn">shapes</a> but several approaches are <a href="../primer/index.html#associating-nodes-with-shapes">described in the ShEx Primer</a>.
     </p>
 
     <section id="shapes-schema" typeof="bibo:Chapter" resource="#shapes-schema" property="bibo:hasPart">
@@ -1655,7 +1655,7 @@ _:User2
         <div class="note-title marker" aria-level="4" role="heading" id="h-note1"><span>Note</span></div>
         <div class="">
           <p>
-            Validation of a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> <span class="math">G</span> does not necessarily require the construction of a <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">ShapeMap</a> with every node in <span class="math">G</span>. The validation semantics defined below imply a set of dependencies for validating some node as a shape. A validation process that tests every <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-node">node</a> in a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> against every <a href="#dfn-shape" class="internalDFN" data-link-type="dfn">shape</a> in a <a href="#dfn-schema" class="internalDFN" data-link-type="dfn">schema</a> can be considered to have an input <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">ShapeMap</a> associating each node with the set of all shapes in the schema.
+            Validation of a <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> <span class="math">G</span> does not necessarily require the construction of a <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">ShapeMap</a> with every node in <span class="math">G</span>. The validation semantics defined below imply a set of dependencies for validating some node as a shape. A validation process that tests every <a href="#dfn-node" class="internalDFN" data-link-type="dfn">node</a> in a <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> against every <a href="#dfn-shape" class="internalDFN" data-link-type="dfn">shape</a> in a <a href="#dfn-schema" class="internalDFN" data-link-type="dfn">schema</a> can be considered to have an input <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">ShapeMap</a> associating each node with the set of all shapes in the schema.
           </p>
           <p>
             The semantics of ShEx are independent from the construction of an input <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">ShapeMap</a>.
@@ -1731,7 +1731,7 @@ _:User2
               <tr class="nob">
                 <th class="nob"><dfn data-dfn-type="dfn" id="dfn-shapeexprlabel">shapeExprLabel</dfn></th>
                 <td>=</td>
-                <td><a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a> | <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#blank-node">BNODE</a> ;</td>
+                <td><a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a> | <a href="#dfn-bnode" class="internalDFN" data-link-type="dfn">BNODE</a> ;</td>
               </tr>
             </tbody>
           </table>
@@ -1767,7 +1767,7 @@ _:User2
         <h4 id="h-shape-expression-semantics" resource="#h-shape-expression-semantics"><span property="xhv:role" resource="xhv:heading"><span class="secno">5.3.2 </span>Semantics</span>
         </h4>
         <p>
-          <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that a node <span class="math">n</span> and <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> <span class="math">G</span> satisfy a <a href="#dfn-shape-expression" class="internalDFN" data-link-type="dfn">shape expression</a> <span class="math">se</span> with <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">shapeMap</a> <span class="math">m</span>.<br>
+          <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that a node <span class="math">n</span> and <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> <span class="math">G</span> satisfy a <a href="#dfn-shape-expression" class="internalDFN" data-link-type="dfn">shape expression</a> <span class="math">se</span> with <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">shapeMap</a> <span class="math">m</span>.<br>
           <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that <span class="math">n</span> and <span class="math">G</span> do not satisfy <span class="math">se</span> with the given <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">shapeMap</a> <span class="math">m</span>.
           <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">_</span>)</code> indicates that no <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">shapeMap</a> would allow <span class="math">n</span> and <span class="math">G</span> to satisfy <span class="math">se</span>.
         </p>
@@ -1776,7 +1776,7 @@ _:User2
         </p>
 
         <ul>
-          <li id="satisfies-NodeConstraint"><span class="math">Se</span> is a <span class="jobjref"><a class="obj internalDFN" href="#dfn-nodeconstraint" data-link-type="dfn">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<span class="math">n</span>, <span class="math">se</span>)</code> as described below in <a href="#node-constraints">Node Constraints</a>. Note that testing if a node satisfies a node constraint does not require a <a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph">graph</a> or <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">shapeMap</a>.</li>
+          <li id="satisfies-NodeConstraint"><span class="math">Se</span> is a <span class="jobjref"><a class="obj internalDFN" href="#dfn-nodeconstraint" data-link-type="dfn">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<span class="math">n</span>, <span class="math">se</span>)</code> as described below in <a href="#node-constraints">Node Constraints</a>. Note that testing if a node satisfies a node constraint does not require a <a href="#dfn-graph" class="internalDFN" data-link-type="dfn">graph</a> or <a href="#dfn-shapemap" class="internalDFN" data-link-type="dfn">shapeMap</a>.</li>
           <li id="satisfies-Shape-proxy"><span class="math">Se</span> is a <span class="jobjref"><a class="obj internalDFN" href="#dfn-shape" data-link-type="dfn">Shape</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
           <li id="satisfies-ShapeOr"><span class="math">Se</span> is a <span class="jobjref"><a class="obj internalDFN" href="#dfn-shapeor" data-link-type="dfn">ShapeOr</a></span> and there is some <a href="#dfn-shape-expression" class="internalDFN" data-link-type="dfn">shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
           <li id="satisfies-ShapeAnd"><span class="math">Se</span> is a <span class="jobjref"><a class="obj internalDFN" href="#dfn-shapeand" data-link-type="dfn">ShapeAnd</a></span> and for every <a href="#dfn-shape-expression" class="internalDFN" data-link-type="dfn">shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
@@ -1858,7 +1858,7 @@ _:User2
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-nodeconstraint">NodeConstraint</dfn></th>
               <td>{</td>
-              <td><span class="param">id</span>:<a class="nobref internalDFN" href="#dfn-shapeexprlabel" data-link-type="dfn">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a>? <a class="nobref internalDFN" href="#dfn-xsfacet" data-link-type="dfn">xsFacet</a>* <span class="param">values</span>:[<a class="nobref internalDFN" href="#dfn-valuesetvalue" data-link-type="dfn">valueSetValue</a>]? }</td>
+              <td><span class="param">id</span>:<a class="nobref internalDFN" href="#dfn-shapeexprlabel" data-link-type="dfn">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a>? <a class="nobref internalDFN" href="#dfn-xsfacet" data-link-type="dfn">xsFacet</a>* <span class="param">values</span>:[<a class="nobref internalDFN" href="#dfn-valuesetvalue" data-link-type="dfn">valueSetValue</a>]? }</td>
             </tr>
             <tr class="nob">
               <th class="nob"><dfn data-dfn-type="dfn" id="dfn-xsfacet">xsFacet</dfn></th>
@@ -1893,37 +1893,37 @@ _:User2
             <tr class="nob">
               <th class="nob"><dfn data-dfn-type="dfn" id="dfn-objectvalue">objectValue</dfn></th>
               <td>=</td>
-              <td><a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a> | <a class="objref" data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-literal">ObjectLiteral</a> ;</td>
+              <td><a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a> | <a class="objref internalDFN" href="#dfn-objectliteral" data-link-type="dfn">ObjectLiteral</a> ;</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-iristem">IRIStem</dfn></th>
               <td>{</td>
-              <td><span class="param">stem</span>:<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a> }</td>
+              <td><span class="param">stem</span>:<a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a> }</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-iristemrange">IRIStemRange</dfn></th>
               <td>{</td>
-              <td><span class="param">stem</span>:(<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a> | <a class="objref internalDFN" href="#dfn-wildcard" data-link-type="dfn">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref internalDFN" href="#dfn-objectvalue" data-link-type="dfn">objectValue</a>|<a class="objref internalDFN" href="#dfn-iristem" data-link-type="dfn">IRIStem</a> +]? }</td>
+              <td><span class="param">stem</span>:(<a href="#dfn-iri" class="internalDFN" data-link-type="dfn">IRI</a> | <a class="objref internalDFN" href="#dfn-wildcard" data-link-type="dfn">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref internalDFN" href="#dfn-objectvalue" data-link-type="dfn">objectValue</a>|<a class="objref internalDFN" href="#dfn-iristem" data-link-type="dfn">IRIStem</a> +]? }</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-literalstem">LiteralStem</dfn></th>
               <td>{</td>
-              <td><span class="param">stem</span>:<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-literal">ObjectLiteral</a> }</td>
+              <td><span class="param">stem</span>:<a href="#dfn-objectliteral" class="internalDFN" data-link-type="dfn">ObjectLiteral</a> }</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-literalstemrange">LiteralStemRange</dfn></th>
               <td>{</td>
-              <td><span class="param">stem</span>:(<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-literal">ObjectLiteral</a> | <a class="objref internalDFN" href="#dfn-wildcard" data-link-type="dfn">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref internalDFN" href="#dfn-objectvalue" data-link-type="dfn">objectValue</a>|<a class="objref internalDFN" href="#dfn-literalstem" data-link-type="dfn">LiteralStem</a> +]? }</td>
+              <td><span class="param">stem</span>:(<a href="#dfn-objectliteral" class="internalDFN" data-link-type="dfn">ObjectLiteral</a> | <a class="objref internalDFN" href="#dfn-wildcard" data-link-type="dfn">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref internalDFN" href="#dfn-objectvalue" data-link-type="dfn">objectValue</a>|<a class="objref internalDFN" href="#dfn-literalstem" data-link-type="dfn">LiteralStem</a> +]? }</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-languagestem">LanguageStem</dfn></th>
               <td>{</td>
-              <td><span class="param">stem</span>:<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-literal">ObjectLiteral</a> }</td>
+              <td><span class="param">stem</span>:<a href="#dfn-objectliteral" class="internalDFN" data-link-type="dfn">ObjectLiteral</a> }</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-languagestemrange">LanguageStemRange</dfn></th>
               <td>{</td>
-              <td><span class="param">stem</span>:(<a data-link-type="dfn" href="https://www.w3.org/TR/rdf11-concepts/#dfn-literal">ObjectLiteral</a> | <a class="objref internalDFN" href="#dfn-wildcard" data-link-type="dfn">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref internalDFN" href="#dfn-objectvalue" data-link-type="dfn">objectValue</a>|<a class="objref internalDFN" href="#dfn-languagestem" data-link-type="dfn">LanguageStem</a> +]? }</td>
+              <td><span class="param">stem</span>:(<a href="#dfn-objectliteral" class="internalDFN" data-link-type="dfn">ObjectLiteral</a> | <a class="objref internalDFN" href="#dfn-wildcard" data-link-type="dfn">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref internalDFN" href="#dfn-objectvalue" data-link-type="dfn">objectValue</a>|<a class="objref internalDFN" href="#dfn-languagestem" data-link-type="dfn">LanguageStem</a> +]? }</td>
             </tr>
             <tr class="obj">
               <th class="obj"><dfn data-dfn-type="dfn" id="dfn-wildcard">Wildcard</dfn></th>
@@ -6938,7 +6938,7 @@ start=@<span class="hljs-tag">&lt;<span class="hljs-name">Schema</span>&gt;</spa
 }
 
 <span class="hljs-tag">&lt;<span class="hljs-name">NodeConstraint</span>&gt;</span> CLOSED {
-  a [sx:NodeConstraint] ; 
+  a [sx:NodeConstraint] ;
   sx:nodeKind [sx:iri sx:bnode sx:literal sx:nonliteral]?;
   sx:datatype IRI ? ;
   &amp;<span class="hljs-tag">&lt;<span class="hljs-name">xsFacets</span>&gt;</span>  ;
@@ -6989,13 +6989,25 @@ start=@<span class="hljs-tag">&lt;<span class="hljs-name">Schema</span>&gt;</spa
 }
 <span class="hljs-tag">&lt;<span class="hljs-name">numericLiteral</span>&gt;</span> xsd:integer OR xsd:decimal OR xsd:double
 
-<span class="hljs-tag">&lt;<span class="hljs-name">valueSetValue</span>&gt;</span> @<span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">Stem</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">StemRange</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">valueSetValue</span>&gt;</span> @<span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">IriStem</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">IriStemRange</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">LiteralStem</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">LiteralStemRange</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">LanguageStem</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">LanguageStemRange</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> IRI OR LITERAL # rdf:langString breaks on Annotation.object
-<span class="hljs-tag">&lt;<span class="hljs-name">Stem</span>&gt;</span> CLOSED { a [sx:Stem]; sx:stem xsd:anyUri }
-<span class="hljs-tag">&lt;<span class="hljs-name">StemRange</span>&gt;</span> CLOSED {
-  a [sx:StemRange];
+<span class="hljs-tag">&lt;<span class="hljs-name">IriStem</span>&gt;</span> CLOSED { a [sx:IriStem]; sx:stem xsd:anyUri }
+<span class="hljs-tag">&lt;<span class="hljs-name">IriStemRange</span>&gt;</span> CLOSED {
+  a [sx:IriStemRange];
   sx:stem xsd:anyUri OR @<span class="hljs-tag">&lt;<span class="hljs-name">Wildcard</span>&gt;</span>;
-  sx:exclusion @<span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">Stem</span>&gt;</span>*
+  sx:exclusion @<span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">IriStem</span>&gt;</span>*
+}
+<span class="hljs-tag">&lt;<span class="hljs-name">LiteralStem</span>&gt;</span> CLOSED { a [sx:LiteralStem]; sx:stem xsd:string }
+<span class="hljs-tag">&lt;<span class="hljs-name">LiteralStemRange</span>&gt;</span> CLOSED {
+  a [sx:LiteralStemRange];
+  sx:stem xsd:string OR @<span class="hljs-tag">&lt;<span class="hljs-name">Wildcard</span>&gt;</span>;
+  sx:exclusion @<span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">LiteralStem</span>&gt;</span>*
+}
+<span class="hljs-tag">&lt;<span class="hljs-name">LanguageStem</span>&gt;</span> CLOSED { a [sx:LanguageStem]; sx:stem xsd:string }
+<span class="hljs-tag">&lt;<span class="hljs-name">LanguageStemRange</span>&gt;</span> CLOSED {
+  a [sx:LanguageStemRange];
+  sx:stem xsd:string OR @<span class="hljs-tag">&lt;<span class="hljs-name">Wildcard</span>&gt;</span>;
+  sx:exclusion @<span class="hljs-tag">&lt;<span class="hljs-name">objectValue</span>&gt;</span> OR @<span class="hljs-tag">&lt;<span class="hljs-name">LanguageStem</span>&gt;</span>*
 }
 <span class="hljs-tag">&lt;<span class="hljs-name">Wildcard</span>&gt;</span> BNODE CLOSED {
   a [sx:Wildcard]
