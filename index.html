@@ -129,7 +129,7 @@
     <section id="notation">
       <h2>Notation</h2>
       <p>
-        The JSON[[!rfc4627]] Syntax serves as a serializable proxy for an abstract syntax.
+        The JSON [[!rfc4627]] Syntax serves as a serializable proxy for an abstract syntax.
         This specification uses a simple grammar to describe the set of JSON documents that can be interpreted as a ShEx schema.
       </p>
       <ul>
@@ -289,7 +289,7 @@
 
     <section id="terminology">
       <h2>Terminology</h2>
-      <p>Shape expressions are defined using terms from RDF semantics[[!rdf11-mt]]:</p>
+      <p>Shape expressions are defined using terms from RDF semantics [[!rdf11-mt]]:</p>
       <ul>
         <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <a>IRI</a>, <dfn data-cite="rdf11-concepts#dfn-blank-node">blank node</dfn>, <a>Literal</a></li>
         <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
@@ -822,7 +822,7 @@ _:User2
           <table>
             <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
+            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedBy</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
           </table>
         </div>
 
