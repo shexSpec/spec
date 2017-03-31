@@ -29,7 +29,7 @@ start=@<Schema>
 }
 
 <NodeConstraint> CLOSED {
-  a [sx:NodeConstraint] ; 
+  a [sx:NodeConstraint] ;
   sx:nodeKind [sx:iri sx:bnode sx:literal sx:nonliteral]?;
   sx:datatype IRI ? ;
   &<xsFacets>  ;
@@ -80,13 +80,25 @@ start=@<Schema>
 }
 <numericLiteral> xsd:integer OR xsd:decimal OR xsd:double
 
-<valueSetValue> @<objectValue> OR @<Stem> OR @<StemRange>
+<valueSetValue> @<objectValue> OR @<IriStem> OR @<IriStemRange> OR @<LiteralStem> OR @<LiteralStemRange> OR @<LanguageStem> OR @<LanguageStemRange>
 <objectValue> IRI OR LITERAL # rdf:langString breaks on Annotation.object
-<Stem> CLOSED { a [sx:Stem]; sx:stem xsd:anyUri }
-<StemRange> CLOSED {
-  a [sx:StemRange];
+<IriStem> CLOSED { a [sx:IriStem]; sx:stem xsd:anyUri }
+<IriStemRange> CLOSED {
+  a [sx:IriStemRange];
   sx:stem xsd:anyUri OR @<Wildcard>;
-  sx:exclusion @<objectValue> OR @<Stem>*
+  sx:exclusion @<objectValue> OR @<IriStem>*
+}
+<LiteralStem> CLOSED { a [sx:LiteralStem]; sx:stem xsd:string }
+<LiteralStemRange> CLOSED {
+  a [sx:LiteralStemRange];
+  sx:stem xsd:string OR @<Wildcard>;
+  sx:exclusion @<objectValue> OR @<LiteralStem>*
+}
+<LanguageStem> CLOSED { a [sx:LanguageStem]; sx:stem xsd:string }
+<LanguageStemRange> CLOSED {
+  a [sx:LanguageStemRange];
+  sx:stem xsd:string OR @<Wildcard>;
+  sx:exclusion @<objectValue> OR @<LanguageStem>*
 }
 <Wildcard> BNODE CLOSED {
   a [sx:Wildcard]
