@@ -80,7 +80,9 @@ start=@<Schema>
 }
 <numericLiteral> xsd:integer OR xsd:decimal OR xsd:double
 
-<valueSetValue> @<objectValue> OR @<IriStem> OR @<IriStemRange> OR @<LiteralStem> OR @<LiteralStemRange> OR @<LanguageStem> OR @<LanguageStemRange>
+<valueSetValue> @<objectValue> OR @<IriStem> OR @<IriStemRange>
+                               OR @<LiteralStem> OR @<LiteralStemRange>
+                               OR @<LanguageStem> OR @<LanguageStemRange>
 <objectValue> IRI OR LITERAL # rdf:langString breaks on Annotation.object
 <IriStem> CLOSED { a [sx:IriStem]; sx:stem xsd:anyUri }
 <IriStemRange> CLOSED {
