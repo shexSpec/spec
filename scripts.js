@@ -44,8 +44,26 @@ function updateExample(doc, content) {
   return utils.xmlEscape(content);
 }
 
+function toggleGrammar() {
+  const labels = [
+    "Display grammar only", "Display semantic actions"
+  ];
+  var state = labels.indexOf($("#toggleGrammar").text());
+  var sel = $(".grammarTable tr").not($("tr[style='vertical-align: baseline']"));
+  if (state === 0) {
+    state = 1;
+    sel.hide();
+  } else {
+    state = 0;
+    sel.show();
+  }
+  $("#toggleGrammar").text(labels[state]);
+  return false;
+}
+
 $(document).ready(function () {
   chooseRep($(".repchoice"), "json");
+  $("#toggleGrammar").on("click", toggleGrammar);
   $("body").keydown(function (evt) {
     var toHide, toShow;
     switch (evt.keyCode) {

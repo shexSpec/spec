@@ -218,7 +218,7 @@
       .fail { background-color: #fcc; }
       span.fail { background-color: #fcc; }
 
-      .param { color: #630; }
+      .param, a[href].param { color: #630; }
       .var { color: #056800; }
       .rdf { border-left: thick solid #77f; padding-left: .5em; }
 
@@ -408,3 +408,7 @@ ol.algorithm li:before {
   counter-increment: numsection;
   content: counters(numsection, ".") ") ";
 }
+
+/* simupre (ab)uses respec's willingness to dive into non-<pre/>s */
+.simupre { white-space: pre; font-family: monospace; }
+

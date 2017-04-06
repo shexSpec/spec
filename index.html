@@ -166,33 +166,30 @@
       <p>
         Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
         Pressing "j" or "c" converts all such examples to the JSON or compact form.
+      </p>
+      <p>
+        The following examples are excerpts from the definitions below.
         In the JSON notation,
       </p>
 
-      <div class="shexj">
-        <pre><a class="obj">Schema</a> { <a class="param">startActs</a>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</pre>
-      </div>
+      <div class="shexj simupre"><a class="obj">Schema</a> { <a class="param">startActs</a>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</div>
       <p>
         signifies that a <code>Schema</code> has three optional components called <a class="param">startActs</a>, <a class="param">start</a> and <a class="param">shapes</a>:
       </p>
       <ul>
-        <li><dfn class="param">startActs</dfn> is a list of <a class="objref">SemAct</a>.</li>
-        <li><dfn class="param">start</dfn> is a <a class="objref">shapeExpr</a>.</li>
-        <li><dfn class="param">shapes</dfn> is an array of <a class="nobref">shapeExpr</a>.</li>
+        <li><span class="param">startActs</span> is a list of <a class="objref">SemAct</a>.</li>
+        <li><span class="param">start</span> is a <a class="objref">shapeExpr</a>.</li>
+        <li><span class="param">shapes</span> is an array of <a class="nobref">shapeExpr</a>.</li>
       </ul>
 
-      <div class="shexj">
-        <pre><a class="nob">shapeExpr</a> = <a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a>
-            | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExternal</a> ;</pre>
-      </div>
+      <div class="shexj simupre"><a class="nob">shapeExpr</a> = <a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a>
+          | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExternal</a> ;</div>
       <p>
         signifies that a <a>shapeExpr</a> is one of seven object types: <a class="objref .shexj">ShapeOr</a> | <a class="objref">ShapeAnd</a> | ….
       </p>
 
-      <div class="shexj">
-        <pre><a class="obj">NodeConstraint</a> { <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <a class="nobref">xsFacet</a>* }
-       <a class="nob">xsFacet</a> = <a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</pre>
-      </div>
+      <div class="shexj simupre"><a class="obj">NodeConstraint</a> { <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <a class="nobref">xsFacet</a>* }
+<a class="nob">xsFacet</a>        = <a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</div>
       <p>
         signifies that a <code>NodeConstraint</code> has a <code class="param">nodeKind</code> of one of the four literals followed by any number of <a class="objref .shexj">xsFacet</a> and an <a class="objref .shexj">xsFacet</a> is either a <a class="objref .shexj">stringFacet</a> or a <a class="objref .shexj">numericFacet</a>.
       </p>
@@ -203,21 +200,17 @@
           <a>ShExJ</a> is a dialect of JSON-LD [[!JSON-LD]] and the member <code>id</code> is used as a <a data-cite="JSON-LD#node-identifiers">node identifier</a>.
           An object may be represented inline or referenced by its <code>id</code> which may be either a <a>blank node</a> or an <a>IRI</a>.
         </p>
-        <div class="shexj">
-          <pre> <a class="obj">ShapeOr</a>         { id:shapeExprLabel? shapeExprs:[shapeExpr] }
- <a class="nob">shapeExprLabel</a>  = <a class="objref">IRI</a> | <a class="objref">BNODE</a> ;
- <a class="obj">EachOf</a>          { id:tripleExprLabel? expressions:[tripleExpr] ... }
- <a class="nob">tripleExprLabel</a> = <a>IRI</a> | <a>BNODE</a> ;</pre>
-        </div>
+        <div class="shexj simupre"><a class="obj">ShapeOr</a>         { <a class="param">id</a>:<a class="nobjref">shapeExprLabel</a>? <dfn class="param">shapeExprs</dfn>:[<a class="nobjref">shapeExpr</a>] }
+<a class="nob">shapeExprLabel</a>  = <a class="objref">IRI</a> | <a class="objref">BNODE</a> ;
+<a class="obj">EachOf</a>          { <a class="param">id</a>:<a class="nobjref">tripleExprLabel</a>? <dfn class="param">expressions</dfn>:[<a class="nobjref">tripleExpr</a>] ... }
+<a class="nob">tripleExprLabel</a> = <a>IRI</a> | <a>BNODE</a> ;</div>
         <p>
           The JSON structure may include references to <a data-lt="shape">shapes</a> and <a>triples</a>:
         </p>
-        <div class="shexj">
-          <pre> shapeExpr     = ShapeOr | ... | shapeExprRef ;
- <a class="nob">shapeExprRef</a>  = <a class="objref">shapeExprLabel</a> ;
- tripleExpr    = EachOf | ... | tripleExprRef ;
- <a class="nob">tripleExprRef</a> = <a class="objref">tripleExprLabel</a> ;</pre>
-        </div>
+        <div class="shexj simupre"><a class="obj">shapeExpr</a>     = <a class="objref">ShapeOr</a> | ... | <a class="nobjref">shapeExprRef</a> ;
+<a class="nob">shapeExprRef</a>  = <a class="nobjref">shapeExprLabel</a> ;
+<a class="nobjref">tripleExpr</a>    = <a class="objref">EachOf</a> | ... | <a class="nobjref">tripleExprRef</a> ;
+<a class="nob">tripleExprRef</a> = <a class="objref">tripleExprLabel</a> ;</div>
         <p>
           An object with a circular reference must be referenced by id.
           This example uses a nested shape reference on a value expression (<a data-lt="TripleConstraint">defined below</a>).
@@ -229,6 +222,10 @@
         "type": "TripleConstraint", "predicate": "http://schema.example/related",
         "valueExpr": "<span class="lookit">http://schema.example/IssueShape</span>", min: 0 } } ] }</pre>
         </div>
+        <p>
+          Not captured in this JSON syntax definition is the rule that every <a class="nobjref">shapeExpr</a> referenced by a schema's <a class="param">shapes</a> must have an <dfn class="param">id</dfn> and no other <a class="nobjref">shapeExpr</a> may have an <a>id</a>.
+          The JSON syntax definitition simplifies this by adding <span style="border: thin solid #888888; background-color: #F8F8F0;"><a class="param">id</a>:<a class="nobjref">shapeExprLabel</a>?</span> to every <a class="nobjref">shapeExpr</a>.
+        </p>
       </section>  
       <section id="style">
         <h3>Document style</h3>
@@ -412,7 +409,7 @@ _:User2
       </p>
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><span class="param">startActs</span>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
         </table>
       </div>
       <p>
@@ -3158,11 +3155,6 @@ PREFIX ex: &lt;http://schema.example/&gt;
     <section id="shexc">
       <h2>ShEx Compact syntax (ShExC)</h2>
       <div>
-      <div class="grammarTable">
-<table style="border: 0; border-top: thick solid white; ">
-
-<tbody class="grammarParagraph">
-  <tr><td colspan="4">
     <p>
       The ShEx Compact Syntax expresses ShEx schemas in a compact, human-friendly form.
       Parsing <dfn>ShExC</dfn> transforms a <a>ShExC</a> document into an equivalent <a>ShExJ</a> structure.
@@ -3170,9 +3162,14 @@ PREFIX ex: &lt;http://schema.example/&gt;
       For example, "<span style="font-family: monospace; ">shapeExprDecl returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span></span>" indicates that the result of matching the <code>shapeExprDecl</code> production is the object produced by parsing the <code>shapeExpression</code> production.
     </p>
     <p>
+      Semantic actions before the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span> are <span class="param"><a>startActs</a></span>.
+      After the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span>, semantic actions are associated with the previous declaration.
     </p>
-  </td></tr>
-</tbody>
+    <p>
+      <button id="toggleGrammar">Display grammar only</button>
+    </p>
+      <div class="grammarTable">
+<table style="border: 0; border-top: thick solid white; ">
 
 <tbody class="prod" style="">
   <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="xml#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
@@ -3182,12 +3179,13 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
-  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated <a>ShExJ</a> object:</td></tr>
+  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated <a>ShExJ</a> object(s):</td></tr>
 <tr class="obj"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td><a class="obj">Schema</a></td><td>{</td><td>
 <a class="param">startActs</a>:[<a class="objref">SemAct</a>]?
 <a class="param">start</a>:<a class="nobref">shapeExpr</a>?
 <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }
 </td></tr>
+  <tr class="obj"><td></td><td class="obj"><a>SemAct</a></td><td>{</td><td><span class="param">name</span>:<a>IRI</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
   <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the <a>ShExJ</a> object:</td></tr>
   <tr class="params"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td colspan="3"><ul>
 <li><a class="param">startActs</a> comes from <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span> production.</li>
@@ -3196,10 +3194,6 @@ PREFIX ex: &lt;http://schema.example/&gt;
   </ul></td></tr>
 </tbody>
 </table>
-    <p>
-      Semantic actions before the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span> are <span class="param"><a>startActs</a></span>.
-      After the first <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shape expression declaration</a></span>, semantic actions are associated with the previous declaration.
-    </p>
 <table>
   <tbody>
 <tr style="vertical-align: baseline">
@@ -3251,7 +3245,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span> (<span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> | "EXTERNAL")</code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If the "<code>EXTERNAL</code>" keyword is present, <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> returns a <a class="obj">ShapeExternal</a> object:</td></tr>
-  <tr class="obj"><td></td><td><a class="obj">ShapeExternal</a></td><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">ShapeExternal</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? }</td></tr>
   <tr class="params"><td></td><td colspan="3">otherwise <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> returns <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span>.</td></tr>
 </tbody>
 
@@ -3301,7 +3295,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <tr class="params"><td></td><td colspan="3">
 If the right <a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a> matches one or more times, the result is a <a class="obj">ShapeOr</a> object with <span class="param">shapeExprs</span> containing the first <a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a> followed by the ordered list from the second <a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a>:
 </td></tr>
-<tr class="obj"><td></td><td><a class="obj">ShapeOr</a></td><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
+<tr class="obj"><td></td><td><a class="obj">ShapeOr</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
 <tr class="params"><td></td><td colspan="3">
 otherwise the result is the left <a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a>.
 </td></tr>
@@ -3320,7 +3314,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-shapeAnd">sha
 <tr class="params"><td></td><td colspan="3">
 If the right <a class="grammarRef" href="#prod-shapeNot">shapeNot</a> matches one or more times, the result is a <a class="obj">ShapeAnd</a> object with <span class="param">shapeExprs</span> containing the first <a class="grammarRef" href="#prod-shapeNot">shapeNot</a> followed by the ordered list from the second <a class="grammarRef" href="#prod-shapeNot">shapeNot</a>:
 </td></tr>
-<tr class="obj"><td></td><td><a class="obj">ShapeAnd</a></td><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
+<tr class="obj"><td></td><td><a class="obj">ShapeAnd</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>] }</td></tr>
 <tr class="params"><td></td><td colspan="3">
 otherwise the result is the left <a class="grammarRef" href="#prod-shapeNot">shapeNot</a>.
 </td></tr>
@@ -3338,7 +3332,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-shapeNot">sha
 </tr>
 <tr class="params"><td></td><td colspan="3">
 If the left "<code>NOT</code>" matches, the result is a <a class="obj">ShapeNot</a> object with <span class="param">shapeExpr</span> containing the <a class="grammarRef" href="#prod-shapeAtom">shapeAtom</a>:</td></tr>
-<tr class="obj"><td></td><td><a class="obj">ShapeNot</a></td><td>{</td><td><span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
+<tr class="obj"><td></td><td><a class="obj">ShapeNot</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
 <tr class="params"><td></td><td colspan="3">
 otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAtom</a>.
 </td></tr>
@@ -3531,6 +3525,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? -->
 <span class="param">annotations</span>:[<a class="objref">Annotation</a>]?
 <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? }</td></tr>
+  <tr class="obj"><td></td><td class="obj"><a>Annotation</a></td><td>{</td><td><span class="param"><a>predicate</a></span>:<a>IRI</a> <span class="param">object</span>:<a class="nobref">objectValue</a> }</td></tr>
   <tr class="params"><td></td><td colspan="3"><ul>
   <li><span class="param">closed</span> is true if the "<code>CLOSED</code>" choice was matched one or more times.</li>
   <li><span class="param">extra</span> is the set of IRIs matching the <a class="grammarRef" href="#prod-extraPropertySet">extraPropertySet</a> production.</li>
@@ -3580,7 +3575,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <tr class="params"><td></td><td colspan="3">
 If the right <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a> matches one or more times, the result is a <a class="obj">OneOf</a> object with <span class="param">expressions</span> containing the first <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a> followed by the ordered list from the second <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a>:
 </td></tr>
-<tr class="obj"><td></td><td><a class="obj">OneOf</a></td><td>{</td><td><span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>] }</td></tr>
+<tr class="obj"><td></td><td class="obj"><a>OneOf</a></td>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>]? }</td></tr>
 <tr class="params"><td></td><td colspan="3">
 otherwise the result is the left <a class="grammarRef" href="#prod-groupTripleExpr">groupTripleExpr</a>.
 </td></tr>
@@ -3623,7 +3618,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-groupTripleEx
 <tr class="params"><td></td><td colspan="3">
 If the right <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a> matches one or more times, the result is a <a class="obj">EachOf</a> object with <span class="param">expressions</span> containing the first <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a> followed by the ordered list from the second <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a>:
 </td></tr>
-<tr class="obj"><td></td><td><a class="obj">EachOf</a></td><td>{</td><td><span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>] }</td></tr>
+<tr class="obj"><td></td><td class="obj"><a>EachOf</a></td>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>]? }</td></tr>
 <tr class="params"><td></td><td colspan="3">
 otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleExpr">unaryTripleExpr</a>.
 </td></tr>
@@ -3757,7 +3752,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> matches with no "<code>~</code>", literalRange returns <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span>.</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-literalExclusion">literalExclusion</a></span>, literalRange returns a <a class="obj">LiteralStem</a> object:</td></tr>
-  <tr class="obj"><td></td><td><a class="obj">LiteralStem</a></td><td>{</td><td><span class="param">stem</span>:<a>IRI</a> }</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">LiteralStem</a></td><td>{</td><td><span class="param">stem</span>:<a>objectLiteral</a> }</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> and "<code>~</code>" match and <span class="prod"><a class="grammarRef" href="#prod-literalExclusion">literalExclusion</a></span> matches one or more times, literalRange returns a <a class="obj">LiteralStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-literalExclusion">literalExclusion</a></span>:</td></tr>
 
 <tr style="vertical-align: baseline">
@@ -3775,7 +3770,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> matches with no "<code>~</code>", languageRange returns <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span>.</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>, languageRange returns a <a class="obj">LanguageStem</a> object:</td></tr>
-  <tr class="obj"><td></td><td><a class="obj">LanguageStem</a></td><td>{</td><td><span class="param">stem</span>:<a>language tag</a> }</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">LanguageStem</a></td><td>{</td><td><span class="param">stem</span>:<a>objectLiteral</a> }</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match and <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span> matches one or more times, languageRange returns a <a class="obj">LanguageStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>:</td></tr>
 
 <tr style="vertical-align: baseline">
@@ -4627,11 +4622,11 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <table class="shexj">
   <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix"></dfn>"@context": "http://www.w3.org/ns/shex.jsonld"<br/><span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExpr</a></th><td>=</td><td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="nobref">shapeExprRef</a> | <a class="objref">ShapeExternal</a> ;</td></tr>
-  <tr class="obj"><th class="obj"><a>ShapeOr</a></th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
-  <tr class="obj"><th class="obj"><a>ShapeAnd</a></th><td>{</td><td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
-  <tr class="obj"><th class="obj"><a>ShapeNot</a></th><td>{</td><td><span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
-  <tr class="obj"><th class="obj"><a>NodeConstraint</a></th><td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRI</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th><td>{</td><td><span class="param">virtual</span>:<a>BOOL</a>? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRI</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]?--> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>ShapeOr</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
+  <tr class="obj"><th class="obj"><a>ShapeAnd</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
+  <tr class="obj"><th class="obj"><a>ShapeNot</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
+  <tr class="obj"><th class="obj"><a>NodeConstraint</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRI</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>?<!-- <span class="param">virtual</span>:<a>BOOL</a>?--> <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRI</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]?--> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? }</td></tr>
   <tr class="obj"><th class="nob"><a>shapeExprRef</a></th><td>=</td><td><a>shapeExprLabel</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeExternal</a></th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExpr</a></th><td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
