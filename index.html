@@ -3171,22 +3171,37 @@ PREFIX ex: &lt;http://schema.example/&gt;
       <div class="grammarTable">
 <table style="border: 0; border-top: thick solid white; ">
 
-<tbody class="prod" style="">
+
+<tbody class="grammarParagraph">
   <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="xml#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
+</tbody>
+<tbody class="prod">
 <tr style="vertical-align: baseline">
 <td id="prod-shexDoc">[<span class="prodNo">1</span>]   </td>
 <td><code class="production prod">shexDoc</code></td>
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-directive">directive</a></span>* ((<span class="prod"><a class="grammarRef" href="#prod-notStartAction">notStartAction</a></span> | <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span>) <span class="prod"><a class="grammarRef" href="#prod-statement">statement</a></span>*)?</code></td>
 </tr>
-  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">followed by the associated <a>ShExJ</a> object(s):</td></tr>
+</tbody>
+<tbody class="grammarParagraph">
+  <tr><td colspan="4" style="padding-top: 2ex; ">followed by the associated <a>ShExJ</a> object(s):</td></tr>
+</tbody>
+
+<tbody class="prod">
 <tr class="obj"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td><a class="obj">Schema</a></td><td>{</td><td>
 <a class="param">startActs</a>:[<a class="objref">SemAct</a>]?
 <a class="param">start</a>:<a class="nobref">shapeExpr</a>?
 <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }
 </td></tr>
   <tr class="obj"><td></td><td class="obj"><a>SemAct</a></td><td>{</td><td><span class="param">name</span>:<a>IRI</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
-  <tr style="border-left: thin solid white; border-right: thin solid white; "><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the <a>ShExJ</a> object:</td></tr>
+</tbody>
+
+<tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
+  <tr><td colspan="4" style="padding-top: 2ex; ">and a description of the mapping of rules in the production to elements of the <a>ShExJ</a> object:</td></tr>
+</tbody>
+
+<tbody class="prod">
   <tr class="params"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td colspan="3"><ul>
 <li><a class="param">startActs</a> comes from <span class="prod"><a class="grammarRef" href="#prod-startActions">startActions</a></span> production.</li>
 <li><a class="param">start</a> comes from the <span class="prod"><a class="grammarRef" href="#prod-start">start</a></span> production.</li>
@@ -3250,6 +3265,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 </tbody>
 
 <tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       Shape expressions are logical combinations of shape atoms.
@@ -3339,6 +3355,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 </tbody>
 
 <tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       Shape atoms are shape references (indicated by "<code>@</code>"), definitions, or nested expressions.
@@ -3418,6 +3435,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 </tbody>
 
 <tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       Node constraints identify a (possibly infinite) set of matching RDF nodes.
@@ -3496,6 +3514,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 </tbody>
 
 <tbody class="grammarParagraph" style="border-left:thin solid white; border-right:thin solid white;">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       Shape defintions associate a <a>triple expression</a> with a closed flag and a list of partially constrained (extra) <a data-lt="predicate">predicates</a>.
@@ -3802,6 +3821,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       Triple expressions can include annotations in the form of a tuple of a <span class="prod"><a class="grammarRef" href="#prod-predicate">predicate</a></span> and an <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> or <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span>.
@@ -3820,6 +3840,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 </tbody>
 
 <tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       Triple expressions can include semantic actions consisting of an <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> and an optional code string.
@@ -3855,6 +3876,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 -->
 
 <tbody class="grammarParagraph">
+  <tr class="borderHack"><td></td><td colspan="3"></td></tr>
   <tr><td colspan="4">
     <p>
       The remaining productions come from the specifications for SPARQL and Turtle.

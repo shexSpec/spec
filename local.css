@@ -282,6 +282,18 @@ div.shexjTable th { text-align: right; }
 
 .label { font-weight: bold; }
 
+.grammarParagraph {
+    font-style: oblique;
+}
+
+/* Embarassing hack to occlude border on first <td/> */
+/* Needed when the previous table ended with an empty 1st <td/> */
+.borderHack {
+    border-bottom: thick solid white !important;
+}
+.borderHack td:nth-child(1) {
+    border-top:none !important;
+}
 
 .code {
   color: #C83500;
