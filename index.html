@@ -792,7 +792,7 @@ _:User2
           <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <span class="math">v &lt;= len</span>,</li>
           <li id="nodeSatisfies-pattern">
             for "<code>pattern</code>" constraints, <span class="math">v</span> is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] <span class="math">re</span> and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">re</span>)</code> returns <code>fn:true</code>.
-            If the <span class="param">flags</span> parameter is present, is it passed as a second argument to <code class="function">fn:matches</code>.
+            If the <span class="param">flags</span> parameter is present, it is passed as a third argument to <code class="function">fn:matches</code>.
             The pattern may have XPath 3.1 regular expression escape sequences per the modified production [10] in <a href="https://www.w3.org/TR/xpath-functions-31/#matching-start-and-end">section 5.6.1.1</a> as well as numeric escape sequences of the form 'u' HEX HEX HEX HEX or 'U' HEX HEX HEX HEX HEX HEX HEX HEX.
             Unescaping replaces numeric escape sequences with the corresponding unicode codepoint.
           </li>
