@@ -792,7 +792,7 @@ _:User2
           <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <span class="math">v &lt;= len</span>,</li>
           <li id="nodeSatisfies-pattern">
             for "<code>pattern</code>" constraints, <span class="math">v</span> is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] <span class="math">re</span> and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">re</span>)</code> returns <code>fn:true</code>.
-            If the <span class="param">flags</span> parameter is present, is it passed as a second argument to <code class="function">fn:matches</code>.
+            If the <span class="param">flags</span> parameter is present, it is passed as a third argument to <code class="function">fn:matches</code>.
             The pattern may have XPath 3.1 regular expression escape sequences per the modified production [10] in <a href="https://www.w3.org/TR/xpath-functions-31/#matching-start-and-end">section 5.6.1.1</a> as well as numeric escape sequences of the form 'u' HEX HEX HEX HEX or 'U' HEX HEX HEX HEX HEX HEX HEX HEX.
             Unescaping replaces numeric escape sequences with the corresponding unicode codepoint.
           </li>
@@ -1699,13 +1699,44 @@ _:User2
       <section id="negation-requirement">
         <h4>Negation Requirement</h4>
         <p>
-          A schema MUST NOT contain any <a>shape expression</a> <span class="math">S</span> with negated references, either directly or transitively, to <span class="math">S</span>.
-        A reference to <span class="math">S</span> is negated if it containes an odd number of nested negations.
-        A nested negation is any of:
-      </p>
+          A schema MUST NOT contain any <a>shapeExpr</a> <span class="param">SE</span> which has a <a>shape</a> which contains a <a>TripleConstraint</a> with negated references, either directly or transitively, to <span class="param">SE</span>.
+        </p>
+        <p class="leadup">The closure of a <a>shapeExpr</a> <span class="param">SE</span> includes every <a>shape</a> <span class="param">S</span> that appears directly or by <a>shapeExprRef</a> in</p>
+        <ul class="followup leadup">
+          <li class="followup leadup"><a>ShapeAnd</a>.<span class="param">shapeExprs</span> or the closure of <a>ShapeAnd</a>.<span class="param">shapeExprs</span> or</li>
+          <li class="followup leadup"><a>ShapeOr</a>.<span class="param">shapeExprs</span> or the closure of <a>ShapeOr</a>.<span class="param">shapeExprs</span> or</li>
+          <li class="followup leadup"><a>ShapeNot</a>.<span class="param">expression</span> or the closure of <a>ShapeNot</a>.<span class="param">shapeExprs</span>.</li>
+        </ul>
+        <p class="followup">
+          If <span class="param">SE</span> is a shape <span class="param">S</span>, the closure of <span class="param">SE</span> is <span class="param">S</span>.
+          A shapeExpr <span class="param">SE</span> <code>contains</code> shape <span class="param">S</span> if <span class="param">S</span> appears in the closure of <span class="param">SE</span>.
+        </p>
+
+        <p class="leadup">The closure of a <a>tripleExpr</a> <span class="param">TE</span> includes every <a>TripleConstraint</a> <span class="param">TC</span> that appears directly or by <a>tripleExprRef</a> in</p>
+        <ul class="followup leadup">
+          <li class="followup leadup"><a>EachOf</a>.<span class="param">tripleExprs</span> or the closure of <a>EachOf</a>.<span class="param">tripleExprs</span> or</li>
+          <li class="followup leadup"><a>OneOf</a>.<span class="param">tripleExprs</span> or the closure of <a>OneOf</a>.<span class="param">tripleExprs</span>.</li>
+        </ul>
+        <p class="followup">
+          If <span class="param">TE</span> is a TripleConstraint <span class="param">TC</span>, the closure of <span class="param">TE</span> is <span class="param">TC</span>.
+          A tripleExpr <span class="param">TE</span> <code>contains</code> TripleConstraint <span class="param">TC</span> if <span class="param">TC</span> appears in the closure of <span class="param">TE</span>.
+        </p>
+
+        <p class="leadup">
+	        A shapeExpr <span class="param">SE<sub>1</sub></span> refers to a shapeExpr <span class="param">SE<sub>2</sub></span> if
+        </p>
+        <ul class="followup">
+          <li class="followup leadup"><span class="param">SE<sub>1</sub></span> contains a shape <span class="param">S</span> and</li>
+          <li class="followup leadup"><span class="param">S</span> has an expression which contains a TripleConstraint <span class="param">TC</span> and</li>
+          <li><span class="param">TC</span> has a valueExpr which contains <span class="param">SE<sub>2</sub></span>.</li>
+        </ul>
+        <p>
+	        A reference of <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> is negated if <span class="param">S</span> appears under an odd number of negations in <span class="param">shapeExpr</span>.
+	        A negated reference is one of the following:
+              </p>
       <ul>
         <li>
-          <p>a <span class="param">shapeExpr</span> in a <span class="jobjref"><a>ShapeNot</a></span></p>
+          <p>a <span class="param">shapeExprRef</span> in a <span class="param">tripleExpr</span> under a <span class="jobjref"><a>ShapeNot</a></span></p>
           <div class="example">
             <p>
               This negated self-reference violates the negation requirement:
@@ -1716,8 +1747,8 @@ _:User2
     "type": "ShapeNot"></span>, "shapeExpr":
       "http://schema.example/#S"
 <span class="lookit">}</span> ] }</pre>
-              <pre class="shexc">                                       
-    ex:S <span class="lookit">NOT</span> @ex:S
+              <pre class="shexc">                                                    
+		ex:S {ex:p NOT @ex:S}<!-- ex:S <span class="lookit">NOT</span> @ex:S -->
 
 
                 </pre>
@@ -1733,14 +1764,34 @@ _:User2
     "http://schema.example/#T": "http://schema.example/#S"
 ] }</pre>
                 <pre class="shexc">                                                          
-    ex:S NOT @ex:T
+    ex:S {ex:p NOT @ex:T} <!-- ex:S NOT @ex:T -->
 
 
-    ex:T @ex:S
+    ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
                 </pre>
               </div>
               <p>
-                This doubly-negated self-reference does not violate the negation requirement:
+                This is a direct negated self-reference of ex:T and violates the negation requirement:
+              </p>
+              <div class="repchoice error">
+                <pre class="json">{ "type": "Schema", "shapes": [
+  { "id": "http://schema.example/#S",
+    "type": "ShapeNot">, "shapeExpr":
+      "http://schema.example/#T" },
+    "http://schema.example/#T": "http://schema.example/#S"
+] }</pre>
+                <pre class="shexc">              
+
+   ex:T {ex:p @ex:S}
+
+   ex:S NOT @ex:T AND @ex:U                                 
+
+   ex:U .
+
+                </pre>
+              </div>
+              <p>
+                This doubly-negated self-reference of ex:T does not violate the negation requirement:
               </p>
               <div class="repchoice">
                 <pre class="json">{ "type": "Schema", "shapes": [
@@ -1752,12 +1803,58 @@ _:User2
             "shapeExpr": "http://schema.example/#S" }
 ] } } ] }</pre>
                 <pre class="shexc">                                                          
-    ex:S NOT (IRI OR NOT @ex:S)
+   ex:T {ex:p @ex:S} <!--     ex:S NOT (IRI OR NOT @ex:S) -->
 
+   ex:S NOT (NOT @ex:T AND @ex:U)                                 
 
+   ex:U .
 
+                </pre>
+              </div>
+              <p>
+		This is a negated self-reference of ex:T (indirectly through ex:U) and violates the negation requirement.
+		More precisely, ex:T refers to the negation of ex:U through NOT @ex:S, and ex:U refers to the negation of ex:T trough ex:S. 
+              </p>
+              <div class="repchoice error">
+                <pre class="json">{ "type": "Schema", "shapes": [
+    { "id": "http://schema.example/#S",
+      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+        "type": "ShapeOr", "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri" },
+          { "type": <span class="lookit">"ShapeNot"</span>,
+            "shapeExpr": "http://schema.example/#S" }
+] } } ] }</pre>
+                <pre class="shexc">                 
 
+   ex:T {ex:p NOT @ex:S}
 
+   ex:U ex:q @ex:S
+ 
+   ex:S NOT @ex:T AND @ex:U                                                  
+    
+
+                </pre>
+              </div>
+              <p>
+		This satisfies the negation requirement, as ex:U does not refer to ex:T (compared to the previous example).
+              </p>
+              <div class="repchoice">
+                <pre class="json">{ "type": "Schema", "shapes": [
+    { "id": "http://schema.example/#S",
+      "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": {
+        "type": "ShapeOr", "shapeExprs": [
+          { "type": "NodeConstraint", "nodeKind": "iri" },
+          { "type": <span class="lookit">"ShapeNot"</span>,
+            "shapeExpr": "http://schema.example/#S" }
+] } } ] }</pre>
+                <pre class="shexc">                 
+
+   ex:T {ex:p NOT @ex:S}
+
+   ex:U {ex:q .}
+
+   ex:S NOT @ex:T AND @ex:U                                                  
+    
                 </pre>
               </div>
           </div>
