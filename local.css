@@ -156,6 +156,16 @@
         line-height: 1.5;
 	display: inline-block;
       }
+      div.repchoice {
+          position: relative;
+      }
+      div.repchoice button {
+          position:absolute;
+          top:0px;
+          right:0px;
+          font-size: 70%;
+          background-color: transparent;
+      }
       div.json pre, div.shexc pre {
 	  margin: 0
       }
@@ -382,27 +392,27 @@ div.shexjTable th { text-align: right; }
     border: medium solid #efe7e7;
 }
 
-.repchosen::before {
-    text-align: right;
-    display: block;
-    font-size: 67%;
-    margin-top: -1ex;
-    margin-bottom: -2ex;
-    margin-right: -.5em; /* @@ would like it to stick out -1em but gives horiz scrollbars */
-}
+/* .repchosen::before { */
+/*     text-align: right; */
+/*     display: block; */
+/*     font-size: 67%; */
+/*     margin-top: -1ex; */
+/*     margin-bottom: -2ex; */
+/*     margin-right: -.5em; /\* @@ would like it to stick out -1em but gives horiz scrollbars *\/ */
+/* } */
 
-.inline .repchosen::before {
-    margin-top: -.2ex;
-    margin-right: 0;
-}
+/* .inline .repchosen::before { */
+/*     margin-top: -.2ex; */
+/*     margin-right: 0; */
+/* } */
 
-.repchosen.json::before {
-    content: "𝙅/c";
-}
+/* .repchosen.json::before { */
+/*     content: "𝙅/c"; */
+/* } */
 
-.repchosen.shexc::before {
-    content: "j/𝗖";
-}
+/* .repchosen.shexc::before { */
+/*     content: "j/𝗖"; */
+/* } */
 
 .rephidden { display: none; }
 

@@ -14,19 +14,53 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
   })
 }
 
-function chooseRep (elts, cls) {
+function prepRep (elts, cls) {
   elts.each(function (idx, container) {
     container = $(container);
-    container.find("> *").each(function (idx, child) {
-      child = $(child);
-      var shown = child.hasClass(cls);
-      child.addClass(shown ? "repchosen" : "rephidden");
-      child.removeClass(shown ? "rephidden" : "repchosen");
-      if (shown)
-        child.on("click", function (evt) {
-          chooseRep(container, cls === "json" ? "shexc" : "json");
-        });
+    var button = $("<button></button>");
+    container.append(button);
+    button.on("click", function (evt) {
+      var next = button.text() === "json" ? "shexc" : "json";
+      chooseRep(container, next);
     });
+    if (true) {
+      var widths = {}, heights = {};
+      ["json", "shexc"].forEach(c => {
+        chooseRep(container, c);
+        var pre = container.find("pre."+c);
+        var bbox = pre.get(0).getBoundingClientRect();
+
+        // var span = $("<span> \n</span>");
+        // pre.append(span);
+        // var w = span.width();
+        // var h = span.height();
+        // span.remove();
+
+        widths[c] = Math.round(bbox.width);
+        heights[c] = Math.round(bbox.height);
+      });
+      if (widths.json !== widths.shexc ||
+          heights.json !== heights.shexc) {
+        console.dir([container.get(0),
+                     widths.json-widths.shexc,
+                     heights.json-heights.shexc]);
+        button.attr("title", ""+(widths.json-widths.shexc)+
+                    ", "+(heights.json-heights.shexc));
+        container.css("border", "thick solid red");
+      }
+    }
+    chooseRep(container, cls);
+  });
+  return 
+}
+function chooseRep (container, cls) {
+  var button = container.find("> button");
+  button.text(cls);
+  container.find("> pre").each(function (idx, child) {
+    child = $(child);
+    var shown = child.hasClass(cls);
+    child.addClass(shown ? "repchosen" : "rephidden");
+    child.removeClass(shown ? "rephidden" : "repchosen");
   });
 }
 
@@ -62,7 +96,7 @@ function toggleGrammar() {
 }
 
 $(document).ready(function () {
-  chooseRep($(".repchoice"), "json");
+  prepRep($(".repchoice"), "json");
   $("#toggleGrammar").on("click", toggleGrammar);
   $("body").keydown(function (evt) {
     var toHide, toShow;
