@@ -67,6 +67,7 @@ function chooseRep (container, cls) {
     child.addClass(shown ? "repchosen" : "rephidden");
     child.removeClass(shown ? "rephidden" : "repchosen");
   });
+  container.find("> button").text(cls);
 }
 
 
@@ -114,22 +115,23 @@ function toggle (from, key) {
     var toHide, toShow;
     switch (key) {
     case "J".charCodeAt(0):
-      toHide = from.find(".shexc");
-      toShow = from.find(".json");
+      toHide = "shexc";
+      toShow = "json";
       break;
     case "C".charCodeAt(0):
-      toHide = from.find(".json");
-      toShow = from.find(".shexc");
+      toHide = "json";
+      toShow = "shexc";
       break;
-    case "T".charCodeAt(0):
-      toHide = from.find(".repchosen");
-      toShow = from.find(".rephidden");
-      break;
+    // case "T".charCodeAt(0):
+    //   toHide = "repchosen";
+    //   toShow = "rephidden";
+    //   break;
     default:
       return true;
     }
-    toHide.removeClass("repchosen").addClass("rephidden");
-    toShow.removeClass("rephidden").addClass("repchosen");
+    from.find("."+toHide).removeClass("repchosen").addClass("rephidden");
+    from.find("."+toShow).removeClass("rephidden").addClass("repchosen");  
+    from.find("> button").text(toShow);
     return false;
 }
 
