@@ -133,6 +133,7 @@
       page-break-inside: avoid;
       background-color: #F8F8F0;
       line-height: 1.5;
+      font-family: monospace;
       }
       .shexj th { vertical-align: top; }
 
