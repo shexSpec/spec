@@ -313,6 +313,13 @@ div.shexjTable th { text-align: right; }
   page-break-inside: avoid;
   text-transform: none;
 }
+/* ul li div[float] paints the bullet on the right. */
+.codelist li > div {
+    /* adding a div creates a blank rest of line in the li */
+    /* list-style-type: none; could shut off the bullets*/
+    /* margin-top: -2.5ex; or push them up */
+    display: inline-flex; /* inline-flex works but I've not researched why. */
+}
 
 .function { white-space: nowrap; }
 
