@@ -535,14 +535,16 @@ _:User2
     "http://schema.example/IssueShape",
     { "type": "ShapeNot", "shapeExpr": { "type": "Shape", <span class="comment">…</span> } }
     ] } ] }</pre>
-    <pre class="shexc">                                                    
+    <pre class="shexc">                                                               
   <span class="keyword">IRI</span> AND
   (
     @&lt;http://schema.example/IssueShape&gt;
     OR NOT { <span class="comment">…</span> }
   )</pre>
-    In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the <a>shape expression</a> with the id "http://schema.example/IssueShape".
   </div>
+  <p>
+    In this ShapeOr's <span class="param">shapeExprs</span>,"http://schema.example/IssueShape" is a reference to the <a>shape expression</a> with the id "http://schema.example/IssueShape".
+  </p>
       </div>
       </section>
       <section id="shape-expression-semantics">
