@@ -2605,9 +2605,9 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
 <span class="lineno schema">nc1</span>
 
-
 <span class="lineno schema">S2</span>
 <span class="lineno schema">tc2</span>
+
 
 
 <span class="lineno schema">nc2</span>
@@ -2630,13 +2630,20 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       { "type": "NodeConstraint",
         "values": [ "http://schema.example/testingRole" ] } } }
   ] }</pre>
-              <pre class="shexc">
-ex:IssueShape {
-  ex:reproducedBy @ex:TesterShape
-}
-ex:TesterShape {
-  ex:role [ex:testingRole]
-}
+              <pre class="shexc">                                                               
+ex:IssueShape
+  {
+
+    ex:reproducedBy
+
+     @ex:TesterShape }
+ex:TesterShape
+ {
+
+    ex:role
+
+     [ex:testingRole] }
+
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
@@ -2721,7 +2728,7 @@ PREFIX ex: <http://schema.example/>
       "valueExpr":
       "http://schema.example/IssueShape"
     } } ] }</pre>
-              <pre class="shexc">                                                               
+              <pre class="shexc">                                                      
   ex:IssueShape {
 
 

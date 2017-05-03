@@ -23,6 +23,11 @@ function prepRep (elts, cls) {
       var next = button.text() === "json" ? "shexc" : "json";
       chooseRep(container, next);
     });
+    container.attr("tabindex", "0").keydown(function (evt) {
+      if (evt.ctrlKey || evt.shiftKey)
+        return true;
+      return toggle(container, evt.keyCode);
+    })
     if (true) {
       var widths = {}, heights = {};
       ["json", "shexc"].forEach(c => {
@@ -99,19 +104,26 @@ $(document).ready(function () {
   prepRep($(".repchoice"), "json");
   $("#toggleGrammar").on("click", toggleGrammar);
   $("body").keydown(function (evt) {
+    if (evt.ctrlKey || !evt.shiftKey)
+      return true;
+    return toggle($("body .repchoice"), evt.keyCode);
+  });
+});
+
+function toggle (from, key) {
     var toHide, toShow;
-    switch (evt.keyCode) {
+    switch (key) {
     case "J".charCodeAt(0):
-      toHide = $(".repchoice .shexc");
-      toShow = $(".repchoice .json");
+      toHide = from.find(".shexc");
+      toShow = from.find(".json");
       break;
     case "C".charCodeAt(0):
-      toHide = $(".repchoice .json");
-      toShow = $(".repchoice .shexc");
+      toHide = from.find(".json");
+      toShow = from.find(".shexc");
       break;
     case "T".charCodeAt(0):
-      toHide = $(".repchosen");
-      toShow = $(".rephidden");
+      toHide = from.find(".repchosen");
+      toShow = from.find(".rephidden");
       break;
     default:
       return true;
@@ -119,6 +131,5 @@ $(document).ready(function () {
     toHide.removeClass("repchosen").addClass("rephidden");
     toShow.removeClass("rephidden").addClass("repchosen");
     return false;
-  });
-});
+}
 
