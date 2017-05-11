@@ -164,8 +164,10 @@
       </ul>
 
       <p>
-        Schemas with the marker "𝙅/c" in the corner can be converted between the JSON representation and the compact syntax by clicking the marker.
-        Pressing "j" or "c" converts all such examples to the JSON or compact form.
+        In javascript-enabled browsers, schemas with a <button class="show-repchoice">json</button> button can be converted between the JSON representation and the compact syntax by clicking the button.
+        The button text indicates the currently shown representation.
+        Selecting the example and pressing "j" or "c" converts the example to the JSON (ShExJ) or compact form (ShExC).
+        Pressing "shift J" or "shift C" converts all such examples to ShExJ or ShExC.
       </p>
       <p>
         The following examples are excerpts from the definitions below.
@@ -226,7 +228,7 @@
           Not captured in this JSON syntax definition is the rule that every <a class="nobjref">shapeExpr</a> referenced by a schema's <a class="param">shapes</a> must have an <dfn class="param">id</dfn> and no other <a class="nobjref">shapeExpr</a> may have an <a>id</a>.
           The JSON syntax definitition simplifies this by adding <span style="border: thin solid #888888; background-color: #F8F8F0;"><a class="param">id</a>:<a class="nobjref">shapeExprLabel</a>?</span> to every <a class="nobjref">shapeExpr</a>.
         </p>
-      </section>  
+      </section>
       <section id="style">
         <h3>Document style</h3>
         <p>
@@ -264,7 +266,7 @@
         <h3>Results</h3>
         <div>
           <p>
-            ShEx does not prescribe a report format.
+            ShEx validation results may be reported as <a href="#shape-map">ShapeMaps</a>.
             For illustration purposes in this specification, results of validation are represented in a table associating node/shape pairs with a pass or fail and a reason for failure:
           </p>
         <table class="example">
@@ -3329,7 +3331,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
         </section>
 
       </section>
-  </section>
+    </section>
       
     <section id="shexc">
       <h2>ShEx Compact syntax (ShExC)</h2>
@@ -3387,8 +3389,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <li><a class="param">shapes</a> come from the <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> production.</li>
   </ul></td></tr>
 </tbody>
-</table>
-<table>
+
   <tbody>
 <tr style="vertical-align: baseline">
 <td id="prod-directive">[<span class="prodNo">2</span>]   </td>
@@ -4261,7 +4262,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="term-ATPNAME_NS">[<span class="prodNo">70</span>]   </td>
 <td>&lt;<code class="production term">ATPNAME_NS</code>&gt;</td>
 <td>   ::=   </td>
-<td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PN_PREFIX">PN_PREFIX</a></span>? ":"</code></td>
+<td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span></code></td>
 </tr>
     <tr id="handle-ATPNAME_NS" class="params"><td></td><td> returns: <a>      IRI </a></td><td></td><td>The <code>iri</code> is the value in the <a>prefixes map</a> corresponding to the second token of the rule.</td></tr>
 </tbody>
@@ -4271,7 +4272,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="term-ATPNAME_LN">[<span class="prodNo">71</span>]   </td>
 <td>&lt;<code class="production term">ATPNAME_LN</code>&gt;</td>
 <td>   ::=   </td>
-<td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL">PN_LOCAL</a></span></code></td>
+<td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_LN">PNAME_LN</a></span></code></td>
 </tr>
     <tr id="handle-ATPNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="#reserved">reserved characters</a> in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
 </tbody>

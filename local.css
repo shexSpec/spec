@@ -167,6 +167,10 @@
           font-size: 70%;
           background-color: transparent;
       }
+      button.show-repchoice {
+          font-size: 70%;
+          background-color: transparent;
+      }
       div.json pre, div.shexc pre {
 	  margin: 0
       }
