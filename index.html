@@ -160,7 +160,7 @@
           <li><code>choice</code>: <span class="shexj">typeExpression1 | typeExpression2 | …</span>— a choice between two or more typeExressions.</li>
         </ul>
         </li>
-        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> following the <a data-cite="xml#sec-notation">notation in the XML specification</a>[[!XML]] or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
+        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> following the <a data-cite="XML#sec-notation">notation in the XML specification</a>[[!XML]] or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
       </ul>
 
       <p>
@@ -389,7 +389,7 @@ _:User2
           conforms to the grammar described in <a href="#shexc" class="sectionRef"></a> resulting
           in a valid <a>ShExJ</a> document.</li>
         <li>A <a>ShExJ</a> document complies with this specification if it is a valid
-          JSON-LD document [[!json-ld]], and conforms to the <a>ShExJ</a> syntax, as described in <a href="#shexj" class="sectionRef"></a>.</li>
+          JSON-LD document [[!JSON-LD]], and conforms to the <a>ShExJ</a> syntax, as described in <a href="#shexj" class="sectionRef"></a>.</li>
         <li>JSON documents can be interpreted as <a>ShExJ</a> by following the normative statements in
           <a data-cite="JSON-LD#interpreting-json-as-json-ld">Section 4.8 Interpreting JSON as JSON-LD</a> in [[!JSON-LD]].</li>
         <li>Other RDF documents comply with this specification, if they are <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-graph-isomorphism">graph isomorphic</a>[[!rdf11-concepts]] to the RDF interpretation of some <a>ShExJ</a> document.</li>
@@ -3354,7 +3354,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 
 
 <tbody class="grammarParagraph">
-  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="xml#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
+  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="XML#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
 </tbody>
 <tbody class="prod">
 <tr style="vertical-align: baseline">
@@ -4557,7 +4557,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       <p>This API provides a clean mechanism that enables developers to determine
         conformance of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
 
-      <p>The JSON-LD API uses <a>Promises</a> to represent
+      <p>The ShEx API uses <a>Promises</a> to represent
         the result of the various asynchronous operations.
         <a data-cite="ECMASCRIPT-6.0#sec-promise-objects">Promises</a> are defined in [[ECMASCRIPT-6.0]].
         General use within specifications can be found in [[promises-guide]].</p>
@@ -4566,16 +4566,13 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
         <h3>The <dfn>ShExProcessor</dfn> Interface</h3>
 
         <p>The <a>ShExProcessor</a> interface is the high-level programming structure
-          that developers use to access the JSON-LD transformation methods.</p>
+          that developers use to determine
+          <a>conformance</a> of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
 
-          <p>The <a>ShExProcessor</a> interface is the high-level programming structure
-            that developers use to determine
-          conformance of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
-
-          <p>It is important to highlight that implementations do not modify the input parameters.
-            If an error is detected, the <a>Promise</a> is
-            rejected passing a <a>ShExError</a> with the corresponding error
-            <a data-link-for="ShExError">code</a>.</p>
+        <p>It is important to highlight that implementations do not modify the input parameters.
+          If an error is detected, the <a>Promise</a> is
+          rejected passing a <a>ShExError</a> with the corresponding error
+          <a data-link-for="ShExError">code</a>.</p>
 
         <pre class="idl" data-transform="unComment"><!--
           [Constructor]
@@ -4801,7 +4798,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       </p>
 
       <p>
-        A ShExJ document is a JSON-LD [[!!JSON-LD]] document uses
+        A ShExJ document is a JSON-LD [[!JSON-LD]] document uses
         a proscribed structure which holds an object at the top level. This object describes a <a>schema</a> containing
         <a>shape expressions</a> and <a>triple expressions</a>. A ShExJ document
         MUST include a <code>@context</code> property referencing <code>http://www.w3.org/ns/shex.jsonld</code>, and MAY include additional contexts
@@ -4912,8 +4909,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
     <dd>http://www.w3.org/TR/json-ld</dd>
     <dt>Applications that use this media type:</dt>
     <dd>Any programming environment that requires the exchange of
-      directed graphs. Implementations of JSON-LD have been created for
-      JavaScript, Python, Ruby, PHP, and C++.
+      directed graphs. Implementations of ShEx have been created for
+      JavaScript, Python, Ruby, and Java.
     </dd>
     <dt>Additional information:</dt>
     <dd>
