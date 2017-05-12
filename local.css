@@ -399,7 +399,7 @@ div.shexjTable th { text-align: right; }
     margin-bottom: 0;
 }
 
-.repchoice.error {
+.repchoice.error, div.example .error {
     background-color: #fff7f7;
     border: medium solid #efe7e7;
 }
