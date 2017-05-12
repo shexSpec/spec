@@ -101,6 +101,11 @@
 
     <section id="terminology">
       <h2>Terminology</h2>
+      <p>The ShEx interface is defined using terms from RDF semantics [[!rdf11-mt]]:</p>
+      <ul>
+        <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <a>IRI</a>, <dfn data-cite="rdf11-concepts#dfn-blank-node">blank node</dfn>, <dfn data-cite="rdf11-concepts#dfn-literal">literal</dfn></li>
+        <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
+      </ul>
       <p class="issue">For the purposes of the <a>ShExProcessor</a> interface,
         a <dfn data-cite="ECMASCRIPT-6.0#sec-promise-objects" data-lt="promises">promise</dfn>
         is an object that represents the eventual result of a single asynchronous operation.
@@ -177,7 +182,7 @@
       </p>
 
       <p>
-        Each function in the ShEx API defines a set of <dfn>results</dfn> and <dfn>errors</dfn>.
+        Each function in the ShEx API defines a set of <dfn data-lt="result">results</dfn> and <dfn data-lt="error">errors</dfn>.
         Errors are identified by their <a data-link-for="ShExError">error code</a>.
       </p>
 
@@ -336,7 +341,9 @@
       <p>The ShEx API uses <a>Promises</a> to represent
         the result of the various asynchronous operations.
         <a data-cite="ECMASCRIPT-6.0#sec-promise-objects">Promises</a> are defined in [[ECMASCRIPT-6.0]].
-        General use within specifications can be found in [[promises-guide]].</p>
+        General use within specifications can be found in [[promises-guide]].
+        <span class="note">When using promises, an <a>error</a> is reported as a rejected promise and a <a>result</a> is reported as an accepted promise.</span>
+      </p>
 
       <section class="informative">
         <h3>The <dfn>ShExProcessor</dfn> Interface</h3>
@@ -573,13 +580,10 @@
       </p>
       <aside class="example" title="Simple human-syntax ShapeMap">
         <p>
-          A simple <a>query ShapeMap</a> might look like this:
+          A simple ShapeMap with one node/shape pair might be both a <a>query ShapeMap</a> and a  <a>result ShapeMap</a>:
         </p>
         <pre class="nohighlight">&lt;http://data.example/#n1&gt; @ &lt;http://data.example/#s&gt;, <span class="comment"># a simple node/shape pair</span>
 </pre>
-        <p>
-          and a response might look the same if there were no errors.
-        </p>
       </aside>
 
       <p>
