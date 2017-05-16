@@ -130,7 +130,7 @@ $(document).ready(function () {
     var panel = $("<div class=\"panel\"/>").append(h2).append(textarea);
     $("#panels").append(panel);
     button.on("click", scriptEvt => {
-      var evalMe = "(function (evt) {\n"+textarea.val()+"\n})()"
+      var evalMe = "(function () {\n"+textarea.val()+"\n})(scriptEvt)"
       log(`setting runner to <span class="lookit">${elt.name}</span>`);
       return wrap(() => { runner = eval(evalMe); });
     });
