@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>API Demo</title>
+    <link rel="stylesheet" href="local.css"/>
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="apiDemo.js"></script>
+    <style>
+      tr:nth-child(2)  th:nth-child(1), tr:nth-child(2)  th:nth-child(3) { border-right-width: thin; }
+      tr:nth-child(2)  th:nth-child(2), tr:nth-child(2)  th:nth-child(4) { border-left-width:  thin; }
+      td:nth-child(1), td:nth-child(3) { text-align: right; padding-right: .37em; }
+      td:nth-child(1), td:nth-child(3) { border-right-width: 0; }
+      td:nth-child(2), td:nth-child(4) { border-left-width:  0; }
+      td:nth-child(2):before, td:nth-child(4):before { content: "@"; margin-left: -.5em; font-size: 70%; vertical-align: top; }
+      .work { background-color: #ffa; }
+      .pass { background-color: #cfc; }
+      .fail { background-color: #fcc; }
+      .stoppable { background-color: red; }
+      #go { width: 3em; }
+      .lookit { font-weight: bold; }
+      .results { color: #005; }
+      #parameters, .panel { float: left; }
+      h2 { text-align: center; margin: 0; }
+      #messages { clear: both; }
+      .panel textarea { resize:both; min-height:30ex; min-width:10em; }
+      .error { border: thick dotted red; border-top-width: thin; border-bottom-width: thin; }
+    </style>
+  </head>
+  <body>
+    <div id="parameters">
+      <table id="shapemap">
+        <tr><th colspan="2">validate</th><th colspan="2">depends</th><th><button id="go">go</button></th></tr>
+        <tr><th>node</th><th>shape</th><th>node</th><th>shape</th><th>stat</th></tr>
+        <tr><td> n1</td><td> s1</td><td>n11</td><td>s11</td><td></td></tr>
+        <tr><td> n1</td><td> s2</td><td>n11</td><td>s11</td><td></td></tr>
+        <tr><td> n2</td><td> s1</td><td>n11</td><td>s11</td><td></td></tr>
+        <tr><td> n2</td><td> s2</td><td>n11</td><td>s11</td><td></td></tr>
+        <tr><td> n3</td><td> s3</td><td>   </td><td>   </td><td></td></tr>
+        <tr><td> n4</td><td> s3</td><td>   </td><td>   </td><td></td></tr>
+        <tr><td> n5</td><td> s5</td><td> n7</td><td> s7</td><td></td></tr>
+        <tr><td> n6</td><td> s5</td><td>   </td><td>   </td><td></td></tr>
+        <tr><td> n7</td><td> s7</td><td> n9</td><td> s9</td><td></td></tr>
+        <tr><td> n8</td><td> s7</td><td>   </td><td>   </td><td></td></tr>
+        <tr><td> n9</td><td> s9</td><td> n3</td><td> s4</td><td></td></tr>
+        <tr><td>n10</td><td> s9</td><td>   </td><td>   </td><td></td></tr>
+        <tr><td>n11</td><td>s11</td><td>   </td><td>   </td><td></td></tr>
+        <tr><td>n12</td><td>s11</td><td>   </td><td>   </td><td></td></tr>
+      </table>
+    </div>
+    <div id="panels"></div>
+    <div id="messages"></div>
+  </body>
+</html>
