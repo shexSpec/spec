@@ -1,74 +1,46 @@
 
-// Self-calibrating time-waster
-function createBurner (iter) {
-  var Second = 1;
-
-  for (var i = 0; i < iter; ++i) {
-    burn(100);
-  }
-  return burn;
-
-  function burn (msec) {
-    var start = Date.now();
-    for (var outer = 0; outer < Second * msec/1000; ++outer)
-      for (var inner = 0; inner < 10000000; ++inner)
-        ;
-    var end = Date.now();
-    Second = Second * msec / (end - start);      
-    // console.log(Second);
-  }
-}
-var Burn = createBurner(5);
-
 function indexKey (node, shape) {
   return node+'@'+shape;
 }
 
-var Validator = {
-  // Would be constructed with a schema but deps are expressed in the table.
-  create: function (fixedMap) {
-    var index = fixedMap.reduce((ret, ent) => {
-      ret[indexKey(ent.node, ent.shape)] = ent;
-      return ret;
-    }, {});
+function _tdValues (sel) {
+  var ret = []; // jquery.map removes nulls
+  sel.each((idx, td) => {
+    var text = $(td).text().trim();
+    ret.push(text === "" ? null : text);
+  });
+  return ret;
+}
 
-    var deps = fixedMap.reduce((ret, ent) => {
-      ret[indexKey(ent.node, ent.shape)] = getAllDependencies(ent);
-      return ret;
-    }, {});
+// Create a fixed (no triple patterns),
+// augmented (extra properties) ShapeMap from HTML table.
+function parseShapeMap (from) {
+  return $(from).slice(2).map((idx, elt) => {
+    var vals = _tdValues($(elt).find("td"));
+    return {
+      node: vals[0],
+      shape: vals[1],
+      depNode: vals[2],
+      depShape: vals[3]
+    };
+  }).get(); // .get() to unwrap jQuery.map results
+}
 
-    return { validate: validate };
+function _indexResultCells (from) {
+  var ret = {};
+  $(from).slice(2).each((idx, elt) => { // jquery has no reduce
+    var vals = _tdValues($(elt).find("td"));
+    ret[indexKey(vals[0], vals[1])] = $(elt).find("td").slice(4,5);
+  });
+  return ret;
+}
 
-    function getAllDependencies (ent) {
-      if (ent.depNode === null)
-        return [];
-      var depKey = indexKey(ent.depNode, ent.depShape);
-      var ret = [depKey];
-      var refd = index[depKey];
-      if (refd)
-        ret = ret.concat(getAllDependencies(refd));
-      return ret;
-    }
-
-    function validate (query, premise) {
-      return query.reduce((ret, ent) => {
-        var passes = ent.node.substr(1) === ent.shape.substr(1);
-        var verdict = passes ? "pass" : "fail";
-        var key = indexKey(ent.node, ent.shape);
-        deps[key].forEach(depKey => {
-          var fallback = depKey.match(/^(.*?)@(.*?)$/);
-          var dep = depKey in index ? index[depKey] : {
-            node: fallback[1].trim(),
-            shape: fallback[2].trim()
-          };
-          ret = ret.concat({node: dep.node, shape: dep.shape, status: "pass"})
-        });
-        Burn(250);
-        return ret.concat({node: ent.node, shape: ent.shape, status: verdict});
-      }, []);
-    }
-  }
-};
+function _indexShapeMap (fixedMap) {
+  return fixedMap.reduce((ret, ent) => {
+    ret[indexKey(ent.node, ent.shape)] = ent;
+    return ret;
+  }, {});
+}
 
 // Log to #results.
 function log () {
@@ -119,6 +91,7 @@ $(document).ready(function () {
   [
     {func: toy, name: "toy"},
     {func: progress, name: "progress"},
+    {func: worker, name: "worker"},
   ].forEach(elt => {
     var button = $(`<button>${elt.name}</button>`);
     var h2 = $("<h2\>").append(button);
@@ -174,28 +147,13 @@ function progress () {
       return false;
     }
 
-    // Create a fixed (no triple patterns),
-    // augmented (extra properties) ShapeMap from HTML table.
-    var fixedMap = $("tr").slice(2).map((idx, elt) => {
-      function nth (n) {
-        var ret = $(elt).find("td").slice(n, n+1).text().trim();
-        return ret === "" ? null : ret;
-      }
-      return {
-        node: nth(0),
-        shape: nth(1),
-        depNode: nth(2),
-        depShape: nth(3),
-        update: $(elt).find("td").slice(4,5)
-      };
-    }).get(); // .get() to unwrap jQuery.map results
+    var fixedMap = parseShapeMap("tr");
+    var updateCells = _indexResultCells("tr");
 
     // Index the ShapeMap by node/shape pair.
-    var index = fixedMap.reduce((ret, ent) => {
-      ent.update.text("…").attr("class", "work");
-      ret[indexKey(ent.node, ent.shape)] = ent;
-      return ret;
-    }, {});
+    var index = _indexShapeMap(fixedMap);
+    for (var k in updateCells)
+      updateCells[k].text("…").attr("class", "work");
 
     // Simulate creating a validator with a schema.
     var validator = Validator.create(fixedMap);
@@ -224,8 +182,8 @@ function progress () {
       } else {
         // Skip entries that were already processed.
         function alreadyDone (row) {
-          return index[indexKey(fixedMap[row].node, fixedMap[row].shape)].
-            update.attr("class") !== "work";
+          var key = indexKey(fixedMap[row].node, fixedMap[row].shape);
+          return updateCells[key].attr("class") !== "work";
         }
         while (alreadyDone(currentEntry))
           ++currentEntry;
@@ -237,7 +195,7 @@ function progress () {
         newResults.forEach(newRes => {
           var key = indexKey(newRes.node, newRes.shape);
           if (key in index) {
-            index[key].update.text(newRes.status).attr("class", newRes.status);
+            updateCells[key].text(newRes.status).attr("class", newRes.status);
           } else {
             log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
           }
@@ -252,3 +210,100 @@ function progress () {
     }
   }
 }
+
+function worker1 () {
+  if (!window.Worker) throw Error("no worker");
+  return function (evt) {
+    var fixedMap = parseShapeMap("tr");
+    var ShExWorker = new Worker("apiDemoWorker.js");
+    ShExWorker.onmessage = function (msgEvent) {
+      console.log('Message received from worker');
+      console.dir(msgEvent.data);
+      log(msgEvent.data);
+    };
+
+    ShExWorker.postMessage(fixedMap);
+    console.log('Message posted to worker');
+  }
+}
+
+function worker () {
+  // WebWorker with callbacks for progressive validation.
+  var abort = false, running = false;
+  var ShExWorker = new Worker("apiDemoWorker.js");
+  return function (evt) {
+    if (running) {
+      // Emergency Stop button was pressed.
+      if (ShExWorker.onmessage !== null) {
+        ShExWorker.onmessage = expectAborted;
+        log("aborting web worker");
+        function expectAborted (msg) {
+          if (["update", "done"].indexOf(msg.data.response) !== -1)
+            return;
+          if (msg.data.response !== "ack")
+            throw "expected aborted: " + JSON.stringify(msg.data);
+          log("web worker aborted");
+          ShExWorker.onmessage = abort = running = false;
+          $("#go").removeClass("stoppable").text("go");
+        }
+      }
+      abort = true;
+      return false;
+    }
+
+    var fixedMap = parseShapeMap("tr");
+    var updateCells = _indexResultCells("tr");
+
+    // Index the ShapeMap by node/shape pair.
+    var index = _indexShapeMap(fixedMap);
+    for (var k in updateCells)
+      updateCells[k].text("…").attr("class", "work");
+
+    ShExWorker.onmessage = expectAck;
+    ShExWorker.postMessage({ request: "create", fixedMap: fixedMap});
+
+    var currentEntry = 0;
+    var results = createResults();
+
+    running = true;
+    $("#go").addClass("stoppable").text("stop");
+
+    function expectAck (msg) {
+      if (msg.data.response !== "ack")
+        throw "expected ack: " + JSON.stringify(msg.data);
+      ShExWorker.onmessage = parseUpdatesAndResults;
+      ShExWorker.postMessage({request: "validate", queryMap: fixedMap});
+    }
+
+    function parseUpdatesAndResults (msg) {
+      switch (msg.data.response) {
+      case "update":
+        msg.data.results.forEach(newRes => {
+          var key = indexKey(newRes.node, newRes.shape);
+          if (key in index) {
+            updateCells[key].text(newRes.status).attr("class", newRes.status);
+          } else {
+            log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
+          }
+        });
+
+        // Merge into results.
+        results.merge(msg.data.results);
+        break;
+
+      case "done":
+        console.dir(msg.data.results);
+        results.report();
+        ShExWorker.onmessage = running = false;
+        $("#go").removeClass("stoppable").text("go");
+        break;
+
+      default:
+        log("<span class=\"error\">unknown response: " + JSON.stringify(msg.data) + "</span>");
+      }
+    }
+
+    return false;
+  }
+}
+
