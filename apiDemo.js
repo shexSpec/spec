@@ -1,46 +1,41 @@
-
-function indexKey (node, shape) {
-  return node+'@'+shape;
-}
-
-function _tdValues (sel) {
-  var ret = []; // jquery.map removes nulls
-  sel.each((idx, td) => {
-    var text = $(td).text().trim();
-    ret.push(text === "" ? null : text);
-  });
-  return ret;
-}
-
-// Create a fixed (no triple patterns),
-// augmented (extra properties) ShapeMap from HTML table.
-function parseShapeMap (from) {
-  return $(from).slice(2).map((idx, elt) => {
-    var vals = _tdValues($(elt).find("td"));
-    return {
-      node: vals[0],
-      shape: vals[1],
-      depNode: vals[2],
-      depShape: vals[3]
-    };
-  }).get(); // .get() to unwrap jQuery.map results
-}
-
-function _indexResultCells (from) {
-  var ret = {};
-  $(from).slice(2).each((idx, elt) => { // jquery has no reduce
-    var vals = _tdValues($(elt).find("td"));
-    ret[indexKey(vals[0], vals[1])] = $(elt).find("td").slice(4,5);
-  });
-  return ret;
-}
-
-function _indexShapeMap (fixedMap) {
-  return fixedMap.reduce((ret, ent) => {
-    ret[indexKey(ent.node, ent.shape)] = ent;
+// Interface object that knows about the HTML layout.
+var Iface = (function () {
+  return {
+    parseShapeMap: parseShapeMap,
+    indexResultCells: indexResultCells
+  };
+  function tdValues (sel) {
+    var ret = []; // jquery.map removes nulls
+    sel.each((idx, td) => {
+      var text = $(td).text().trim();
+      ret.push(text === "" ? null : text);
+    });
     return ret;
-  }, {});
-}
+  }
+
+  // Create a fixed (no triple patterns),
+  // augmented (extra properties) ShapeMap from HTML table.
+  function parseShapeMap (from) {
+    return $(from).slice(2).map((idx, elt) => {
+      var vals = tdValues($(elt).find("td"));
+      return {
+        node: vals[0],
+        shape: vals[1],
+        depNode: vals[2],
+        depShape: vals[3]
+      };
+    }).get(); // .get() to unwrap jQuery.map results
+  }
+
+  function indexResultCells (from) {
+    var ret = {};
+    $(from).slice(2).each((idx, elt) => { // jquery has no reduce
+      var vals = tdValues($(elt).find("td"));
+      ret[Util.indexKey(vals[0], vals[1])] = $(elt).find("td").slice(4,5);
+    });
+    return ret;
+  }
+})();
 
 // Log to #results.
 function log () {
@@ -49,32 +44,6 @@ function log () {
     return elt.toString.apply(elt);
   }).join(" ")+"<br />\n";
   $("#messages").append(toAdd);
-}
-
-function createResults () {
-  var _shapeMap = [];
-  var known = {};
-  return {
-    // Get results ShapeMap.
-    getShapeMap: function () { return _shapeMap; },
-
-    // Add entries to results ShapeMap.
-    merge: function (toAdd) {
-      toAdd.forEach(ent => {
-        var key = indexKey(ent.node, ent.shape);
-        if (!(key in known)) {
-          _shapeMap.push(ent);
-          known[key] = ent;
-        }
-      });
-    },
-
-    report: function () {
-      log("<span class=\"results\">" + _shapeMap.map(elt => {
-        return JSON.stringify(elt);
-      }).join("<br />\n") + "</span>");
-    }
-  };
 }
 
 $(document).ready(function () {
@@ -123,7 +92,7 @@ $(document).ready(function () {
     //   var results = fixedMap.reduce((ret, ent) => {
     //     var newResults = validate([ent], results);
     //     newResults.forEach(newRes => {
-    //       index[indexKey(newRes.node, newRes.shape)].update.
+    //       index[Util.indexKey(newRes.node, newRes.shape)].update.
     //         text(newRes.status).attr("class", newRes.status);
     //       console.log(`${newRes.node}@${newRes.shape} ${newRes.status}`);
     //     });
@@ -147,11 +116,11 @@ function progress () {
       return false;
     }
 
-    var fixedMap = parseShapeMap("tr");
-    var updateCells = _indexResultCells("tr");
+    var fixedMap = Iface.parseShapeMap("tr");
+    var updateCells = Iface.indexResultCells("tr");
 
     // Index the ShapeMap by node/shape pair.
-    var index = _indexShapeMap(fixedMap);
+    var index = Util.indexShapeMap(fixedMap);
     for (var k in updateCells)
       updateCells[k].text("…").attr("class", "work");
 
@@ -159,7 +128,7 @@ function progress () {
     var validator = Validator.create(fixedMap);
 
     var currentEntry = 0;
-    var results = createResults();
+    var results = Util.createResults();
 
     running = true;
     $("#go").addClass("stoppable").text("stop");
@@ -182,7 +151,7 @@ function progress () {
       } else {
         // Skip entries that were already processed.
         function alreadyDone (row) {
-          var key = indexKey(fixedMap[row].node, fixedMap[row].shape);
+          var key = Util.indexKey(fixedMap[row].node, fixedMap[row].shape);
           return updateCells[key].attr("class") !== "work";
         }
         while (alreadyDone(currentEntry))
@@ -193,7 +162,7 @@ function progress () {
 
         // Render newResults.
         newResults.forEach(newRes => {
-          var key = indexKey(newRes.node, newRes.shape);
+          var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
             updateCells[key].text(newRes.status).attr("class", newRes.status);
           } else {
@@ -214,7 +183,7 @@ function progress () {
 function worker1 () {
   if (!window.Worker) throw Error("no worker");
   return function (evt) {
-    var fixedMap = parseShapeMap("tr");
+    var fixedMap = Iface.parseShapeMap("tr");
     var ShExWorker = new Worker("apiDemoWorker.js");
     ShExWorker.onmessage = function (msgEvent) {
       console.log('Message received from worker');
@@ -251,11 +220,11 @@ function worker () {
       return false;
     }
 
-    var fixedMap = parseShapeMap("tr");
-    var updateCells = _indexResultCells("tr");
+    var fixedMap = Iface.parseShapeMap("tr");
+    var updateCells = Iface.indexResultCells("tr");
 
     // Index the ShapeMap by node/shape pair.
-    var index = _indexShapeMap(fixedMap);
+    var index = Util.indexShapeMap(fixedMap);
     for (var k in updateCells)
       updateCells[k].text("…").attr("class", "work");
 
@@ -263,7 +232,7 @@ function worker () {
     ShExWorker.postMessage({ request: "create", fixedMap: fixedMap});
 
     var currentEntry = 0;
-    var results = createResults();
+    var results = Util.createResults();
 
     running = true;
     $("#go").addClass("stoppable").text("stop");
@@ -279,7 +248,7 @@ function worker () {
       switch (msg.data.response) {
       case "update":
         msg.data.results.forEach(newRes => {
-          var key = indexKey(newRes.node, newRes.shape);
+          var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
             updateCells[key].text(newRes.status).attr("class", newRes.status);
           } else {

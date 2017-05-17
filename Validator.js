@@ -1,4 +1,4 @@
-(function () {
+Validator = (function () {
 // Self-calibrating time-waster
 function createBurner (iter) {
   var Second = 1;
@@ -20,13 +20,13 @@ function createBurner (iter) {
 }
 var Burn = createBurner(5);
 
-window.Validator = {
+return {
   // Would be constructed with a schema but deps are expressed in the table.
   create: function (fixedMap) {
 
-    var index = _indexShapeMap(fixedMap);
+    var index = Util.indexShapeMap(fixedMap);
     var deps = fixedMap.reduce((ret, ent) => {
-      ret[indexKey(ent.node, ent.shape)] = getAllDependencies(ent);
+      ret[Util.indexKey(ent.node, ent.shape)] = getAllDependencies(ent);
       return ret;
     }, {});
 
@@ -35,7 +35,7 @@ window.Validator = {
     function getAllDependencies (ent) {
       if (ent.depNode === null)
         return [];
-      var depKey = indexKey(ent.depNode, ent.depShape);
+      var depKey = Util.indexKey(ent.depNode, ent.depShape);
       var ret = [depKey];
       var refd = index[depKey];
       if (refd)
@@ -47,7 +47,7 @@ window.Validator = {
       return query.reduce((ret, ent) => {
         var passes = ent.node.substr(1) === ent.shape.substr(1);
         var verdict = passes ? "pass" : "fail";
-        var key = indexKey(ent.node, ent.shape);
+        var key = Util.indexKey(ent.node, ent.shape);
         deps[key].forEach(depKey => {
           var fallback = depKey.match(/^(.*?)@(.*?)$/);
           var dep = depKey in index ? index[depKey] : {
