@@ -51,7 +51,7 @@ function log () {
 function markResult (element, status, start) {
   element.text(
     RENDER_TIME ?
-      Date.now() - start :
+      Math.round((Date.now() - start)/100)/10 :
       status
   ).attr("class", status)
 }
@@ -133,7 +133,6 @@ function simpleSingle () {
     var validator = Validator.create(fixedMap);
     var results = Util.createResults();
 
-    $("#go").prop( "disabled", true );
     var start = Date.now();
     var newResults = validator.validate(fixedMap, []);
 
@@ -150,7 +149,6 @@ function simpleSingle () {
     // Merge into results.
     results.merge(newResults);
     results.report();
-    $("#go").prop( "disabled", false );
 
     return false;
   }
@@ -375,6 +373,7 @@ function killerWorker () {
         // Merge into results.
         results.merge(msg.data.results);
         results.report();
+        ShExWorker.onmessage = running = false;
         $("#go").removeClass("stoppable").text("go");
         break;
 
