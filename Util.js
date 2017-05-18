@@ -42,7 +42,7 @@ Util = (function () {
 
       report: function () {
         log("<span class=\"results\">" + _shapeMap.map(elt => {
-          return JSON.stringify(elt);
+          return "<span class=\"" + elt.status + "\">" + elt.node + "@" + (elt.status === "fail" ? "!" : "") + elt.shape + "</span>";
         }).join("<br />\n") + "</span>");
       }
     };

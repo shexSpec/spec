@@ -55,12 +55,17 @@ $(document).ready(function () {
   var runner = function () {
     log("<span class=\"error\">select a runner</span>");
   }
-  $("#go").on("click", evt => { wrap(() => { runner(evt); }); });
+  $("#go").on("click", evt => {
+    wrap(() => { runner(evt); });
+  }).prop("disabled", true);
 
-  [ // ⛕
-    {func: toy, name: "⛔ toy"},
-    {func: interactiveProgress, name: "⛗ progress"},
-    {func: interactiveWorker, name: "⛗ worker"},
+  [
+//    {func: toy, name: "⛔ toy"},
+    {func: simpleSingle, name: "⛔ Simple Single"},
+    {func: progressiveSingle, name: "⛗ Progressive Single"},
+    {func: simpleWorker, name: "⛔ Simple Worker"},
+    {func: killerWorker, name: "⛕ Killer Worker"},
+    {func: interactiveWorker, name: "⛗ Interactive Worker"},
   ].forEach(elt => {
     var button = $(`<button>${elt.name}</button>`);
     var h2 = $("<h2\>").append(button);
@@ -73,8 +78,13 @@ $(document).ready(function () {
     $("#panels").append(panel);
     button.on("click", scriptEvt => {
       var evalMe = "(function () {\n"+textarea.val()+"\n})(scriptEvt)"
-      log(`setting runner to <span class="lookit">${elt.name}</span>`);
-      return wrap(() => { runner = eval(evalMe); });
+      log(`setting runner to <span class="lookit now-playing">${elt.name}</span>`);
+      return wrap(() => {
+        $("h2 button").removeClass("now-playing");
+        button.addClass("now-playing");
+        $("#go").prop("disabled", false);
+        runner = eval(evalMe);
+      });
     });
   });
 
@@ -107,7 +117,50 @@ function toy () {
   };
 }
 
-function interactiveProgress () {
+function simpleSingle () {
+  // Single Thread
+  //   
+  //   
+
+  return function (evt) {
+
+    var fixedMap = Iface.parseShapeMap("tr");
+    var updateCells = Iface.indexResultCells("tr");
+
+    // Index the ShapeMap by node/shape pair.
+    var index = Util.indexShapeMap(fixedMap);
+
+    // Simulate creating a validator with a schema.
+    var validator = Validator.create(fixedMap);
+    var results = Util.createResults();
+
+    $("#go").prop( "disabled", true );
+    var newResults = validator.validate(fixedMap, []);
+
+    // Render newResults.
+    newResults.forEach(newRes => {
+      var key = Util.indexKey(newRes.node, newRes.shape);
+      if (key in index) {
+        updateCells[key].text(newRes.status).attr("class", newRes.status);
+      } else {
+        log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
+      }
+    });
+
+    // Merge into results.
+    results.merge(newResults);
+    results.report();
+    $("#go").prop( "disabled", false );
+
+    return false;
+  }
+}
+
+function progressiveSingle () {
+  // Single Thread
+  //   progressive rendering
+  //   stop button
+
   var abort = false, running = false;
   return function (evt) {
     if (running) {
@@ -180,24 +233,11 @@ function interactiveProgress () {
   }
 }
 
-function worker1 () {
-  if (!window.Worker) throw Error("no worker");
-  return function (evt) {
-    var fixedMap = Iface.parseShapeMap("tr");
-    var ShExWorker = new Worker("apiDemoWorker.js");
-    ShExWorker.onmessage = function (msgEvent) {
-      console.log('Message received from worker');
-      console.dir(msgEvent.data);
-      log(msgEvent.data);
-    };
-
-    ShExWorker.postMessage(fixedMap);
-    console.log('Message posted to worker');
-  }
-}
-
 function interactiveWorker () {
-  // WebWorker with callbacks for progressive validation.
+  // Interactive WebWorker
+  //   progressive rendering
+  //   stop button
+
   var abort = false, running = false;
   var ShExWorker = new Worker("apiDemoInteractiveWorker.js");
   return function (evt) {
@@ -266,6 +306,135 @@ function interactiveWorker () {
         results.report();
         ShExWorker.onmessage = running = false;
         $("#go").removeClass("stoppable").text("go");
+        break;
+
+      default:
+        log("<span class=\"error\">unknown response: " + JSON.stringify(msg.data) + "</span>");
+      }
+    }
+
+    return false;
+  }
+}
+
+function killerWorker () {
+  // Killer WebWorker
+  // 
+  //   stop button
+
+  var abort = false, running = false;
+  var ShExWorker = new Worker("apiDemoWorker.js");
+  return function (evt) {
+    if (running) {
+      // Emergency Stop button was pressed.
+      if (ShExWorker.onmessage !== null) {
+        ShExWorker.terminate();
+        ShExWorker = new Worker("apiDemoWorker.js");
+        log("terminated web worker");
+        ShExWorker.onmessage = abort = running = false;
+        $("#go").removeClass("stoppable").text("go");
+      }
+      return false;
+    }
+
+    var fixedMap = Iface.parseShapeMap("tr");
+    var updateCells = Iface.indexResultCells("tr");
+
+    // Index the ShapeMap by node/shape pair.
+    var index = Util.indexShapeMap(fixedMap);
+    for (var k in updateCells)
+      updateCells[k].text("…").attr("class", "work");
+
+    ShExWorker.onmessage = expectCreated;
+    ShExWorker.postMessage({ request: "create", fixedMap: fixedMap});
+
+    var results = Util.createResults();
+
+    running = true;
+    $("#go").addClass("stoppable").text("stop");
+
+    function expectCreated (msg) {
+      if (msg.data.response !== "created")
+        throw "expected created: " + JSON.stringify(msg.data);
+      ShExWorker.onmessage = parseUpdatesAndResults;
+      ShExWorker.postMessage({request: "validate", queryMap: fixedMap});
+    }
+
+    function parseUpdatesAndResults (msg) {
+      switch (msg.data.response) {
+      case "done":
+        console.dir(msg.data.results);
+        msg.data.results.forEach(newRes => {
+          var key = Util.indexKey(newRes.node, newRes.shape);
+          if (key in index) {
+            updateCells[key].text(newRes.status).attr("class", newRes.status);
+          } else if (!results.has(newRes)) {
+            log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
+          }
+        });
+
+        // Merge into results.
+        results.merge(msg.data.results);
+        results.report();
+        $("#go").removeClass("stoppable").text("go");
+        break;
+
+      default:
+        log("<span class=\"error\">unknown response: " + JSON.stringify(msg.data) + "</span>");
+      }
+    }
+
+    return false;
+  }
+}
+
+function simpleWorker () {
+  // Simple WebWorker
+  // 
+  // 
+
+  var ShExWorker = new Worker("apiDemoWorker.js");
+  return function (evt) {
+
+    var fixedMap = Iface.parseShapeMap("tr");
+    var updateCells = Iface.indexResultCells("tr");
+
+    // Index the ShapeMap by node/shape pair.
+    var index = Util.indexShapeMap(fixedMap);
+    for (var k in updateCells)
+      updateCells[k].text("…").attr("class", "work");
+
+    ShExWorker.onmessage = expectCreated;
+    ShExWorker.postMessage({ request: "create", fixedMap: fixedMap});
+
+    var results = Util.createResults();
+
+    $("#go").prop( "disabled", true );
+
+    function expectCreated (msg) {
+      if (msg.data.response !== "created")
+        throw "expected created: " + JSON.stringify(msg.data);
+      ShExWorker.onmessage = parseUpdatesAndResults;
+      ShExWorker.postMessage({request: "validate", queryMap: fixedMap});
+    }
+
+    function parseUpdatesAndResults (msg) {
+      switch (msg.data.response) {
+      case "done":
+        console.dir(msg.data.results);
+        msg.data.results.forEach(newRes => {
+          var key = Util.indexKey(newRes.node, newRes.shape);
+          if (key in index) {
+            updateCells[key].text(newRes.status).attr("class", newRes.status);
+          } else if (!results.has(newRes)) {
+            log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
+          }
+        });
+
+        // Merge into results.
+        results.merge(msg.data.results);
+        results.report();
+        $("#go").prop( "disabled", false );
         break;
 
       default:
