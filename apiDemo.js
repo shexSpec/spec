@@ -1,3 +1,5 @@
+var RENDER_TIME = true;
+
 // Interface object that knows about the HTML layout.
 var Iface = (function () {
   return {
@@ -46,6 +48,14 @@ function log () {
   $("#messages").append(toAdd);
 }
 
+function markResult (element, status, start) {
+  element.text(
+    RENDER_TIME ?
+      Date.now() - start :
+      status
+  ).attr("class", status)
+}
+
 $(document).ready(function () {
   $("td").
     not("td:nth-child(5)").
@@ -80,8 +90,9 @@ $(document).ready(function () {
       var evalMe = "(function () {\n"+textarea.val()+"\n})(scriptEvt)"
       log(`setting runner to <span class="lookit now-playing">${elt.name}</span>`);
       return wrap(() => {
-        $("h2 button").removeClass("now-playing");
+        $("h2 button, textarea").removeClass("now-playing");
         button.addClass("now-playing");
+        textarea.addClass("now-playing");
         $("#go").prop("disabled", false);
         runner = eval(evalMe);
       });
@@ -97,18 +108,6 @@ $(document).ready(function () {
     return false;
   }
 });
-
-    // setTimeout(() => {
-    //   var results = fixedMap.reduce((ret, ent) => {
-    //     var newResults = validate([ent], results);
-    //     newResults.forEach(newRes => {
-    //       index[Util.indexKey(newRes.node, newRes.shape)].update.
-    //         text(newRes.status).attr("class", newRes.status);
-    //       console.log(`${newRes.node}@${newRes.shape} ${newRes.status}`);
-    //     });
-    //   }, []);
-    //   console.log(results);
-    // }, 0);
 
 function toy () {
   log("init");
@@ -135,13 +134,14 @@ function simpleSingle () {
     var results = Util.createResults();
 
     $("#go").prop( "disabled", true );
+    var start = Date.now();
     var newResults = validator.validate(fixedMap, []);
 
     // Render newResults.
     newResults.forEach(newRes => {
       var key = Util.indexKey(newRes.node, newRes.shape);
       if (key in index) {
-        updateCells[key].text(newRes.status).attr("class", newRes.status);
+        markResult(updateCells[key], newRes.status, start);
       } else {
         log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
       }
@@ -185,6 +185,7 @@ function progressiveSingle () {
 
     running = true;
     $("#go").addClass("stoppable").text("stop");
+    var start = Date.now();
     setTimeout(validateSingleEntry, 0);
     return false;
 
@@ -203,11 +204,7 @@ function progressiveSingle () {
 
       } else {
         // Skip entries that were already processed.
-        function alreadyDone (row) {
-          var key = Util.indexKey(fixedMap[row].node, fixedMap[row].shape);
-          return updateCells[key].attr("class") !== "work";
-        }
-        while (alreadyDone(currentEntry))
+        while (results.has(fixedMap[currentEntry]))
           ++currentEntry;
 
         var queryMap = [fixedMap[currentEntry++]]; // ShapeMap with single entry.
@@ -217,7 +214,7 @@ function progressiveSingle () {
         newResults.forEach(newRes => {
           var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
-            updateCells[key].text(newRes.status).attr("class", newRes.status);
+            markResult(updateCells[key], newRes.status, start);
           } else {
             log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
           }
@@ -277,6 +274,7 @@ function interactiveWorker () {
 
     running = true;
     $("#go").addClass("stoppable").text("stop");
+    var start = Date.now();
 
     function expectCreated (msg) {
       if (msg.data.response !== "created")
@@ -291,7 +289,7 @@ function interactiveWorker () {
         msg.data.results.forEach(newRes => {
           var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
-            updateCells[key].text(newRes.status).attr("class", newRes.status);
+            markResult(updateCells[key], newRes.status, start);
           } else if (!results.has(newRes)) {
             log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
           }
@@ -352,6 +350,7 @@ function killerWorker () {
 
     running = true;
     $("#go").addClass("stoppable").text("stop");
+    var start = Date.now();
 
     function expectCreated (msg) {
       if (msg.data.response !== "created")
@@ -367,7 +366,7 @@ function killerWorker () {
         msg.data.results.forEach(newRes => {
           var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
-            updateCells[key].text(newRes.status).attr("class", newRes.status);
+            markResult(updateCells[key], newRes.status, start);
           } else if (!results.has(newRes)) {
             log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
           }
@@ -410,6 +409,7 @@ function simpleWorker () {
     var results = Util.createResults();
 
     $("#go").prop( "disabled", true );
+    var start = Date.now();
 
     function expectCreated (msg) {
       if (msg.data.response !== "created")
@@ -425,7 +425,7 @@ function simpleWorker () {
         msg.data.results.forEach(newRes => {
           var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
-            updateCells[key].text(newRes.status).attr("class", newRes.status);
+            markResult(updateCells[key], newRes.status, start);
           } else if (!results.has(newRes)) {
             log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
           }

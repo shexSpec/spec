@@ -24,8 +24,8 @@ return {
   // Would be constructed with a schema but deps are expressed in the table.
   create: function (fixedMap) {
 
-    var index = Util.indexShapeMap(fixedMap);
-    var deps = fixedMap.reduce((ret, ent) => {
+    var fixedMapIndex = Util.indexShapeMap(fixedMap);
+    var fixedMapDeps = fixedMap.reduce((ret, ent) => {
       ret[Util.indexKey(ent.node, ent.shape)] = getAllDependencies(ent);
       return ret;
     }, {});
@@ -37,7 +37,7 @@ return {
         return [];
       var depKey = Util.indexKey(ent.depNode, ent.depShape);
       var ret = [depKey];
-      var refd = index[depKey];
+      var refd = fixedMapIndex[depKey];
       if (refd)
         ret = ret.concat(getAllDependencies(refd));
       return ret;
@@ -48,17 +48,20 @@ return {
         var passes = ent.node.substr(1) === ent.shape.substr(1);
         var verdict = passes ? "pass" : "fail";
         var key = Util.indexKey(ent.node, ent.shape);
-        deps[key].forEach(depKey => {
+        var deps = fixedMapDeps[key].map(depKey => {
           var fallback = depKey.match(/^(.*?)@(.*?)$/);
-          var dep = depKey in index ? index[depKey] : {
+          var dep = depKey in fixedMapIndex ? fixedMapIndex[depKey] : {
             node: fallback[1].trim(),
             shape: fallback[2].trim()
           };
-          ret = ret.concat({node: dep.node, shape: dep.shape, status: "pass"})
+          return {node: dep.node, shape: dep.shape, status: "pass"};
         });
-        Burn(250);
-        return ret.concat({node: ent.node, shape: ent.shape, status: verdict});
-      }, []);
+        var thisPair = {node: ent.node, shape: ent.shape, status: verdict};
+        if (ret.has(thisPair))
+          return ret.merge(deps);
+        Burn(200); // Chew up some CPU time.
+        return ret.merge(deps.concat([thisPair]));
+      }, Util.createResults()).getShapeMap();
     }
   }
 };

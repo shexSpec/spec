@@ -33,6 +33,7 @@ Util = (function () {
             known[key] = ent;
           }
         });
+        return this;
       },
 
       has: function (ent) {

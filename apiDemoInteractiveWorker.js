@@ -33,11 +33,7 @@ onmessage = function (msg) {
 
       } else {
         // Skip entries that were already processed.
-        function alreadyDone (row) { return false;
-          var key = Util.indexKey(fixedMap[row].node, fixedMap[row].shape);
-          return updateCells[key].attr("class") !== "work";
-        }
-        while (alreadyDone(currentEntry))
+        while (results.has(fixedMap[currentEntry]))
           ++currentEntry;
 
         var queryMap = [fixedMap[currentEntry++]]; // ShapeMap with single entry.

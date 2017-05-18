@@ -14,6 +14,7 @@
       td:nth-child(1), td:nth-child(3) { border-right-width: 0; }
       td:nth-child(2), td:nth-child(4) { border-left-width:  0; }
       td:nth-child(2):before, td:nth-child(4):before { content: "@"; margin-left: -.5em; font-size: 70%; vertical-align: top; }
+      td:nth-child(5) { font-family: monospace; }
       .work { background-color: #ffa; }
       .pass { background-color: #cfc; }
       .fail { background-color: #fcc; }
@@ -26,15 +27,15 @@
       #messages { clear: both; }
       .panel textarea { resize:both; min-height:30ex; min-width:18em; }
       .error { border: thick dotted red; border-top-width: thin; border-bottom-width: thin; }
-      /* div h2 button { color: "green" !important ;  } */
-      .now-playing { color: green ;  }
+      button.now-playing, span.now-playing { color: green;  }
+      textarea.now-playing { border: thin solid green;  }
     </style>
   </head>
   <body>
     <div id="parameters">
       <table id="shapemap">
         <tr><th colspan="2">validate</th><th colspan="2">depends</th><th><button id="go">go</button></th></tr>
-        <tr><th>node</th><th>shape</th><th>node</th><th>shape</th><th>stat</th></tr>
+        <tr><th>node</th><th>shape</th><th>node</th><th>shape</th><th>time</th></tr>
         <tr><td> n1</td><td> s1</td><td>n11</td><td>s11</td><td></td></tr>
         <tr><td> n1</td><td> s2</td><td>n11</td><td>s11</td><td></td></tr>
         <tr><td> n2</td><td> s1</td><td>n11</td><td>s11</td><td></td></tr>
