@@ -35,6 +35,11 @@ Util = (function () {
         });
       },
 
+      has: function (ent) {
+        var key = indexKey(ent.node, ent.shape);
+        return (key in known);
+      },
+
       report: function () {
         log("<span class=\"results\">" + _shapeMap.map(elt => {
           return JSON.stringify(elt);

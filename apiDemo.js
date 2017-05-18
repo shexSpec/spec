@@ -252,7 +252,7 @@ function worker () {
           var key = Util.indexKey(newRes.node, newRes.shape);
           if (key in index) {
             updateCells[key].text(newRes.status).attr("class", newRes.status);
-          } else {
+          } else if (!results.has(newRes)) {
             log(`<span class="lookit">extra result:</span> ${newRes.node}@${newRes.shape} ${newRes.status}`);
           }
         });
