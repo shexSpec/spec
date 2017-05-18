@@ -209,13 +209,14 @@ function worker () {
         function expectAborted (msg) {
           if (["update", "done"].indexOf(msg.data.response) !== -1)
             return;
-          if (msg.data.response !== "ack")
+          if (msg.data.response !== "aborted")
             throw "expected aborted: " + JSON.stringify(msg.data);
-          log("web worker aborted");
+          log("aborted at entry " + msg.data.stoppedAt);
           ShExWorker.onmessage = abort = running = false;
           $("#go").removeClass("stoppable").text("go");
         }
       }
+      ShExWorker.postMessage({ request: "abort" });
       abort = true;
       return false;
     }

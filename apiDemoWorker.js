@@ -3,7 +3,8 @@ importScripts('Validator.js');
 
 var abort = false, running = false;
 var fixedMap = null, validator = null;
-onmessage = function (msg) {debugger;
+onmessage = function (msg) {
+
   switch (msg.data.request) {
   case "create":
     fixedMap = msg.data.fixedMap;
@@ -21,9 +22,9 @@ onmessage = function (msg) {debugger;
     function validateSingleEntry () {
       if (abort) {
         // Emergency Stop button was pressed.
-        log(`aborted at entry ${currentEntry}`);
+        console.log(`aborted at entry ${currentEntry}`);
         abort = running = false;
-        postMessage({ response: "aborted" });
+        postMessage({ response: "aborted", stoppedAt: currentEntry });
 
       } else if (currentEntry === fixedMap.length) {
         // Done -- show results and restore interface.
@@ -56,7 +57,8 @@ onmessage = function (msg) {debugger;
 
   case "abort": // kills validator
     validator = null;
-    postMessage({ response: "aborted" });
+    abort = true;
+    // postMessage({ response: "aborted" });
     break;
 
   default:
