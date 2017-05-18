@@ -9,7 +9,7 @@ onmessage = function (msg) {
   case "create":
     fixedMap = msg.data.fixedMap;
     validator = Validator.create(msg.data.fixedMap);
-    postMessage({ response: "ack" });
+    postMessage({ response: "created" });
     break;
 
   case "validate":

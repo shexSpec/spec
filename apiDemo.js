@@ -57,10 +57,10 @@ $(document).ready(function () {
   }
   $("#go").on("click", evt => { wrap(() => { runner(evt); }); });
 
-  [
-    {func: toy, name: "toy"},
-    {func: progress, name: "progress"},
-    {func: worker, name: "worker"},
+  [ // ⛕
+    {func: toy, name: "⛔ toy"},
+    {func: interactiveProgress, name: "⛗ progress"},
+    {func: interactiveWorker, name: "⛗ worker"},
   ].forEach(elt => {
     var button = $(`<button>${elt.name}</button>`);
     var h2 = $("<h2\>").append(button);
@@ -107,7 +107,7 @@ function toy () {
   };
 }
 
-function progress () {
+function interactiveProgress () {
   var abort = false, running = false;
   return function (evt) {
     if (running) {
@@ -196,16 +196,16 @@ function worker1 () {
   }
 }
 
-function worker () {
+function interactiveWorker () {
   // WebWorker with callbacks for progressive validation.
   var abort = false, running = false;
-  var ShExWorker = new Worker("apiDemoWorker.js");
+  var ShExWorker = new Worker("apiDemoInteractiveWorker.js");
   return function (evt) {
     if (running) {
       // Emergency Stop button was pressed.
       if (ShExWorker.onmessage !== null) {
         ShExWorker.onmessage = expectAborted;
-        log("aborting web worker");
+        log("aborting web worker...");
         function expectAborted (msg) {
           if (["update", "done"].indexOf(msg.data.response) !== -1)
             return;
@@ -229,7 +229,7 @@ function worker () {
     for (var k in updateCells)
       updateCells[k].text("…").attr("class", "work");
 
-    ShExWorker.onmessage = expectAck;
+    ShExWorker.onmessage = expectCreated;
     ShExWorker.postMessage({ request: "create", fixedMap: fixedMap});
 
     var currentEntry = 0;
@@ -238,9 +238,9 @@ function worker () {
     running = true;
     $("#go").addClass("stoppable").text("stop");
 
-    function expectAck (msg) {
-      if (msg.data.response !== "ack")
-        throw "expected ack: " + JSON.stringify(msg.data);
+    function expectCreated (msg) {
+      if (msg.data.response !== "created")
+        throw "expected created: " + JSON.stringify(msg.data);
       ShExWorker.onmessage = parseUpdatesAndResults;
       ShExWorker.postMessage({request: "validate", queryMap: fixedMap});
     }
