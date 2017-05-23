@@ -1,7 +1,6 @@
 importScripts('Util.js');
 importScripts('Validator.js');
 
-var abort = false, running = false;
 var fixedMap = null, validator = null;
 onmessage = function (msg) {
 
@@ -16,19 +15,11 @@ onmessage = function (msg) {
     var currentEntry = 0, options = msg.data.options || {};
     var results = Util.createResults();
 
-    running = true;
     setTimeout(validateSingleEntry, 0);
 
     function validateSingleEntry () {
-      if (abort) {
-        // Emergency Stop button was pressed.
-        console.log(`aborted at entry ${currentEntry}`);
-        abort = running = false;
-        postMessage({ response: "aborted", stoppedAt: currentEntry });
-
-      } else if (currentEntry === fixedMap.length) {
+      if (currentEntry === fixedMap.length) {
         // Done -- show results and restore interface.
-        running = false;
         if (options.includeDoneResults)
           postMessage({ response: "done", results: results.getShapeMap() });
         else
@@ -52,12 +43,6 @@ onmessage = function (msg) {
         setTimeout(validateSingleEntry, 0);
       }
     }
-    break;
-
-  case "abort": // kills validator
-    validator = null;
-    abort = true;
-    // postMessage({ response: "aborted" });
     break;
 
   default:
