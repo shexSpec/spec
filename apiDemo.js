@@ -263,10 +263,6 @@ function progressiveSingle () {
         $("#go").removeClass("stoppable").text("go");
 
       } else {
-        // Skip entries that were already processed.
-        while (results.has(fixedMap[currentEntry]))
-          ++currentEntry;
-
         var queryMap = [fixedMap[currentEntry++]]; // ShapeMap with single entry.
         var newResults = validator.validate(queryMap, results.getShapeMap());
 
@@ -283,6 +279,12 @@ function progressiveSingle () {
         // Merge into results.
         results.merge(newResults);
 
+        // Skip entries that were already processed.
+        while (currentEntry < fixedMap.length &&
+               results.has(fixedMap[currentEntry])) {
+          console.log(currentEntry, fixedMap[currentEntry]);
+          ++currentEntry;
+        }
         // Call this function again after yielding.
         setTimeout(validateSingleEntry, 0);
       }
@@ -337,10 +339,6 @@ function progressivePromise () {
         $("#go").removeClass("stoppable").text("go");
 
       } else {
-        // Skip entries that were already processed.
-        while (results.has(fixedMap[currentEntry]))
-          ++currentEntry;
-
         var queryMap = [fixedMap[currentEntry++]]; // ShapeMap with single entry.
         new Promise((accept, reject) => {
           accept(validator.validate(queryMap, results.getShapeMap()));
@@ -358,6 +356,11 @@ function progressivePromise () {
 
           // Merge into results.
           results.merge(newResults);
+
+          // Skip entries that were already processed.
+          while (currentEntry < fixedMap.length &&
+                 results.has(fixedMap[currentEntry]))
+            ++currentEntry;
 
           // Call this function again after yielding.
           setTimeout(validateSingleEntry, 0);
