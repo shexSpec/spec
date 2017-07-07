@@ -426,15 +426,16 @@ _:User2
       <h3>ShapeMap Definition</h3>
 
       <p>
-        A <dfn data-lt="ShapeMap">fixed ShapeMap</dfn> is a set of pairs of an RDF node and a shape expression identifier.
-        The shape expression identifier is either a <a>shapeExprLabel</a> or a distinct token identifying the <dfn>start shape expression</dfn> <code>"start shape"</code>. <span class="issue">this is deliberately not a legal relative IRI</span>
+        A <dfn data-lt="ShapeMap">fixed ShapeMap</dfn> is a set of pairs of a <dfn>nodeSelector</dfn>, an RDF node) and <dfn>shapeLabel</dfn>, a shape expression identifier.
+        The <a>shapeLabel</a> member is either a <a>shapeExprLabel</a> or the token <code>"START"</code> to identify the <a>start</a> shape expression.
         <!-- <span class="math">[(Node<sub>1</sub>, Shape<sub>2</sub>), (Node<sub>1</sub>, Shape<sub>2</sub>), (Node<sub>2</sub>, Shape<sub>1</sub>), …])</span> where <span class="math">node</span> is an RDF node, and <span class="math">Shape<sub>n</sub></span> is a shape label from a schema.
         We use the JSON list notation <span class="math">[Shape<sub>2</sub>, Shape<sub>3</sub>, …]</span> for sets with the additional understanding that the list neither order nor repetition have any semantic impact. -->
-        When used as an argument to <a class="function" href="#isValid">isValid</a>, a <span class="math">node/shapeExprLabel</span> association in a ShapeMap indicates that the validation process should test whether <span class="math">node</span> satisfies the constraint given by the definition of the <a>shapeExpr</a> labeled by <span class="math">shapeExprLabel</span>.
+        When used as an argument to <a class="function" href="#isValid">isValid</a>, a <span class="math">nodeSelector/shapeLabel</span> association in a ShapeMap indicates that the validation process should test whether <span class="math">nodeSelector</span> satisfies the constraint given by the definition of the <a>shapeExpr</a> labeled by <span class="math">shapeLabel</span>.
       </p>
 
+<!-- 
       <p>
-        When represented in JSON, a fixed ShapeMap has the attributes <code>node</code> and <code>shape</code>.
+        When represented in JSON, a fixed ShapeMap has the attributes <code>nodeSelector</code> and <code>shapeLabel</code>.
         An <dfn>annotated ShapeMap</dfn> may have additional attributes, not specified here.
       </p>
 
@@ -457,41 +458,12 @@ _:User2
     An example <a>ShapeMap</a> is:
   </p>
   <div class="json">
-    <pre>[ { "node": "http://inst.example/#Issue1", "shape": "http://schema.example/IssueShape" },
-  { "node": "http://inst.example/#Issue1", "shape": "start shape" },
-  { "node": "_:User2": "_:UserShape", "http://schema.example/EmployeeShape"} ]</pre>
+    <pre>[ { "nodeSelector": "http://inst.example/#Issue1", "shapeLabel": "http://schema.example/IssueShape" },
+  { "nodeSelector": "http://inst.example/#Issue1", "shapeLabel": "START" },
+  { "nodeSelector": "_:User2", "shapeLabel": "http://schema.example/EmployeeShape"} ]</pre>
   </div>
       </div>
-
-      <p>
-        The combination of <code>node</code> and <code>shape</code> in a ShapeMap is unique.
-        No repetitions are permited.
-      </p>
-
-      <div class="example">
-        <p>
-          This JSON ShapeMap would not be valid as it has two entries for a node/shape pair:
-        </p>
-<!--         <pre class="error nohighlight">
-[
-  { "node": "&lt;http://data.example/node1&gt;,
-    "shape": "&lt;http://schema.example/Shape2&gt;,
-    <span class="lookit">"status": "nonconformant"</span> },
-  { "node": "&lt;http://data.example/node1&gt;,
-    "shape": "&lt;http://schema.example/Shape2&gt; }
-]</pre>
-        <p>
-          The above example has conflicting values for the <a>status</a>: the first asserts that <code>node1</code> does not conform to <code>Shape2</code>; the second has no status and so asserts the default which is that it does conform.
-          The following example is also invalid because it has duplicates even though they do not conflict:
-        </p> -->
-        <pre class="error nohighlight">
-[
-  { "node": "&lt;http://data.example/node1&gt;,
-    "shape": "&lt;http://schema.example/Shape2&gt; },
-  { "node": "&lt;http://data.example/node1&gt;,
-    "shape": "&lt;http://schema.example/Shape2&gt; }
-]</pre>
-      </div>
+-->
       </section>
 
       <section id="validation">
