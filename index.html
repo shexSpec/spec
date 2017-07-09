@@ -1701,7 +1701,7 @@ _:User2
           <li><span class="param">TC</span> has a valueExpr which contains <span class="param">SE<sub>2</sub></span>.</li>
         </ul>
         <p>
-	        A reference of <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> is negated if <span class="param">S</span> appears under an odd number of negations in <span class="param">shapeExpr</span>.
+	        A reference of <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> is negated if <span class="param">S</span> appears under any number of negations in <span class="param">shapeExpr</span>.
 	        A negated reference is one of the following:
               </p>
       <ul>
@@ -1723,6 +1723,39 @@ _:User2
               <pre class="shexc">                                                       
 ex:S {ex:p <span class="lookit">NOT</span> @ex:S}
 
+
+
+
+
+                </pre>
+              </div>
+              <p>
+                This indirect self-reference does not violate the negation requirement:
+              </p>
+              <div class="repchoice">
+                <pre class="json">{ "type": "Schema",
+  "shapes": [
+    { "id": "http://schema.example/#US",
+      "type": "Shape",
+      "expression": { "type": "TripleConstraint",
+        "predicate": "http://schema.example/#Up",
+        "valueExpr": { "type": "ShapeNot",
+          "shapeExpr": "http://schema.example/#UT" } } },
+    { "id": "http://schema.example/#UT",
+      "type": "Shape",
+      "expression": { "type": "TripleConstraint",
+        "predicate": "http://schema.example/#Uq",
+        "valueExpr": "http://schema.example/#US" } }
+  ] }</pre>
+                <pre class="shexc">                                                         
+ex:S {ex:p @ex:T} <!-- ex:S NOT @ex:T -->
+
+
+
+
+
+
+ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
 
 
 
@@ -1792,9 +1825,9 @@ ex:U .
                 </pre>
               </div>
               <p>
-                This doubly-negated self-reference of ex:T does not violate the negation requirement:
+                This doubly-negated self-reference of ex:T violates the negation requirement:
               </p>
-              <div class="repchoice">
+              <div class="repchoice error">
                 <pre class="json">{ "type": "Schema", "shapes": [
     { "id": "http://schema.example/#T",
       "type": "Shape",
