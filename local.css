@@ -220,8 +220,8 @@
       pre.schema.hljs.xquery { color: #070; border: thin solid #0f0; }
       pre.data.hljs.javascript { color: #007; border: thin solid #00f; }
       .inline .hljs { padding: 0; }
-      th.schema { color: #070; }
-        th.data { color: #007; }
+      .schema { color: #070; }
+        .data { color: #007; }
 /*      pre.schema:before { content: schema }
         pre.data:before { content: data   }
 */
@@ -338,6 +338,7 @@ div.shexjTable th { text-align: right; }
       margin-left: 0;
       line-height: 1.2;
       }
+      .fake-example { background-color: #FCFAEE }
       .example.wrapper .fail {
       background-color: #fceefa
       }

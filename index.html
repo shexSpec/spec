@@ -19,6 +19,11 @@
           "authors": ["Gregg Kellogg"],
           "title": "Shape Expression Vocabulary",
           "href":  "http://www.w3.org/ns/shex#"
+        },
+        "shape-map": {
+          "authors": ["Eric Prud'hommeaux", "Thomas Baker"],
+          "title": "ShapeMap Structure and Language",
+          "href":  "http://shex.io/shape-map/"
         }
       },
       specStatus:     "CG-DRAFT",
@@ -259,11 +264,14 @@
       <!-- button id="toggleRDF">Toggle RDF ("r")</button> <button id="toggleExamples">Toggle Examples ("e")</button> <button id="toggleSquished">Render only abstract syntax ("a")</button -->
 
       <section id="results">
-        <h3>Results</h3>
+        <h3>Validation process</h3>
         <div>
           <p>
-            ShEx validation results may be reported as an <a>annotated ShapeMap</a>.
-            For illustration purposes in this specification, results of validation are represented in a table associating node/shape pairs with a pass or fail and a reason for failure:
+            ShEx validation is defined in this document by the <a class="function" href="#isValid">isValid</a> function.
+            This process takes as input a <a>shapes schema</a>, an <a>RDF graph</a>, and a <dfn data-cite="shape-map#dfn-fixed-shapemap" data-lt="shapemap">fixed ShapeMap</dfn> (abbreviated as "ShapeMap" in this document).
+            ShEx validation results may be reported as a <dfn data-cite="shape-map#dfn-result-shapemap">result ShapeMap</dfn> [[!shape-map]].
+            <br/>
+            For illustration purposes in this specification, both the fixed ShapeMap input and the result ShapeMap output are represented in a table with four columns: <span class="data fake-example">node</span>: a ShapeMap nodeSelector, <span class="schema fake-example">shape</span>: a ShapeMap shapeLabel, <span class="fake-example">result</span>: ("<span class="pass">pass</span>" or "<span class="fail">fail</span>"), and an optional <span class="fake-example">reason</span>: an informal, human-readable explanation.
           </p>
         <table class="example">
           <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
@@ -399,7 +407,7 @@ _:User2
       <section id="shapes-schema">
       <h3>Shapes Schema</h3>
       <p>
-        A shapes schema is captured in a <span class="jobjref"><dfn>Schema</dfn></span> object:
+        A shapes schema is captured in a <span class="jobjref"><dfn data-lt="shapes schema">Schema</dfn></span> object:
       </p>
       <div class="shexjTable">
         <table class="shexj">
@@ -422,55 +430,11 @@ _:User2
       </div>
       </section>
 
-      <section id="shape-map">
-      <h3>ShapeMap Definition</h3>
-
-      <p>
-        A <dfn data-lt="ShapeMap">fixed ShapeMap</dfn> is a set of pairs of a <dfn>nodeSelector</dfn>, an RDF node) and <dfn>shapeLabel</dfn>, a shape expression identifier.
-        The <a>shapeLabel</a> member is either a <a>shapeExprLabel</a> or the token <code>"START"</code> to identify the <a>start</a> shape expression.
-        <!-- <span class="math">[(Node<sub>1</sub>, Shape<sub>2</sub>), (Node<sub>1</sub>, Shape<sub>2</sub>), (Node<sub>2</sub>, Shape<sub>1</sub>), …])</span> where <span class="math">node</span> is an RDF node, and <span class="math">Shape<sub>n</sub></span> is a shape label from a schema.
-        We use the JSON list notation <span class="math">[Shape<sub>2</sub>, Shape<sub>3</sub>, …]</span> for sets with the additional understanding that the list neither order nor repetition have any semantic impact. -->
-        When used as an argument to <a class="function" href="#isValid">isValid</a>, a <span class="math">nodeSelector/shapeLabel</span> association in a ShapeMap indicates that the validation process should test whether <span class="math">nodeSelector</span> satisfies the constraint given by the definition of the <a>shapeExpr</a> labeled by <span class="math">shapeLabel</span>.
-      </p>
-
-<!-- 
-      <p>
-        When represented in JSON, a fixed ShapeMap has the attributes <code>nodeSelector</code> and <code>shapeLabel</code>.
-        An <dfn>annotated ShapeMap</dfn> may have additional attributes, not specified here.
-      </p>
-
-      <div class="example">
-  <p>
-    Consider a shapes schema with a start shape and shape labels <span class="json">"http://schema.example/IssueShape"</span>, <span class="json">"_:UserShape"</span>:
-  </p>
-      <div class="repchoice">
-        <pre class="json">{ "type": "Schema", "start": <span class="comment">…</span>, "shapes": [
-  { "id": "http://schema.example/IssueShape", <span class="comment">…</span> },
-  { "id": "_:UserShape", <span class="comment">…</span> },
-  { "id": "http://schema.example/EmployeeShape", <span class="comment">…</span> } ] }</pre>
-        <pre class="shexc">    start { … }                                         
-    ex:IssueShape { … }
-    _:UserShape { … }
-    ex:EmployeeShape { … }
-</pre>
-      </div>
-  <p>
-    An example <a>ShapeMap</a> is:
-  </p>
-  <div class="json">
-    <pre>[ { "nodeSelector": "http://inst.example/#Issue1", "shapeLabel": "http://schema.example/IssueShape" },
-  { "nodeSelector": "http://inst.example/#Issue1", "shapeLabel": "START" },
-  { "nodeSelector": "_:User2", "shapeLabel": "http://schema.example/EmployeeShape"} ]</pre>
-  </div>
-      </div>
--->
-      </section>
-
       <section id="validation">
       <h3>Validation Definition</h3>
 
       <p>
-        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every node/shape pair <span class="math">(n, s)</span> in <span class="math">m</span>, <span class="math">s</span> has a corresponding <a>shape expression</a> <span class="math">se</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.
+        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every nodeSelector/shapeLabel pair <span class="math">(n, s)</span> in <span class="math">m</span>, <span class="math">s</span> has a corresponding <a>shape expression</a> <span class="math">se</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.
         <code class="function">satisfies</code> is defined below for each form of <a>shape expression</a>.
       </p>
 
