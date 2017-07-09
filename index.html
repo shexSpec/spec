@@ -270,13 +270,12 @@
             ShEx validation is defined in this document by the <a class="function" href="#isValid">isValid</a> function.
             This process takes as input a <a>shapes schema</a>, an <a>RDF graph</a>, and a <dfn data-cite="shape-map#dfn-fixed-shapemap" data-lt="shapemap">fixed ShapeMap</dfn> (abbreviated as "ShapeMap" in this document).
             ShEx validation results may be reported as a <dfn data-cite="shape-map#dfn-result-shapemap">result ShapeMap</dfn> [[!shape-map]].
-            <br/>
-            For illustration purposes in this specification, both the fixed ShapeMap input and the result ShapeMap output are represented in a table with four columns: <span class="data fake-example">node</span>: a ShapeMap nodeSelector, <span class="schema fake-example">shape</span>: a ShapeMap shapeLabel, <span class="fake-example">result</span>: ("<span class="pass">pass</span>" or "<span class="fail">fail</span>"), and an optional <span class="fake-example">reason</span>: an informal, human-readable explanation.
+            For illustration purposes in this specification, both the fixed ShapeMap input and the result ShapeMap output are represented in a table with four columns: <span class="data fake-example">node</span>: a ShapeMap nodeSelector, <span class="schema fake-example">shape</span>: a ShapeMap shapeLabel, <span class="fake-example">result</span>: "<span class="pass">pass</span>" (conformant) or "<span class="fail">fail</span>" (nonconformant), and an optional <span class="fake-example">reason</span>: an informal, human-readable explanation.
           </p>
         <table class="example">
-          <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-          <tr class="pass"><td>&lt;Shape1&gt;</td><td>&lt;node1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-          <tr class="fail"><td>&lt;Shape1&gt;</td><td>&lt;node2&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
+          <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+          <tr class="pass"><td>&lt;node1&gt;</td><td>&lt;Shape1&gt;</td><td>pass</td><td class="noreason"></td></tr>
+          <tr class="fail"><td>&lt;node2&gt;</td><td>&lt;Shape1&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
         </table>
         </div>
         </section>
@@ -646,10 +645,10 @@ _:User2
 &lt;issue2&gt; <span style="border-bottom: thin solid red;">ex:taste</span> ex:GoodEnough .
 <span class="fail">&lt;issue3&gt; ex:state "just fine" .</span></pre>
             <table>
-              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail">expected 1 <code>ex:state</code> property.</td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be an IRI, literal found.</td></tr>
+              <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+              <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail">expected 1 <code>ex:state</code> property.</td></tr>
+              <tr class="fail"><td>&lt;issue3&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be an IRI, literal found.</td></tr>
             </table>
             <p>
               Note that &lt;issue2&gt; <span class="fail">fails</span> not because of a nodeKind violation but instead because of a <a href="#cardinality">Cardinality</a> violation described below.
@@ -689,10 +688,10 @@ _:User2
 <span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span>
 <span class="fail">&lt;issue3&gt; ex:submittedOn "2016-07"^^xsd:date .</span></pre>
             <table>
-              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be an <code>xsd:date</code>, <code>xsd:dateTime</code> found.</td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>2016-07</code> is not a valid <code>xsd:date</code>.</td></tr>
+              <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+              <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be an <code>xsd:date</code>, <code>xsd:dateTime</code> found.</td></tr>
+              <tr class="fail"><td>&lt;issue3&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>2016-07</code> is not a valid <code>xsd:date</code>.</td></tr>
             </table>
           </div>
 
@@ -732,9 +731,9 @@ _:User2
 &lt;issue3&gt; rdfs:label "emits dense black smoke"@en .
 <span class="fail">&lt;issue4&gt; rdfs:label "unexpected odor" .</span></pre>
             <table>
-              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue4&gt;</td><td>fail</td><td class="fail"><code>rdfs:label</code> expected to be an <code>rdf:langString</code>, <code>xsd:string</code> found.</td></tr>
+              <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;issue3&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+              <tr class="fail"><td>&lt;issue4&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>rdfs:label</code> expected to be an <code>rdf:langString</code>, <code>xsd:string</code> found.</td></tr>
             </table>
           </div>
         </section>
@@ -791,9 +790,9 @@ _:User2
 &lt;issue1&gt; ex:submittedBy &lt;http://a.example/bob&gt; . <span class="comment"># 20 characters</span>
 <span class="fail">&lt;issue2&gt; ex:submittedBy "Bob" .</span> <span class="comment"># 3 characters</span></pre>
           <table>
-            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:submittedBy</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
+            <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:submittedBy</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
           </table>
         </div>
 
@@ -828,9 +827,9 @@ _:User2
 &lt;issue6&gt; ex:submittedBy _:genUser218 .
 <span class="fail">&lt;issue7&gt; ex:submittedBy _:genContact817 .</span></pre>
           <table>
-            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue6&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genuser[0-9]+</code>.</td></tr>
+            <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;issue6&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;issue7&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genuser[0-9]+</code>.</td></tr>
           </table>
         </div>
 
@@ -863,10 +862,10 @@ _:User2
 &lt;product7&gt; ex:trademark "\t\\\U0001D4B8?" . <span class="comment"># Turtle literals have escape characters <a href="https://www.w3.org/TR/turtle/#grammar-production-ECHAR">[tbnrf"'\]</a>.</span>
 <span class="fail">&lt;product8&gt; ex:trademark "\t\\\\U0001D4B8?" .</span></pre>
           <table>
-            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;ProductShape&gt;</td><td>&lt;product6&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="pass"><td>&lt;ProductShape&gt;</td><td>&lt;product7&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;ProductShape&gt;</td><td>&lt;product8&gt;</td><td>fail</td><td class="fail">found "<code>\U0001D4B8</code>" instead of "<code>𝒸</code>" (codepoint U+1D4B8).</td></tr>
+            <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;product6&gt;</td><td>&lt;ProductShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;product7&gt;</td><td>&lt;ProductShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;product8&gt;</td><td>&lt;ProductShape&gt;</td><td>fail</td><td class="fail">found "<code>\U0001D4B8</code>" instead of "<code>𝒸</code>" (codepoint U+1D4B8).</td></tr>
           </table>
         </div>
       </section>
@@ -923,11 +922,11 @@ _:User2
 <span class="fail">&lt;issue3&gt; ex:confirmations 0 .</span>
 <span class="fail">&lt;issue4&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
             <table>
-              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="pass"><td>&lt;IssueShape&gt;</td><td>&lt;issue2&gt;</td><td>pass</td><td class="noreason"></td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue3&gt;</td><td>fail</td><td class="fail"><code>0</code> is less than <code>1</code>.</td></tr>
-              <tr class="fail"><td>&lt;IssueShape&gt;</td><td>&lt;issue4&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
+              <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+              <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+              <tr class="pass"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+              <tr class="fail"><td>&lt;issue3&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>0</code> is less than <code>1</code>.</td></tr>
+              <tr class="fail"><td>&lt;issue4&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:romanNumeral</code> is not a numeric datatype.</td></tr>
             </table>
           </div>
       </section>
@@ -988,9 +987,9 @@ _:User2
 &lt;issue1&gt; ex:state ex:Resolved .
 <span class="fail">&lt;issue2&gt; ex:state ex:Unresolved .</span></pre>
           <table>
-            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;NoActionIssueShape&gt;</td><td>&lt;issue2&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be <code>ex:Resolved</code> or <code>ex:Rejected</code>, <code>ex:Unresolved</code> found.</td></tr>
+            <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;NoActionIssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;NoActionIssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be <code>ex:Resolved</code> or <code>ex:Rejected</code>, <code>ex:Unresolved</code> found.</td></tr>
           </table>
         </div>
 
@@ -1034,12 +1033,12 @@ _:User2
 <span class="fail">&lt;issue6&gt; foaf:mbox "missing" .</span>
 <span class="fail">&lt;issue7&gt; foaf:mbox &lt;mailto:sales-contacts-999@a.example&gt; .</span></pre>
           <table>
-            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue3&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue4&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue5&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue6&gt;</td><td>fail</td><td class="fail"><code>"missing"</code> is not in value set.</td></tr>
-            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue7&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:sales-contacts-999@a.example&gt;</code> is excluded.</td></tr>
+            <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;issue3&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;issue4&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;issue5&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;issue6&gt;</td><td>&lt;EmployeeShape&gt;</td><td>fail</td><td class="fail"><code>"missing"</code> is not in value set.</td></tr>
+            <tr class="fail"><td>&lt;issue7&gt;</td><td>&lt;EmployeeShape&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:sales-contacts-999@a.example&gt;</code> is excluded.</td></tr>
           </table>
         </div>
 
@@ -1079,10 +1078,10 @@ _:User2
 &lt;issue9&gt; foaf:mbox &lt;mailto:core-engineering-2112@a.example&gt; .
 <span class="fail">&lt;issue10&gt; foaf:mbox &lt;mailto:engineering-2112@a.example&gt; .</span></pre>
           <table>
-            <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>reason</th></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue8&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="pass"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue9&gt;</td><td>pass</td><td class="noreason"></td></tr>
-            <tr class="fail"><td>&lt;EmployeeShape&gt;</td><td>&lt;issue10&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:engineering-2112@a.example&gt;</code> is excluded.</td></tr>
+            <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
+            <tr class="pass"><td>&lt;issue8&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="pass"><td>&lt;issue9&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
+            <tr class="fail"><td>&lt;issue10&gt;</td><td>&lt;EmployeeShape&gt;</td><td>fail</td><td class="fail"><code>&lt;mailto:engineering-2112@a.example&gt;</code> is excluded.</td></tr>
           </table>
         </div>
 
@@ -2015,10 +2014,10 @@ ex:S NOT @ex:T AND @ex:U
 &lt;http://a.example/n2&gt; &lt;http://a.example/p1&gt; "a", "b" .
 &lt;http://a.example/n3&gt; &lt;http://a.example/p2&gt; &lt;http://a.example/o2&gt; .</pre>
             <table>
-              <tr><th class="schema">shape</th><th class="data">node</th><th>result</th><th>print arguments</th></tr>
-              <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
-              <tr class="pass"><td>&lt;S1&gt;</td><td>&lt;n2&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
-              <tr class="fail"><td>&lt;S1&gt;</td><td>&lt;n3&gt;</td><td>fail</td><td class="noreason"></td></tr>
+              <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>print arguments</th></tr>
+              <tr class="pass"><td>&lt;n1&gt;</td><td>&lt;S1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
+              <tr class="pass"><td>&lt;n2&gt;</td><td>&lt;S1&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
+              <tr class="fail"><td>&lt;n3&gt;</td><td>&lt;S1&gt;</td><td>fail</td><td class="noreason"></td></tr>
             </table>
           </div>
         </section>
