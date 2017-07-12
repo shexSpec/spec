@@ -1669,45 +1669,56 @@ _:User2
       <section id="negation-requirement">
         <h4>Negation Requirement</h4>
         <p>
-          A schema MUST NOT contain any <a>shapeExpr</a> <span class="param">SE</span> which has a <a>shape</a> which contains a <a>TripleConstraint</a> with negated references, either directly or transitively, to <span class="param">SE</span>.
+          A schema MUST NOT contain any <a>shapeExpr</a> <span class="param">SE</span> which has a <a>shape</a> which contains<!-- a <a>TripleConstraint</a> with--> negated references, either directly or transitively, to <span class="param">SE</span>.
         </p>
-        <p class="leadup">The closure of a <a>shapeExpr</a> <span class="param">SE</span> includes every <a>shape</a> <span class="param">S</span> that appears directly or by <a>shapeExprRef</a> in</p>
+        <p class="leadup">The <dfn>shapeExpr closure</dfn> of a <a>shapeExpr</a> <span class="param">SE</span> includes every <a>shape</a> <span class="param">S</span> that appears directly or by <a>shapeExprRef</a> in</p>
         <ul class="followup leadup">
-          <li class="followup leadup"><a>ShapeAnd</a>.<span class="param">shapeExprs</span> or the closure of <a>ShapeAnd</a>.<span class="param">shapeExprs</span> or</li>
-          <li class="followup leadup"><a>ShapeOr</a>.<span class="param">shapeExprs</span> or the closure of <a>ShapeOr</a>.<span class="param">shapeExprs</span> or</li>
-          <li class="followup leadup"><a>ShapeNot</a>.<span class="param">expression</span> or the closure of <a>ShapeNot</a>.<span class="param">shapeExprs</span>.</li>
+          <li class="followup leadup"><a>ShapeAnd</a>.<span class="param">shapeExprs</span> or the shapeExpr closure of <a>ShapeAnd</a>.<span class="param">shapeExprs</span> or</li>
+          <li class="followup leadup"><a>ShapeOr</a>.<span class="param">shapeExprs</span> or the shapeExpr closure of <a>ShapeOr</a>.<span class="param">shapeExprs</span> or</li>
+          <li class="followup leadup"><a>ShapeNot</a>.<span class="param">shapeExpr</span> or the shapeExpr closure of <a>ShapeNot</a>.<span class="param">shapeExpr</span>.</li>
         </ul>
-        <p class="followup">
-          If <span class="param">SE</span> is a shape <span class="param">S</span>, the closure of <span class="param">SE</span> is <span class="param">S</span>.
-          A shapeExpr <span class="param">SE</span> <code>contains</code> shape <span class="param">S</span> if <span class="param">S</span> appears in the closure of <span class="param">SE</span>.
-        </p>
+        <!-- p class="followup">
+          If <span class="param">SE</span> is a shape <span class="param">S</span>, the shapeExpr closure of <span class="param">SE</span> is <span class="param">S</span>.
+          A shapeExpr <span class="param">SE</span> <code>contains</code> shape <span class="param">S</span> if <span class="param">S</span> appears in the shapeExpr closure of <span class="param">SE</span>.
+        </p -->
 
-        <p class="leadup">The closure of a <a>tripleExpr</a> <span class="param">TE</span> includes every <a>TripleConstraint</a> <span class="param">TC</span> that appears directly or by <a>tripleExprRef</a> in</p>
+        <p class="leadup">The <dfn>tripleExpr closure</dfn> of a <a>tripleExpr</a> <span class="param">TE</span> includes every <a>TripleConstraint</a> <span class="param">TC</span> that appears directly or by <a>tripleExprRef</a> in</p>
         <ul class="followup leadup">
           <li class="followup leadup"><a>EachOf</a>.<span class="param">tripleExprs</span> or the closure of <a>EachOf</a>.<span class="param">tripleExprs</span> or</li>
           <li class="followup leadup"><a>OneOf</a>.<span class="param">tripleExprs</span> or the closure of <a>OneOf</a>.<span class="param">tripleExprs</span>.</li>
         </ul>
-        <p class="followup">
+        <!-- p class="followup">
           If <span class="param">TE</span> is a TripleConstraint <span class="param">TC</span>, the closure of <span class="param">TE</span> is <span class="param">TC</span>.
           A tripleExpr <span class="param">TE</span> <code>contains</code> TripleConstraint <span class="param">TC</span> if <span class="param">TC</span> appears in the closure of <span class="param">TE</span>.
-        </p>
+        </p -->
 
         <p class="leadup">
 	        A shapeExpr <span class="param">SE<sub>1</sub></span> refers to a shapeExpr <span class="param">SE<sub>2</sub></span> if
         </p>
         <ul class="followup">
-          <li class="followup leadup"><span class="param">SE<sub>1</sub></span> contains a shape <span class="param">S</span> and</li>
-          <li class="followup leadup"><span class="param">S</span> has an expression which contains a TripleConstraint <span class="param">TC</span> and</li>
-          <li><span class="param">TC</span> has a valueExpr which contains <span class="param">SE<sub>2</sub></span>.</li>
+          <li><span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> or</li>
+          <li><span class="param">SE<sub>2</sub></span> appears in a <a>TripleConstraint</a><span class="param">.valueExpr</span> of a shape in <span class="param">SE<sub>1</sub></span>, i.e.
+        <ul class="followup">
+          <li class="followup leadup">some shape <span class="param">S</span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> and</li>
+          <li class="followup leadup">some <a>TripleConstraint</a> <span class="param">TC</span> appears in the <a>tripleExpr closure</a> of <span class="param">S</span>.<span class="param">tripleExprs</span> and</li>
+          <li>the tripleExpr <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">TC</span>.</li>
         </ul>
-        <p>
-	        A reference of <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> is negated if <span class="param">S</span> appears under any number of negations in <span class="param">shapeExpr</span>.
-	        A negated reference is one of the following:
-              </p>
-      <ul>
-        <li>
-          <p>a <span class="param">shapeExprRef</span> in a <span class="param">tripleExpr</span> under a <span class="jobjref"><a>ShapeNot</a></span></p>
+          </li>
+        </ul>
+        <p class="leadup">
+	        For each reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span>:.
+        </p>
+        <ul class="followup">
+          <li>The reference is <span class="param">negated</span> if <span class="param">SE<sub>2</sub></span> appears within an odd number of negations inside <span class="param">SE<sub>1</sub></span>.</li>
+          <li>
+            If <span class="param">SE<sub>2</sub></span> appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>.
+          </li>
+        </ul>
+        <p class="note">
+          One strategy for detecting negated cycles is stratified negation.
+        </p>
           <div class="example">
+            <h3 class="followup">Examples with <span class="jobjref"><a>ShapeNot</a></span></h3>
             <p>
               This negated self-reference violates the negation requirement:
             </p>
@@ -1825,9 +1836,9 @@ ex:U .
                 </pre>
               </div>
               <p>
-                This doubly-negated self-reference of ex:T violates the negation requirement:
+                This doubly-negated self-reference of ex:T does not violate the negation requirement:
               </p>
-              <div class="repchoice error">
+              <div class="repchoice">
                 <pre class="json">{ "type": "Schema", "shapes": [
     { "id": "http://schema.example/#T",
       "type": "Shape",
@@ -1933,10 +1944,8 @@ ex:S NOT @ex:T AND @ex:U
                 </pre>
               </div>
           </div>
-        </li>
-        <li>
-          a <span class="param">valueExpr</span> in a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>
           <div class="example">
+            <h3 class="followup">Examples with <span class="jobjref"><a>Shape</a></span><span class="param">.extra</span> predicate</h3>
             <p>
               This self-reference on a <a>predicate</a> designated as <span class="param">extra</span> violates the negation requirement:
             </p>
@@ -1984,8 +1993,6 @@ ex:S NOT @ex:T AND @ex:U
               </pre>
             </div>
           </div>
-        </li>
-      </ul>
     </section>
 
     </section>
