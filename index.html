@@ -175,13 +175,14 @@
         In the JSON notation,
       </p>
 
-      <div class="shexj simupre"><a class="obj">Schema</a> { <a class="param">startActs</a>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</div>
+      <div class="shexj simupre"><a class="obj">Schema</a> { <a class="param">startActs</a>:[<a class="objref">SemAct</a>]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">imports</a>:[<a>IRI</a>]? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</div>
       <p>
         signifies that a <code>Schema</code> has three optional components called <a class="param">startActs</a>, <a class="param">start</a> and <a class="param">shapes</a>:
       </p>
       <ul>
         <li><span class="param">startActs</span> is a list of <a class="objref">SemAct</a>.</li>
         <li><span class="param">start</span> is a <a class="objref">shapeExpr</a>.</li>
+        <li><span class="param">imports</span> is a list of <a class="objref">IRI</a>.</li>
         <li><span class="param">shapes</span> is an array of <a class="nobref">shapeExpr</a>.</li>
       </ul>
 
@@ -208,7 +209,7 @@
 <a class="obj">EachOf</a>          { <a class="param">id</a>:<a class="nobjref">tripleExprLabel</a>? <dfn class="param">expressions</dfn>:[<a class="nobjref">tripleExpr</a>] ... }
 <a class="nob">tripleExprLabel</a> = <a>IRI</a> | <a>BNODE</a> ;</div>
         <p>
-          The JSON structure may include references to <a data-lt="shape">shapes</a> and <a>triples</a>:
+          The JSON structure may include references to <a data-lt="shape">shape expressions</a> and <a>triple expressions</a>:
         </p>
         <div class="shexj simupre"><a class="obj">shapeExpr</a>     = <a class="objref">ShapeOr</a> | ... | <a class="nobjref">shapeExprRef</a> ;
 <a class="nob">shapeExprRef</a>  = <a class="nobjref">shapeExprLabel</a> ;
@@ -410,7 +411,7 @@ _:User2
       </p>
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">imports</dfn>:[<a class="nobref">IRI</a>]? <dfn class="param">shapes</dfn>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
         </table>
       </div>
       <p>
@@ -472,7 +473,7 @@ _:User2
             an external shape (<span class="jobjref"><a>ShapeExternal</a></span>) which is an extension mechanism to externally define e.g. functional shapes or prohibitively large value sets.
           </li>
           <li>
-            a shape reference (<span class="jobjref"><a>shapeExprLabel</a></span>) identifies another shape in the schema.
+            a shape reference (<span class="jobjref"><a>shapeExprLabel</a></span>) identifies another shape in the schema or an <a href="#import">imported schema</a>.
           </li>
         </ul>
         <section id="shape-expressions-shexj">
@@ -1458,6 +1459,198 @@ _:User2
     </section>
       </section>
 
+    <section id="import">
+      <h3>ShEx Import</h3>
+      <p>
+        The presence of <span class="param">imports</span> requires that:
+      </p>
+      <ul>
+        <li>each IRI in <span class="param">imports</span> be resolved and</li>
+        <li>the returned representation of that IRI be interpreted as a ShEx <span class="math">S</span> and</li>
+        <li>each <a class="jobjref">shapeExpr</a> in <span class="math">S</span>.<span class="param">shapes</span> be in scope for resolving shape expression references and</li>
+        <li>each <a class="jobjref">tripleExpr</a> with a <a class="jobjref">tripleExprLabel</a> be in scope for resolving triple expression references.</li>
+      </ul>
+      <p>
+        If any imported schema imports other schemas, shape and triple expression labels from those schemas are also in scope.
+      </p>
+          <div class="example">
+            <div class="example-title marker"><span>Import example 1 - Shape and Triple Expressions</span></div>
+            <div class="repchoice">
+              <pre class="json nohighlight"><span class="label">schema1:</span>
+{ "type": "Schema", "imports": ["http://schema.example/schema2"], "shapes": [
+  { "id": "http://schema.example/EmployeeShape",
+    "type": "Shape", "expression": {
+      "type": "EachOf", "expressions": [
+        "http://schema.example/nameExpr",
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/empID",
+          "valueExpr": { "type": "NodeConstraint",
+            "datatype": "http://www.w3.org/2001/XMLSchema#integer" } } ] } } ] }
+<span class="label">schema2:</span>
+{ "type": "Schema", "shapes": [
+  { "id": "http://schema.example/PersonShape",
+    "type": "Shape", "expression": {
+      "id": "http://schema.example/nameExpr",
+      "type": "TripleConstraint",
+      "predicate": "http://xmlns.com/foaf/0.1/name" } } ] }
+</pre>
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
+&lt;http://schema.example/EmployeeShape&gt; {
+    &amp;&lt;http://schema.example/nameExpr&gt; ;
+    &lt;http://schema.example/empID&gt;
+          &lt;http://www.w3.org/2001/XMLSchema#integer&gt;
+
+
+
+
+}
+<span class="label">schema2:</span>
+<span class="lookit">&lt;http://schema.example/PersonShape&gt;</span> {
+
+  <span class="lookit">$&lt;http://schema.example/nameExpr&gt;</span>
+    &lt;http://xmlns.com/foaf/0.1/name&gt; ;
+}
+
+</pre>
+            </div>
+            <p>
+              Both the shape expression <code>&lt;PersonShape&gt;</code> and the triple expression <code>&lt;nameExpr&gt;</code> are in scope.<br/>
+              <span class="label">schema2</span>'s <code>&lt;nameExpr&gt;</code> is referenced in <span class="label">schema1</span>'s <code>&lt;EmployeeShape&gt;</code>
+            </p>
+          </div>
+      <p>
+        Redundant imports are treated as a single import.
+        This includes circular imports:
+      </p>
+          <div class="example">
+            <div class="example-title marker"><span>Import example 2 - Circular Import</span></div>
+            <div class="repchoice">
+              <pre class="json nohighlight"><span class="label">schema1:</span>
+{ "type": "Schema",
+  "imports": ["http://schema.example/schema2", "http://schema.example/schema3"],
+  "shapes": [
+  { "id": "http://schema.example/schema1#S1",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/p1",
+      "valueExpr": "http://schema.example/schema1#S2"
+    } } ] }
+<span class="label">schema2:</span>
+{ "type": "Schema",
+  "imports": ["http://schema.example/schema3"],
+  "shapes": [
+  { "id": "http://schema.example/schema1#S2",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/p2",
+      "valueExpr": "http://schema.example/schema1#S3"
+    } } ] }
+<span class="label">schema3:</span>
+{ "type": "Schema",
+  "imports": ["http://schema.example/schema1"],
+  "shapes": [
+  { "id": "http://schema.example/schema1#S3",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/p3",
+      "valueExpr": "http://schema.example/schema1#S1", "min": 0,
+    } } ] }
+</pre>
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
+
+IMPORT &lt;http://schema.example/schema2&gt; &lt;http://schema.example/schema3&gt;
+
+&lt;http://schema.example/schema1#S1&gt; {
+
+  &lt;http://schema.example/p1&gt; @&lt;http://schema.example/schema1#S2&gt;
+
+
+<span class="label">schema2:</span>
+
+IMPORT &lt;http://schema.example/schema3&gt;
+
+&lt;http://schema.example/schema1#S2&gt; {
+
+  &lt;http://schema.example/p2&gt; @&lt;http://schema.example/schema1#S3&gt;
+
+
+<span class="label">schema3:</span>
+
+IMPORT &lt;http://schema.example/schema1&gt;
+
+&lt;http://schema.example/schema1#S3&gt; {
+
+  &lt;http://schema.example/p3&gt; @&lt;http://schema.example/schema1#S1&gt;?
+
+
+</pre>
+            </div>
+          </div>
+      <p>
+        It is an error if there are any conflicting labels for shape expressions or triple expressions, or if any imported schema has either a <a class="jobjref">startActs</a> or a <a class="jobjref">start</a> member.
+      </p>
+          <div class="example">
+            <div class="example-title marker"><span>Import example 3 - Erroneous Import</span></div>
+            <div class="repchoice error">
+              <pre class="json nohighlight"><span class="label">schema1:</span>
+{ "type": "Schema",
+  "imports": ["http://schema.example/schema2"],
+  "shapes": [
+  { "id": "http://schema.example/schema1#S1",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/p1",
+      "valueExpr": "http://schema.example/schema1#S2"
+    } } ] }
+<span class="label">schema2:</span>
+{ "type": "Schema",
+  "imports": ["http://schema.example/schema3"],
+  <span class="lookit">"start": "http://schema.example/schema1#S2"</span>,
+  "shapes": [
+  { <span class="lookit">"id": "http://schema.example/schema1#S1"</span>,
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/p1",
+      "valueExpr": "http://schema.example/schema1#S2"
+    } },
+  { "id": "http://schema.example/schema1#S2",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/p2",
+      "valueExpr": <span class="lookit">"http://schema.example/schema1#S3"</span>
+    } } ] }
+</pre>
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                  
+
+IMPORT &lt;http://schema.example/schema2&gt;
+
+&lt;http://schema.example/schema1#S1&gt; {
+
+  &lt;http://schema.example/p1&gt; @&lt;http://schema.example/schema1#S2&gt;
+
+}
+<span class="label">schema2:</span>
+
+IMPORT &lt;http://schema.example/schema3&gt;
+<span class="lookit">start=@&lt;http://schema.example/schema1#S2&gt;</span>
+
+<span class="lookit">&lt;http://schema.example/schema1#S1&gt;</span> {
+
+  &lt;http://schema.example/p1&gt; @&lt;http://schema.example/schema1#S2&gt;
+
+}
+&lt;http://schema.example/schema1#S2&gt; {
+
+  &lt;http://schema.example/p2&gt; <span class="lookit">@&lt;http://schema.example/schema1#S3&gt;</span>
+
+}
+</pre>
+            </div>
+          <p>
+            This import fails because:
+          </p>
+          <ul>
+            <li><code>&lt;http://schema.example/schema1#S1&gt;</code> has conflicting definitions and</li>
+            <li>an included schema has a <code>start</code> directive and</li>
+            <li>the reference to <code>&lt;http://schema.example/schema1#S3&gt;</code> is not resolvable after imports.</li>
+          </ul>
+          </div>
+    </section>
+
     <section id="schema-requirements">
       <h3>Schema Requirements</h3>
       <p>
@@ -1488,7 +1681,7 @@ _:User2
 
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
-        <p>An <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
+        <p>An <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map (or an <a href="#import">imported schema's</a> map) and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
         The function <code>shapeExprWithId(<span class="param">shapeExprRef</span>)</code> returns the shape's <span class="param">shapeExpr</span>.
       </p>
 
@@ -3380,6 +3573,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <tr class="obj"><td style="border-top: thick solid white; border-bottom: thick solid white; "></td><td><a class="obj">Schema</a></td><td>{</td><td>
 <a class="param">startActs</a>:[<a class="objref">SemAct</a>]?
 <a class="param">start</a>:<a class="nobref">shapeExpr</a>?
+<a class="param">imports</a>:[<a>IRI</a>]?
 <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }
 </td></tr>
   <tr class="obj"><td></td><td class="obj"><a>SemAct</a></td><td>{</td><td><span class="param">name</span>:<a>IRI</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
@@ -3403,7 +3597,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td id="prod-directive">[<span class="prodNo">2</span>]   </td>
 <td><code class="production prod">directive</code></td>
 <td>   ::=   </td>
-<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-baseDecl">baseDecl</a></span> | <span class="prod"><a class="grammarRef" href="#prod-prefixDecl">prefixDecl</a></span></code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-baseDecl">baseDecl</a></span> | <span class="prod"><a class="grammarRef" href="#prod-prefixDecl">prefixDecl</a></span> | <span class="prod"><a class="grammarRef" href="#prod-importDecl">importDecl</a></span></code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-baseDecl">[<span class="prodNo">3</span>]   </td>
@@ -3417,6 +3611,13 @@ PREFIX ex: &lt;http://schema.example/&gt;
 <td>   ::=   </td>
 <td><code class="content">"PREFIX" <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-IRIREF">IRIREF</a></span></code></td>
 </tr>
+<tr style="vertical-align: baseline">
+<td id="prod-importDecl">[<span class="prodNo">4½</span>]   </td>
+<td><code class="production prod">importDecl</code></td>
+<td>   ::=   </td>
+<td><code class="content">"IMPORT" <span class="prod"><a class="grammarRef" href="#term-IRIREF">IRIREF</a></span></code></td>
+</tr>
+  <tr class="params"><td></td><td colspan="3">"<code>IMPORT</code>" is described in <a href="#import">ShEx Import</a>.</td></tr>
 <tr style="vertical-align: baseline">
 <td id="prod-notStartAction">[<span class="prodNo">5</span>]   </td>
 <td><code class="production prod">notStartAction</code></td>
