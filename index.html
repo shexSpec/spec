@@ -1587,7 +1587,7 @@ IMPORT &lt;http://schema.example/schema1&gt;
         It is an error if there are any conflicting labels for shape expressions or triple expressions, or if any imported schema has either a <a class="jobjref">startActs</a> or a <a class="jobjref">start</a> member.
       </p>
           <div class="example">
-            <div class="example-title marker"><span>Import example 2 - Erroneous Import</span></div>
+            <div class="example-title marker"><span>Import example 3 - Erroneous Import</span></div>
             <div class="repchoice error">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
@@ -1640,15 +1640,15 @@ IMPORT &lt;http://schema.example/schema3&gt;
 }
 </pre>
             </div>
-          </div>
           <p>
             This import fails because:
           </p>
           <ul>
-            <li><code>&lt;http://schema.example/schema1#S2&gt;</code> has conflicting definitions and</li>
-            <li>an included schemas has a <code>start</code> directive and</li>
+            <li><code>&lt;http://schema.example/schema1#S1&gt;</code> has conflicting definitions and</li>
+            <li>an included schema has a <code>start</code> directive and</li>
             <li>the reference to <code>&lt;http://schema.example/schema1#S3&gt;</code> is not resolvable after imports.</li>
           </ul>
+          </div>
     </section>
 
     <section id="schema-requirements">
