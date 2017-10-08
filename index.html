@@ -4860,16 +4860,16 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <p>This section has been submitted to the Internet Engineering Steering
     Group (IESG) for review, approval, and registration with IANA.</p>
 
-  <h3>application/shex</h3>
+  <h3>text/shex</h3>
   <dl>
     <dt>Type name:</dt>
-    <dd>application</dd>
+    <dd>text</dd>
     <dt>Subtype name:</dt>
     <dd>shex</dd>
     <dt>Required parameters:</dt>
     <dd>None</dd>
     <dt>Encoding considerations:</dt>
-    <dd>See <a data-cite="rfc6839#section-3.1">RFC&nbsp;6839, section 3.1</a>.</dd>
+    <dd>ShEx Compact Syntax (ShExC) is a text language which is encoded in UTF-8.</dd>
     <dt>Security considerations:</dt>
     <dd>Given that <a>ShExC</a> allows the substitution of long IRIs with short terms,
       <a>ShExC</a> documents may expand considerably when processed and, in the worst case,
@@ -4878,7 +4878,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
     <dt>Interoperability considerations:</dt>
     <dd>Not Applicable</dd>
     <dt>Published specification:</dt>
-    <dd>http://www.w3.org/TR/json-ld</dd>
+    <dd><a href="">This document</a></dd>
     <dt>Applications that use this media type:</dt>
     <dd>Any programming environment that requires the exchange of
       directed graphs. Implementations of ShEx have been created for
