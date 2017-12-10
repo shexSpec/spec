@@ -4983,17 +4983,26 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 
     <section id="security">
       <h3>Security Considerations</h3>
-      <p class="issue">Consider requirements from <a href="https://w3ctag.github.io/security-questionnaire/">Self-Review Questionnaire: Security and Privacy</a>.</p>
-      <p>Since <a>ShEx</a> is intended to be a pure data exchange format for
-        validating <a>RDF graphs</a>, the <a>ShExJ</a> serialization SHOULD NOT be passed through a
-        code execution mechanism such as JavaScript's <code>eval()</code>
-        function to be parsed. An (invalid) document may contain code that,
-        when executed, could lead to unexpected side effects compromising
-        the security of a system.</p>
-      <p>See also, <a href="#iana-considerations" class="sectionRef"></a></p>
+      <p>
+        Revealing the structure of an RDF graph can reveal information about the content of conformant data.
+        For instance, a schema with a predicate to describe cancer stage indicates that conforming graphs describe patients with cancer.
+      </p>
+      <p>
+        The process of testing a graph's conformance to a schema may involve many detailed queries which could draw resources to respond to API calls or SPARQL queries.
+      </p>
+      <p>
+        ShEx has an extension mechanism which can, in principle, evalute arbitrary code, possibly as some trusted agent.
+        Such extensions should not be executed if they don't come from a trusted source.
+      </p>
+      <p>
+        Since <a>ShEx</a> is intended to be a pure data exchange format for validating <a>RDF graphs</a>, the <a>ShExJ</a> serialization SHOULD NOT be passed through a code execution mechanism such as JavaScript's <code>eval()</code> function to be parsed.
+        An (invalid) document may contain code that, when executed, could lead to unexpected side effects compromising the security of a system.</p>
+        <p>
+          See also, <a href="#iana-considerations" class="sectionRef"></a>.
+        </p>
     </section>
 
-    <section id="idl-index" class="appendix informative">
-    </section>
+    <!-- <section id="idl-index" class="appendix informative"> -->
+    <!-- </section> -->
   </body>
 </html>
