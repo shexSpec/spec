@@ -275,7 +275,7 @@ div.shexjTable th { text-align: right; }
 .grammarTable tr.obj td:nth-child(2) { text-align: right; }
 .grammarTable tr.obj td:nth-child(3) { text-align: right; }
 
-.comment { color: #e20; font-style: italic; }
+.comment, .comment a[href] { color: #e20; font-style: italic; }
 
 .grammarTable .grammarParagraph /* needs .grammarTable specificity for at least FF and chromium */
     { border-left:thin solid white; border-right:thin solid white; }
