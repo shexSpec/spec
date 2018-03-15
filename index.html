@@ -500,6 +500,28 @@ _:User2
             a shape reference (<span class="jobjref"><a>shapeExprLabel</a></span>) identifies another shape in the schema or an <a href="#import">imported schema</a>.
           </li>
         </ul>
+
+	<section id="shape-expressions-nonrecursive-refs-requirement">
+          <h4>Non Recursive Shape References Requirement</h4>
+	
+	<p>
+	  Additionally, in a shapes schema, a shape label cannot refer to itself through a shape reference neither directly nor recursively.
+	  The <dfn>shapeExprLabel-closure</dfn> of a <a>shapeExprLabel</a> <span class="param">sl</span> is defined recursively as follows.
+	  If <span class="param">se</span> is the shape expression that defines <span class="param">sl</span> in the schema, then shapeExprLabel-closure(<span class="param">sl</span>) contains:</p>
+
+	<ul>
+	  <li>
+	    every <a>shapeExprLabel</a>  <span class="param">sl2</span> that appears as a <span class="jobjref"><a>shapeExprRef</a></span> in <span class="param">se</span>
+	  </li>
+	  <li>
+	    every <a>shapeExprLabel</a>  <span class="param">sl3</span> that belongs shapeExprLabel-closure(<span class="param">sl2</span>) for every <a>shapeExprLabel</a> <span class="param">sl2</span> that appears as a <span class="jobjref"><a>shapeExprRef</a></span> in <span class="param">se</span>
+	  </li>
+	</ul>
+	<p>
+	  A shapes schema is not well formed if it defines a shape label <span class="param">sl</span> that belongs to its own shapeExprLabel-closure.
+	</p>
+	</section>
+	
         <section id="shape-expressions-shexj">
           <h4>JSON Syntax</h4>
 
