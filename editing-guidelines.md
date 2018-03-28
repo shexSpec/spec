@@ -6,7 +6,7 @@ Here is how they should be used.
 ## Tags
 
 * **dfn**: highlights a term being defined. The label attribute defines a tag to this position, to be used with the a tag
-* **a**: <a>some term</a> adds a reference to <dfn label="some term">...</dfn>
+* **a**: `<a>some term</a>` adds a reference to `<dfn label="some term">...</dfn>`
 * **code**: 
 
 
