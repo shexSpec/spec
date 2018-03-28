@@ -458,10 +458,37 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every nodeSelector/shapeLabel pair <span class="math">(n, s)</span> in <span class="math">m</span>, <span class="math">s</span> has a corresponding <a>shape expression</a> <span class="math">se</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.
-        <code class="function">satisfies</code> is defined below for each form of <a>shape expression</a>.
+        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">Sch</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every nodeSelector/shapeLabel pair <span class="math">(n, s)</span> in <span class="math">m</span>, the node n is considered to have shape s.
+	For that, m must be included in the fixed shapeMap <code class="function">exhaustiveShapeMap(<span class="math">G</span>, <span class="math">Sch</span>)</code> defined in the sequel using a <a href="#stratification">stratification</a> of the schema Sch and the function satisfies.
+	The function satisfies is defined below for each form of a <a>shape expression</a>.
       </p>
 
+      <p>
+	Given a stratification of Sch to 1..k, define the series of k shapeMaps exhaustiveShapeMapAux(1, G, Sch) ... exhaustiveShapeMapAux(k, G, Sch):
+      </p>
+      <ul>
+	<li>
+	  exhaustiveShapeMapAux(1, G, Sch) is the union of all shape maps m such for every (n,s) in m, stratum(s) = 1 and satisfies(n, se, G, m)
+	</li>
+	<li>
+	  for every i in 2..n, exhaustiveShapeMapAux(i, G, Sch) is the union of all shape maps m such that exhaustiveShapeMap(i-1, G, Sch) is included in m and for every (n,s) in m, stratum(s) <= k and satisfies(n, se, G, m)
+																								</li>
+      </ul>
+      <p>
+	Then exhaustiveShapeMap(G, Sch) = exhaustiveShapeMapAux(k, G, Sch).
+      </p>
+      <p>
+	A schema might have several different stratifications but exhaustiveShapeMap is the same for all these stratifications.
+      </p>
+	
+      <div class="note">
+	<p>
+	  It is not necessary to compute exhaustiveShapeMap in order to decide isValid(Sch, G, m).
+	  It can be done by computing only a portion of exhaustiveShapeMap by an appropriate algorithm presented in separate document.
+	</p>
+      </div>
+
+      
       <div class="note">
       <p>
   Validation of a <a>graph</a> <span class="math">G</span> does not necessarily require the construction of a <a>ShapeMap</a> with every node in <span class="math">G</span>.
@@ -474,10 +501,10 @@ _:User2
       </p>
       </div>
 
-      <p>
-        Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <!-- @@set of --> shape for every node and shape visited during a validation process.
-        The remainder of this document uses <span class="math">m</span> to indicate such a mapping.
-      </p>
+      <!-- <p> -->
+      <!--   Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <\!-- @@set of -\-> shape for every node and shape visited during a validation process. -->
+      <!--   The remainder of this document uses <span class="math">m</span> to indicate such a mapping. -->
+      <!-- </p> -->
       </section>
 
       <section id="shape-expressions">
@@ -500,27 +527,6 @@ _:User2
             a shape reference (<span class="jobjref"><a>shapeExprLabel</a></span>) identifies another shape in the schema or an <a href="#import">imported schema</a>.
           </li>
         </ul>
-
-	<section id="shape-expressions-nonrecursive-refs-requirement">
-          <h4>Non Recursive Shape References Requirement</h4>
-	
-	<p>
-	  Additionally, in a shapes schema, a shape label cannot refer to itself through a shape reference neither directly nor recursively.
-	  The <dfn>shapeExprLabel-closure</dfn> of a <a>shapeExprLabel</a> <span class="param">sl</span> is defined recursively as follows.
-	  If <span class="param">se</span> is the shape expression that defines <span class="param">sl</span> in the schema, then shapeExprLabel-closure(<span class="param">sl</span>) contains:</p>
-
-	<ul>
-	  <li>
-	    every <a>shapeExprLabel</a>  <span class="param">sl2</span> that appears as a <span class="jobjref"><a>shapeExprRef</a></span> in <span class="param">se</span>
-	  </li>
-	  <li>
-	    every <a>shapeExprLabel</a>  <span class="param">sl3</span> that belongs shapeExprLabel-closure(<span class="param">sl2</span>) for every <a>shapeExprLabel</a> <span class="param">sl2</span> that appears as a <span class="jobjref"><a>shapeExprRef</a></span> in <span class="param">se</span>
-	  </li>
-	</ul>
-	<p>
-	  A shapes schema is not well formed if it defines a shape label <span class="param">sl</span> that belongs to its own shapeExprLabel-closure.
-	</p>
-	</section>
 	
         <section id="shape-expressions-shexj">
           <h4>JSON Syntax</h4>
@@ -570,7 +576,6 @@ _:User2
       <p>
         <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that a node <span class="math">n</span> and <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>shapeMap</a> <span class="math">m</span>.<br/>
         <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that <span class="math">n</span> and <span class="math">G</span> do not satisfy <span class="math">se</span> with the given <a>shapeMap</a> <span class="math">m</span>.
-        <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">_</span>)</code> indicates that no <a>shapeMap</a> would allow <span class="math">n</span> and <span class="math">G</span> to satisfy <span class="math">se</span>.
       </p>
       <p>
         <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> is true if and only if:
@@ -579,12 +584,12 @@ _:User2
       <ul>
         <li id="satisfies-NodeConstraint"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<span class="math">n</span>, <span class="math">se</span>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>shapeMap</a>.</li>
-        <li id="satisfies-Shape-proxy"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">Shape</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
+        <li id="satisfies-Shape-proxy"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">Shape</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code> as <a href="#satisfies-Shape">defined below</a> in Shapes and Triple Expressions.</li>
         <li id="satisfies-ShapeOr"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
         <li id="satisfies-ShapeAnd"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span>, <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
         <li id="satisfies-ShapeNot"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> <span class="math">se2</span> at <span class="param">shapeExpr</span>, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
         <li id="satisfies-ShapeExternal"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
-        <li id="satisfies-shapeExprRef"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and there exists in the schema a <a>shape expression</a> <span class="math">se2</span> with that <span class="param">id</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.</li>
+        <li id="satisfies-shapeExprRef"><span class="math">Se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <span class="math">m</span> contains the nodeSelector/shapeLabel pair <span class="math">(n,l)</span> where <span class="math">l</span> is the <span class="param">shapeExprLabel</span> of <span class="math">se</span>.</li>
       </ul>
 
       <div class="example">
@@ -1275,7 +1280,7 @@ _:User2
           </div -->
         </li>
         <li>
-          <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that a <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
+          <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline repchoice">
@@ -1727,10 +1732,26 @@ IMPORT &lt;http://schema.example/schema3&gt;
 
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
-        <p>An <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map (or an <a href="#import">imported schema's</a> map) and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
+        <p>A <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map (or an <a href="#import">imported schema's</a> map) and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
         The function <code>shapeExprWithId(<span class="param">shapeExprRef</span>)</code> returns the shape's <span class="param">shapeExpr</span>.
       </p>
+	<p>
+	  Additionally, a <span class="jobjref"><a>shapeExprLabel</a></span> cannot refer to itself through a shape reference neither directly nor recursively.
+	  The <dfn>shapeExprLabel-closure</dfn> of a <span class="jobjref"><a>shapeExprLabel</a></span> <span class="param">sl</span> is defined recursively as follows.
+	  If <code>se = shapeExprWithId(<span class="param">sl</span>)</code>, then shapeExprLabel-closure(<span class="param">sl</span>) contains:</p>
 
+	<ul>
+	  <li>
+	    every <a>shapeExprLabel</a>  <span class="param">sl2</span> that appears as a <span class="jobjref"><a>shapeExprRef</a></span> in <span class="param">se</span>
+	  </li>
+	  <li>
+	    every <a>shapeExprLabel</a>  <span class="param">sl3</span> that belongs shapeExprLabel-closure(<span class="param">sl2</span>) for every <a>shapeExprLabel</a> <span class="param">sl2</span> that appears as a <span class="jobjref"><a>shapeExprRef</a></span> in <span class="param">se</span>
+	  </li>
+	</ul>
+	<p>
+	  A shapes schema MUST NOT define a shape label <span class="param">sl</span> that belongs to its own shapeExprLabel-closure.
+	</p>
+	
       <div class="example">
         <p>
           Following are two valid shapeExprRefs:
@@ -1834,6 +1855,10 @@ IMPORT &lt;http://schema.example/schema3&gt;
         The function <code>tripleExprWithId(<span class="param">tripleExprRef</span>)</code> returns the <a>triple expression</a> with the id <span class="param">tripleExprRef</span>.
       </p>
 
+	<p>
+	  TBD: no recursive definition of triple expr references
+	</p>
+	
       <div class="example">
         <p>
           Following is a valid <a>triple expression</a> reference:
@@ -1910,23 +1935,50 @@ IMPORT &lt;http://schema.example/schema3&gt;
       <section id="negation-requirement">
         <h4>Negation Requirement</h4>
         <p>
-          A schema MUST NOT contain any <a>shapeExpr</a> <span class="param">SE</span> which has a <a>shape</a> which contains<!-- a <a>TripleConstraint</a> with--> negated references, either directly or transitively, to <span class="param">SE</span>.
+          A schema MUST NOT contain any <a>shapeExprLabel</a> that has a <a>negated reference</a> to itself, either directly or transitively.
         </p>
-        <p class="leadup">The <dfn>shapeExpr closure</dfn> of a <a>shapeExpr</a> <span class="param">SE</span> includes every <a>shape</a> <span class="param">S</span> that appears directly or by <a>shapeExprRef</a> in</p>
+        <p class="leadup">
+	  The <dfn>shapeExpr closure</dfn> of a <a>shapeExpr</a> <span class="param">SE</span> includes every <a>tripleExpr</a> <span class="param">TE</span> that appears directly or by <a>shapeExprRef</a> in <span class="param">SE</span>.
+	  That is, TE belongs to the shapeExpr closure of SE if
+	</p>
         <ul class="followup leadup">
-          <li class="followup leadup"><a>ShapeAnd</a>.<span class="param">shapeExprs</span> or the shapeExpr closure of <a>ShapeAnd</a>.<span class="param">shapeExprs</span> or</li>
-          <li class="followup leadup"><a>ShapeOr</a>.<span class="param">shapeExprs</span> or the shapeExpr closure of <a>ShapeOr</a>.<span class="param">shapeExprs</span> or</li>
-          <li class="followup leadup"><a>ShapeNot</a>.<span class="param">shapeExpr</span> or the shapeExpr closure of <a>ShapeNot</a>.<span class="param">shapeExpr</span>.</li>
+	  <li>
+	    SE is a <a>Shape</a> and TE is equal to SE.expression or
+	  </li>
+          <li>
+	    SE is a <a>ShapeAnd</a> and TE belongs to the shapeExpr closure of some SE1 in SE.<span class="param">shapeExpr</span> or
+	  </li>
+          <li>
+	    SE is a <a>ShapeOr</a> and TE belongs to the shapeExpr closure of some SE1 in SE.<span class="param">shapeExprs</span> or
+	  </li>
+          <li>
+	    SE is a <a>ShapeNot</a> and TE belongs to the shapeExpr closure of SE.<span class="param">shapeExpr</span>
+	  </li>
+	  <li>
+	    SE is a <a>shapeExprRef</a> and TE belongs to the shapeExpr closure of the shapeExpr SE1 that has SE as label
+	  </li>
         </ul>
         <!-- p class="followup">
           If <span class="param">SE</span> is a shape <span class="param">S</span>, the shapeExpr closure of <span class="param">SE</span> is <span class="param">S</span>.
           A shapeExpr <span class="param">SE</span> <code>contains</code> shape <span class="param">S</span> if <span class="param">S</span> appears in the shapeExpr closure of <span class="param">SE</span>.
         </p -->
 
-        <p class="leadup">The <dfn>tripleExpr closure</dfn> of a <a>tripleExpr</a> <span class="param">TE</span> includes every <a>TripleConstraint</a> <span class="param">TC</span> that appears directly or by <a>tripleExprRef</a> in</p>
-        <ul class="followup leadup">
-          <li class="followup leadup"><a>EachOf</a>.<span class="param">tripleExprs</span> or the closure of <a>EachOf</a>.<span class="param">tripleExprs</span> or</li>
-          <li class="followup leadup"><a>OneOf</a>.<span class="param">tripleExprs</span> or the closure of <a>OneOf</a>.<span class="param">tripleExprs</span>.</li>
+        <p class="leadup">The <dfn>tripleExpr closure</dfn> of a <a>tripleExpr</a> <span class="param">TE</span> includes every <a>TripleConstraint</a> <span class="param">TC</span> that appears directly or by <a>tripleExprRef</a> in TE.
+	  That is, TC is in the tripleExpr closure of TE if:
+	</p>
+        <ul>
+          <li>
+	    TE is a <a>TripleConstraint</a> and TC = TE or
+	  </li>
+          <li>
+	    TE is a <a>OneOf</a> and TC belongs to the tripleExpr closure of some TE1 in TE.expressions or
+	  </li>
+	  <li>
+	    TE is a <a>EachOf</a> and TC belongs to the tripleExpr closure of some TE1 in TE.expressions or
+	  </li>
+	  <li>
+	    TE is a <a>tripleExprLabel</a> and TC belongs to the tripleExpr closure of the triple expression TE1 that has TE as label
+	  </li>
         </ul>
         <!-- p class="followup">
           If <span class="param">TE</span> is a TripleConstraint <span class="param">TC</span>, the closure of <span class="param">TE</span> is <span class="param">TC</span>.
@@ -1934,27 +1986,62 @@ IMPORT &lt;http://schema.example/schema3&gt;
         </p -->
 
         <p class="leadup">
-	        A shapeExpr <span class="param">SE<sub>1</sub></span> refers to a shapeExpr <span class="param">SE<sub>2</sub></span> if
+	  A <a>shapeExprLabel</a> <span class="math">SL<sub>1</sub></span> refers to a <a>shapeExprLabel</a> <span class="math">SL<sub>2</sub></span> if
         </p>
         <ul class="followup">
-          <li><span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> or</li>
-          <li><span class="param">SE<sub>2</sub></span> appears in a <a>TripleConstraint</a><span class="param">.valueExpr</span> of a shape in <span class="param">SE<sub>1</sub></span>, i.e.
-        <ul class="followup">
-          <li class="followup leadup">some shape <span class="param">S</span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> and</li>
-          <li class="followup leadup">some <a>TripleConstraint</a> <span class="param">TC</span> appears in the <a>tripleExpr closure</a> of <span class="param">S</span>.<span class="param">tripleExprs</span> and</li>
-          <li>the tripleExpr <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">TC</span>.</li>
-        </ul>
-          </li>
-        </ul>
-        <p class="leadup">
-	        For each reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span>:.
-        </p>
-        <ul class="followup">
-          <li>The reference is <span class="param">negated</span> if <span class="param">SE<sub>2</sub></span> appears within an odd number of negations inside <span class="param">SE<sub>1</sub></span>.</li>
           <li>
-            If <span class="param">SE<sub>2</sub></span> appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>.
+	    there is a triple expression TE that belongs to the shapeExpr closure of the shape expression that has SL1 as id, and
+	  </li>
+	  <li>
+	    there is a triple constraint TC that belongs to the tripleExpr closure of TE, and
+	  </li>
+	  <li>
+	    the valueExpr of TC is a shapeExprRef with shapeExprLabel SL2
+	  </li>
+	</ul>
+	    <!-- <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> or</li> -->
+          <!-- <li><span class="param">SE<sub>2</sub></span> appears in a <a>TripleConstraint</a><span class="param">.valueExpr</span> of a shape in <span class="param">SE<sub>1</sub></span>, i.e. -->
+	    
+        <!-- <ul class="followup"> -->
+        <!--   <li class="followup leadup">some shape <span class="param">S</span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> and</li> -->
+        <!--   <li class="followup leadup">some <a>TripleConstraint</a> <span class="param">TC</span> appears in the <a>tripleExpr closure</a> of <span class="param">S</span>.<span class="param">tripleExprs</span> and</li> -->
+        <!--   <li>the tripleExpr <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">TC</span>.</li> -->
+        <!-- </ul> -->
+        <p class="leadup">
+	  A reference from <span class="param">SL<sub>1</sub></span> to <span class="param">SL<sub>2</sub></span> can be a <dfn label="negated reference">negated reference</dfn>:
+        </p>
+        <ul class="followup">
+          <li>
+	    The reference is <span class="param">negated</span> if the tripleExpression <span class="param">TE<sub>2</sub></span> appears under an odd number of negations inside the shape expression SE having <span class="param">SL<sub>1</sub></span> as <span class="param">id</span>.
+	    That is, the rule for ShapeNot from the definition of shapeExpr closure was applied an odd number of times when checking whether TE belongs to the shapeExpr closure of SE.
+	  </li>
+          <li>
+            If the TripleConstraint TC has <a class="param">predicate</a> <span class="math">p</span> and is inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SL<sub>1</sub></span> to <span class="param">SL<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>.
+	    <!-- appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>. -->
           </li>
         </ul>
+
+	<p>
+	  For a schema Sch, its dependency graph is the graph which vertices are the shapeExprLabels that identify some shapeExr in Sch, and that has a negative edge from SL1 to SL2 if SL1 has a negated reference to SL2, and has a positive edge from SL1 to SL2 if SL1 refers to SL2 but there is no negative reference from SL1 to SL2.
+	  The number of stratums of Sch is the number of maximal strongly connected components of the dependency graph of Sch.
+	</p>
+	<p>
+	  A <dfn id="stratification">stratification</dfn> of the schema Sch with k stratums is a function <span class="function">stratum</span> that associates with every shape label in Sch a natural number between 1 and k and such that:
+	</p>
+	<ul>
+	  <li>
+	    If SL1 and SL2 belong to the same maximal connected component, then stratum(SL1) = stratum(sl2).
+	  </li>
+	  <li>
+	    If there is a negated reference from sl1 to sl2, then stratum(sl2) < stratum(sl1).
+	  </li>
+	</ul>
+	<p>
+	  The existence of a stratification for every schema is guaranteed by the negation requirement.
+	</p>
+
+	</p>
+	
         <p class="note">
           One strategy for detecting negated cycles is stratified negation.
         </p>
