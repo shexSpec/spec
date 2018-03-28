@@ -11,10 +11,13 @@ Here is how they should be used.
 
 
 ## CSS classes
+Between parenthesis, the tags it can be used with.
 
-* **math** (span): for variables that locally name elements (e.g. shape expressions, triple expressions, etc.)
-* **param** (span): for the names of the keys in the json grammar
-* **jobjref** (span, a): for the names of the types in the json grammar
+"Always" indicates that the class should always be used in the described situation.
+
+* **math** (span): for variables that locally name elements (e.g. shape expressions, triple expressions, etc.). Always.
+* **param** (span): for the names of the keys in the json grammar. Always.
+* **jobjref** (span, a): for the names of the types in the json grammar. Always.
 * **label** (dfn): see tag dfn
 * **function** (code)
 * **comment** (span)
