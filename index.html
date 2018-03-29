@@ -458,24 +458,27 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">Sch</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every nodeSelector/shapeLabel pair <span class="math">(n, s)</span> in <span class="math">m</span>, the node n is considered to have shape s.
-	For that, m must be included in the fixed shapeMap <code class="function">exhaustiveShapeMap(<span class="math">G</span>, <span class="math">Sch</span>)</code> defined in the sequel using a <a href="#stratification">stratification</a> of the schema Sch and the function satisfies.
-	The function satisfies is defined below for each form of a <a>shape expression</a>.
+        <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">Sch</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every nodeSelector/shapeLabel pair <span class="math">(n, s)</span> in <span class="math">m</span>, the node <span class="math">n</span> is considered to have shape <span class="math">s</span>.
+	This is the case (by definition) if <span class="math">m</span> is included in the fixed shapeMap <code class="function">exhaustiveShapeMap(<span class="math">G</span>, <span class="math">Sch</span>)</code> that is defined for every graph <span class="math">G</span> and shapes schema <span class="math">Sch</span> using
       </p>
+      <ul>
+	<li>a <a href="#stratification">stratification</a> of <span class="math">Sch</span>, and</li>
+	<li>the function <code class="function">satisfies</code> defined below for each form of a <a>shape expression</a>.</li>
+      </ul>
 
       <p>
-	Given a stratification of Sch to 1..k, define the series of k shapeMaps exhaustiveShapeMapAux(1, G, Sch) ... exhaustiveShapeMapAux(k, G, Sch):
+	Given a <a>stratification</a> <code class="function">stratum</code> of <span class="math">Sch</span> that with every <a>shapeExprLabel</a> in <span class="math">Sch</span> associates a number between <span class="math">1</span> and <span class="math">k</span>, define the series of <span class="math">k</span> <a>shapeMap</a>s <code class="function">exhaustiveShapeMapAux(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> … <code class="function">exhaustiveShapeMapAux(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>:
       </p>
       <ul>
 	<li>
-	  exhaustiveShapeMapAux(1, G, Sch) is the union of all shape maps m such for every (n,s) in m, stratum(s) = 1 and satisfies(n, se, G, m)
+	  <code class="function">exhaustiveShapeMapAux(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all shape maps <span class="math">m</span> such that for every <span class="math">(n,s)</span> in <span class="math">m</span>, <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>;
 	</li>
 	<li>
-	  for every i in 2..n, exhaustiveShapeMapAux(i, G, Sch) is the union of all shape maps m such that exhaustiveShapeMap(i-1, G, Sch) is included in m and for every (n,s) in m, stratum(s) <= k and satisfies(n, se, G, m)
-																								</li>
+	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">exhaustiveShapeMapAux(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all shape maps <span class="math">m</span> such that <code class="function">exhaustiveShapeMap(<span class="math">i-1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is included in <span class="math">m</span> and for every <span class="math">(n,s)</span> in <span class="math">m</span>, <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">k</span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>
+	</li>
       </ul>
       <p>
-	Then exhaustiveShapeMap(G, Sch) = exhaustiveShapeMapAux(k, G, Sch).
+	Then <code class="function">exhaustiveShapeMap(G, Sch)</code> = <code class="function">exhaustiveShapeMapAux(k, G, Sch)</code>.
       </p>
       <p>
 	A schema might have several different stratifications but exhaustiveShapeMap is the same for all these stratifications.
