@@ -460,7 +460,7 @@ _:User2
       <p>
         <span class="label" id="isValid">isValid</span>: The expression <code class="function">isValid(<span class="math">Sch</span>, <span class="math">G</span>, <span class="math">m</span>)</code> indicates that for every RDFnode/shapeLabel pair <span class="math">(n, s)</span> in <span class="math">m</span>, the node <span class="math">n</span> is considered to have shape <span class="math">s</span>.
 	The shape label <span class="math">s</span> must be the <a class="param">id</a> of some <a>shape expression</a> in <span class="math">Sch</span>.
-	This is the case (by definition) if <span class="math">m</span> is included in the fixed <a>shapeMap</a> <code class="function">exhaustiveShapeMap(<span class="math">G</span>, <span class="math">Sch</span>)</code> that is defined for every graph <span class="math">G</span> and shapes schema <span class="math">Sch</span> using
+	By definition,  <code class="function">isValid(<span class="math">Sch</span>, <span class="math">G</span>, <span class="math">m</span>)</code> if <span class="math">m</span> is included in the fixed <a>shapeMap</a> <code class="function">exhaustiveShapeMap(<span class="math">G</span>, <span class="math">Sch</span>)</code> that is defined for every graph <span class="math">G</span> and shapes schema <span class="math">Sch</span> using
       </p>
       <ul>
 	<li>a <a>stratification</a> of <span class="math">Sch</span>, and</li>
