@@ -522,19 +522,20 @@ _:User2
 
       </div>
 
-      
-  <!--     <div class="note"> -->
-  <!--     <p> -->
-  <!-- Validation of a <a>graph</a> <span class="math">G</span> does not necessarily require the construction of a <a>ShapeMap</a> with every node in <span class="math">G</span>. -->
-  <!-- The validation semantics defined below imply a set of dependencies for validating some node as a shape. -->
-  <!-- A validation process that tests every <a>node</a> in a <a>graph</a> against every <a>shape</a> in a <a>schema</a> can be considered to have an input <a>ShapeMap</a> associating each node with the set of all shapes in the schema. -->
-  <!--     </p> -->
-  <!--     </div> -->
+<!--
+      <div class="note">
+      <p>
+  Validation of a <a>graph</a> <span class="math">G</span> does not necessarily require the construction of a <a>ShapeMap</a> with every node in <span class="math">G</span>.
+  The validation semantics defined below imply a set of dependencies for validating some node as a shape.
+  A validation process that tests every <a>node</a> in a <a>graph</a> against every <a>shape</a> in a <a>schema</a> can be considered to have an input <a>ShapeMap</a> associating each node with the set of all shapes in the schema.
+      </p>
+      </div>
 
-      <!-- <p> -->
-      <!--   Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <\!-- @@set of -\-> shape for every node and shape visited during a validation process. -->
-      <!--   The remainder of this document uses <span class="math">m</span> to indicate such a mapping. -->
-      <!-- </p> -->
+      <p>
+        Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <!-\- @@set of -\-> shape for every node and shape visited during a validation process.
+        The remainder of this document uses <span class="math">m</span> to indicate such a mapping.
+      </p>
+-->
       </section>
 
       <section id="shape-expressions">
@@ -557,7 +558,7 @@ _:User2
             a shape reference (<span class="jobjref"><a>shapeExprLabel</a></span>) identifies another shape in the schema or an <a href="#import">imported schema</a>.
           </li>
         </ul>
-	
+
         <section id="shape-expressions-shexj">
           <h4>JSON Syntax</h4>
 
@@ -1205,7 +1206,7 @@ _:User2
       <section id="triple-expressions-semantics">
         <h4>Semantics</h4>
         <p id="satisfies-Shape">
-	  The semantics of the <code>matchesShape</code> function based on the <code>matches</code> function <a href="#matches">defined below</a>.
+          The semantics of the <code>matchesShape</code> function based on the <code>matches</code> function <a href="#matches">defined below</a>.
 	  For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
         </p>
         <ul>
@@ -2000,15 +2001,17 @@ IMPORT &lt;http://schema.example/schema3&gt;
           <li>
 	    <span class="math">s</span> belongs to <code>atomicShapes(se2)</code> for some shape expression <span class="math">se2</span> such that the <span class="param">id</span> of <span class="math">se2</span> belongs to the shapeExprRefClosure of <span class="math">se</span>.
 	  </li>
-          <!-- <li> -->
-	  <!--   <span class="math">se</span> is a <a>ShapeOr</a> and <span class="math">te</span> belongs to the tripleExpr closure of some <span class="math">se1</span> in <span class="math">se</span>.<span class="param">shapeExprs</span> or -->
-	  <!-- </li> -->
-          <!-- <li> -->
-	  <!--   <span class="math">se</span> is a <a>ShapeNot</a> and <span class="math">te</span> belongs to the tripleExpr closure of <span class="math">se</span>.<span class="param">shapeExpr</span> -->
-	  <!-- </li> -->
-	  <!-- <li> -->
-	  <!--   <span class="math">se</span> is a <a>shapeExprRef</a> and <span class="math">te</span> belongs to the tripleExpr closure of the shapeExpr <span class="math">se1</span> that has <span class="math">se</span> as <span class="param">id</span> (that is, <span class="math">se1</span>.<span class="param">id</span> = <span class="math">se</span>). -->
-	  <!-- </li> -->
+<!--
+          <li>
+	    <span class="math">se</span> is a <a>ShapeOr</a> and <span class="math">te</span> belongs to the tripleExpr closure of some <span class="math">se1</span> in <span class="math">se</span>.<span class="param">shapeExprs</span> or
+	  </li>
+          <li>
+	    <span class="math">se</span> is a <a>ShapeNot</a> and <span class="math">te</span> belongs to the tripleExpr closure of <span class="math">se</span>.<span class="param">shapeExpr</span>
+	  </li>
+	  <li>
+	    <span class="math">se</span> is a <a>shapeExprRef</a> and <span class="math">te</span> belongs to the tripleExpr closure of the shapeExpr <span class="math">se1</span> that has <span class="math">se</span> as <span class="param">id</span> (that is, <span class="math">se1</span>.<span class="param">id</span> = <span class="math">se</span>).
+	  </li>
+-->
         </ul>
         <!-- p class="followup">
           If <span class="param">SE</span> is a shape <span class="param">S</span>, the shapeExpr closure of <span class="param">SE</span> is <span class="param">S</span>.
@@ -2025,12 +2028,14 @@ IMPORT &lt;http://schema.example/schema3&gt;
           <li>
 	    <span class="math">te</span> is an atomic <a>TripleConstraint</a> in <code class="function">tripleExprWithId(<span class="math">tl</span>)</code> for some <a>tripleExprLabel</a> <span class="math">tl</span> that belongs to <code class="function">tripleExprRefClosure(<span class="math">te</span>)</code>.
 	  </li>
-	  <!-- <li> -->
-	  <!--   <span class="math">te</span> is a <a>EachOf</a> and <span class="math">tc</span> belongs to the tripleConstraint closure of some <span class="math">te1</span> in <span class="math">te</span>.<span class="param">expressions</span> or -->
-	  <!-- </li> -->
-	  <!-- <li> -->
-	  <!--   <span class="math">te</span> is a <a>tripleExprLabel</a> and <span class="math">tc</span> belongs to the tripleConstraint closure of the triple expression <span class="math">te1</span> that has <span class="math">te</span> as id (that is, <span class="math">te1</span>.<span class="param">id</span> = <span class="math">te</span>) -->
-	  <!-- </li> -->
+<!--
+	  <li>
+	    <span class="math">te</span> is a <a>EachOf</a> and <span class="math">tc</span> belongs to the tripleConstraint closure of some <span class="math">te1</span> in <span class="math">te</span>.<span class="param">expressions</span> or
+	  </li>
+	  <li>
+	    <span class="math">te</span> is a <a>tripleExprLabel</a> and <span class="math">tc</span> belongs to the tripleConstraint closure of the triple expression <span class="math">te1</span> that has <span class="math">te</span> as id (that is, <span class="math">te1</span>.<span class="param">id</span> = <span class="math">te</span>)
+	  </li>
+-->
         </ul>
         <!-- p class="followup">
           If <span class="param">TE</span> is a TripleConstraint <span class="param">TC</span>, the closure of <span class="param">TE</span> is <span class="param">TC</span>.
@@ -2054,14 +2059,15 @@ IMPORT &lt;http://schema.example/schema3&gt;
 	    <span class="math">s2</span> belongs to <code>atomicShapes(<span class="math">tc</span>.<span class="param">valueExpr</span>)</code>.
 	  </li>
 	</ul>
-	    <!-- <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> or</li> -->
-          <!-- <li><span class="param">SE<sub>2</sub></span> appears in a <a>TripleConstraint</a><span class="param">.valueExpr</span> of a shape in <span class="param">SE<sub>1</sub></span>, i.e. -->
-	    
-        <!-- <ul class="followup"> -->
-        <!--   <li class="followup leadup">some shape <span class="param">S</span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> and</li> -->
-        <!--   <li class="followup leadup">some <a>TripleConstraint</a> <span class="param">TC</span> appears in the <a>tripleExpr closure</a> of <span class="param">S</span>.<span class="param">tripleExprs</span> and</li> -->
-        <!--   <li>the tripleExpr <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">TC</span>.</li> -->
-        <!-- </ul> -->
+<!--
+	    <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> or</li>
+          <li><span class="param">SE<sub>2</sub></span> appears in a <a>TripleConstraint</a><span class="param">.valueExpr</span> of a shape in <span class="param">SE<sub>1</sub></span>, i.e.
+        <ul class="followup">
+          <li class="followup leadup">some shape <span class="param">S</span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> and</li>
+          <li class="followup leadup">some <a>TripleConstraint</a> <span class="param">TC</span> appears in the <a>tripleExpr closure</a> of <span class="param">S</span>.<span class="param">tripleExprs</span> and</li>
+          <li>the tripleExpr <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">TC</span>.</li>
+        </ul>
+-->
         <p class="leadup">
 	  The reference from <span class="math">s1</span> to <span class="math">s2</span> is a <dfn>negated reference</dfn> if
 	</p>
@@ -2079,14 +2085,13 @@ IMPORT &lt;http://schema.example/schema3&gt;
 	  There is a negative edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a <a>negated reference</a> to <span class="math">s2</span>.
 	  There is a positive edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a reference but not a negated reference to <span class="math">s2</span>.
 	</p>
-	
-        <div class="example">
-          <h3 class="followup">Examples with <span class="jobjref"><a>ShapeNot</a></span></h3>
-          <p>
-            This negated self-reference violates the negation requirement.
-	  </p>
-          <div class="repchoice error">
-            <pre class="json nohighlight">{ "type": "Schema", "shapes": [
+          <div class="example">
+            <h3 class="followup">Examples with <span class="jobjref"><a>ShapeNot</a></span></h3>
+            <p>
+              This negated self-reference violates the negation requirement.
+            </p>
+            <div class="repchoice error">
+              <pre class="json nohighlight">{ "type": "Schema", "shapes": [
     { "id": "http://schema.example/#S",
       "type": "Shape",
       "expression": { "type": "TripleConstraint",
@@ -2270,18 +2275,18 @@ ex:S NOT @ex:T AND @ex:U
     
 
                 </pre>
-	      </div>
-	  <p>
-		  This satisfies the negation requirement, as ex:U does not refer to ex:T (compared to the previous example).
-          </p>
-          <div class="repchoice">
-            <pre class="json nohighlight">{ "type": "Schema", "shapes": [          
+              </div>
+              <p>
+		This satisfies the negation requirement, as ex:U does not refer to ex:T (compared to the previous example).
+              </p>
+              <div class="repchoice">
+                <pre class="json nohighlight">{ "type": "Schema", "shapes": [
     { "id": "http://schema.example/#T",
       "type": "Shape",
       "expression": { "type": "TripleConstraint",
         "predicate": "http://schema.example/#p",
         "valueExpr": { "type": "ShapeNot",
-          "shapeExpr": "http://schema.example/#S" } } },       
+          "shapeExpr": "http://schema.example/#S" } } },
     { "id": "http://schema.example/#U",
       "type": "Shape",
       "expression": { "type": "TripleConstraint",
@@ -2290,26 +2295,24 @@ ex:S NOT @ex:T AND @ex:U
       "type": "ShapeNot",
       "shapeExpr": "http://schema.example/#T" }
   ] }</pre>
-            <pre class="shexc nohighlight">
-ex:T {ex:p NOT @ex:S}                
+                <pre class="shexc nohighlight">                                                        
+ex:T {ex:p NOT @ex:S}
 
 
 
 
 
-ex:U {ex:q .}                     
+ex:U {ex:q .}
 
 
 
-ex:S NOT @ex:T AND @ex:U                  
+ex:S NOT @ex:T AND @ex:U
 
 
-	    </pre>
+                </pre>
+              </div>
           </div>
-	  
-	</div>
-	      
-        <div class="example">
+          <div class="example">
             <h3 class="followup">Examples with <span class="jobjref"><a>Shape</a></span><span class="param">.extra</span> predicate</h3>
             <p>
               This self-reference on a <a>predicate</a> designated as <span class="param">extra</span> violates the negation requirement:
