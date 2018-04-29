@@ -458,10 +458,10 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	The validation of an RDF graph <span class="math">G</span> against a ShEx schema <span class="math">Sch</span> is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(G,Sch)</code></a>.
+	The validation of an RDF graph <span class="math">G</span> against a ShEx schema <span class="math">Sch</span> is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code></a>.
 	For an RDF graph <span class="math">G</span> and a shapes schema <span class="math">Sch</span>, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(n, s)</span> where <span class="math">n</span> is a node in <span class="math">G</span> and <span class="math">s</span> is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of <span class="math">Sch</span>.
 	A <dfn label="correct typing">correct typing</dfn> is a <span class="math">typing</span> such that for every RDFnode/shape pair <span class="math">(n,s)</span> in <span class="math">typing</span>, <a href="#satisfies-Shape"><code class="function">matches(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">typing</span>)</code></a> holds.
-	<code class="function">completeTyping(G,Sch)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
+	<code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
       
       <p>
@@ -472,9 +472,9 @@ _:User2
       </p>
 
       <p>
-	<dfn id="completeTyping">completeTyping</dfn>: the definition of <code class="function">completeTyping(G,Sch)</code> is based on a <a>stratification</a> of <span class="math">Sch</span>.
-	The number of <dfn>stratums</dfn> of <span class="math">Sch</span> is the number of maximal strongly connected components of the <a>dependency graph</a> of <span class="math">Sch</span>.
-	A <dfn>stratification</dfn> of a schema <span class="math">Sch</span> with <span class="math">k</span> stratums is a function <code class="function">stratum</code> that associates with every <a>Shape</a> in <span class="math">Sch</span> a natural number between <span class="math">1</span> and <span class="math">k</span> such that:
+	<dfn id="completeTyping">completeTyping</dfn>: the definition of <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is based on a <a>stratification</a> of <span class="math">Sch</span>.
+	The number of <dfn>strata</dfn> of <span class="math">Sch</span> is the number of maximal strongly connected components of the <a>dependency graph</a> of <span class="math">Sch</span>.
+	A <dfn>stratification</dfn> of a schema <span class="math">Sch</span> with <span class="math">k</span> strata is a function <code class="function">stratum</code> that associates with every <a>Shape</a> in <span class="math">Sch</span> a natural number between <span class="math">1</span> and <span class="math">k</span> such that:
       </p>
       <ul>
 	<li>
@@ -490,7 +490,7 @@ _:User2
 
       
       <p>
-	Given a <a>stratification</a> <code class="function">stratum</code> of <span class="math">Sch</span> with <span class="math">k</span> stratums, define inductively the series of <span class="math">k</span> typings <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> … <code class="function">completeTypingOn(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>.
+	Given a <a>stratification</a> <code class="function">stratum</code> of <span class="math">Sch</span> with <span class="math">k</span> strata, define inductively the series of <span class="math">k</span> typings <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> … <code class="function">completeTypingOn(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>.
       </p>
       <ul>
 	<li>
@@ -1206,7 +1206,7 @@ _:User2
       <section id="triple-expressions-semantics">
         <h4>Semantics</h4>
         <p id="satisfies-Shape">
-          The semantics of the <code>matchesShape</code> function based on the <code>matches</code> function <a href="#matches">defined below</a>.
+          The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
 	  For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
         </p>
         <ul>
@@ -1492,7 +1492,7 @@ _:User2
         </li>
         <li>
           <p id="matches-tripleExprRef">
-            <span class="math">expr</span> is an <span class="jobjref"><a class="obj">tripleExprRef</a></span> and <code class="function">satisfies(<span class="math">value</span>, tripleExprWithId(<span class="param">tripleExprRef</span>), <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>.<br/>
+            <span class="math">expr</span> is a <span class="jobjref"><a class="obj">tripleExprRef</a></span> and <code class="function">satisfies(<span class="math">value</span>, tripleExprWithId(<span class="param">tripleExprRef</span>), <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>.<br/>
             The <code class="function">tripleExprWithId</code> function is defined in <a href="#tripleExprRef-requirement">Triple Expression Reference Requirement</a> below.
           </p>
           <div class="example">
@@ -1766,7 +1766,7 @@ IMPORT &lt;http://schema.example/schema3&gt;
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
         <p>A <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map (or an <a href="#import">imported schema's</a> map) and the corresponding <a>shape expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
-          The function <code>shapeExprWithId(<span class="math">shapeExprRef</span>)</code> returns the shape expression having <span class="math">shapeExprRef</span> as id.
+          The function <code>shapeExprWithId(<span class="math">shapeExprRef</span>)</code> returns the shape expression with an <span class="param">id</span> of <span class="math">shapeExprRef</span>.
 	</p>
 	
 	<p>
