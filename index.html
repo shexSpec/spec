@@ -532,7 +532,7 @@ _:User2
   <!--     </div> -->
 
       <!-- <p> -->
-      <!--   Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <\!-- @@set of -\-> shape for every node and shape visited during a validation process. -->
+      <!--   Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <!-\- @@set of -\-> shape for every node and shape visited during a validation process. -->
       <!--   The remainder of this document uses <span class="math">m</span> to indicate such a mapping. -->
       <!-- </p> -->
       </section>
@@ -4925,7 +4925,17 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td><code class="production directive">PASSED TOKENS</code></td>
 <td>   ::=   </td>
 <td>   <code class="content">[ \t\r\n]+<br/>
-| "#" [^\r\n]*</code></td>
+      | <span class="prod"><a class="grammarRef" href="#term-COMMENT">COMMENT</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-COMMENT">[<span class="prodNo">99</span>]   </td>
+<td><code class="production directive">COMMENT</code></td>
+<td>   ::=   </td>
+<td>   <code class="content">"#" [^\r\n]*<br/>
+      | "/*" ([^*] | '*' ('\\/' | [^/]))* "*/"</code></td>
 </tr>
 </tbody>
 
