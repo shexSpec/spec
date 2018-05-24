@@ -3928,9 +3928,9 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td>   ::=   </td>
 <td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>?<br/>
                                 | <span class="prod"><a class="grammarRef" href="#prod-litNodeConstraint">litNodeConstraint</a></span><br/>
-                                | <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span>?
-| '(' <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ')'<br/>
-| '.'</code></td>
+                                | <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span>?<br/>
+                                | '(' <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ')'<br/>
+                                | '.'</code></td>
 </tr>
 
 <tr style="vertical-align: baseline">
@@ -4007,10 +4007,9 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td><code class="production prod">litNodeConstraint</code></td>
 <td>   ::=   </td>
 <td>   <code class="content">"LITERAL" <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-nonLiteralKind">nonLiteralKind</a></span> <span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span>*<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-datatype">datatype</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-valueSet">valueSet</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
-| <span class="prod"><a class="grammarRef" href="#prod-numericFacet">numericFacet</a></span>+</code></td>
+                                | <span class="prod"><a class="grammarRef" href="#prod-datatype">datatype</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-valueSet">valueSet</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
+                                | <span class="prod"><a class="grammarRef" href="#prod-numericFacet">numericFacet</a></span>+</code></td>
 </tr>
 
 <tr style="vertical-align: baseline">
@@ -4664,7 +4663,10 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="term-REGEXP">[<span class="prodNo">72</span>]   </td>
 <td>&lt;<code class="production term">REGEXP</code>&gt;</td>
 <td>   ::=   </td>
-<td><code class="content">'/' ([^/\\\n\r] | '\\' [nrt\\|.?*+(){}$-\[\]^/] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)+ '/' [smix]*</code></td>
+<td><code class="content">'/' ([^/\\\n\r]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp; | '\\' [nrt\\|.?*+(){}$-\[\]^/]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp; | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;)+ '/' [smix]*</code></td>
 </tr>
 <tr class="obj"><td></td><td></td><td>{</td><td><span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? }</td></tr>
     <tr id="handle-REGEXP" class="params"><td></td><td>returns: <a data-cite="ECMASCRIPT-6.0#sec-terms-and-definitions-object">JSON object</a></td><td></td><td><span class="param">pattern</span> is a unicode string formed from the characters between the outermost '/'s by unescaping matches of '\\' '/' in the terminal pattern as well as the <a data-cite="turtle#numeric">numeric escape sequences</a> matched by <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>.
