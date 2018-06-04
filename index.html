@@ -458,18 +458,19 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
+	<dfn label="isValid">isValid</dfn>: For an input graph <span class="math">G</span>, schema  <span class="math">Sch</span> and input shape map <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeExprLabel pair <span class="math">(n, sl)</span> in  <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
+	The latter is captured by the expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <a href="#completeTyping">completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>))</code>.
+	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
+      </p>
+
+      
+      <p>
 	The validation of an RDF graph <span class="math">G</span> against a ShEx schema <span class="math">Sch</span> is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code></a>.
 	For an RDF graph <span class="math">G</span> and a shapes schema <span class="math">Sch</span>, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(n, s)</span> where <span class="math">n</span> is a node in <span class="math">G</span> and <span class="math">s</span> is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of <span class="math">Sch</span>.
-	A <dfn label="correct typing">correct typing</dfn> is a <span class="math">typing</span> such that for every RDFnode/shape pair <span class="math">(n,s)</span> in <span class="math">typing</span>, <a href="#satisfies-Shape"><code class="function">matches(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">typing</span>)</code></a> holds.
+	A <dfn label="correct typing">correct typing</dfn> is a <span class="math">typing</span> such that for every RDFnode/shape pair <span class="math">(n,s)</span> in <span class="math">typing</span>, <a href="#satisfies-Shape"><code class="function">matchesShape(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">typing</span>)</code></a> holds.
 	<code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
       
-      <p>
-	<dfn label="isValid">isValid</dfn>:
-	<code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeExprLabel pair <span class="math">(n, sl)</span> in the input shapeMap <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape identified by <span class="math">sl</span>.
-	The latter is captured by the expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, completeTyping(<span class="math">G</span>, <span class="math">Sch</span>))</code>.
-	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
-      </p>
 
       <p>
 	<dfn id="completeTyping">completeTyping</dfn>: the definition of <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is based on a <a>stratification</a> of <span class="math">Sch</span>.
@@ -630,30 +631,30 @@ _:User2
     Given the three shape expressions <span class="math">SE<sub>1</sub></span>, <span class="math">SE<sub>2</sub></span>, <span class="math">SE<sub>3</sub></span> in a <span class="jobjref"><a class="obj">Schema</a></span> <span class="math">Sch</span>, such that:
   </p>
   <ul>
-    <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">SE<sub>1</sub></span>, <span class="math">G</span>, <span class="math">m</span>)</code></li>
-    <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">SE<sub>2</sub></span>, <span class="math">G</span>, <span class="math">m</span>)</code></li>
-    <li><code class="function">notSatisfies(<span class="math">n</span>, <span class="math">SE<sub>3</sub></span>, <span class="math">G</span>, <span class="math">m</span>)</code></li>
+    <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">SE<sub>1</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code></li>
+    <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">SE<sub>2</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code></li>
+    <li><code class="function">notSatisfies(<span class="math">n</span>, <span class="math">SE<sub>3</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code></li>
   </ul>
   <p>
     the following hold:
   </p>
 
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span> ] }</pre></div>,<br/> <span class="math">G</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>{ "type": "ShapeOr", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span>, <span class="comment">SE<sub>3</sub></span> ] }</pre></div>,<br/> <span class="math">G</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span> ] }</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>{ "type": "ShapeOr", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span>, <span class="comment">SE<sub>3</sub></span> ] }</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
     <li><div><div style="float:left;" class="code function">notSatisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json code"><pre>{ "type": "ShapeNot", "shapeExpr": {
     { "type": "ShapeOr", "shapeExprs": [
         <span class="comment">SE<sub>1</sub></span>,
         { "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>2</sub></span>, <span class="comment">SE<sub>3</sub></span> ] }
       ] }
-  } }</pre></div>,<br/> <span class="math">G</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+  } }</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
     </ul>
 
     <p>
       If <span class="math">Sch</span>'s <a class="param">shapes</a> maps "<code>http://schema.example/shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
     </p>
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
     </ul>
       </div>
       </section>
@@ -1738,7 +1739,7 @@ IMPORT &lt;http://schema.example/schema3&gt;
     <section id="schema-requirements">
       <h3>Schema Requirements</h3>
       <p>
-        The semantics defined above assume two structural requirements beyond those imposed by the grammar of the abstract syntax.
+        The semantics defined above assume three structural requirements beyond those imposed by the grammar of the abstract syntax.
         These ensure referential integrity and eliminate logical paradoxes such as those that arrise through the use of negation.
         These are not constraints expressed by the schema but instead those imposed on the schema.
       </p>
@@ -1803,23 +1804,21 @@ IMPORT &lt;http://schema.example/schema3&gt;
   }, {
     "id" : "http://schema.example/#EmployeeShape",
     "type" : "ShapeAnd",
-    "shapeExprs" : [ {
-      "type" : "NodeConstraint",
-      "datatype" : "http://schema.example/#PersonShape"
-    }, {
+    "shapeExprs" : [ "http://schema.example/#PersonShape", {
       "type" : "Shape",
       "expression" : {
         "type" : "TripleConstraint",
         "predicate" : "http://schema.example/#employeeNumber"
       }
     } ]
-  } ] }</pre>
+  } ]
+}</pre>
           <pre class="shexc nohighlight">                                                                                   
     ex:PersonShape {
       foaf:name .
     }
 
-    ex:EmployeeShape ex:PersonShape AND {
+    ex:EmployeeShape @ex:PersonShape AND {
       ex:employeeNumber .
     }
 
@@ -1843,14 +1842,12 @@ IMPORT &lt;http://schema.example/schema3&gt;
     "expression" : {
       "type" : "TripleConstraint",
       "predicate" : "http://schema.example/#dependent",
-      "valueExpr" : {
-        "type" : "NodeConstraint",
-        "datatype" : "http://schema.example/#PersonShape"
-      },
+      "valueExpr" : "http://schema.example/#PersonShape",
       "min" : 0,
       "max" : -1
     }
-  } ] }</pre>
+  } ]
+}</pre>
           <pre class="shexc nohighlight">                                                                  
     ex:PersonShape {
       foaf:name .
@@ -1859,7 +1856,7 @@ IMPORT &lt;http://schema.example/schema3&gt;
 
 
     ex:EmployeeShape {
-      ex:dependent ex:PersonShape*
+      ex:dependent @ex:PersonShape*
     }
           </pre>
         </div>
@@ -1880,23 +1877,32 @@ IMPORT &lt;http://schema.example/schema3&gt;
         </div>
         <p>This shapeExprRef is invalid because the referenced object is a <a>triple expression</a> instead of a <a>shape expression</a>:</p>
         <div class="repchoice error">
-          <pre class="json nohighlight">{ "type":"Schema", "shapes": [
-    { "id": "http://schema.example/CustomerShape",
-      "type":"Shape", "expression": { "type": "TripleConstraint",
-          "id": "http://schema.example/discountExpr",
-          "predicate": "http://schema.example/discount" } },
-    { "id": "http://schema.example/EmployeeShape",
-      "type":"Shape", "expression": { "type": "TripleConstraint",
-        "predicate": "http://schema.example/contactFor",
-        "valueExpr": "http://schema.example/CustomerShape"
-} } ] }</pre>
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id" : "http://schema.example/#CustomerShape",
+    "type" : "Shape",
+    "expression" : {
+      "id" : "http://schema.example/#discountExpr",
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#discount"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape",
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#contactFor",
+      "valueExpr" : "http://schema.example/#discountExpr"
+    }
+  } ]
+}</pre>
           <pre class="shexc nohighlight">                                                                 
     ex:CustomerShape {
       $ex:discountExpr ex:discount .
     }
 
     ex:EmployeeShape {
-      ex:contactFor @ex:CustomerShape
+      ex:contactFor @ex:discountExpr
     }
 
           </pre>
@@ -1907,10 +1913,7 @@ IMPORT &lt;http://schema.example/schema3&gt;
   "shapes" : [ {
     "id" : "http://schema.example/#PersonShape",
     "type" : "ShapeAnd",
-    "shapeExprs" : [ {
-      "type" : "NodeConstraint",
-      "datatype" : "http://schema.example/#EmployeeShape"
-    }, {
+    "shapeExprs" : [ "http://schema.example/#EmployeeShape", {
       "type" : "Shape",
       "expression" : {
         "type" : "TripleConstraint",
@@ -1920,10 +1923,7 @@ IMPORT &lt;http://schema.example/schema3&gt;
   }, {
     "id" : "http://schema.example/#EmployeeShape",
     "type" : "ShapeAnd",
-    "shapeExprs" : [ {
-      "type" : "NodeConstraint",
-      "datatype" : "http://schema.example/#PersonShape"
-    }, {
+    "shapeExprs" : [ "http://schema.example/#PersonShape", {
       "type" : "Shape",
       "expression" : {
         "type" : "TripleConstraint",
@@ -1932,11 +1932,11 @@ IMPORT &lt;http://schema.example/schema3&gt;
     } ]
   } ] }</pre>
           <pre class="shexc nohighlight">                                                                                   
-    ex:PersonShape ex:EmployeeShape AND {
+    ex:PersonShape @ex:EmployeeShape AND {
       foaf:name .
     }
 
-    ex:EmployeeShape ex:PersonShape AND {
+    ex:EmployeeShape @ex:PersonShape AND {
       ex:employeeNumber .
     }
 
@@ -2230,7 +2230,8 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
       "valueExpr" : "http://schema.example/#S"
     }
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                   
+                <pre class="shexc nohighlight">
+                                                  
 ex:S {ex:p NOT @ex:T} <!-- ex:S NOT @ex:T -->
 
 
