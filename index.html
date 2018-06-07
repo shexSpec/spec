@@ -1813,16 +1813,23 @@ IMPORT &lt;http://schema.example/schema3&gt;
     } ]
   } ]
 }</pre>
-          <pre class="shexc nohighlight">                                                                                   
+          <pre class="shexc nohighlight">                                                             
+
     ex:PersonShape {
+
+
+
       foaf:name .
     }
 
-    ex:EmployeeShape @ex:PersonShape AND {
-      ex:employeeNumber .
-    }
+    ex:EmployeeShape
+
+      @ex:PersonShape AND {
 
 
+
+        ex:employeeNumber .
+      }
 
 
           </pre>
@@ -1848,16 +1855,25 @@ IMPORT &lt;http://schema.example/schema3&gt;
     }
   } ]
 }</pre>
-          <pre class="shexc nohighlight">                                                                  
+          <pre class="shexc nohighlight">                                                         
+
     ex:PersonShape {
+
+
+
       foaf:name .
     }
 
-
-
     ex:EmployeeShape {
-      ex:dependent @ex:PersonShape*
+
+
+
+      ex:dependent
+        @ex:PersonShape
+          *
+
     }
+
           </pre>
         </div>
         <p>
@@ -1871,9 +1887,9 @@ IMPORT &lt;http://schema.example/schema3&gt;
 } ] }</pre>
           <pre class="shexc nohighlight">                                                
     S1 {
+
       &amp;MissingShapeExpr
-    }
-          </pre>
+    }</pre>
         </div>
         <p>This shapeExprRef is invalid because the referenced object is a <a>triple expression</a> instead of a <a>shape expression</a>:</p>
         <div class="repchoice error">
@@ -1896,18 +1912,27 @@ IMPORT &lt;http://schema.example/schema3&gt;
     }
   } ]
 }</pre>
-          <pre class="shexc nohighlight">                                                                 
+          <pre class="shexc nohighlight">                                                         
+
     ex:CustomerShape {
-      $ex:discountExpr ex:discount .
+
+
+      $ex:discountExpr
+
+        ex:discount .
     }
 
     ex:EmployeeShape {
-      ex:contactFor @ex:discountExpr
+
+
+
+      ex:contactFor
+        @ex:discountExpr
     }
 
           </pre>
         </div>
-	<p>These shapeExprRefs are invalid because they recursively refer to each other.
+	<p>These shapeExprRefs are invalid because they recursively refer to each other.</p>
 	<div class="repchoice error">
           <pre class="json nohighlight">{"type" : "Schema",
   "shapes" : [ {
@@ -1931,17 +1956,26 @@ IMPORT &lt;http://schema.example/schema3&gt;
       }
     } ]
   } ] }</pre>
-          <pre class="shexc nohighlight">                                                                                   
-    ex:PersonShape @ex:EmployeeShape AND {
-      foaf:name .
+          <pre class="shexc nohighlight">                                                              
+
+    ex:PersonShape
+
+      @ex:EmployeeShape AND {
+
+
+
+        foaf:name .
+      }
+
+
+    ex:EmployeeShape
+
+      @ex:PersonShape AND {
+
+
+
+        ex:employeeNumber .
     }
-
-    ex:EmployeeShape @ex:PersonShape AND {
-      ex:employeeNumber .
-    }
-
-
-
 
           </pre>
         </div>
@@ -2230,20 +2264,26 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
       "valueExpr" : "http://schema.example/#S"
     }
   } ] }</pre>
-                <pre class="shexc nohighlight">
-                                                  
-ex:S {ex:p NOT @ex:T} <!-- ex:S NOT @ex:T -->
+                <pre class="shexc nohighlight">                                                
+
+    ex:S {
 
 
 
+      ex:p 
+
+        NOT
+          @ex:T
+    } <!-- ex:S NOT @ex:T -->
+
+
+    ex:T {
 
 
 
-ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
-
-
-
-
+      ex:q
+        @ex:S
+    } <!--     ex:T @ex:S -->
                 </pre>
               </div>
               <p>
@@ -2271,16 +2311,24 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
     "id" : "http://schema.example/#U",
     "type" : "NodeConstraint"
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                    
-ex:T {ex:p @ex:S}
+                <pre class="shexc nohighlight">                                               
+
+    ex:T {
 
 
 
+      ex:p
+        @ex:S
+    }
 
-ex:S NOT @ex:T AND @ex:U
+    ex:S
 
 
-ex:U .
+      NOT
+        @ex:T
+     AND @ex:U
+
+     ex:U .
 
                 </pre>
               </div>
@@ -2311,18 +2359,28 @@ ex:U .
     "id" : "http://schema.example/#U",
     "type" : "NodeConstraint"
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                    
-ex:T {ex:p @ex:S}
+                <pre class="shexc nohighlight">                                                
+
+    ex:T {
 
 
 
+      ex:p
+        @ex:S
+    }
+
+    ex:S
+      NOT
 
 
-ex:S NOT (NOT @ex:T AND @ex:U)
+                     (
+                       NOT
+                         @ex:T
+                       AND @ex:U )
 
 
+    ex:U .
 
-ex:U .
                 </pre>
               </div>
               <p>
@@ -2357,23 +2415,33 @@ ex:U .
       "shapeExpr" : "http://schema.example/#T"
     }, "http://schema.example/#U" ]
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                        
-ex:T {ex:p NOT @ex:S}
+                <pre class="shexc nohighlight">                                                
+
+    ex:T {
 
 
 
+      ex:p
+
+        NOT
+          @ex:S
+    }
+
+
+    ex:U {
 
 
 
-ex:U {ex:q @ex:S}
+      ex:q
+        @ex:S
+    }
+
+    ex:S
 
 
-
-
-
-ex:S NOT @ex:T AND @ex:U
-    
-
+      NOT
+        @ex:T
+      AND @ex:U
                 </pre>
 
 	      </div>
@@ -2408,20 +2476,32 @@ ex:S NOT @ex:T AND @ex:U
       "shapeExpr" : "http://schema.example/#T"
     }, "http://schema.example/#U" ]
   } ] }</pre>
-            <pre class="shexc nohighlight">
-ex:T {ex:p NOT @ex:S}                
+            <pre class="shexc nohighlight">                                                
+
+    ex:T {
 
 
 
+      ex:p
+        NOT
+
+          @ex:S
+    }
 
 
-ex:U {ex:q .}
+    ex:U {
 
 
 
-ex:S NOT @ex:T AND @ex:U
+      ex:q .
+    }
+
+    ex:S
 
 
+      NOT
+        @ex:T
+    AND @ex:U
                 </pre>
               </div>
           </div>
