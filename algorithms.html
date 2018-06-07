@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Algorithms for Static Analysis and Validation of the Shape Expressions Language</title>
+    <link rel="stylesheet" href="local.css"/>
+
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            defer class='remove'></script>
+    <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+      localBiblio: {
+      "shex-spec" : {
+          "authors": ["Eric Prud'hommeaux", "Iovka Boneva", "Jose Emilio Labra Gayo", "Gregg Kellogg"],
+          "title": "Shape Expressions Language 2.next",
+          "href": "index.html"
+        },
+        "shex-vocab": {
+          "authors": ["Gregg Kellogg"],
+          "title": "Shape Expression Vocabulary",
+          "href":  "http://www.w3.org/ns/shex#"
+        },
+        "shape-map": {
+          "authors": ["Eric Prud'hommeaux", "Thomas Baker"],
+          "title": "ShapeMap Structure and Language",
+          "href":  "http://shex.io/shape-map/"
+        }
+      },
+      specStatus:     "CG-DRAFT",
+      shortName:      "shex-algorithms",
+      latestVersion:  "",
+      thisVersion:    "",
+      prevVersion:    "",
+      edDraftURI:     "",
+      previousPublishDate:  "",
+      previousMaturity:"",
+      testSuiteURI:   "",
+      issueBase:      "",
+      githubAPI:      "",
+      editors: [
+        { name:       "Iovka Boneva",
+          url:        "http://cristal.univ-lille.fr/~boneva/",
+          company:    "University of Lille",
+          companyURL: "http://www.univ-lille1.fr/" },
+        { name:       "Jérémie Dusart",
+          company:    "Inria",
+          companyURL: "http://www.inria.fr/" },
+      ],
+      wg:           "Shape Expressions Community Group",
+      wgURI:        "https://www.w3.org/community/shex/",
+      wgPublicList: "public-shex",
+      //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
+
+      bugTracker:             {
+        open: "https://github.com/shexSpec/shex/issues",
+        new:  "https://github.com/shexSpec/shex/issues/new"
+      },
+
+      otherLinks: [{
+        key: "Version control",
+        data: [{
+          value: "Github Repository",
+          href: ""
+        }]
+      }],
+      };
+    </script>
+
+    <script type="text/javascript" src="scripts.js"></script>
+  </head>
+  
+  <body>
+    <section id="abstract">
+      <p>
+        The <a href="index.html">Shape Expressions (ShEx) language</a> describes <a>RDF nodes</a> and <a>graph</a> structures, organized in a shapes schema.
+	A shapes schema must comply to a series of <a href="index.html#schema-requirements">requirements</a>.
+      </p>
+      <p>
+        This document presents the algorithms that allow to test whether a syntactically correct shapes schema satisfies the requirements.
+	It also presents algorithms for validating an RDF graph against a ShEx schema that satisfies the requirements.
+      </p>
+    </section>
+
+    <section id="sotd">
+      <p>This document is being developed by the
+        <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>.
+      <p>
+	This version is an editor's draft.
+      </p>
+    </section>
+
+
+    <section id="introduction">
+      <h2>Introduction</h2>
+    </section>
+
+    <section id="schema-requirements">
+      <h2>Algorithms for Checking the Schema Requirements</h2>
+
+      <section id="shape-expr-ref">
+	<h3>Shape Expression Reference Requirement</h3>
+
+	<p>
+	  The <a href="index.html#shapeExprRef-requirement">definition of this requirement</a> is in the shape expressions language specification.
+	</p>
+
+	<p>For a ShEx schema <span class="math">sch</span>, let <span class="math">ShapeExprIds(sch)</span> be the set of shape expression identifiers in <span class="math">sch</span>.</p>
+
+<p>Algorithm checkShapeExpressionReferenceRequirement</p>
+<pre><code>
+Input: sch: a schema
+Output: true sch satisfies the shape expression reference requirement, false otherwise
+        whenever the latter is true, produces also  D: the shape expressions dependency graph induced by sch
+
+let ShapeExprIds be the set of all shape expression ids in sch
+let ShapeExprRefs be the set of all shape expression references in sch
+if shapeExprRefs is not included in shapeExprIds then return false
+
+initiate a directed edge labelled graph D which nodes are all Shape, NodeConstraint, ShapeNot, ShapeOr, ShapeAnd and shapeExprRef elements that appear in sch
+
+foreach ShapeExpr se in the vertex set of D
+    if se is a ShapeOr or a ShapeAnd then
+        foreach ShapeExpr sub in se.shapeExprs
+            add to D an edge from se to sub labelled with pos
+    else if se is a ShapeNot then
+        add to D an edge from se to se.shapeExpr labelled with neg
+    else if se is a shapeExprRef then
+        add to D an edge from se to shapeExprWithId(se) labelled with pos
+
+if D contains a cycle then
+    return false
+else 
+    return (true, D)
+</code></pre>
+	
+      </section>
+
+      <section id="triple-expr-ref">
+	<h3>Triple Expression Reference Requirement</h3>
+
+	<p>
+	  The <a href="index.html#tripleExprRef-requirement">definition of this requirement</a> is in the shape expressions language specification.
+	</p>
+	
+
+	
+      </section>
+	
+      <section id="negation">
+	<h3>Negation Requirement</h3>
+
+	<p>
+	  The <a href="index.html#negation-requirement">definition of this requirement</a> is in the shape expressions language specification.
+	</p>
+	
+	<p>Algorithm for computing the dependency graph of a schema.</p>
+
+<pre><code>
+Input: schema a ShexSchema
+Output: D the shape expressions dependency graph
+
+
+let DSE be the dependency graph as computed by checkShapeExpressionReferenceRequirement
+let DTE be the dependency graph as computed by checkTripleExpressionReferenceRequirement
+
+let atomicTripleConstraints be the map that with every TripleExpression s.expression that appears in schema (for some Shape s) associates the set of TripleConstrants tc s.t. there is a path in DTE between s.expression and tc;
+
+let atomicShapes be the map that with every ShapeExpression tc.valueExpr that appears in schema (for some TripleConstraint tc) associates the set of Shapes s s.t. there is path in DSE from tc.valueExpr to s
+
+initiate a directed edge-labelled graph D with vertex set that contains all the Shapes in schema
+
+foreach Shape s vertex of D s.t. s.expression is in the key set of atomicTripleConstraints
+    foreach TripleConstraint tc in atomicTripleConstraints(s.expression)
+        if tc.valueExpr is present then
+            foreach Shape s2 that belongs to atomicShapes(tc.valueExpr)
+                if there is at least one path in DSE from tc.valueExpr to s2 that traverses an odd number of neg-labelled edges then
+                    add to D a neg-labelled edge from s to s2
+                else
+                    add to D a pos-labeled edge from s to s2
+
+return D
+</code></pre>
+
+<p>Algorithm for computing the stratification of a schema.</p>
+<pre><code>
+Input: schema a ShexSchema
+Output: a map stratum from the set of Shapes in schema to natural numbers, or ERROR if the schema cannot be stratified
+
+let D be the dependency graph of schema
+
+if D contains a strongly connected component stc that contains a neg-labelled edge then
+    raise an error
+
+let S be a directed graph which set of vertices is the set of strongly connected components of D
+let L be a topological sorting of the vertices of S
+
+foreach s node of D
+    let stratum(s) be the index in L of the unique strongly connected component stc s.t. s belongs to stc
+
+return stratum
+</code></pre>    
+
+      </section>
+      
+    </section>
+
+    <section id="validation">
+      <h2>Algorithms for Validation</h2>
+
+      <section id="refine-validation">
+	<h3>Refine Validation</h3>
+
+	<p>Algorithm for refine validation.</p>
+
+<pre><code>
+Input: an RDF graph G, a ShexSchema schema which set of shapes is S
+Output: the shape map completeTyping(G,sch)
+
+let stratum=stratification(sch)
+let k be the greatest number in the range of stratum
+
+let typing be the empty set
+for i in 0 .. k do
+    let shapes-i be the set of Shapes s in S s.t. stratum(s) = i
+    let typing-i = nodes(G) x shapes-i
+    do
+        changing = false
+        foreach (n,s) in typing-i do
+            if not matches(n,s,G,Sch,typing-i union typing)
+                remove (n,s) from typing-i
+                changing = true
+    while (changing)
+    add typing-i to typing
+end for    
+
+return typing
+</code></pre>	
+      </section>
+
+      <section id="recursive-validation">
+	<h3>Recursive Validation</h3>
+
+
+	<p>Algorithm isValid(G,sch,n,se) for checking a unique node s against a unique shape expression s.</p>
+
+<pre><code>
+Input: RDF graph G, ShexSchema sch with set of Shapes S, node n in G, Shape s in sch, hyp: a stack over Nodes(G)xS
+Output: true if satisfies(G,sch,n,s,completeTyping(G,sch)), false otherwise
+
+push (n,s) on hyp
+let sm be an empty shape map
+
+let atomicTripleConstranits be the set of atomic triple constraints of s.expression
+let neighbourhood be the set of (predicate,n2) s.t. either (n, predicate, n2) in G and predicate appears in a triple constraint in allTC, or (n2, predicate, n) in G and ^predicate appears in a triple constraint in allTC
+
+for (pred,n2) in neighbourhood do
+    foreach tc in allTC
+        if tc.predicate == pred then
+            if tc.valueExpr is present then
+                foreach s2 in atomicShapes(tc.valueExpr)
+                    if isValid(G,sch,n2,s2) then
+                        add (n2,s2) to sm
+
+add all elements of hyp to sm
+result = satisfies(n,s,G,sm)
+pop from hyp
+
+return result
+</code></pre>
+
+
+<p>Recursive validation algorithm.</p>
+<pre><code>
+Input: an RDF graph G, a ShexSchema schema which set of shapes is S, an initial shapeMap map
+Output: true if satisfies(n,s,G,sch,completeTyping(G,sch)) for every (n,s) in map, false otherwise
+
+let sm be an empty shape map
+
+foreach (n,se) in map
+    foreach Shape s in atomicShapes of se
+        if isValid(s,n,G,sch) then
+            add (n,s) to sm
+    if not satisfies(n,se,G,sch,sm) then
+        return false
+
+return true
+</code></pre>	
+
+
+	
+      </section>
+    </section>
+
+
+  </body>
+</html>
