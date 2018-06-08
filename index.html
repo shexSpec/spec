@@ -14,6 +14,7 @@
 
     <script class='remove'>
       var respecConfig = {
+      github: "https://github.com/shexSpec/spec/",
       localBiblio: {
         "shex-vocab": {
           "authors": ["Gregg Kellogg"],
@@ -29,14 +30,14 @@
       specStatus:     "CG-DRAFT",
       shortName:      "shex-semantics",
       latestVersion:  "http://shex.io/shex-semantics/",
-      thisVersion:    "http://shex.io/shex-semantics-20170713",
-      prevVersion:    "http://shex.io/shex-semantics-20170327",
+      // thisVersion:    "http://shex.io/shex-semantics-20170713",
+      prevVersion:    "http://shex.io/shex-semantics-20170713",
       edDraftURI:     "https://shexspec.github.io/spec/",
       previousPublishDate:  "2014-06-02",
       previousMaturity:"Member-SUBM",
       testSuiteURI:   "https://github.com/shexSpec/shexTest",
       issueBase:      "https://github.com/shexSpec/shex/issues",
-      githubAPI:      "https://api.github.com/repos/shexSpec/shex",
+      githubAPI:      "https://api.github.com/repos/shexSpec/spec",
       editors: [
         { name:       "Eric Prud'hommeaux",
           url:        "http://www.w3.org/People/Eric/",
@@ -58,20 +59,21 @@
       ],
       wg:           "Shape Expressions Community Group",
       wgURI:        "https://www.w3.org/community/shex/",
-      wgPublicList: "public-shex",
+      //wgPublicList: "public-shex",
       //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
 
       bugTracker:             {
-        open: "https://github.com/shexSpec/shex/issues",
-        new:  "https://github.com/shexSpec/shex/issues/new"
+        open: "https://github.com/shexSpec/spec/issues",
+        new:  "https://github.com/shexSpec/spec/issues/new"
       },
 
       otherLinks: [{
-        key: "Version control",
-        data: [{
-          value: "Github Repository",
-          href: "https://github.com/shexSpec/spec"
-        }]
+        key: "ShEx language",
+        data: [
+          {value: "Homepage", href: "https://shex.io/"},
+          {value: "Issues", href: "https://github.com/shexSpec/shex/issues"},
+          {value: "Gitter chat", href: "https://gitter.im/shapeExpressions/Lobby"}
+        ]
       }],
       };
     </script>
@@ -94,17 +96,18 @@
     </section>
 
     <section id="sotd">
-      <p>This document has been developed by the
-        <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>.
-        The specification has undergone significant development since the 1.0 version.
-      </p>
-
-      <p>This is an editor's draft of the Shape Expressions specification.</p>
-
       <p>
+        This is an editor's draft of the Shape Expressions specification.
+        ShEx 2.x differs significantly from the W3C ShEx Submission.
         The <a href="http://shex.io/shex-semantics-20170713/">July 2017 publication</a> included a <a href="#validation">definition of validation</a> which implied infinite recursion.
         This version explicitly includes recursion checks.
-        No tests changed as a result of this and no implementations are known to have been affected.
+        No tests changed as a result of this and no implementations or applications are known to have been affected.
+      </p>
+      <p>
+        If you wish to make comments regarding this document, please raise them as GitHub issues.
+        There are separate interfaces for <a href="https://github.com/shexSpec/spec/issues">specification</a>, <a href="https://github.com/shexSpec/shex/issues">langauge</a> and <a href="https://github.com/shexSpec/shexTest/issues">test</a> issues.
+        Only send comments to <a href="mailto:public-shex@w3.org">public-shex@w3.org</a>     (<a href="mailto:public-shex-request@w3.org?subject=subscribe">subscribe</a>,
+    <a href="https://lists.w3.org/Archives/Public/public-shex/">archives</a>) if you are unable to raise issues on GitHub. All comments are welcome.
       </p>
     </section>
 
