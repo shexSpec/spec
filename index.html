@@ -4344,7 +4344,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-languageRange">[<span class="prodNo">55</span>]   </td>
 <td><code class="production prod">languageRange</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*)?</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*)?<br/>
+| <span class="prod">'@' '~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*</span></code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> matches with no "<code>~</code>" match , languageRange returns a <a class="obj">Language</a> object with <span class="param">languageTag</span> equal to <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span>:</td></tr>
   <tr class="obj"><td></td><td><a class="obj">Language</a></td><td>{</td><td><span class="param">languageTag</span>:<a>LANGTAG</a> }</td></tr>
@@ -4352,6 +4353,11 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <tr class="obj"><td></td><td><a class="obj">LanguageStem</a></td><td>{</td><td><span class="param">stem</span>:<a>LANGTAG</a> }</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match and <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span> matches one or more times, languageRange returns a <a class="obj">LanguageStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>:</td></tr>
   <tr class="obj"><td></td><td><a class="obj">LanguageStemRange</a></td><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a> +] }</td></tr>
+
+  <tr class="params"><td></td><td colspan="3">If '@' '~' matched with no <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>, languageRange returns a <a class="obj">LanguageStemRange</a> object with an empty <span class="param">stem</span>:</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">LanguageStemRange</a></td><td>{</td><td><span class="param">stem</span>: "" }</td></tr>
+  <tr class="params"><td></td><td colspan="3">If '@' '~' matched and <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span> matches one or more times, languageRange returns a <a class="obj">LanguageStemRange</a> object with an empty <span class="param">stem</span> ad <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>:</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">LanguageStemRange</a></td><td>{</td><td><span class="param">stem</span>: "" <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a> +] }</td></tr>
 
 <tr style="vertical-align: baseline">
 <td id="prod-languageExclusion">[<span class="prodNo">56</span>]   </td>
