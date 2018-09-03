@@ -462,7 +462,7 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn label="isValid">isValid</dfn>: For an input graph <span class="math">G</span>, schema  <span class="math">Sch</span> and input shape map <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeExprLabel pair <span class="math">(n, sl)</span> in  <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
+	<dfn id="isValid" label="isValid">isValid</dfn>: For an input graph <span class="math">G</span>, schema  <span class="math">Sch</span> and input shape map <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeExprLabel pair <span class="math">(n, sl)</span> in  <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
 	The latter is captured by the expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <a href="#completeTyping">completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>))</code>.
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
       </p>
@@ -742,7 +742,7 @@ _:User2
               <tr class="fail"><td>&lt;issue3&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be an IRI, literal found.</td></tr>
             </table>
             <p>
-              Note that &lt;issue2&gt; <span class="fail">fails</span> not because of a nodeKind violation but instead because of a <a href="#cardinality">Cardinality</a> violation described below.
+              Note that &lt;issue2&gt; <span class="fail">fails</span> not because of a nodeKind violation but instead because of a <a href="#matches-cardinality">Cardinality</a> violation described below.
             </p>
           </div>
         </section>
@@ -1025,7 +1025,7 @@ _:User2
       <section id="values">
         <h4>Values Constraint</h4>
         <p>
-          The <code><a href="#nodeSatisfies">nodeSatisfies</a></code> semantics for <span class="jobjref"><a class="obj">NodeConstraint</a></span> <span class="param">values</span> depends on a <code>nodeIn</code> function <a href="#nodeIn">defined below</a>.
+          The <code>nodeSatisfies</code> semantics for <span class="jobjref"><a class="obj">NodeConstraint</a></span> <span class="param">values</span> depends on a <code>nodeIn</code> function <a href="#nodeIn">defined below</a>.
         </p>
         <p>
           For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> matches some <a class="nobref">valueSetValue</a> <span class="math">vsv</span> in <span class="math">v</span>.
@@ -1755,7 +1755,7 @@ IMPORT &lt;http://schema.example/schema3&gt;
           a <a>schema</a> <span class="math">S</span> with a <a>ShapeMap</a> <span class="math">m</span> when:</p>
         <ol class="algorithm">
           <li>Every, <a>SemAct</a> in the <a>startActs</a> of <span class="math">S</span>
-            has a successful evaluation of <a href="#sumActsSatisfied">semActsSatisfied</a>.</li>
+            has a successful evaluation of <a href="#semActsSatisfied">semActsSatisfied</a>.</li>
           <li>Every <a>node</a> <span class="math">n</span> in <span class="math">m</span> <a>conforms</a> to its associated
             <a>shapeExprRefs</a> <span class="math">se<sub>n</sub></span> where
             for each <a>shapeExprRef</a> <span class="math">se<sub>i</sub></span> in <span class="math">se<sub>n</sub></span>:
@@ -4156,7 +4156,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 </tr>
 <tr class="params"><td></td><td colspan="3">
 <ul>
-  <li>If the matching production inludes both a  <span class="prod"><a class="grammarRef" href="#prod-nodeConstraint">nodeConstraint</a></span> and a <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>, the result is a <a class="obj">ShapeAnd</a> object with <span class="param">shapeExprs</span> containing the list of <span class="prod"><a class="grammarRef" href="#prod-nodeConstraint">nodeConstraint</a></span> and a <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>.</li>
+  <li>If the matching production inludes both a node constraint (<span class="prod"><a class="grammarRef" href="#prod-litNodeConstraint">litNodeConstraint</a></span> OR <span class="prod"><a class="grammarRef" href="#prod-nonLitNodeConstraint">nonLitNodeConstraint</a></span>) <span class="param">nc</span> and a <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>, the result is a <a class="obj">ShapeAnd</a> object with <span class="param">shapeExprs</span> containing the list of <span class="param">nc</span> and a <span class="prod"><a class="grammarRef" href="#prod-shapeOrRef">shapeOrRef</a></span>.</li>
   <li>If the "(" <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> ")" production matches, the result is the result of <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span>.</li>
   <li>If the <code>"."</code> production matches, the result is an empty shape: <code>{"type": "Shape"}</code>.</li>
 </ul>
@@ -4499,7 +4499,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-exclusion">[<span class="prodNo">50</span>]   </td>
 <td><code class="production prod">exclusion</code></td>
 <td>   ::=   </td>
-<td><code class="content">'-' (<span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> | <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span>) '~'?</code></td>
+<td><code class="content">'-' (<span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> | <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span>) '~'?</code></td>
 </tr>
 
 <tr style="vertical-align: baseline">
@@ -4544,20 +4544,20 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-languageRange">[<span class="prodNo">55</span>]   </td>
 <td><code class="production prod">languageRange</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*)?</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*)?</code></td>
 </tr>
-  <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> matches with no "<code>~</code>" match , languageRange returns a <a class="obj">Language</a> object with <span class="param">languageTag</span> equal to <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span>:</td></tr>
+  <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> matches with no "<code>~</code>" match , languageRange returns a <a class="obj">Language</a> object with <span class="param">languageTag</span> equal to <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span>:</td></tr>
   <tr class="obj"><td></td><td><a class="obj">Language</a></td><td>{</td><td><span class="param">languageTag</span>:<a>LANGTAG</a> }</td></tr>
-  <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>, languageRange returns a <a class="obj">LanguageStem</a> object:</td></tr>
+  <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>, languageRange returns a <a class="obj">LanguageStem</a> object:</td></tr>
   <tr class="obj"><td></td><td><a class="obj">LanguageStem</a></td><td>{</td><td><span class="param">stem</span>:<a>LANGTAG</a> }</td></tr>
-  <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match and <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span> matches one or more times, languageRange returns a <a class="obj">LanguageStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>:</td></tr>
+  <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> and "<code>~</code>" match and <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span> matches one or more times, languageRange returns a <a class="obj">LanguageStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>:</td></tr>
   <tr class="obj"><td></td><td><a class="obj">LanguageStemRange</a></td><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a> +] }</td></tr>
 
 <tr style="vertical-align: baseline">
 <td id="prod-languageExclusion">[<span class="prodNo">56</span>]   </td>
 <td><code class="production prod">languageExclusion</code></td>
 <td>   ::=   </td>
-<td><code class="content">'-' <span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> '~'?</code></td>
+<td><code class="content">'-' <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> '~'?</code></td>
 </tr>
 
 </tbody>
@@ -4577,7 +4577,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">'&amp;' <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span></code></td>
 </tr>
-  <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-constraint">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
+  <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-requirement">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
 <tr class="obj"><td></td><td><a class="obj">tripleExprRef</a></td><td>=</td><td><a class="nobref">tripleExprLabel</a> ;</td></tr>
 </tbody>
 
@@ -4835,7 +4835,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL">PN_LOCAL</a></span></code></td>
 </tr>
-    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the first token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="#reserved">reserved characters</a> in the second argument, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
+    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the first token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="https://tools.ietf.org/html/rfc3987#page-9">reserved characters</a> [[!rfc7159]] in the second argument, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -4855,7 +4855,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_LN">PNAME_LN</a></span></code></td>
 </tr>
-    <tr id="handle-ATPNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="#reserved">reserved characters</a> in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
+    <tr id="handle-ATPNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="https://tools.ietf.org/html/rfc3987#page-9">reserved characters</a> [[!rfc7159]] in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -5360,7 +5360,7 @@ tripleExprLabel = IRIREF | BNODE ;
     <dd>W3C</dd>
   </dl>
 
-  <p>Fragment identifiers used with <a href="#application-ld-json">application/ld+json</a>
+  <p>Fragment identifiers used with <a href="https://www.w3.org/TR/2014/REC-json-ld-20140116/#application-ld-json">application/ld+json</a>
     are treated as in RDF syntaxes, as per
     <a data-cite="RDF11-CONCEPTS#section-fragID">RDF 1.1 Concepts and Abstract Syntax</a>
     [[RDF11-CONCEPTS]].</p>
