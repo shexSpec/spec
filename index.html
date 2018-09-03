@@ -2030,13 +2030,13 @@ IMPORT &lt;http://schema.example/schema3&gt;
 ] } } ] }</pre>
           <pre class="shexc nohighlight">                                                                      
     ex:PersonShape {
-      foaf:name .
+      $ex:nameExpr foaf:name .
     }
 
 
 
     ex:EmployeeShape {
-      &amp;ex:PersonShape ;
+      &amp;ex:nameExpr ;
       ex:employeeNumber .
     }
 
