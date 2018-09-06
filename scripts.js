@@ -54,6 +54,28 @@ function prepRep (elts, cls) {
         container.css("border", "thick solid red");
       }
     }
+    if (!container.hasClass("incomplete")) {
+      try {
+        let shexjStr = container.find("pre.json").text()
+        let shexj = ShEx.Util.ShExJtoAS(JSON.parse(shexjStr))
+        let shexcStr =
+            "PREFIX ex: <http://schema.example/#>\n" +
+            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+            "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+            "PREFIX Test: <http://shex.io/extensions/Test/>\n" +
+            container.find("pre.shexc").text()
+        let shexc = ShEx.Parser.construct("http://schema.example/schema1").parse(shexcStr)
+        delete shexc.prefixes
+        delete shexc.base
+        if (!deepEquals(shexj, shexc)) {
+          console.dir([container.get(), shexj,  shexc]);
+        }
+      } catch (e) {
+        console.dir([container, e]);
+      }
+    }
     chooseRep(container, cls);
   });
   return 
@@ -134,4 +156,46 @@ function toggle (from, key) {
     from.find("> button").text(toShow);
     return false;
 }
+
+// from https://stackoverflow.com/questions/1068834/object-comparison-in-javascript#answer-2408334
+function deepEquals (l, r) {
+  for (i in l) {
+    if(typeof r[i] === 'undefined') {
+      return false;
+    }
+    else if(typeof r[i] === 'object') {
+      if(!deepEquals(r[i], l[i])) {
+        return false;
+      }
+    }
+    else if(r[i] != l[i]) {
+      return false;
+    }
+  }
+  for(i in r) {
+    if(typeof l[i] === 'undefined') {
+      return false;
+    }
+    else if(typeof l[i] === 'object') {
+      if(!deepEquals(l[i], r[i])) {
+        return false;
+      }
+    }
+    else if(l[i] != r[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/*
+let a = {foo:'bar', bar: {blub:'bla'}}
+let b = {foo:'bar', bar: {blub:'blob'}}
+console.log(false, deepEquals(a, b))
+console.log(true, deepEquals(a, JSON.parse(JSON.stringify(a))))
+console.log(true, deepEquals(b, JSON.parse(JSON.stringify(b))))
+let c = {a:[]}
+let d = {a:[]}
+console.log(true, deepEquals(c, d))
+*/
 

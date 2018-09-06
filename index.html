@@ -78,6 +78,7 @@
       };
     </script>
 
+    <script src="//rawgit.com/shexSpec/shex.js/wikidata/browser/shex-browserify.js"></script>
     <script type="text/javascript" src="scripts.js"></script>
   </head>
   
@@ -230,10 +231,10 @@
         </p>
         <div class="json">
           <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "<span class="lookit">http://schema.example/IssueShape</span>",
+    { "id": "<span class="lookit">http://schema.example/#IssueShape</span>",
       "type": "Shape", "expression": {
-        "type": "TripleConstraint", "predicate": "http://schema.example/related",
-        "valueExpr": "<span class="lookit">http://schema.example/IssueShape</span>", "min": 0 } } ] }</pre>
+        "type": "TripleConstraint", "predicate": "http://schema.example/#related",
+        "valueExpr": "<span class="lookit">http://schema.example/#IssueShape</span>", "min": 0 } } ] }</pre>
         </div>
         <p>
           Not captured in this JSON syntax definition is the rule that every <a class="nobjref">shapeExpr</a> nested in a schema's <a class="param">shapes</a> must have an <span class="param">id</span> and no other <a class="nobjref">shapeExpr</a> may have an <span class="param">id</span>.
@@ -242,12 +243,12 @@
         </p>
         <div class="json">
           <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://schema.example/IssueShape",
+    { "id": "http://schema.example/#IssueShape",
       "type": "Shape", "expression": {
-        "type": "TripleConstraint", "predicate": "http://schema.example/submittedBy",
+        "type": "TripleConstraint", "predicate": "http://schema.example/#submittedBy",
         "valueExpr": {
           "type": "Shape", "expression": {
-            "type": "TripleConstraint", "predicate": "http://schema.example/name",
+            "type": "TripleConstraint", "predicate": "http://schema.example/#name",
             "valueExpr": {
               "type": "NodeConstraint", "nodeKind": "literal"
             } } } } } ] }</pre>
@@ -369,7 +370,7 @@
   </p>
 
   <pre class="data">
-PREFIX ex: http://schema.example/
+PREFIX ex: http://schema.example/#
 PREFIX inst: http://inst.example/#
 PREFIX foaf: http://xmlns.com/foaf/
 PREFIX xsd: http://www.w3.org/2001/XMLSchema#
@@ -445,12 +446,12 @@ _:User2
       <p>
         where <a class="param">shapes</a> is a mapping from shape label to <a>shape expression</a>.
       </p>
-      <div class="repchoice">
+      <div class="repchoice incomplete">
         <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape", <span class="comment">…</span> },
+  { "id": "http://schema.example/#IssueShape", <span class="comment">…</span> },
   { "id": "_:UserShape", <span class="comment">…</span> },
-  { "id": "http://schema.example/EmployeeShape", <span class="comment">…</span> } ] }</pre>
-        <pre class="shexc nohighlight">                                                        
+  { "id": "http://schema.example/#EmployeeShape", <span class="comment">…</span> } ] }</pre>
+        <pre class="shexc nohighlight">                                                         
     ex:IssueShape { … }
     _:UserShape { … }
     ex:EmployeeShape { … }
@@ -583,27 +584,27 @@ _:User2
     Examples of shape expressions:
   </p>
 
-  <div class="repchoice">
+  <div class="repchoice incomplete">
     <pre class="json nohighlight">{ "type": "Shape", <span class="comment">…</span> }    </pre>
     <pre class="shexc nohighlight">{ <span class="comment">…</span> }                     </pre>
   </div>
   <div style="clear:both;"> </div>
-  <div class="repchoice">
+  <div class="repchoice incomplete">
     <pre class="json nohighlight">{ "type": "ShapeAnd", "shapeExprs": [
   { "type": "NodeConstraint", "nodeKind": "iri" },
   { "type": "ShapeOr", "shapeExprs": [
-    "http://schema.example/IssueShape",
+    "http://schema.example/#IssueShape",
     { "type": "ShapeNot", "shapeExpr": { "type": "Shape", <span class="comment">…</span> } }
     ] } ] }</pre>
     <pre class="shexc nohighlight">                                                               
   <span class="keyword">IRI</span> AND
   (
-    @&lt;http://schema.example/IssueShape&gt;
+    @&lt;http://schema.example/#IssueShape&gt;
     OR NOT { <span class="comment">…</span> }
   )</pre>
   </div>
   <p>
-    In this ShapeOr's <span class="param">shapeExprs</span>, "http://schema.example/IssueShape" is a reference to the <a>shape expression</a> with the id "http://schema.example/IssueShape".
+    In this ShapeOr's <span class="param">shapeExprs</span>, "http://schema.example/#IssueShape" is a reference to the <a>shape expression</a> with the id "http://schema.example/#IssueShape".
   </p>
       </div>
       </section>
@@ -655,10 +656,10 @@ _:User2
     </ul>
 
     <p>
-      If <span class="math">Sch</span>'s <a class="param">shapes</a> maps "<code>http://schema.example/shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
+      If <span class="math">Sch</span>'s <a class="param">shapes</a> maps "<code>http://schema.example/#shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
     </p>
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
     </ul>
       </div>
       </section>
@@ -721,12 +722,12 @@ _:User2
             </p>
             <div class="repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/state",
+      "type": "TripleConstraint", "predicate": "http://schema.example/#state",
       "valueExpr": { "type": "NodeConstraint", "nodeKind": "iri" } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                     
-    ex:IssueShape {                                                          
+              <pre class="shexc nohighlight">                                                                              
+    ex:IssueShape {
       ex:state IRI
     }
               </pre>
@@ -758,14 +759,14 @@ _:User2
             <div class="example-title marker"><span>Datatype example 1</span></div>
             <div class="repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/submittedOn",
+      "type": "TripleConstraint", "predicate": "http://schema.example/#submittedOn",
       "valueExpr": {
         "type": "NodeConstraint",
         "datatype": "http://www.w3.org/2001/XMLSchema#date"
       } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                                   
+              <pre class="shexc nohighlight">                                                                                    
     ex:IssueShape {                                                          
       ex:submittedOn xsd:date
     }
@@ -800,7 +801,7 @@ _:User2
             <div class="example-title marker"><span>Datatype example 2</span></div>
             <div class="repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
       "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
@@ -865,10 +866,10 @@ _:User2
           <div class="example-title marker"><span>String Facets example 1</span></div>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
-      "predicate": "http://schema.example/submittedBy",
+      "predicate": "http://schema.example/#submittedBy",
       "valueExpr": { "type": "NodeConstraint", "minlength": 10 } } } ] }</pre>
             <pre class="shexc nohighlight">                                                                        
   ex:IssueShape {
@@ -898,16 +899,16 @@ _:User2
           <div class="example-title marker"><span>String Facets example 2</span></div>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
-      "predicate": "http://schema.example/submittedBy",
+      "predicate": "http://schema.example/#submittedBy",
       "valueExpr": { "type": "NodeConstraint",
                      "pattern": "genuser[0-9]+", "flags": "i" }
 } } ] }</pre>
             <pre class="shexc nohighlight">                                                               
   ex:IssueShape {
-    ex:submittedBy ~/genuser[0-9]+/i
+    ex:submittedBy /genuser[0-9]+/i
   }
 
 
@@ -932,14 +933,14 @@ _:User2
           <div class="example-title marker"><span>String Facets example 3</span></div>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/ProductShape",
+  { "id": "http://schema.example/#ProductShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
-      "predicate": "http://schema.example/trademark",
+      "predicate": "http://schema.example/#trademark",
       "valueExpr": { "type": "NodeConstraint",
-                     "pattern": "^/\\t\\\\\\U0001D4B8\\?$" }
+                     "pattern": "^/\\t\\\\\uD835\uDCB8\\?$" }
 } } ] }</pre>
-            <pre class="shexc nohighlight">                                                            
+            <pre class="shexc nohighlight">                                                             
   ex:ProductShape {
     ex:trademark /^\/\t\\\U0001D4B8\?$/
   }
@@ -995,10 +996,10 @@ _:User2
           <div class="example-title marker"><span>Numeric Facets example 1</span></div>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
-      "predicate": "http://schema.example/confirmations",
+      "predicate": "http://schema.example/#confirmations",
       "valueExpr": { "type": "NodeConstraint", "mininclusive": 1 } } } ] }</pre>
             <pre class="shexc nohighlight">                                                                          
   ex:IssueShape {
@@ -1057,15 +1058,15 @@ _:User2
           <p>NoActionIssueShape requires a state of Resolved or Rejected:</p>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/NoActionIssueShape",
+  { "id": "http://schema.example/#NoActionIssueShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
-      "predicate": "http://schema.example/state",
+      "predicate": "http://schema.example/#state",
       "valueExpr": {
         "type": "NodeConstraint", "values": [
-          "http://schema.example/Resolved",
-          "http://schema.example/Rejected" ] } } } ] }</pre>
-            <pre class="shexc nohighlight">                                                      
+          "http://schema.example/#Resolved",
+          "http://schema.example/#Rejected" ] } } } ] }</pre>
+            <pre class="shexc nohighlight">                                                       
   ex:NoActionIssueShape {
     ex:state [ ex:Resolved ex:Rejected ]
   }
@@ -1090,14 +1091,14 @@ _:User2
           <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/EmployeeShape",
+  { "id": "http://schema.example/#EmployeeShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/mbox",
       "valueExpr": {
         "type": "NodeConstraint", "values": [
           {"value": "N/A"},
-          { "type": "IriStemRange", "stem": "mailto:engineering-" },
+          { "type": "IriStem", "stem": "mailto:engineering-" },
           { "type": "IriStemRange", "stem": "mailto:sales-", "exclusions": [
               { "type": "IriStem", "stem": "mailto:sales-contacts" },
               { "type": "IriStem", "stem": "mailto:sales-interns" }
@@ -1139,7 +1140,7 @@ _:User2
           <p>An employee must not have an email address that starts with "engineering-"  or "sales-":</p>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/EmployeeShape",
+  { "id": "http://schema.example/#EmployeeShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/mbox",
@@ -1179,7 +1180,7 @@ _:User2
 
         <p>
           A value set can have a single value in it.
-          This is used to indicate that a specific value is required, e.g. that an ex:state must be equal to &lt;http://schema.example/Resolved&gt; or the rdf:type of some node must be foaf:Person.
+          This is used to indicate that a specific value is required, e.g. that an ex:state must be equal to &lt;http://schema.example/#Resolved&gt; or the rdf:type of some node must be foaf:Person.
         </p>
       </section>
     </section>
@@ -1243,7 +1244,7 @@ _:User2
           <p id="matches-semActs"><span class="math">expr</span> has <span class="param">semActs</span> and <code class="function">matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3,     
   "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre>
               <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                     
@@ -1254,7 +1255,7 @@ _:User2
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
               <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
               </div>,<br/>
@@ -1268,7 +1269,7 @@ _:User2
           <p id="matches-cardinality"><span class="math">expr</span> has a <dfn>cardinality</dfn> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1, where a <span class="param">max</span> of -1 is treated as unbounded, and <span class="math">T</span> can be partitioned into <span class="math">k</span> subsets <span class="math function" >T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,…<span class="math">T<sub>k</sub></span> such that <span class="math">min ≤ k ≤ max</span> and for each <span class="math">T<sub>n</sub></span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
               <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
               </div>,<br/>
@@ -1276,7 +1277,7 @@ _:User2
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">Let e = </div><div style="float:left;">
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }     </pre>
               <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>)                                        </pre>
             </div></div>
@@ -1321,7 +1322,7 @@ _:User2
           <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [
   { "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] },
   { "type": "TripleExpression", "min": 1, "max": -1,
@@ -1337,7 +1338,7 @@ _:User2
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }     </pre>
               <pre class="shexc nohighlight"><span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>                                         </pre>
               </div>,<br/>
@@ -1345,7 +1346,7 @@ _:User2
             </div>
             <div style="clear:both;"></div>
             <div class="math"><div style="float:left;">or matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression", "min": 1, "max": -1,     
     "predicate": "http://xmlns.com/foaf/0.1/name" }</pre>
               <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/name&gt; . +                   
@@ -1359,7 +1360,7 @@ _:User2
           <p id="matches-EachOf"><span class="math">expr</span> is an <span class="jobjref"><a class="obj">EachOf</a></span> and there is some partition of <span class="math">T</span> into <span class="math">T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,… such that for every expression <span class="function"><span class="math">expr<sub>1</sub></span>, <span class="math">expr<sub>2</sub></span>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr<sub>n</sub></span>, <span class="math">m</span>)</code>.</p>
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [
   { "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/givenName" },
@@ -1377,7 +1378,7 @@ _:User2
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T<sub>1</sub>,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
               <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; .                 
@@ -1387,7 +1388,7 @@ _:User2
             </div>
             <div style="clear:both;"></div>
             <div class="math"><div style="float:left;">and matches(</div><div style="float:left;">T<sub>2</sub>,<br/>
-            <div class="inline repchoice">
+            <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/familyName" }</pre>
               <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/familyName&gt; .                 
@@ -1419,7 +1420,7 @@ _:User2
                 <p><span class="math">expr</span> has no <span class="param">valueExpr</span></p>
                 <div class="example">
                   <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline repchoice">
+                  <div class="inline repchoice incomplete">
                     <pre class="json nohighlight">{ "type": "TripleExpression",
   "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
                     <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;             
@@ -1438,13 +1439,13 @@ _:User2
                 <p>or <code class="function">satisfies(<span class="math">value</span>, <span class="param">valueExpr</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>.</p>
                 <div class="example">
                   <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
-                  <div class="inline repchoice">
+                  <div class="inline repchoice incomplete">
                     <pre class="json nohighlight">{ "type": "TripleConstraint", "inverse": true,
   "predicate": "http://purl.org/dc/elements/1.1/author",
-  "valueExpr": "http://schema.example/IssueShape" }</pre>
+  "valueExpr": "http://schema.example/#IssueShape" }</pre>
                     <pre class="shexc nohighlight">                                                        
 ^&lt;http://purl.org/dc/elements/1.1/author&gt;
-        @&lt;http://schema.example/IssueShape&gt;</pre>
+        @&lt;http://schema.example/#IssueShape&gt;</pre>
                   </div>,<br/>
               m)</div>
                   </div>
@@ -1453,7 +1454,7 @@ _:User2
                     <li><span class="math">T</span> has exactly one triple <span class="math">t</span>.</li>
                     <li><span class="math">t</span> has the <a>predicate</a> "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
                     <li><span class="math">t</span> has a subject <span class="math">n2</span></li>
-                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/IssueShape</code>" to <span class="math">se2</span></li>
+                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to <span class="math">se2</span></li>
                     <li><span class="math function" >satisfies(n2, se2, G, Sch, m)</span></li>
                   </ul></div>
                 </div>
@@ -1463,16 +1464,16 @@ _:User2
                   For the schema<br/>
                   <div class="inline json">
                     <pre>{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/UserShape",
+  { "id": "http://schema.example/#UserShape",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "inverse": true,
       "predicate": "http://purl.org/dc/elements/1.1/author",
       "valueExpr": {
         "type": "ShapeAnd", "shapeExprs": [
           { "type": "NodeConstraint", "nodeKind": "iri", "pattern": "http:.*" },
-          "http://schema.example/IssueShape"
+          "http://schema.example/#IssueShape"
         ] } } },
-  { "id": "http://schema.example/IssueShape", "type": "Shape" } ] }</pre>
+  { "id": "http://schema.example/#IssueShape", "type": "Shape" } ] }</pre>
                   </div><div style="clear:both;"></div>
                   <span class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
                   <div class="inline json">
@@ -1486,7 +1487,7 @@ _:User2
                     <li><span class="math">T</span> has exactly one triple <span class="math">t</span>.</li>
                     <li><span class="math">t</span> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
                     <li><span class="math">t</span> has a subject <span class="math">n2</span></li>
-                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/IssueShape</code>" to <span class="math">se2</span></li>
+                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to <span class="math">se2</span></li>
                     <li><span class="math function" >satisfies(n2, se2, G, m)</span></li>
                   </ul></div>
                 </div>
@@ -1504,42 +1505,42 @@ _:User2
             For the schema<br/>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/EmployeeShape",
+  { "id": "http://schema.example/#EmployeeShape",
     "type": "Shape", "expression": {
       "type": "EachOf", "expressions": [
-        "http://schema.example/nameExpr",
+        "http://schema.example/#nameExpr",
         { "type": "TripleConstraint",
-          "predicate": "http://schema.example/empID",
+          "predicate": "http://schema.example/#empID",
           "valueExpr": { "type": "NodeConstraint",
             "datatype": "http://www.w3.org/2001/XMLSchema#integer" } } ] } },
-  { "id": "http://schema.example/PersonShape",
+  { "id": "http://schema.example/#PersonShape",
     "type": "Shape", "expression": {
-      "id": "http://schema.example/nameExpr",
+      "id": "http://schema.example/#nameExpr",
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/name" } } ] }</pre>
               <pre class="shexc nohighlight">                                                                             
-&lt;http://schema.example/EmployeeShape&gt; {
-    &amp;<span class="lookit">&lt;http://schema.example/nameExpr&gt;</span> ;
-    &lt;http://schema.example/empID&gt;
+&lt;http://schema.example/#EmployeeShape&gt; {
+    &amp;<span class="lookit">&lt;http://schema.example/#nameExpr&gt;</span> ;
+    &lt;http://schema.example/#empID&gt;
           &lt;http://www.w3.org/2001/XMLSchema#integer&gt;
 
 
 
 }
-&lt;http://schema.example/PersonShape&gt; {
+&lt;http://schema.example/#PersonShape&gt; {
 
-  <span class="lookit">$&lt;http://schema.example/nameExpr&gt;</span>
-    &lt;http://xmlns.com/foaf/0.1/name&gt; ;
+  <span class="lookit">$&lt;http://schema.example/#nameExpr&gt;</span>
+    &lt;http://xmlns.com/foaf/0.1/name&gt; . ;
 }</pre>
             </div><div style="clear:both;"></div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>"http://schema.example/PersonShape"</pre></div>,<br/>
+              <pre>"http://schema.example/#PersonShape"</pre></div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">holds if
             <ul class="tight">
-              <li>The schema has a shape <span class="math">se2</span> with the <span class="param">id</span> "<code>http://schema.example/PersonShape</code>"</li>
+              <li>The schema has a shape <span class="math">se2</span> with the <span class="param">id</span> "<code>http://schema.example/#PersonShape</code>"</li>
               <li><span class="math function" >satisfies(n, se2, G, Sch, m)</span></li>
             </ul></div>
           </div>
@@ -1564,29 +1565,29 @@ _:User2
       </p>
           <div class="example">
             <div class="example-title marker"><span>Import example 1 - Shape and Triple Expressions</span></div>
-            <div class="repchoice">
+            <div class="repchoice incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
-{ "type": "Schema", "imports": ["http://schema.example/schema2"], "shapes": [
-  { "id": "http://schema.example/EmployeeShape",
+{ "type": "Schema", "imports": ["http://schema.example/#schema2"], "shapes": [
+  { "id": "http://schema.example/#EmployeeShape",
     "type": "Shape", "expression": {
       "type": "EachOf", "expressions": [
-        "http://schema.example/nameExpr",
+        "http://schema.example/#nameExpr",
         { "type": "TripleConstraint",
-          "predicate": "http://schema.example/empID",
+          "predicate": "http://schema.example/#empID",
           "valueExpr": { "type": "NodeConstraint",
             "datatype": "http://www.w3.org/2001/XMLSchema#integer" } } ] } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema", "shapes": [
-  { "id": "http://schema.example/PersonShape",
+  { "id": "http://schema.example/#PersonShape",
     "type": "Shape", "expression": {
-      "id": "http://schema.example/nameExpr",
+      "id": "http://schema.example/#nameExpr",
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/name" } } ] }
 </pre>
               <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
-&lt;http://schema.example/EmployeeShape&gt; {
-    &amp;&lt;http://schema.example/nameExpr&gt; ;
-    &lt;http://schema.example/empID&gt;
+&lt;http://schema.example/#EmployeeShape&gt; {
+    &amp;&lt;http://schema.example/#nameExpr&gt; ;
+    &lt;http://schema.example/#empID&gt;
           &lt;http://www.w3.org/2001/XMLSchema#integer&gt;
 
 
@@ -1594,9 +1595,9 @@ _:User2
 
 }
 <span class="label">schema2:</span>
-<span class="lookit">&lt;http://schema.example/PersonShape&gt;</span> {
+<span class="lookit">&lt;http://schema.example/#PersonShape&gt;</span> {
 
-  <span class="lookit">$&lt;http://schema.example/nameExpr&gt;</span>
+  <span class="lookit">$&lt;http://schema.example/#nameExpr&gt;</span>
     &lt;http://xmlns.com/foaf/0.1/name&gt; ;
 }
 
@@ -1613,60 +1614,60 @@ _:User2
       </p>
           <div class="example">
             <div class="example-title marker"><span>Import example 2 - Circular Import</span></div>
-            <div class="repchoice">
+            <div class="repchoice incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/schema2", "http://schema.example/schema3"],
+  "imports": ["http://schema.example/#schema2", "http://schema.example/#schema3"],
   "shapes": [
-  { "id": "http://schema.example/schema1#S1",
+  { "id": "http://schema.example/#schema1#S1",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/p1",
-      "valueExpr": "http://schema.example/schema1#S2"
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
+      "valueExpr": "http://schema.example/#schema1#S2"
     } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/schema3"],
+  "imports": ["http://schema.example/#schema3"],
   "shapes": [
-  { "id": "http://schema.example/schema1#S2",
+  { "id": "http://schema.example/#schema1#S2",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/p2",
-      "valueExpr": "http://schema.example/schema1#S3"
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p2",
+      "valueExpr": "http://schema.example/#schema1#S3"
     } } ] }
 <span class="label">schema3:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/schema1"],
+  "imports": ["http://schema.example/#schema1"],
   "shapes": [
-  { "id": "http://schema.example/schema1#S3",
+  { "id": "http://schema.example/#schema1#S3",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/p3",
-      "valueExpr": "http://schema.example/schema1#S1", "min": 0,
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p3",
+      "valueExpr": "http://schema.example/#schema1#S1", "min": 0,
     } } ] }
 </pre>
-              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                          
 
-IMPORT &lt;http://schema.example/schema2&gt; &lt;http://schema.example/schema3&gt;
+IMPORT &lt;http://schema.example/#schema2&gt; &lt;http://schema.example/#schema3&gt;
 
-&lt;http://schema.example/schema1#S1&gt; {
+&lt;http://schema.example/#schema1#S1&gt; {
 
-  &lt;http://schema.example/p1&gt; @&lt;http://schema.example/schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
 
 
 <span class="label">schema2:</span>
 
-IMPORT &lt;http://schema.example/schema3&gt;
+IMPORT &lt;http://schema.example/#schema3&gt;
 
-&lt;http://schema.example/schema1#S2&gt; {
+&lt;http://schema.example/#schema1#S2&gt; {
 
-  &lt;http://schema.example/p2&gt; @&lt;http://schema.example/schema1#S3&gt;
+  &lt;http://schema.example/#p2&gt; @&lt;http://schema.example/#schema1#S3&gt;
 
 
 <span class="label">schema3:</span>
 
-IMPORT &lt;http://schema.example/schema1&gt;
+IMPORT &lt;http://schema.example/#schema1&gt;
 
-&lt;http://schema.example/schema1#S3&gt; {
+&lt;http://schema.example/#schema1#S3&gt; {
 
-  &lt;http://schema.example/p3&gt; @&lt;http://schema.example/schema1#S1&gt;?
+  &lt;http://schema.example/#p3&gt; @&lt;http://schema.example/#schema1#S1&gt;?
 
 
 </pre>
@@ -1677,54 +1678,54 @@ IMPORT &lt;http://schema.example/schema1&gt;
       </p>
           <div class="example">
             <div class="example-title marker"><span>Import example 3 - Erroneous Import</span></div>
-            <div class="repchoice error">
+            <div class="repchoice error incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/schema2"],
+  "imports": ["http://schema.example/#schema2"],
   "shapes": [
-  { "id": "http://schema.example/schema1#S1",
+  { "id": "http://schema.example/#schema1#S1",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/p1",
-      "valueExpr": "http://schema.example/schema1#S2"
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
+      "valueExpr": "http://schema.example/#schema1#S2"
     } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/schema3"],
-  <span class="lookit">"start": "http://schema.example/schema1#S2"</span>,
+  "imports": ["http://schema.example/#schema3"],
+  <span class="lookit">"start": "http://schema.example/#schema1#S2"</span>,
   "shapes": [
-  { <span class="lookit">"id": "http://schema.example/schema1#S1"</span>,
+  { <span class="lookit">"id": "http://schema.example/#schema1#S1"</span>,
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/p1",
-      "valueExpr": "http://schema.example/schema1#S2"
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
+      "valueExpr": "http://schema.example/#schema1#S2"
     } },
-  { "id": "http://schema.example/schema1#S2",
+  { "id": "http://schema.example/#schema1#S2",
     "type": "Shape", "expression": {
-      "type": "TripleConstraint", "predicate": "http://schema.example/p2",
-      "valueExpr": <span class="lookit">"http://schema.example/schema1#S3"</span>
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p2",
+      "valueExpr": <span class="lookit">"http://schema.example/#schema1#S3"</span>
     } } ] }
 </pre>
-              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                  
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                   
 
-IMPORT &lt;http://schema.example/schema2&gt;
+IMPORT &lt;http://schema.example/#schema2&gt;
 
-&lt;http://schema.example/schema1#S1&gt; {
+&lt;http://schema.example/#schema1#S1&gt; {
 
-  &lt;http://schema.example/p1&gt; @&lt;http://schema.example/schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
 
 }
 <span class="label">schema2:</span>
 
-IMPORT &lt;http://schema.example/schema3&gt;
-<span class="lookit">start=@&lt;http://schema.example/schema1#S2&gt;</span>
+IMPORT &lt;http://schema.example/#schema3&gt;
+<span class="lookit">start=@&lt;http://schema.example/#schema1#S2&gt;</span>
 
-<span class="lookit">&lt;http://schema.example/schema1#S1&gt;</span> {
+<span class="lookit">&lt;http://schema.example/#schema1#S1&gt;</span> {
 
-  &lt;http://schema.example/p1&gt; @&lt;http://schema.example/schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
 
 }
-&lt;http://schema.example/schema1#S2&gt; {
+&lt;http://schema.example/#schema1#S2&gt; {
 
-  &lt;http://schema.example/p2&gt; <span class="lookit">@&lt;http://schema.example/schema1#S3&gt;</span>
+  &lt;http://schema.example/#p2&gt; <span class="lookit">@&lt;http://schema.example/#schema1#S3&gt;</span>
 
 }
 </pre>
@@ -1733,9 +1734,9 @@ IMPORT &lt;http://schema.example/schema3&gt;
             This import fails because:
           </p>
           <ul>
-            <li><code>&lt;http://schema.example/schema1#S1&gt;</code> has conflicting definitions and</li>
+            <li><code>&lt;http://schema.example/#schema1#S1&gt;</code> has conflicting definitions and</li>
             <li>an included schema has a <code>start</code> directive and</li>
-            <li>the reference to <code>&lt;http://schema.example/schema1#S3&gt;</code> is not resolvable after imports.</li>
+            <li>the reference to <code>&lt;http://schema.example/#schema1#S3&gt;</code> is not resolvable after imports.</li>
           </ul>
           </div>
     </section>
@@ -1885,14 +1886,14 @@ IMPORT &lt;http://schema.example/schema3&gt;
         </p>
         <div class="repchoice error">
           <pre class="json nohighlight">{ "type":"Schema", "shapes": [
-    { "id": "http://schema.example/S1",
+    { "id": "http://schema.example/#S1",
       "type":"Shape", "expression":
-        "http://schema.example/MissingShapeExpr"
+        "http://schema.example/#MissingShapeExpr"
 } ] }</pre>
-          <pre class="shexc nohighlight">                                                
-    S1 {
+          <pre class="shexc nohighlight">                                                 
+    ex:S1 {
 
-      &amp;MissingShapeExpr
+      &amp;ex:MissingShapeExpr
     }</pre>
         </div>
         <p>This shapeExprRef is invalid because the referenced object is a <a>triple expression</a> instead of a <a>shape expression</a>:</p>
@@ -2016,19 +2017,19 @@ IMPORT &lt;http://schema.example/schema3&gt;
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{ "type":"Schema", "shapes": [
-    { "id": "http://schema.example/PersonShape",
+    { "id": "http://schema.example/#PersonShape",
       "type":"Shape", "expression": {
-        "id": "http://schema.example/nameExpr",
+        "id": "http://schema.example/#nameExpr",
         "type": "TripleConstraint",
         "predicate": "http://xmlns.com/foaf/0.1/name"
       } },
-    { "id": "http://schema.example/EmployeeShape",
-      "type":"Shape", "expression": { "type":"EachOf", "shapeExprs": [
-        "http://schema.example/nameExpr",
+    { "id": "http://schema.example/#EmployeeShape",
+      "type":"Shape", "expression": { "type":"EachOf", "expressions": [
+        "http://schema.example/#nameExpr",
         { "type": "TripleConstraint",
-          "predicate": "http://schema.example/employeeNumber" }
+          "predicate": "http://schema.example/#employeeNumber" }
 ] } } ] }</pre>
-          <pre class="shexc nohighlight">                                                                      
+          <pre class="shexc nohighlight">                                                                       
     ex:PersonShape {
       $ex:nameExpr foaf:name .
     }
@@ -2047,27 +2048,27 @@ IMPORT &lt;http://schema.example/schema3&gt;
         </p>
         <div class="repchoice error">
           <pre class="json nohighlight">{ "type":"Schema", "shapes": [
-    { "id": "http://schema.example/S1",
+    { "id": "http://schema.example/#S1",
       "type":"Shape", "expression":
-        "http://schema.example/missingTripleExpr"
+        "http://schema.example/#missingTripleExpr"
 } ] }</pre>
-          <pre class="shexc nohighlight">                                                 
-    S1 {
-      &amp;missingTripleExpr
+          <pre class="shexc nohighlight">                                                  
+    ex:S1 {
+      &amp;ex:missingTripleExpr
     }
           </pre>
         </div>
         <p>This triple expression reference is invalid because the referenced object is a <a>shape expression</a> instead of a triple expression:</p>
-        <div class="repchoice error">
+        <div class="repchoice error incomplete">
           <pre class="json nohighlight">{ "type":"Schema", "shapes": [
-    { "id": "http://schema.example/CustomerShape",
+    { "id": "http://schema.example/#CustomerShape",
       "type":"ShapeAnd", "shapeExprs": [ <span class="comment">…</span> ]
     },
-    { "id": "http://schema.example/PreferredCustomerShape",
+    { "id": "http://schema.example/#PreferredCustomerShape",
       "type":"Shape", "expression": { "type":"EachOf", "expressions": [
-        "http://schema.example/CustomerShape",
+        "http://schema.example/#CustomerShape",
         { "type": "TripleConstraint",
-          "predicate": "http://schema.example/discount" }
+          "predicate": "http://schema.example/#discount" }
 ] } } ] }</pre>
           <pre class="shexc nohighlight">                                                                       
     ex:CustomerShape {
@@ -2229,14 +2230,14 @@ ex:S {ex:p <span class="lookit">NOT</span> @ex:S}
         "valueExpr": "http://schema.example/#US" } }
   ] }</pre>
                 <pre class="shexc nohighlight">                                                         
-ex:S {ex:p @ex:T} <!-- ex:S NOT @ex:T -->
+ex:US {ex:Up NOT @ex:UT} <!-- ex:S NOT @ex:T -->
 
 
 
 
 
 
-ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
+ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
 
 
@@ -2291,7 +2292,7 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
                 </pre>
               </div>
               <p>
-                This is a direct negated self-reference of the shape with id ex:T and violates the negation requirement.
+                This is a direct, negated self-reference of the shape with id ex:T and violates the negation requirement.
 
               </p>
               <div class="repchoice error">
@@ -2313,7 +2314,7 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
     }, "http://schema.example/#U" ]
   }, {
     "id" : "http://schema.example/#U",
-    "type" : "NodeConstraint"
+    "type" : "Shape"
   } ] }</pre>
                 <pre class="shexc nohighlight">                                               
 
@@ -2328,8 +2329,8 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
     ex:S
 
 
-      NOT
-        @ex:T
+     (NOT
+        @ex:T)
      AND @ex:U
 
      ex:U .
@@ -2361,7 +2362,7 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
     }
   }, {
     "id" : "http://schema.example/#U",
-    "type" : "NodeConstraint"
+    "type" : "Shape"
   } ] }</pre>
                 <pre class="shexc nohighlight">                                                
 
@@ -2378,8 +2379,8 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
 
 
                      (
-                       NOT
-                         @ex:T
+                       (NOT
+                          @ex:T)
                        AND @ex:U )
 
 
@@ -2443,8 +2444,8 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
     ex:S
 
 
-      NOT
-        @ex:T
+      (NOT
+         @ex:T)
       AND @ex:U
                 </pre>
 
@@ -2503,8 +2504,8 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
     ex:S
 
 
-      NOT
-        @ex:T
+      (NOT
+         @ex:T)
     AND @ex:U
                 </pre>
               </div>
@@ -2516,7 +2517,7 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
             </p>
             <div class="repchoice error">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://schema.example/#S":
+    { "id": "http://schema.example/#S",
       "type": "Shape",
       "extra": [ <span class="lookit">"http://schema.example/#p"</span> ], "expression":
       { "type": "TripleConstraint",
@@ -2594,9 +2595,9 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
             <div class="example-title marker"><span>Semantic Actions example 1</span></div>
             <div class="repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://a.example/S1",
+    { "id": "http://schema.example/#S1",
       "type": "Shape", "expression": {
-        "type": "TripleConstraint", "predicate": "http://a.example/p1",
+        "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
         "min": 1, "max": -1,
         "semActs": [
           { "type": "SemAct", "code": " print(s) ",
@@ -2604,7 +2605,7 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
           { "type": "SemAct", "code": " print(o) ",
             "name": "http://shex.io/extensions/Test/" } ] } } ] }
 </pre>
-              <pre class="shexc nohighlight">                                                                       
+              <pre class="shexc nohighlight">                                                                             
     ex:S1 {
       ex:p1 .+ %Test:{ print(s) %} %Test:{ print(o) %}
     }
@@ -2649,10 +2650,10 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
             <div class="example-title marker"><span>Annotations example 1</span></div>
             <div class="repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://schema.example/IssueShape",
+    { "id": "http://schema.example/#IssueShape",
       "type": "Shape", "expression": {
         "type": "TripleConstraint",
-        "predicate": "http://schema.example/status",
+        "predicate": "http://schema.example/#status",
         "annotations": [
            { "type": "Annotation",
              "predicate": "http://www.w3.org/2000/01/rdf-schema#comment",
@@ -2685,8 +2686,8 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
         <section id="example-simple">
           <h4>Simple Examples</h4>
           <!--
-              BASE <http://schema.example/>
-              PREFIX ex: <http://schema.example/>
+              BASE <http://schema.example/#>
+              PREFIX ex: <http://schema.example/#>
               PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
               PREFIX foaf: <http://xmlns.com/foaf/0.1/>
               PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -2702,7 +2703,7 @@ ex:T {ex:q @ex:S} <!--     ex:T @ex:S -->
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://schema.example/IntConstraint",
+    { "id": "http://schema.example/#IntConstraint",
       "type": "NodeConstraint",
       "datatype": "http://www.w3.org/2001/XMLSchema#integer"
     } ] }</pre>
@@ -2719,14 +2720,14 @@ ex:IntConstraint
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://schema.example/&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/#&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 ex:someNode ex:somePredicate "30"^^xsd:integer .
 </pre>
             </div>
             <div style="clear:both;"></div> -->
             <p>
-              Here the shape identified by <code>http://schema.example/IntConstraint</code> is a <a>shape expression</a> consisting of a single <span class="jobjref"><a class="obj">NodeConstraint</a></span>.
+              Here the shape identified by <code>http://schema.example/#IntConstraint</code> is a <a>shape expression</a> consisting of a single <span class="jobjref"><a class="obj">NodeConstraint</a></span>.
               Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, "30"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; satisfies <span class="lineno schema">IntConstraint</span>.
             </p>
             <p>
@@ -2748,8 +2749,8 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
           </p>
           <div class="example">
             <!--
-                BASE &lt;http://schema.example/&gt;
-                PREFIX ex: &lt;http://schema.example/&gt;
+                BASE &lt;http://schema.example/#&gt;
+                PREFIX ex: &lt;http://schema.example/#&gt;
                 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
                 PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
                 PREFIX dc: &lt;http://purl.org/dc/elements/1.1/&gt;
@@ -2763,12 +2764,12 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/UserShape",
+  { "id": "http://schema.example/#UserShape",
     "type": "Shape", "expression":
     { "type": "TripleConstraint",
-      "predicate": "http://schema.example/shoeSize"
+      "predicate": "http://schema.example/#shoeSize"
       } } ] }</pre>
-              <pre class="shexc nohighlight">                                                   
+              <pre class="shexc nohighlight">                                                    
 
   ex:UserShape {
     ex:shoeSize .
@@ -2785,7 +2786,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;Alice&gt; ex:shoeSize "30"^^xsd:integer .
 </pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/#UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1</span>] <span class="comment">The <a>graph</a> G consists of one <a>triple</a>.</span></li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -2808,8 +2809,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
             </p>
           <div class="example">
             <!--
-                BASE <http://schema.example/>
-                PREFIX ex: <http://schema.example/>
+                BASE <http://schema.example/#>
+                PREFIX ex: <http://schema.example/#>
                 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                 PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -2829,19 +2830,21 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/UserShape",
-    "type": "Shape", "expression":
+  { "id": "http://schema.example/#UserShape",
+    "type": "Shape",
     "extra": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#type"],
-    { "type": "TripleConstraint",
+    "expression": {
+      "type": "TripleConstraint",
       "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
       "valueExpr":
       { "type": "NodeConstraint",
-        "values": ["http://schema.example/Teacher"]
+        "values": ["http://schema.example/#Teacher"]
       } } } ] }</pre>
               <pre class="shexc nohighlight">                                                                     
 
   ex:UserShape EXTRA a {
     a
+
 
 
 
@@ -2867,7 +2870,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;TheMoon&gt; ex:madeOf &lt;GreenCheese&gt; .
 </pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/#UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4,t5</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -2885,7 +2888,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               </li>
             </ul>
             <p>
-              The non-empty matchables is permitted because the triple <code>t3</code> has a <a>predicate</a> which appears in the "extra" list: <span class="json">["http://schema.example/Teacher"]</span>.
+              The non-empty matchables is permitted because the triple <code>t3</code> has a <a>predicate</a> which appears in the "extra" list: <span class="json">["http://schema.example/#Teacher"]</span>.
             </p>
           </div>
         </section>
@@ -2893,8 +2896,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
         <section id="example-disjunction">
           <h4>Disjunction Example</h4>
           <!--
-              BASE <http://schema.example/>
-              PREFIX ex: <http://schema.example/>
+              BASE <http://schema.example/#>
+              PREFIX ex: <http://schema.example/#>
               PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
               PREFIX foaf: <http://xmlns.com/foaf/0.1/>
               PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -2924,7 +2927,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/UserShape",
+  { "id": "http://schema.example/#UserShape",
     "type": "Shape", "expression":
      {"type": "OneOf", "expressions": [
         { "type": "TripleConstraint",
@@ -2995,7 +2998,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </div>
             <div style="clear:both;"></div>
             <p class="leadup followup">as seen in this validation.</p>
-            <div class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
+            <div class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/#UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4,t5,t6</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno">S1</span>, G, m)
@@ -3052,7 +3055,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 &lt;Alice&gt; foaf:name "Alice Malsenior Walker" .
 </pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/#UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -3094,7 +3097,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 &lt;Alice&gt; foaf:name "Alice Malsenior Walker" .
 </pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/UserShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;Alice&gt;</span> as <span class="hljs-string">http://schema.example/#UserShape</span>:</div>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t4,t5,t6,t7</span>]</li>
               <li><span class="fail"><a href="#satisfies-Shape">satisfies Shape</a> (&lt;Alice&gt;, <span class="lineno schema">S1</span>, G, m)</span>
@@ -3123,7 +3126,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 </pre>
             <div class="inline json">
               <pre>{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/UserShape",
+  { "id": "http://schema.example/#UserShape",
     "type": "Shape", "extra": ["http://xmlns.com/foaf/0.1/familyName"] …
    } ] }</pre>
             </div>
@@ -3138,7 +3141,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
 </pre>
             <div class="inline json">
               <pre>{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/UserShape",
+  { "id": "http://schema.example/#UserShape",
     "type": "Shape", "closed": true …
    } ] }</pre>
             </div>
@@ -3159,8 +3162,8 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
         <section id="example-dependent-shape">
           <h4>Dependent Shape Example</h4>
           <!--
-BASE <http://schema.example/>
-PREFIX ex: <http://schema.example/>
+BASE <http://schema.example/#>
+PREFIX ex: <http://schema.example/#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 <IssueShape> {
@@ -3191,21 +3194,21 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression":
     { "type": "TripleConstraint",
-      "predicate": "http://schema.example/reproducedBy",
+      "predicate": "http://schema.example/#reproducedBy",
       "valueExpr":
-      "http://schema.example/TesterShape" } },
-  { "id": "http://schema.example/TesterShape",
+      "http://schema.example/#TesterShape" } },
+  { "id": "http://schema.example/#TesterShape",
     "type": "Shape", "expression":
     { "type": "TripleConstraint",
-      "predicate": "http://schema.example/role",
+      "predicate": "http://schema.example/#role",
       "valueExpr":
       { "type": "NodeConstraint",
-        "values": [ "http://schema.example/testingRole" ] } } }
+        "values": [ "http://schema.example/#testingRole" ] } } }
   ] }</pre>
-              <pre class="shexc nohighlight">                                                               
+              <pre class="shexc nohighlight">                                                                
 ex:IssueShape
   {
 
@@ -3227,7 +3230,7 @@ ex:TesterShape
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://schema.example/&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/#&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
 inst:Issue1 ex:reproducedBy inst:Tester2 .
 inst:Tester2 ex:role ex:testingRole .</pre>
@@ -3236,11 +3239,11 @@ inst:Tester2 ex:role ex:testingRole .</pre>
             <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the <a>ShapeMap</a></p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
-              <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
-  "http://inst.example/Tester2": "http://schema.example/TesterShape",
-  "http://inst.example/Testgrammer23": "http://schema.example/ProgrammerShape" }</pre>
+              <pre>{ "http://inst.example/Issue1": "http://schema.example/#IssueShape",
+  "http://inst.example/Tester2": "http://schema.example/#TesterShape",
+  "http://inst.example/Testgrammer23": "http://schema.example/#ProgrammerShape" }</pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/IssueShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/#IssueShape</span>:</div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1</span>]</li>
@@ -3277,8 +3280,8 @@ inst:Tester2 ex:role ex:testingRole .</pre>
         <section id="example-recursion">
           <h4>Recursion Example</h4>
           <!--
-BASE <http://schema.example/>
-PREFIX ex: <http://schema.example/>
+BASE <http://schema.example/#>
+PREFIX ex: <http://schema.example/#>
 <IssueShape> {
   ex:related @<IssueShape>*
 }
@@ -3296,12 +3299,12 @@ PREFIX ex: <http://schema.example/>
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression":
     { "type": "TripleConstraint", "min": 0, "max": -1,
-      "predicate": "http://schema.example/related",
+      "predicate": "http://schema.example/#related",
       "valueExpr":
-      "http://schema.example/IssueShape"
+      "http://schema.example/#IssueShape"
     } } ] }</pre>
               <pre class="shexc nohighlight">                                                      
   ex:IssueShape {
@@ -3319,7 +3322,7 @@ PREFIX ex: <http://schema.example/>
 <span class="lineno data">t2</span>
 <span class="lineno data">t3</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://schema.example/&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/#&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
 inst:Issue1 ex:related inst:Issue2 .
 inst:Issue2 ex:related inst:Issue3 .
@@ -3329,11 +3332,11 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
             <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the <a>ShapeMap</a></p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
-              <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
-  "http://inst.example/Issue2": "http://schema.example/IssueShape",
-  "http://inst.example/Issue3": "http://schema.example/IssueShape" }</pre>
+              <pre>{ "http://inst.example/Issue1": "http://schema.example/#IssueShape",
+  "http://inst.example/Issue2": "http://schema.example/#IssueShape",
+  "http://inst.example/Issue3": "http://schema.example/#IssueShape" }</pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/IssueShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/#IssueShape</span>:</div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3</span>]</li>
@@ -3384,8 +3387,8 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
         <section id="example-simple-repeated-property">
           <h4>Simple Repeated Property Examples</h4>
           <!--
-              BASE <http://schema.example/>
-              PREFIX ex: <http://schema.example/>
+              BASE <http://schema.example/#>
+              PREFIX ex: <http://schema.example/#>
               PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
               PREFIX foaf: <http://xmlns.com/foaf/0.1/>
               PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -3413,31 +3416,31 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://schema.example/TestResultsShape",
+    { "id": "http://schema.example/#TestResultsShape",
       "type": "Shape", "expression": {
         "type": "EachOf", "expressions": [
           { "type": "TripleConstraint", "min": 1, "max": -1,
-            "predicate": "http://schema.example/val",
+            "predicate": "http://schema.example/#val",
             "valueExpr":
             { "type": "NodeConstraint",
               "values": [ {"value": "a"}, {"value": "b"}, {"value": "c"} ] } },
           { "type": "TripleConstraint", "min": 1, "max": -1,
-            "predicate": "http://schema.example/val",
+            "predicate": "http://schema.example/#val",
             "valueExpr":
             { "type": "NodeConstraint",
               "values": [ {"value": "b"}, {"value": "c"}, {"value": "d"} ] } }
         ] } } ] }</pre>
               <pre class="shexc nohighlight">                                                                               
-            &lt;http://schema.example/TestResultsShape&gt;
+            &lt;http://schema.example/#TestResultsShape&gt;
 {
 
 
-                         &lt;http://schema.example/val&gt;
+                         &lt;http://schema.example/#val&gt;
 
 
                          ["a" "b" "c"]+ ;
 
-                         &lt;http://schema.example/val&gt;
+                         &lt;http://schema.example/#val&gt;
 
 
                          ["b" "c" "d"]+
@@ -3453,7 +3456,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
 <span class="lineno data">t4</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
-PREFIX ex: &lt;http://schema.example/&gt;
+PREFIX ex: &lt;http://schema.example/#&gt;
 &lt;s&gt; ex:val "a" .
 &lt;s&gt; ex:val "b" .
 &lt;s&gt; ex:val "c" .
@@ -3465,7 +3468,7 @@ PREFIX ex: &lt;http://schema.example/&gt;
             <div class="inline json">
               <pre>{ "http://a.example/s": "http://a.example/S1 }</pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/TestResultShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/#TestResultShape</span>:</div>
             <p class="leadup followup">If <span class="math"><span class="lineno schema">tc1</span></span> consumes as many triples as it can, it consumes three and <span class="math"><span class="lineno schema">tc2</span></span> consumes one:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4</span>]</li>
@@ -3557,8 +3560,8 @@ PREFIX ex: &lt;http://schema.example/&gt;
         <section id="example-repeated-property-with-dependent-shapes">
           <h4>Repeated Property With Dependent Shapes Example</h4>
           <!--
-BASE <http://schema.example/>
-PREFIX ex: <http://schema.example/>
+BASE <http://schema.example/#>
+PREFIX ex: <http://schema.example/#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 <IssueShape> {
@@ -3604,34 +3607,34 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-  { "id": "http://schema.example/IssueShape",
+  { "id": "http://schema.example/#IssueShape",
     "type": "Shape", "expression":
     { "type": "EachOf", "expressions": [
         { "type": "TripleConstraint",
-          "predicate": "http://schema.example/reproducedBy",
+          "predicate": "http://schema.example/#reproducedBy",
           "valueExpr":
-          "http://schema.example/TesterShape" },
+          "http://schema.example/#TesterShape" },
         { "type": "TripleConstraint",
-          "predicate": "http://schema.example/reproducedBy",
+          "predicate": "http://schema.example/#reproducedBy",
           "valueExpr":
-          "http://schema.example/ProgrammerShape" }
+          "http://schema.example/#ProgrammerShape" }
       ] } },
-  { "id": "http://schema.example/TesterShape",
+  { "id": "http://schema.example/#TesterShape",
     "type": "Shape", "expression":
     { "type": "TripleConstraint",
-      "predicate": "http://schema.example/role",
+      "predicate": "http://schema.example/#role",
       "valueExpr":
       { "type": "NodeConstraint",
-        "values": [ "http://schema.example/testingRole" ] } } },
-  { "id": "http://schema.example/ProgrammerShape",
+        "values": [ "http://schema.example/#testingRole" ] } } },
+  { "id": "http://schema.example/#ProgrammerShape",
     "type": "Shape", "expression":
     { "type": "TripleConstraint",
-      "predicate": "http://schema.example/department",
+      "predicate": "http://schema.example/#department",
       "valueExpr":
       { "type": "NodeConstraint",
-        "values": [ "http://schema.example/ProgrammingDepartment" ] } } }
+        "values": [ "http://schema.example/#ProgrammingDepartment" ] } } }
   ] }</pre>
-              <pre class="shexc nohighlight">                                                                         
+              <pre class="shexc nohighlight">                                                                          
 ex:IssueShape {
 
 
@@ -3675,7 +3678,7 @@ ex:ProgrammerShape {
 <span class="lineno data">t4</span>
 <span class="lineno data">t5</span></pre>
             <div class="inline json">
-              <pre>PREFIX ex: &lt;http://schema.example/&gt;
+              <pre>PREFIX ex: &lt;http://schema.example/#&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
 inst:Issue1
   ex:reproducedBy inst:Tester2 ;
@@ -3692,11 +3695,11 @@ inst:Testgrammer23
             <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the <a>ShapeMap</a></p>
             <pre class="line-labels">m:</pre>
             <div class="inline json">
-              <pre>{ "http://inst.example/Issue1": "http://schema.example/IssueShape",
-  "http://inst.example/Tester2": "http://schema.example/TesterShape",
-  "http://inst.example/Testgrammer23": "http://schema.example/ProgrammerShape" }</pre>
+              <pre>{ "http://inst.example/Issue1": "http://schema.example/#IssueShape",
+  "http://inst.example/Tester2": "http://schema.example/#TesterShape",
+  "http://inst.example/Testgrammer23": "http://schema.example/#ProgrammerShape" }</pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/IssueShape</span>:</div>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span>inst:Issue1</span> as <span class="hljs-string">http://schema.example/#IssueShape</span>:</div>
             <p class="leadup followup">as seen in this evaluation:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1,t2,t3,t4,t5</span>]</li>
@@ -3757,8 +3760,8 @@ inst:Testgrammer23
             Setting the maximum <a>cardinality</a> of a TripleConstraint with <a>predicate</a> <span class="math">p</span> to zero (i.e. <span>"max": 0</span> in <a>ShExJ</a> or <code>{0}</code> or <code>{0, 0}</code> in <a>ShExC</a>) asserts that matching nodes must have no triples with <a>predicate</a> <span class="math">p</span>.
           </p>
           <!--
-              BASE <http://schema.example/>
-              PREFIX ex: <http://schema.example/>
+              BASE <http://schema.example/#>
+              PREFIX ex: <http://schema.example/#>
               PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
               PREFIX foaf: <http://xmlns.com/foaf/0.1/>
               PREFIX dc: <http://purl.org/dc/elements/1.1/>
@@ -3784,28 +3787,28 @@ inst:Testgrammer23
 </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
-    { "id": "http://schema.example/TestResultsShape",
+    { "id": "http://schema.example/#TestResultsShape",
       "type": "Shape", "expression": {
         "type": "EachOf", "expressions": [
           { "type": "TripleConstraint", "min": 1, "max": -1,
-            "predicate": "http://schema.example/p1",
+            "predicate": "http://schema.example/#p1",
             "valueExpr":
             { "type": "NodeConstraint",
               "values": [ {"value": "a"}, {"value": "b"} ] } },
           { "type": "TripleConstraint", "min": 1, "max": -1,
-            "predicate": "http://schema.example/p2", "min": 0, "max": 0 }
+            "predicate": "http://schema.example/#p2", "min": 0, "max": 0 }
         ] } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                         
-            &lt;http://schema.example/TestResultsShape&gt;
+              <pre class="shexc nohighlight">                                                                          
+            &lt;http://schema.example/#TestResultsShape&gt;
 {
 
 
-                         &lt;http://schema.example/p1&gt;
+                         &lt;http://schema.example/#p1&gt;
 
 
-                         ["a" "b"] ;
+                         ["a" "b"] + ;
 
-                         &lt;http://schema.example/p2&gt; . {0}
+                         &lt;http://schema.example/#p2&gt; . {0}
 }              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
@@ -3815,7 +3818,7 @@ inst:Testgrammer23
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
               <pre>BASE &lt;http://a.example/&gt;
-PREFIX ex: &lt;http://schema.example/&gt;
+PREFIX ex: &lt;http://schema.example/#&gt;
 &lt;s&gt; ex:p1 "a" .</pre>
             </div>
             <div style="clear:both;"></div>
@@ -3824,8 +3827,8 @@ PREFIX ex: &lt;http://schema.example/&gt;
             <div class="inline json">
               <pre>{ "http://a.example/s": "http://a.example/S1" }</pre>
             </div>
-            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/TestResultShape</span>:</div>
-            <p class="leadup followup">If <span class="math"><span class="lineno schema">tc1</span></span> consumes as many triples as it can, it consumes three and <span class="math"><span class="lineno schema">tc2</span></span> consumes one:</p>
+            <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/#TestResultShape</span>:</div>
+            <p class="leadup followup">This is trivially satisfied by <span class="math"><span class="lineno schema">tc1</span></span> consuming one triple and <span class="math"><span class="lineno schema">tc2</span></span> consuming none:</p>
             <ul class="trace followup">
               <li>G = [<span class="lineno data">t1</span>]</li>
               <li><a href="#satisfies-Shape">satisfies Shape</a> (&lt;s&gt;, <span class="lineno schema">S1</span>, G, m)
@@ -3861,9 +3864,9 @@ PREFIX ex: &lt;http://schema.example/&gt;
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
-            <div class="inline json">
+            <div class="inline json error">
               <pre>BASE &lt;http://a.example/&gt;
-PREFIX ex: &lt;http://schema.example/&gt;
+PREFIX ex: &lt;http://schema.example/#&gt;
 &lt;s&gt; ex:p1 "a" .
 &lt;s&gt; ex:p2 5 .</pre>
             </div>
