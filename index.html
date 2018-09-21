@@ -4040,9 +4040,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 <td id="prod-shapeExpression">[<span class="prodNo">10</span>]   </td>
 <td><code class="production prod">shapeExpression</code></td>
 <td>   ::=   </td>
-<td><code class="content">  "NOT"? <span class="prod"><a class="grammarRef" href="#prod-shapeAtomNoRef">shapeAtomNoRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span>?<br/>
-                                | "NOT" <span class="prod"><a class="grammarRef" href="#prod-shapeRef">shapeRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span>?<br/>
-                                | <span class="prod"><a class="grammarRef" href="#prod-shapeRef">shapeRef</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span></code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeOr">shapeOr</a></span></code></td>
 </tr>
 </tbody>
 
@@ -4060,8 +4058,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 <td id="prod-shapeOr">[<span class="prodNo">12</span>]   </td>
 <td><code class="production prod">shapeOr</code></td>
 <td>   ::=   </td>
-<td><code class="content">  ("OR" <span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span>)+<br/>
-                                | ("AND" <span class="prod"><a class="grammarRef" href="#prod-shapeNot">shapeNot</a></span>)+ ("OR" <span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span>)*</code></td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span> ("OR" <span class="prod"><a class="grammarRef" href="#prod-shapeAnd">shapeAnd</a></span>)*</code></td>
 </tr>
 <tr style="vertical-align: baseline">
 <td id="prod-inlineShapeOr">[<span class="prodNo">13</span>]   </td>
