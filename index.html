@@ -758,7 +758,8 @@ _:User2
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
             For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is an Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
-            Only datatypes supported by SPARQL MUST be tested but ShEx extensions MAY add support for other datatypes.
+            The lexical form and numeric value (where applicable) of all datatypes required by <a data-cite="sparql11-query#FunctionMapping">SPARQL XPath Constructor Functions</a> MUST be tested for conformance with the corresponding XML Schema form.
+            ShEx extensions MAY add support for other datatypes.
           </p>
 
           <div class="example">
