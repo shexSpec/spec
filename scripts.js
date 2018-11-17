@@ -71,6 +71,7 @@ function prepRep (elts, cls) {
         delete shexc.base
         if (!deepEquals(shexj, shexc)) {
           console.dir([container.get(), shexj,  shexc]);
+          container.css("border", "thick solid red");
         }
       } catch (e) {
         console.dir([container, e]);
