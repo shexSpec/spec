@@ -78,6 +78,7 @@
       };
     </script>
 
+    <!-- <script src="../shex.js/browser/shex-browserify.js"></script> -->
     <script src="//rawgit.com/shexSpec/shex.js/wikidata/browser/shex-browserify.js"></script>
     <script type="text/javascript" src="scripts.js"></script>
   </head>
@@ -253,6 +254,11 @@
               "type": "NodeConstraint", "nodeKind": "literal"
             } } } } } ] }</pre>
         </div>
+
+        <p class="note">
+          The shape expressions in a schema are expressed as a list of shape expressions with <span class="param">id</span> attributes because JSON-LD 1.0 has no provision for defining as JSON object as representing a map of URL→object.
+          Drafts of JSON-LD 1.1 <a href="https://www.w3.org/TR/2018/WD-json-ld11-20181011/#id-maps">include this expressivity</a> and, once JSON-LD 1.1 exits Candidate Recommendation, future versions of ShExJ will likely adopt it while requiring backard-compatibility with the list of shape expressions with <span class="param">id</span> attributes.
+        </p>
       </section>
       <section id="style">
         <h3>Document style</h3>
@@ -4535,7 +4541,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-languageRange">[<span class="prodNo">55</span>]   </td>
 <td><code class="production prod">languageRange</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-LANGTAG">LANGTAG</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*)?<br/>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*)?<br/>
 | <span class="prod">'@' '~' <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>*</span></code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> matches with no "<code>~</code>" match , languageRange returns a <a class="obj">Language</a> object with <span class="param">languageTag</span> equal to <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span>:</td></tr>
