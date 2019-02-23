@@ -457,7 +457,7 @@ _:User2
   { "id": "http://schema.example/#IssueShape", <span class="comment">…</span> },
   { "id": "_:UserShape", <span class="comment">…</span> },
   { "id": "http://schema.example/#EmployeeShape", <span class="comment">…</span> } ] }</pre>
-        <pre class="shexc nohighlight">                                                         
+        <pre class="shexc nohighlight">                                                             
     ex:IssueShape { … }
     _:UserShape { … }
     ex:EmployeeShape { … }
@@ -591,8 +591,8 @@ _:User2
   </p>
 
   <div class="repchoice incomplete">
-    <pre class="json nohighlight">{ "type": "Shape", <span class="comment">…</span> }    </pre>
-    <pre class="shexc nohighlight">{ <span class="comment">…</span> }                     </pre>
+    <pre class="json nohighlight">{ "type": "Shape", <span class="comment">…</span> }    </pre>
+    <pre class="shexc nohighlight">{ <span class="comment">…</span> }                     </pre>
   </div>
   <div style="clear:both;"> </div>
   <div class="repchoice incomplete">
@@ -602,7 +602,7 @@ _:User2
     "http://schema.example/#IssueShape",
     { "type": "ShapeNot", "shapeExpr": { "type": "Shape", <span class="comment">…</span> } }
     ] } ] }</pre>
-    <pre class="shexc nohighlight">                                                               
+    <pre class="shexc nohighlight">                                                                 
   <span class="keyword">IRI</span> AND
   (
     @&lt;http://schema.example/#IssueShape&gt;
@@ -732,11 +732,11 @@ _:User2
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#state",
       "valueExpr": { "type": "NodeConstraint", "nodeKind": "iri" } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                              
+              <pre class="shexc nohighlight">                                                                              
     ex:IssueShape {
       ex:state IRI
     }
-              </pre>
+              </pre>
             </div>
             <pre class="data">
 &lt;issue1&gt; ex:state ex:HunkyDory .
@@ -773,14 +773,14 @@ _:User2
         "type": "NodeConstraint",
         "datatype": "http://www.w3.org/2001/XMLSchema#date"
       } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                                    
+              <pre class="shexc nohighlight">                                                                                    
     ex:IssueShape {                                                          
       ex:submittedOn xsd:date
     }
 
     
     
-              </pre>
+              </pre>
             </div>
             <pre class="data">
 &lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
@@ -816,7 +816,7 @@ _:User2
         "type": "NodeConstraint",
         "datatype": "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
       } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                           
+              <pre class="shexc nohighlight">                                                                           
   ex:IssueShape {
     rdfs:label rdf:langString
   }
@@ -824,7 +824,7 @@ _:User2
 
 
 
-              </pre>
+              </pre>
             </div>
             <pre class="data">
 &lt;issue3&gt; rdfs:label "emits dense black smoke"@en .
@@ -878,12 +878,12 @@ _:User2
       "type": "TripleConstraint",
       "predicate": "http://schema.example/#submittedBy",
       "valueExpr": { "type": "NodeConstraint", "minlength": 10 } } } ] }</pre>
-            <pre class="shexc nohighlight">                                                                        
+            <pre class="shexc nohighlight">                                                                        
   ex:IssueShape {
     ex:submittedBy MINLENGTH 10
   }
 
-            </pre>
+            </pre>
           </div>
           <pre class="data">
 &lt;issue1&gt; ex:submittedBy &lt;http://a.example/bob&gt; . <span class="comment"># 20 characters</span>
@@ -913,14 +913,14 @@ _:User2
       "valueExpr": { "type": "NodeConstraint",
                      "pattern": "genuser[0-9]+", "flags": "i" }
 } } ] }</pre>
-            <pre class="shexc nohighlight">                                                               
+            <pre class="shexc nohighlight">                                                               
   ex:IssueShape {
     ex:submittedBy /genuser[0-9]+/i
   }
 
 
 
-            </pre>
+            </pre>
           </div>
           <pre class="data">
 &lt;issue6&gt; ex:submittedBy _:genUser218 .
@@ -947,14 +947,14 @@ _:User2
       "valueExpr": { "type": "NodeConstraint",
                      "pattern": "^/\\t\\\\\uD835\uDCB8\\?$" }
 } } ] }</pre>
-            <pre class="shexc nohighlight">                                                             
+            <pre class="shexc nohighlight">                                                             
   ex:ProductShape {
     ex:trademark /^\/\t\\\U0001D4B8\?$/
   }
 
 
 
-            </pre>
+            </pre>
           </div>
           <pre class="data">
 &lt;product6&gt; ex:trademark "	\\𝒸?" .
@@ -1008,12 +1008,12 @@ _:User2
       "type": "TripleConstraint",
       "predicate": "http://schema.example/#confirmations",
       "valueExpr": { "type": "NodeConstraint", "mininclusive": 1 } } } ] }</pre>
-            <pre class="shexc nohighlight">                                                                          
+            <pre class="shexc nohighlight">                                                                          
   ex:IssueShape {
     ex:confirmations MININCLUSIVE 1
   }
 
-            </pre>
+            </pre>
           </div>
             <pre class="data">
 &lt;issue1&gt; ex:confirmations 1 .
@@ -1072,7 +1072,7 @@ _:User2
         "type": "NodeConstraint", "values": [
           "http://schema.example/#Resolved",
           "http://schema.example/#Rejected" ] } } } ] }</pre>
-            <pre class="shexc nohighlight">                                                       
+            <pre class="shexc nohighlight">                                                       
   ex:NoActionIssueShape {
     ex:state [ ex:Resolved ex:Rejected ]
   }
@@ -1080,7 +1080,7 @@ _:User2
 
 
 
-            </pre>
+            </pre>
           </div>
           <pre class="data">
 &lt;issue1&gt; ex:state ex:Resolved .
@@ -1110,7 +1110,7 @@ _:User2
               { "type": "IriStem", "stem": "mailto:sales-interns" }
             ] }
         ] } } } ] }</pre>
-            <pre class="shexc nohighlight">                                                                            
+            <pre class="shexc nohighlight">                                                                            
   ex:EmployeeShape {
     foaf:mbox [ "N/A"
                 &lt;mailto:engineering-&gt;~
@@ -1123,7 +1123,7 @@ _:User2
 
 
 
-            </pre>
+            </pre>
           </div>
           <pre class="data">
 &lt;issue3&gt; foaf:mbox "N/A" .
@@ -1158,7 +1158,7 @@ _:User2
               { "type": "IriStem", "stem": "mailto:sales-" }
             ] }
         ] } } } ] }</pre>
-            <pre class="shexc nohighlight">                                                                   
+            <pre class="shexc nohighlight">                                                                   
   ex:EmployeeShape {
     foaf:mbox [ . - &lt;mailto:engineering-&gt;~ - &lt;mailto:sales-&gt;~ ]
   }
@@ -1170,7 +1170,7 @@ _:User2
 
 
 
-            </pre>
+            </pre>
           </div>
           <pre class="data">
 &lt;issue8&gt; foaf:mbox 123 .
@@ -1253,7 +1253,7 @@ _:User2
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3,     
   "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                     
+              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                     
         %&lt;SemAct<sub>1</sub>&gt;% %&lt;SemAct2&gt;% …
 </pre>
               </div>,<br/>
@@ -1262,8 +1262,8 @@ _:User2
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
+              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
               </div>,<br/>
               m)</div>
             </div>
@@ -1276,16 +1276,16 @@ _:User2
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
+              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
               </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">Let e = </div><div style="float:left;">
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }     </pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>)                                        </pre>
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }     </pre>
+              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>)                                        </pre>
             </div></div>
             <div style="clear:both;"></div>
             (<span class="math function" >matches(T<sub>1</sub>, e, m)</span> and
@@ -1334,19 +1334,19 @@ _:User2
   { "type": "TripleExpression", "min": 1, "max": -1,
     "predicate": "http://xmlns.com/foaf/0.1/name" }
 ] }</pre>
-              <pre class="shexc nohighlight">                                                    
+              <pre class="shexc nohighlight">                                                    
   (<span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>)
   | &lt;http://xmlns.com/foaf/0.1/name&gt; . +
 
- </pre>
+ </pre>
               </div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }     </pre>
-              <pre class="shexc nohighlight"><span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>                                         </pre>
+              <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }     </pre>
+              <pre class="shexc nohighlight"><span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>                                         </pre>
               </div>,<br/>
               m)</div>
             </div>
@@ -1355,8 +1355,8 @@ _:User2
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression", "min": 1, "max": -1,     
     "predicate": "http://xmlns.com/foaf/0.1/name" }</pre>
-              <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/name&gt; . +                   
- </pre>
+              <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/name&gt; . +                   
+ </pre>
               </div>,<br/>
               m)</div>
             </div>
@@ -1373,12 +1373,12 @@ _:User2
   { "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/familyName" }
 ] }</pre>
-              <pre class="shexc nohighlight">                                                         
+              <pre class="shexc nohighlight">                                                         
 &lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;
 
 &lt;http://xmlns.com/foaf/0.1/familyName&gt; .
 
- </pre>
+ </pre>
              </div>,<br/>
               m)</div>
             </div>
@@ -1387,8 +1387,8 @@ _:User2
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
-              <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; .                 
- </pre>
+              <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; .                 
+ /pre>
               </div>,<br/>
               m)</div>
             </div>
@@ -1397,8 +1397,8 @@ _:User2
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/familyName" }</pre>
-              <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/familyName&gt; .                 
- </pre>
+              <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/familyName&gt; .                 
+ </pre>
               </div>,<br/>
               m)</div>
             </div>
@@ -1429,8 +1429,8 @@ _:User2
                   <div class="inline repchoice incomplete">
                     <pre class="json nohighlight">{ "type": "TripleExpression",
   "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
-                    <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;             
- </pre>
+                    <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;             
+ </pre>
                   </div>,<br/>
               m)</div>
                   </div>
@@ -1449,7 +1449,7 @@ _:User2
                     <pre class="json nohighlight">{ "type": "TripleConstraint", "inverse": true,
   "predicate": "http://purl.org/dc/elements/1.1/author",
   "valueExpr": "http://schema.example/#IssueShape" }</pre>
-                    <pre class="shexc nohighlight">                                                        
+                    <pre class="shexc nohighlight">                                                        
 ^&lt;http://purl.org/dc/elements/1.1/author&gt;
         @&lt;http://schema.example/#IssueShape&gt;</pre>
                   </div>,<br/>
@@ -1524,7 +1524,7 @@ _:User2
       "id": "http://schema.example/#nameExpr",
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/name" } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                             
+              <pre class="shexc nohighlight">                                                                             
 &lt;http://schema.example/#EmployeeShape&gt; {
     &amp;<span class="lookit">&lt;http://schema.example/#nameExpr&gt;</span> ;
     &lt;http://schema.example/#empID&gt;
@@ -1590,7 +1590,7 @@ _:User2
       "type": "TripleConstraint",
       "predicate": "http://xmlns.com/foaf/0.1/name" } } ] }
 </pre>
-              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
 &lt;http://schema.example/#EmployeeShape&gt; {
     &amp;&lt;http://schema.example/#nameExpr&gt; ;
     &lt;http://schema.example/#empID&gt;
@@ -1606,8 +1606,7 @@ _:User2
   <span class="lookit">$&lt;http://schema.example/#nameExpr&gt;</span>
     &lt;http://xmlns.com/foaf/0.1/name&gt; ;
 }
-
-</pre>
+ </pre>
             </div>
             <p>
               Both the shape expression <code>&lt;PersonShape&gt;</code> and the triple expression <code>&lt;nameExpr&gt;</code> are in scope.<br/>
@@ -1649,7 +1648,7 @@ _:User2
       "valueExpr": "http://schema.example/#schema1#S1", "min": 0,
     } } ] }
 </pre>
-              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                          
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                          
 
 IMPORT &lt;http://schema.example/#schema2&gt; &lt;http://schema.example/#schema3&gt;
 
@@ -1675,8 +1674,7 @@ IMPORT &lt;http://schema.example/#schema1&gt;
 
   &lt;http://schema.example/#p3&gt; @&lt;http://schema.example/#schema1#S1&gt;?
 
-
-</pre>
+ </pre>
             </div>
           </div>
       <p>
@@ -1710,7 +1708,7 @@ IMPORT &lt;http://schema.example/#schema1&gt;
       "valueExpr": <span class="lookit">"http://schema.example/#schema1#S3"</span>
     } } ] }
 </pre>
-              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                   
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                   
 
 IMPORT &lt;http://schema.example/#schema2&gt;
 
@@ -1824,7 +1822,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
     } ]
   } ]
 }</pre>
-          <pre class="shexc nohighlight">                                                             
+          <pre class="shexc nohighlight">                                                             
 
     ex:PersonShape {
 
@@ -1843,7 +1841,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
       }
 
 
-          </pre>
+          </pre>
         </div>
         <div class="repchoice">
           <pre class="json nohighlight">{"type" : "Schema",
@@ -1866,7 +1864,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
     }
   } ]
 }</pre>
-          <pre class="shexc nohighlight">                                                         
+          <pre class="shexc nohighlight">                                                         
 
     ex:PersonShape {
 
@@ -1885,7 +1883,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
 
     }
 
-          </pre>
+          </pre>
         </div>
         <p>
           This shapeExprRef is invalid because there is no corresponding <a>shape expression</a>:
@@ -1896,7 +1894,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
       "type":"Shape", "expression":
         "http://schema.example/#MissingShapeExpr"
 } ] }</pre>
-          <pre class="shexc nohighlight">                                                 
+          <pre class="shexc nohighlight">                                                     
     ex:S1 {
 
       &amp;ex:MissingShapeExpr
@@ -1923,7 +1921,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
     }
   } ]
 }</pre>
-          <pre class="shexc nohighlight">                                                         
+          <pre class="shexc nohighlight">                                                         
 
     ex:CustomerShape {
 
@@ -1941,7 +1939,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
         @ex:discountExpr
     }
 
-          </pre>
+          </pre>
         </div>
 	<p>These shapeExprRefs are invalid because they recursively refer to each other.</p>
 	<div class="repchoice error">
@@ -1967,7 +1965,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
       }
     } ]
   } ] }</pre>
-          <pre class="shexc nohighlight">                                                              
+          <pre class="shexc nohighlight">                                                              
 
     ex:PersonShape
 
@@ -1988,7 +1986,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
         ex:employeeNumber .
     }
 
-          </pre>
+          </pre>
         </div>
       </div>
       </section>
@@ -2035,7 +2033,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/#employeeNumber" }
 ] } } ] }</pre>
-          <pre class="shexc nohighlight">                                                                       
+          <pre class="shexc nohighlight">                                                                       
     ex:PersonShape {
       $ex:nameExpr foaf:name .
     }
@@ -2047,7 +2045,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
       ex:employeeNumber .
     }
 
-          </pre>
+          </pre>
         </div>
         <p>
           This <a>triple expression</a> reference is invalid because there is no corresponding triple expression:
@@ -2058,11 +2056,11 @@ IMPORT &lt;http://schema.example/#schema3&gt;
       "type":"Shape", "expression":
         "http://schema.example/#missingTripleExpr"
 } ] }</pre>
-          <pre class="shexc nohighlight">                                                  
+          <pre class="shexc nohighlight">                                                  
     ex:S1 {
       &amp;ex:missingTripleExpr
     }
-          </pre>
+          </pre>
         </div>
         <p>This triple expression reference is invalid because the referenced object is a <a>shape expression</a> instead of a triple expression:</p>
         <div class="repchoice error incomplete">
@@ -2076,7 +2074,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/#discount" }
 ] } } ] }</pre>
-          <pre class="shexc nohighlight">                                                                       
+          <pre class="shexc nohighlight">                                                                       
     ex:CustomerShape {
       <span class="comment">…</span>; <span class="comment">…</span>
     }
@@ -2085,7 +2083,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
       ex:discount .
     }
 
-          </pre>
+          </pre>
         </div>
       </div>
       </section>
@@ -2208,14 +2206,14 @@ IMPORT &lt;http://schema.example/#schema3&gt;
         "valueExpr": { "type": <span class="lookit">"ShapeNot"</span>,
           "shapeExpr": "http://schema.example/#S" } } }
   ] }</pre>
-              <pre class="shexc nohighlight">                                                       
+              <pre class="shexc nohighlight">                                                       
 ex:S {ex:p <span class="lookit">NOT</span> @ex:S}
 
 
 
 
 
-                </pre>
+                </pre>
               </div>
               <p>
                 This indirect self-reference does not violate the negation requirement.
@@ -2235,7 +2233,7 @@ ex:S {ex:p <span class="lookit">NOT</span> @ex:S}
         "predicate": "http://schema.example/#Uq",
         "valueExpr": "http://schema.example/#US" } }
   ] }</pre>
-                <pre class="shexc nohighlight">                                                         
+                <pre class="shexc nohighlight">                                                         
 ex:US {ex:Up NOT @ex:UT} <!-- ex:S NOT @ex:T -->
 
 
@@ -2248,7 +2246,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
 
 
-                </pre>
+                </pre>
               </div>
               <p>
                 This negated, indirect self-reference violates the negation requirement.
@@ -2275,7 +2273,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       "valueExpr" : "http://schema.example/#S"
     }
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                
+                <pre class="shexc nohighlight">                                                
 
     ex:S {
 
@@ -2295,7 +2293,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       ex:q
         @ex:S
     } <!--     ex:T @ex:S -->
-                </pre>
+                </pre>
               </div>
               <p>
                 This is a direct, negated self-reference of the shape with id ex:T and violates the negation requirement.
@@ -2322,7 +2320,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
     "id" : "http://schema.example/#U",
     "type" : "Shape"
   } ] }</pre>
-                <pre class="shexc nohighlight">                                               
+                <pre class="shexc nohighlight">                                               
 
     ex:T {
 
@@ -2341,7 +2339,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
      ex:U .
 
-                </pre>
+                </pre>
               </div>
               <p>
                 This doubly-negated self-reference of ex:T does not violate the negation requirement.
@@ -2370,7 +2368,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
     "id" : "http://schema.example/#U",
     "type" : "Shape"
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                
+                <pre class="shexc nohighlight">                                                
 
     ex:T {
 
@@ -2392,7 +2390,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
     ex:U .
 
-                </pre>
+                </pre>
               </div>
               <p>
 		There is a cycle of negated references between the shape that defines ex:T and the shape that defines ex:U, so the negation requirement is violated.
@@ -2426,7 +2424,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       "shapeExpr" : "http://schema.example/#T"
     }, "http://schema.example/#U" ]
   } ] }</pre>
-                <pre class="shexc nohighlight">                                                
+                <pre class="shexc nohighlight">                                                
 
     ex:T {
 
@@ -2453,7 +2451,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       (NOT
          @ex:T)
       AND @ex:U
-                </pre>
+                </pre>
 
 	      </div>
 	  <p>
@@ -2487,7 +2485,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       "shapeExpr" : "http://schema.example/#T"
     }, "http://schema.example/#U" ]
   } ] }</pre>
-            <pre class="shexc nohighlight">                                                
+            <pre class="shexc nohighlight">                                                
 
     ex:T {
 
@@ -2513,7 +2511,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       (NOT
          @ex:T)
     AND @ex:U
-                </pre>
+                </pre>
               </div>
           </div>
           <div class="example">
@@ -2530,14 +2528,14 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
         "predicate": <span class="lookit">"http://schema.example/#p"</span>,
         "valueExpr": "http://schema.example/#S"
 } } ] }</pre>
-              <pre class="shexc nohighlight">                                                            
+              <pre class="shexc nohighlight">                                                            
   ex:S EXTRA ex:p {
     ex:p @ex:S
   }
 
 
 
-              </pre>
+              </pre>
             </div>
             <p>
               The same shape with a negated self-reference still violates the negation requirement because the reference occurs with a <span class="jobjref"><a>ShapeNot</a></span>:
@@ -2553,7 +2551,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
         "valueExpr": {
           "type": <span class="lookit">"ShapeNot"</span>, "shapeExpr": "http://schema.example/#S"
 } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                     
+              <pre class="shexc nohighlight">                                                                     
     ex:S EXTRA ex:p {
       ex:p NOT @ex:S
     }
@@ -2562,7 +2560,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
 
 
-              </pre>
+              </pre>
             </div>
           </div>
     </section>
@@ -2611,7 +2609,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
           { "type": "SemAct", "code": " print(o) ",
             "name": "http://shex.io/extensions/Test/" } ] } } ] }
 </pre>
-              <pre class="shexc nohighlight">                                                                             
+              <pre class="shexc nohighlight">                                                                             
     ex:S1 {
       ex:p1 .+ %Test:{ print(s) %} %Test:{ print(o) %}
     }
@@ -2620,7 +2618,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
 
 
-              </pre>
+              </pre>
             </div>
             <pre class="data">&lt;http://a.example/n1&gt; &lt;http://a.example/p1&gt; &lt;http://a.example/o1&gt; .
 &lt;http://a.example/n2&gt; &lt;http://a.example/p1&gt; "a", "b" .
@@ -2667,7 +2665,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
            { "type": "Annotation",
              "predicate": "http://www.w3.org/2000/01/rdf-schema#label",
              "object": {"value": "software issue"} } ] } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                           
+              <pre class="shexc nohighlight">                                                                           
     ex:IssueShape {
       ex:status .
           // rdfs:comment "Represents reported software issues."
@@ -2678,7 +2676,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
 
 
 
-              </pre>
+              </pre>
             </div>
           </div>
         </section>
@@ -2713,11 +2711,11 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
       "type": "NodeConstraint",
       "datatype": "http://www.w3.org/2001/XMLSchema#integer"
     } ] }</pre>
-              <pre class="shexc nohighlight">                                                            
+              <pre class="shexc nohighlight">                                                            
 ex:IntConstraint
 
       xsd:integer
-              </pre>
+              </pre>
             </div>
             <div style="clear:both;"></div>
 <!--             Data:<br/>
@@ -2775,12 +2773,12 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
     { "type": "TripleConstraint",
       "predicate": "http://schema.example/#shoeSize"
       } } ] }</pre>
-              <pre class="shexc nohighlight">                                                    
+              <pre class="shexc nohighlight">                                                    
 
   ex:UserShape {
     ex:shoeSize .
   }
-              </pre>
+              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
@@ -2846,7 +2844,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
       { "type": "NodeConstraint",
         "values": ["http://schema.example/#Teacher"]
       } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                     
+              <pre class="shexc nohighlight">                                                                     
 
   ex:UserShape EXTRA a {
     a
@@ -2856,7 +2854,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 
       [ex:Teacher]
   }
-              </pre>
+              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
@@ -2953,7 +2951,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
      ] }
  } ] }
 </pre>
-              <pre class="shexc nohighlight">                                                                      
+              <pre class="shexc nohighlight">                                                                        
   ex:UserShape
     {
      (              <span class="comment"># extra ()s to clarify alignment with <a>ShExJ</a></span>
@@ -3214,7 +3212,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       { "type": "NodeConstraint",
         "values": [ "http://schema.example/#testingRole" ] } } }
   ] }</pre>
-              <pre class="shexc nohighlight">                                                                
+              <pre class="shexc nohighlight">                                                                
 ex:IssueShape
   {
 
@@ -3228,7 +3226,7 @@ ex:TesterShape
 
      [ex:testingRole] }
 
-              </pre>
+              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels">
@@ -3312,7 +3310,7 @@ PREFIX ex: <http://schema.example/#>
       "valueExpr":
       "http://schema.example/#IssueShape"
     } } ] }</pre>
-              <pre class="shexc nohighlight">                                                      
+              <pre class="shexc nohighlight">                                                      
   ex:IssueShape {
 
 
@@ -3436,7 +3434,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
             { "type": "NodeConstraint",
               "values": [ {"value": "b"}, {"value": "c"}, {"value": "d"} ] } }
         ] } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                               
+              <pre class="shexc nohighlight">                                                                               
             &lt;http://schema.example/#TestResultsShape&gt;
 {
 
@@ -3640,7 +3638,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
       { "type": "NodeConstraint",
         "values": [ "http://schema.example/#ProgrammingDepartment" ] } } }
   ] }</pre>
-              <pre class="shexc nohighlight">                                                                          
+              <pre class="shexc nohighlight">                                                                          
 ex:IssueShape {
 
 
@@ -3667,8 +3665,7 @@ ex:ProgrammerShape {
 
     [ex:ProgrammingDepartment]
 }
-
-</pre>
+ </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
             <pre class="line-labels"> 
@@ -3804,7 +3801,7 @@ inst:Testgrammer23
           { "type": "TripleConstraint", "min": 1, "max": -1,
             "predicate": "http://schema.example/#p2", "min": 0, "max": 0 }
         ] } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                          
+              <pre class="shexc nohighlight">                                                                          
             &lt;http://schema.example/#TestResultsShape&gt;
 {
 
