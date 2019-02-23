@@ -306,7 +306,7 @@
             ShEx validation is defined in this document by the <a class="function" href="#isValid">isValid</a> function.
             This process takes as input a <a>shapes schema</a>, an <a>RDF graph</a>, and a <dfn data-cite="shape-map#dfn-fixed-shapemap" data-lt="shapemap">fixed ShapeMap</dfn> (abbreviated as "ShapeMap" in this document).
             ShEx validation results may be reported as a <dfn data-cite="shape-map#dfn-result-shapemap">result ShapeMap</dfn> [[!shape-map]].
-            For illustration purposes in this specification, both the fixed ShapeMap input and the result ShapeMap output are represented in a table with four columns: <span class="data fake-example">node</span>: a ShapeMap nodeSelector, <span class="schema fake-example">shape</span>: a ShapeMap shapeLabel, <span class="fake-example">result</span>: "<span class="pass">pass</span>" (conformant) or "<span class="fail">fail</span>" (nonconformant), and an optional <span class="fake-example">reason</span>: an informal, human-readable explanation.
+            For illustration purposes in this specification, both the fixed ShapeMap input and the result ShapeMap output are represented in a table with four columns: <span class="data fake-example">node</span>: a ShapeMap nodeSelector, <span class="schema fake-example">shape</span>: a ShapeMap shapeLabel, <span class="fake-example">result</span>: "<span class="pass">pass</span>" (for "conformant" status) or "<span class="fail">fail</span>" ("nonconformant" status), and an optional <span class="fake-example">reason</span>: an informal, human-readable explanation.
           </p>
         <table class="example">
           <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
@@ -469,7 +469,7 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For an input graph <span class="math">G</span>, schema  <span class="math">Sch</span> and input shape map <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeExprLabel pair <span class="math">(n, sl)</span> in  <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
+	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed ShapeMap <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeLabel pair <span class="math">(n, sl)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
 	The latter is captured by the expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <a href="#completeTyping">completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>))</code>.
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
       </p>
@@ -485,15 +485,16 @@ _:User2
 
       <p>
 	<dfn id="completeTyping">completeTyping</dfn>: the definition of <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is based on a <a>stratification</a> of <span class="math">Sch</span>.
+	
 	The number of <dfn>strata</dfn> of <span class="math">Sch</span> is the number of maximal strongly connected components of the <a>dependency graph</a> of <span class="math">Sch</span>.
 	A <dfn>stratification</dfn> of a schema <span class="math">Sch</span> with <span class="math">k</span> strata is a function <code class="function">stratum</code> that associates with every <a>Shape</a> in <span class="math">Sch</span> a natural number between <span class="math">1</span> and <span class="math">k</span> such that:
       </p>
       <ul>
 	<li>
-	  If <span class="math">s1</span> and <span class="math">s2</span> belong to the same maximal connected component, then <code class="function">stratum(<span class="math">s1</span>)</code> = <code class="function">stratum(<span class="math">s2</span>)</code>.
+	  If <span class="math">s1</span> and <span class="math">s2</span> belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s1</span>)</code> = <code class="function">stratum(<span class="math">s2</span>)</code>.
 	</li>
 	<li>
-	  If there is a <a>negated reference</a> from <span class="math">s1</span> to <span class="math">s2</span>, then <code class="function">stratum(<span class="math">s2</span>)</code> &lt; <code class="function">stratum(<span class="math">s1</span>)</code>.
+	  If there is a <a>reference</a> from <span class="math">s1</span> to <span class="math">s2</span> and <span class="math">s1</span> and <span class="math">s2</span> do not belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s2</span>)</code> &lt; <code class="function">stratum(<span class="math">s1</span>)</code>.
 	</li>
       </ul>
       <p>
@@ -509,7 +510,13 @@ _:User2
 	  <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span>;
 	</li>
 	<li>
-	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">completeTypingOn(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that include <code class="function">completeTypingOn(<span class="math">i</span>-1, <span class="math">G</span>, <span class="math">Sch</span>)</code> and that contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">i</span>;
+	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">completeTypingOn(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that:
+	  <ul>
+	    <li> contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">i</span>
+	    </li>
+	    <li> are equal to <code class="function">completeTypingOn(<span class="math">i</span>-1, <span class="math">G</span>, <span class="math">Sch</span>)</code> when restricted to their RDFnode/shape pairs <span class="math">(n1,s1)</span> for which <code class="function">stratum(<span class="math">s1</span>)</code> &lt; i.
+	    </li>
+	  </ul>
 	</li>
       </ul>
       <p>
@@ -517,19 +524,21 @@ _:User2
       </p>
 
       <div class="note">
-	<p>
-	The schema <span class="math">Sch</span> might have several different stratifications but <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is the same for all these stratifications.
-	</p>
+	The definition on strogly connected component and maximal strongly connected component of a graph can be found on Wikipedia <a href="https://en.wikipedia.org/wiki/Strongly_connected_component">https://en.wikipedia.org/wiki/Strongly_connected_component</a>.
       </div>
-	
+      
       <div class="note">
 	<p>
-	  It is not necessary to compute exhaustiveShapeMap in order to decide isValid(Sch, G, m).
-	  Validity can be checked by computing only a portion of exhaustiveShapeMap by an appropriate algorithm presented in a separate document.
+	  The schema <span class="math">Sch</span> might have several different stratifications but <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is the same for all these stratifications.
+	  This property is reminiscent of the use of stratified negiation in Datalog.	  
 	</p>
 	<p>
-          The semantics of ShEx are independent from the construction of an input <a>ShapeMap</a>.
-          <a href="https://www.w3.org/2001/sw/wiki/ShEx/ShapeMap">https://www.w3.org/2001/sw/wiki/ShEx/ShapeMap</a> has list of popular methods for constructing ShapeMaps.
+	  In order to decide isValid(Sch, G, m), it is sufficient to compute only a portion of completeTyping using an appropriate algorithm.
+	</p>
+      </div>
+      <div class="note">
+	<p>
+	  Popular methods for constructing the input fixed ShapeMaps can be found on <a href="https://www.w3.org/2001/sw/wiki/ShEx/ShapeMap">https://www.w3.org/2001/sw/wiki/ShEx/ShapeMap</a>.
       </p>
 
       </div>
@@ -1411,7 +1420,7 @@ _:User2
           <ul>
             <li>
               <span class="math">T</span> is a set of one triple.<br/>
-              Let <span class="label">t</span> be the soul triple in <span class="math">T</span>.
+              Let <span class="label">t</span> be the sole triple in <span class="math">T</span>.
             </li>
             <li>
               <span class="math">t</span>'s <a class="param">predicate</a> equals <span class="math">expr</span>'s <a>predicate</a>.<br/>
@@ -2192,7 +2201,7 @@ IMPORT &lt;http://schema.example/#schema3&gt;
 	  There is a negative edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a <a>negated reference</a> to <span class="math">s2</span>.
 	  There is a positive edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a reference but not a negated reference to <span class="math">s2</span>.
 	</p>
-          <div class="example">
+        <div class="example">
             <h3 class="followup">Examples with <span class="jobjref"><a>ShapeNot</a></span></h3>
             <p>
               This negated self-reference violates the negation requirement.
@@ -5386,7 +5395,7 @@ tripleExprLabel = IRIREF | BNODE ;
           See also, <a href="#iana-considerations" class="sectionRef"></a>.
         </p>
     </section>
-
+    
     <!-- <section id="idl-index" class="appendix informative"> -->
     <!-- </section> -->
   </body>
