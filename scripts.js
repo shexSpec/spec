@@ -94,20 +94,26 @@ function chooseRep (container, cls) {
 }
 
 
-function unComment(doc, content) {
+function unComment (doc, content) {
   // perform transformations to make it render and prettier
   content = content.replace(/<!--/, '');
   content = content.replace(/-->/, '');
   return content ;
 }
 
-function updateExample(doc, content) {
-  var utils = require("core/utils");
-// perform transformations to make it render and prettier
-  return utils.xmlEscape(content);
+// Crappy, single-purpose ShExC highlighter.
+function highlightShExC (doc, content) {
+  return content
+    .replace(/# ([^\n]*)$/gm, s => s.replace(/</g, "@@@"))
+    .replace(/<([^>]*)>/g, "<span class='relativeIRI'>&lt;$1&gt;</span>")
+    .replace(/@@@/g, "<")
+    .replace(/# ([^\n]*)$/gm, s => "<span class='comment'>"+s+"</span>")
+    .replace(/(\b(?:CLOSED|BNODE|IRI|OR|PREFIX|BASE|LITERAL)\b|start=)/g,
+             "<span class='keyword'>$1</span>")
+    .replace(/\[(.*?)\]/g, "<span class='valueSet'>[$1]</span>")
 }
 
-function toggleGrammar() {
+function toggleGrammar () {
   const labels = [
     "Display grammar only", "Display semantic actions"
   ];

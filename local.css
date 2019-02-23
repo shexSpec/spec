@@ -277,6 +277,10 @@ div.shexjTable th { text-align: right; }
 
 .comment, .comment a[href] { color: #e20; font-style: italic; }
 
+.relativeIRI { color: #058; }
+.keyword { color: #c0c; }
+.valueSet { font-style: italic }
+
 .grammarTable .grammarParagraph /* needs .grammarTable specificity for at least FF and chromium */
     { border-left:thin solid white; border-right:thin solid white; }
 
