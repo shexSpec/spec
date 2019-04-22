@@ -1,0 +1,1 @@
+PREFIX ex: <http://schema.example/#> ex:S NOT (IRI OR NOT @ex:S)

@@ -1,0 +1,25 @@
+{
+  "@context": ["http://shex.io/context.jsonld", {"foaf": "http://xmlns.com/foaf/0.1/"}],
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/EmployeeShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "foaf:mbox",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "values": [
+          {"@value": "N/A"},
+          { "type": "StemRange", "stem": "mailto:engineering-" },
+          { "type": "StemRange", "stem": "mailto:sales-",
+            "exclusions": [
+              { "type": "Stem", "stem": "mailto:sales-contacts" },
+              { "type": "Stem", "stem": "mailto:sales-interns" }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

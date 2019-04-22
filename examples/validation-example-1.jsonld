@@ -1,0 +1,9 @@
+{
+  "@context": "http://shex.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/IntConstraint",
+    "type": "NodeConstraint",
+    "datatype": "http://www.w3.org/2001/XMLSchema#integer"
+  }
+}

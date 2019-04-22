@@ -1,0 +1,19 @@
+{
+  "@context": "http://shex.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/NoActionIssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/state",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "values": [
+          "http://schema.example/Resolved",
+          "http://schema.example/Rejected"
+        ]
+      }
+    }
+  }
+}

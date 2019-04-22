@@ -1,0 +1,17 @@
+{
+  "type": "Schema",
+  "prefixes": {
+    "ex": "http://schema.example/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "shapes": {
+    "http://schema.example/IssueShape": {
+      "type": "Shape",
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/submittedBy",
+        "valueExpr": { "type": "NodeConstraint", "minlength": 10 }
+      }
+    }
+  }
+}

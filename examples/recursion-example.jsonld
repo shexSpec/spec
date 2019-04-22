@@ -1,0 +1,17 @@
+{
+  "@context": "http://shex.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/related",
+      "valueExpr": {
+        "type": "ShapeRef",
+        "reference": "http://schema.example/IssueShape"
+      },
+      "min": 0, "max": "*"
+    }
+  }
+}

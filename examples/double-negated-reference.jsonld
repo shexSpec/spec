@@ -1,0 +1,20 @@
+{
+  "@context": "http://shex.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/#S",
+    "type": "ShapeNot",
+    "expression": {
+      "type": "ShapeOr",
+      "expressions": [
+        { "type": "NodeConstraint", "nodeKind": "iri" },
+        { "type": "ShapeNot",
+          "expression": {
+            "type": "ShapeRef",
+            "reference": "http://schema.example/#S"
+          }
+        }
+      ]
+    }
+  }
+}

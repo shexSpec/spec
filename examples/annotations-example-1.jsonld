@@ -1,0 +1,20 @@
+{
+  "@context": "http://shex.io/context.jsonld",
+  "type": "Schema",
+  "shapes":{
+    "id": "http://schema.example/IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/status",
+      "annotations": [
+         { "type": "Annotation",
+           "predicate": "rdfs:comment",
+           "object": {"@value": "Represents reported software issues."} },
+         { "type": "Annotation",
+           "predicate": "rdfs:label",
+           "object": {"@value": "software issue"} } 
+      ]
+    }
+  }
+}

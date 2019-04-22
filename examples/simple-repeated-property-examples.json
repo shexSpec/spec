@@ -1,0 +1,17 @@
+{ "type": "Schema",
+  "prefixes": {"ex": "http://schema.example/"},
+  "shapes": {
+  "http://schema.example/TestResultsShape":
+  { "type": "Shape", "expression": {
+      "type": "EachOf", "expressions": [
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/val",
+          "valueExpr":
+          { "type": "NodeConstraint",
+            "values": [ "\\"a\\"", "\\"b\\"", "\\"c\\"" ] }, "min": 1, "max": "*" },
+        { "type": "TripleConstraint",
+          "predicate": "http://schema.example/val",
+          "valueExpr":
+          { "type": "NodeConstraint",
+            "values": [ "\\"b\\"", "\\"c\\"", "\\"d\\"" ] }, "min": 1, "max": "*" }
+      ] } } } }

@@ -125,7 +125,7 @@
       
       .shexj, .grammarTable tr.obj {
       margin-left: 0;
-      margin-right: 0.1ex;
+      margin-right: 2ex;
       margin-top: 0.1ex;
       margin-bottom: 0.1ex;
       border: thin solid #888888;
@@ -133,7 +133,6 @@
       page-break-inside: avoid;
       background-color: #F8F8F0;
       line-height: 1.5;
-      font-family: monospace;
       }
       .shexj th { vertical-align: top; }
 
@@ -156,20 +155,6 @@
         background-color: #F0FFF0;
         line-height: 1.5;
 	display: inline-block;
-      }
-      div.repchoice {
-          position: relative;
-      }
-      div.repchoice button {
-          position:absolute;
-          top:0px;
-          right:0px;
-          font-size: 70%;
-          background-color: transparent;
-      }
-      button.show-repchoice {
-          font-size: 70%;
-          background-color: transparent;
       }
       div.json pre, div.shexc pre {
 	  margin: 0
@@ -220,8 +205,8 @@
       pre.schema.hljs.xquery { color: #070; border: thin solid #0f0; }
       pre.data.hljs.javascript { color: #007; border: thin solid #00f; }
       .inline .hljs { padding: 0; }
-      .schema { color: #070; }
-        .data { color: #007; }
+      th.schema { color: #070; }
+        th.data { color: #007; }
 /*      pre.schema:before { content: schema }
         pre.data:before { content: data   }
 */
@@ -233,7 +218,7 @@
       .fail { background-color: #fcc; }
       span.fail { background-color: #fcc; }
 
-      .param, a[href].param { color: #630; }
+      .param { color: #630; }
       .var { color: #056800; }
       .rdf { border-left: thick solid #77f; padding-left: .5em; }
 
@@ -275,11 +260,7 @@ div.shexjTable th { text-align: right; }
 .grammarTable tr.obj td:nth-child(2) { text-align: right; }
 .grammarTable tr.obj td:nth-child(3) { text-align: right; }
 
-.comment, .comment a[href] { color: #e20; font-style: italic; }
-
-.relativeIRI { color: #058; }
-.keyword { color: #c0c; }
-.valueSet { font-style: italic }
+.comment { color: #e20; font-style: italic; }
 
 .grammarTable .grammarParagraph /* needs .grammarTable specificity for at least FF and chromium */
     { border-left:thin solid white; border-right:thin solid white; }
@@ -301,18 +282,6 @@ div.shexjTable th { text-align: right; }
 
 .label { font-weight: bold; }
 
-.grammarParagraph {
-    font-style: oblique;
-}
-
-/* Embarassing hack to occlude border on first <td/> */
-/* Needed when the previous table ended with an empty 1st <td/> */
-.borderHack {
-    border-bottom: thick solid white !important;
-}
-.borderHack td:nth-child(1) {
-    border-top:none !important;
-}
 
 .code {
   color: #C83500;
@@ -320,13 +289,6 @@ div.shexjTable th { text-align: right; }
   font-size: .9em;
   page-break-inside: avoid;
   text-transform: none;
-}
-/* ul li div[float] paints the bullet on the right. */
-.codelist li > div {
-    /* adding a div creates a blank rest of line in the li */
-    /* list-style-type: none; could shut off the bullets*/
-    /* margin-top: -2.5ex; or push them up */
-    display: inline-flex; /* inline-flex works but I've not researched why. */
 }
 
 .function { white-space: nowrap; }
@@ -342,7 +304,6 @@ div.shexjTable th { text-align: right; }
       margin-left: 0;
       line-height: 1.2;
       }
-      .fake-example { background-color: #FCFAEE }
       .example.wrapper .fail {
       background-color: #fceefa
       }
@@ -404,32 +365,32 @@ div.shexjTable th { text-align: right; }
     margin-bottom: 0;
 }
 
-.repchoice.error, div.example .error {
+.repchoice.error {
     background-color: #fff7f7;
     border: medium solid #efe7e7;
 }
 
-/* .repchosen::before { */
-/*     text-align: right; */
-/*     display: block; */
-/*     font-size: 67%; */
-/*     margin-top: -1ex; */
-/*     margin-bottom: -2ex; */
-/*     margin-right: -.5em; /\* @@ would like it to stick out -1em but gives horiz scrollbars *\/ */
-/* } */
+.repchosen::before {
+    text-align: right;
+    display: block;
+    font-size: 67%;
+    margin-top: -1ex;
+    margin-bottom: -2ex;
+    margin-right: -.5em; /* @@ would like it to stick out -1em but gives horiz scrollbars */
+}
 
-/* .inline .repchosen::before { */
-/*     margin-top: -.2ex; */
-/*     margin-right: 0; */
-/* } */
+.inline .repchosen::before {
+    margin-top: -.2ex;
+    margin-right: 0;
+}
 
-/* .repchosen.json::before { */
-/*     content: "𝙅/c"; */
-/* } */
+.repchosen.json::before {
+    content: "𝙅/c";
+}
 
-/* .repchosen.shexc::before { */
-/*     content: "j/𝗖"; */
-/* } */
+.repchosen.shexc::before {
+    content: "j/𝗖";
+}
 
 .rephidden { display: none; }
 
@@ -447,7 +408,3 @@ ol.algorithm li:before {
   counter-increment: numsection;
   content: counters(numsection, ".") ") ";
 }
-
-/* simupre (ab)uses respec's willingness to dive into non-<pre/>s */
-.simupre { white-space: pre; font-family: monospace; }
-

@@ -1,0 +1,16 @@
+{
+  "@context": "http://shex.io/context.jsonld",
+  "type": "Schema",
+  "shapes": {
+    "id": "http://schema.example/IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/submittedBy",
+      "valueExpr": {
+        "type": "NodeConstraint",
+        "pattern": "genUser[0-9]+"
+      }
+    }
+  }
+}
