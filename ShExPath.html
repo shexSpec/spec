@@ -75,15 +75,27 @@
         A <dfn>singleton</dfn> is a sequence of exactly one <a>item</a>.
       </p>
       <p>
-        <dfn>evaluation</dfn> is a process that takes as arguments a schema <code>S</code> and a <a>value</a> and produces a <a>value</a>.
-        The initial <a>value</a> argument is assumed to be the list of shapes in the schema
+        <dfn>evaluation</dfn>(path, schema, optional value) is a process that takes as arguments a schema <code>S</code> and a <a>value</a> and produces a <a>value</a>.
+        The operators are evaluated as follows:
       .</p>
+      <ul>
+        <li>
+          <code>/</code>: <code>res</code> = the list of shapes in the schema
+        </li>
+        <li>
+          <code></code> | <code></code> | <code></code> | <code></code> | <code></code> | 
+        </li>
+        <li>
+          <i>empty string</i>: the evaluation is terminated, the result is <code>value</code>.
+        </li>
+      </ul>
+      <p class="todo">advance through ShapeAnd automagically? doubles threads?</p>
     </section>
 
     <section id="issueExample">
       <h2>Issue Example</h2>
       <p>
-        This schema excerpt describes an issue that might appear in an issue tracking system.
+        This schema excerpt describes an issue that might appear in an issue tracking system. 
       </p>
       <pre>
 &lt;#IssueShape> IRI /Issue\?id=[0-9]+/ {
