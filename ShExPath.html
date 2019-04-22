@@ -1,0 +1,149 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Shape Expressions ShExPath Language</title>
+    <!-- link rel="stylesheet" href="css/wgio.min.css"/ ask Iovka -->
+    <link rel="stylesheet" href="local.css"/>
+
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            async="async" class='remove'></script>
+    <script src="https://www.w3.org/2013/ShEx/demobits/jquery.min.js" type="text/javascript"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+      specStatus: "base",
+      shortName:  "shexpath",
+      editors: [
+      {   name:       "Eric Prud'hommeaux",
+      url:        "http://www.w3.org/Team/Eric",
+      company:    "Janeiro Digital, Micelio" }
+      ],
+      // wg:           "Shape Expressions ",
+      // wgURI:        "https://shex.io/",
+      // wgPublicList: "public-shex-dev",
+      // wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+    <style type="text/css">
+      em { font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p>
+        ShEx is a schema language for RDF graphs. It provides structural constraint on graph structures and lexical forms of literals.
+        ShExPath addresses elements in a ShEx schema.
+        This can be used to anchor validation results, identify regions of RDF graphs, or tie external annotations to elements in a schema.
+      </p>
+    </section>
+
+    <section id="scope">
+      <h2>Scope</h2>
+      <p>
+        ShExPath identifies <a href="">Shape Expressions</a> and <a href="">Triple Expressions</a>.
+        It does not, on its own, identify portions of <a href="">Node Constraint</a>.
+      </p>
+    </section>
+
+    <section id="data-model">
+      <h2>Data Model</h2>
+      <p>
+        A ShExPath is a Unicode string which defines a traversal of a Shape Expressions schema.
+      </p>
+      <p>
+        An <dfn>item</dfn> is one of these elements from a Shape Expressions schema:
+      </p>
+      <ul>
+        <li>some shape expression:<ul>
+        <li>a ShapeAnd expression</li>
+        <li>a ShapeOr expression</li>
+        <li>a ShapeNot expression</li>
+        <li>a NodeConstraint</li>
+        <li>a Shape</li>
+      </ul>some triple expression<ul>
+        <li>an EachOf triple expression</li>
+        <li>a OneOf triple expression</li>
+        <li>a Triple Constraint</li>
+      </ul></li>
+      </ul>
+      <p>
+        A <dfn>value</dfn> is a sequence of <a>items</a>.
+      </p>
+      <p>
+        A <dfn>singleton</dfn> is a sequence of exactly one <a>item</a>.
+      </p>
+    </section>
+
+    <section id="issueExample">
+      <h2>Issue Example</h2>
+      <p>
+        This schema excerpt describes an issue that might appear in an issue tracking system.
+      </p>
+      <pre>
+&lt;#IssueShape> IRI /Issue\?id=[0-9]+/ {
+  :name STRING MinLength 4;
+  :category ["bug" "feature request"];
+  :postedBy @&lt;#UserShape>;
+  :processing {
+    :reproduced [true false];
+    :priority xsd:integer
+  }?
+}
+
+&lt;#UserShape> {
+  (  foaf:name xsd:string
+   | foaf:givenName +;
+     foaf:familyName            
+  );
+  foaf:mbox IRI
+}
+      </pre>
+    </section>
+      <section id="simple-access">
+        <h2>Simple Access</h2>
+        <p>
+          Elements can be addressed either by label or index.
+          For shape expressions, the label is the name of the shape expression.
+          For triple constraints, the label is the name of the predicate for that triple constraints.
+        </p>
+      <table>
+        <thead>
+          <th>ShExPath</th> <th>value</th>
+        </thead>
+        <tbody>
+          <tr><td>/[#IssueShape]/[:category]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>name</em> of the shape expression followed by the <em>name</em> of the <code>:category</code> property.</td></tr>
+          <tr><td>/[#IssueShape]/[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>name</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
+          <tr><td>/[1]/[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>index</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
+        </tbody>
+      </table>
+      </section>
+
+      <section id="triple-expressions">
+        <h2>Triple Expressions</h2>
+        <p>
+          Elements of triple expressions may be selected by index within the triple expression.
+          For added clarity, the axes <code>eachOf</code> and <code>oneOf</code> may be used to specify the expected expression type.
+          If the expression type is specified and does not match the corresponding type in the schema, the path is invalid.
+        </p>
+      <table>
+        <thead>
+          <th>ShExPath</th> <th>value</th>
+        </thead>
+        <tbody>
+          <tr><td>/shapes[1]/eachOf[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, explicitly labeling the <em>index</em> axes.</td></tr>
+          <tr><td>/[#UserShape]/eachOf::[1]/oneOf::[2]</td><td>the <code>EachOf</code> containing <code>foaf:givenName</code> and <code>foaf:familyName</code> in the <code>#UserShape</code> shape.</td></tr>
+          <tr><td>/[#UserShape]/eachOf::[1]/eachOf::[2]</td><td class="error">invalid path for the given schema.</td></tr>
+        </tbody>
+      </table>
+      </section>
+
+      <section id="disambiguation">
+        <h2>Disambiguation</h2>
+        <p>
+          If more than one triple constraint has the same predicate, they can be indexed by the order they would be encountered in a depth-first search.
+        </p>
+      </section>
+  </body>
+</html>
