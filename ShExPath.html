@@ -83,7 +83,9 @@
           <code>/</code>: <code>res</code> = the list of shapes in the schema
         </li>
         <li>
-          <code></code> | <code></code> | <code></code> | <code></code> | <code></code> | 
+          axis label (<code>shapeAnd::</code> | <code>shapeOr::</code> | <code>shapeNot::</code> | <code>eachOf::</code> | <code>oneOf::</code> | <code>NodeConstraint</code> | <code>TripleConstraint</code>): the items in <code>value</code> are tested for alignment with the axis label.
+          It is a fatal error if the <code>item</code> is not the same as the axis label.
+          This does not change the <code>value</code>.
         </li>
         <li>
           <i>empty string</i>: the evaluation is terminated, the result is <code>value</code>.
@@ -98,7 +100,7 @@
         This schema excerpt describes an issue that might appear in an issue tracking system. 
       </p>
       <pre>
-&lt;#IssueShape> IRI /Issue\?id=[0-9]+/ {
+&lt;#IssueShape> {
   :name STRING MinLength 4;
   :category ["bug" "feature request"];
   :postedBy @&lt;#UserShape>;
@@ -108,7 +110,7 @@
   }?
 }
 
-&lt;#UserShape> {
+&lt;#UserShape> IRI /User\?id=[0-9]+/ {
   (  foaf:name xsd:string
    | foaf:givenName +;
      foaf:familyName            
@@ -132,6 +134,9 @@
           <tr><td>/[#IssueShape]/[:category]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>name</em> of the shape expression followed by the <em>name</em> of the <code>:category</code> property.</td></tr>
           <tr><td>/[#IssueShape]/[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>name</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
           <tr><td>/[1]/[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>index</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
+          <tr><td>/[#UserShape]/shapeAnd[2][foaf:mbox]</td><td>the <code>foaf:mbox</code> constraint in <code>#UserShape</code>'s shape.
+          Note that <code>IRI /User\?id=[0-9]+/ {...}</code> compiles to a <code>ShapeAnd</code> with the first component a <code>NodeConstraint</code> and the second being a shape..
+          </td></tr>
         </tbody>
       </table>
       </section>
@@ -148,9 +153,9 @@
           <th>ShExPath</th> <th>value</th>
         </thead>
         <tbody>
-          <tr><td>/shapes[1]/eachOf[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, explicitly labeling the <em>index</em> axes.</td></tr>
-          <tr><td>/[#UserShape]/eachOf::[1]/oneOf::[2]</td><td>the <code>EachOf</code> containing <code>foaf:givenName</code> and <code>foaf:familyName</code> in the <code>#UserShape</code> shape.</td></tr>
-          <tr><td>/[#UserShape]/eachOf::[1]/eachOf::[2]</td><td class="error">invalid path for the given schema.</td></tr>
+          <tr><td>/shapes[1]/shapeAnd[2]/eachOf[2]</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, explicitly labeling the <em>index</em> axes.</td></tr>
+          <tr><td>/[#UserShape][2]/eachOf::[1]/oneOf::[2]</td><td>the <code>EachOf</code> containing <code>foaf:givenName</code> and <code>foaf:familyName</code> in the <code>#UserShape</code> shape.</td></tr>
+          <tr><td>/[#UserShape][2]/eachOf::[1]/eachOf::[2]</td><td class="error">invalid path for the given schema.</td></tr>
         </tbody>
       </table>
       </section>
