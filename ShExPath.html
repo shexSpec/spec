@@ -74,18 +74,30 @@
       <p>
         A <dfn>singleton</dfn> is a sequence of exactly one <a>item</a>.
       </p>
+      <p class="issue">some way to say a singleton is expected? useful at end to say ShExPath should specify a single item; useful earlier in path for debugging.</p>
       <p>
         <dfn>evaluation</dfn>(path, schema, optional value) is a process that takes as arguments a schema <code>S</code> and a <a>value</a> and produces a <a>value</a>.
         The operators are evaluated as follows:
       .</p>
       <ul>
         <li>
-          <code>/</code>: <code>res</code> = the list of shapes in the schema
+          <code>/</code>: <code>value</code> = the list of shapes in the schema
         </li>
         <li>
           axis label (<code>shapeAnd::</code> | <code>shapeOr::</code> | <code>shapeNot::</code> | <code>eachOf::</code> | <code>oneOf::</code> | <code>NodeConstraint</code> | <code>TripleConstraint</code>): the items in <code>value</code> are tested for alignment with the axis label.
           It is a fatal error if the <code>item</code> is not the same as the axis label.
           This does not change the <code>value</code>.
+          <p class="issue">is an error or just a filter?</p>
+        </li>
+        <li>
+          <code>[index]/?</code>: <code>value</code> = a mapping of the <code>items</code> in <code>value</code> to<br/>
+          switch <code>item</code>:
+          <ul>
+            <li>(ShapeAnd | ShapeOr) and index a 1-based integer: <code>item</code> = item.tripleExprs[index-1]</li>
+            <li>(EachOf | OneOf) and index a 1-based integer: <code>item</code> = item.expressions[index-1]</li>
+            <li>(EachOf | OneOf) and index a URL: <code>item</code> = item.expressions[index-1]</li>
+          </ul>
+          )
         </li>
         <li>
           <i>empty string</i>: the evaluation is terminated, the result is <code>value</code>.
