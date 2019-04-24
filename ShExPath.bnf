@@ -1,0 +1,50 @@
+ShExPathExpr ::= AbsolutePathExpr | RelativePathExpr
+AbsolutePathExpr ::= "/" RelativePathExpr
+RelativePathExpr ::= StepExpr ("/" StepExpr)*
+StepExpr ::= ContextTest? Index
+ContextTest ::= Context
+Context ::= "shapeAnd" | "shapeOr" | "shapeNot" | "nodeConstraint" | "shape"
+          | "eachOf" | "oneOf" | "tripleConstraint"
+Index ::= "["? (INTEGER | schemaLabel INTEGER? ) "]"?
+schemaLabel ::= iri | BLANK_NODE_LABEL
+[136s]  iri                   ::= IRIREF | prefixedName
+[137s]  prefixedName          ::= PNAME_LN | PNAME_NS
+
+@terminals
+[18t]   IRIREF                ::= '<' ([^#x00-#x20<>\"{}|^`\\] | UCHAR)* '>' /* #x00=NULL #01-#x1F=control codes #x20=space */
+[140s]  PNAME_NS              ::= PN_PREFIX? ':'
+[141s]  PNAME_LN              ::= PNAME_NS PN_LOCAL
+[65]    ATPNAME_NS            ::= '@' PN_PREFIX? ':'
+[66]    ATPNAME_LN            ::= '@' PNAME_NS PN_LOCAL
+[142s]  BLANK_NODE_LABEL      ::= '_:' (PN_CHARS_U | [0-9]) ((PN_CHARS | '.')* PN_CHARS)?
+[145s]  LANGTAG               ::= '@' [a-zA-Z]+ ('-' [a-zA-Z0-9]+)*
+[19t]   INTEGER               ::= [+-]? [0-9]+
+#[20t]   DECIMAL               ::= [+-]? [0-9]* '.' [0-9]+
+#[21t]   DOUBLE                ::= [+-]? ([0-9]+ '.' [0-9]* EXPONENT | '.'? [0-9]+ EXPONENT)
+[155s]  EXPONENT              ::= [eE] [+-]? [0-9]+
+[156s]  STRING_LITERAL1       ::= "'" ([^#x27#x5C#xA#xD] | ECHAR | UCHAR)* "'" /* #x27=' #x5C=\ #xA=new line #xD=carriage return */
+[157s]  STRING_LITERAL2       ::= '"' ([^#x22#x5C#xA#xD] | ECHAR | UCHAR)* '"' /* #x22=" #x5C=\ #xA=new line #xD=carriage return */
+[158s]  STRING_LITERAL_LONG1  ::= "'''" (("'" | "''")? ([^\'\\] | ECHAR | UCHAR))* "'''"
+[159s]  STRING_LITERAL_LONG2  ::= '"""' (('"' | '""')? ([^\"\\] | ECHAR | UCHAR))* '"""'
+[68]    LANG_STRING_LITERAL1       ::= "'" ([^#x27#x5C#xA#xD] | ECHAR | UCHAR)* "'"  LANGTAG
+[69]    LANG_STRING_LITERAL2       ::= '"' ([^#x22#x5C#xA#xD] | ECHAR | UCHAR)* '"' LANGTAG
+[70]    LANG_STRING_LITERAL_LONG1  ::= "'''" (("'" | "''")? ([^\'\\] | ECHAR | UCHAR))* "'''" LANGTAG
+[71]    LANG_STRING_LITERAL_LONG2  ::= '"""' (('"' | '""')? ([^\"\\] | ECHAR | UCHAR))* '"""' LANGTAG
+[26t]   UCHAR                 ::= '\\u' HEX HEX HEX HEX
+                                | '\\U' HEX HEX HEX HEX HEX HEX HEX HEX
+[160s]  ECHAR                 ::= '\\' [tbnrf\\\"\']
+[164s]  PN_CHARS_BASE         ::= [A-Z] | [a-z]
+                                | [#x00C0-#x00D6] | [#x00D8-#x00F6] | [#x00F8-#x02FF]
+                                | [#x0370-#x037D] | [#x037F-#x1FFF]
+                                | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF]
+                                | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD]
+                                | [#x10000-#xEFFFF]
+[165s]  PN_CHARS_U            ::= PN_CHARS_BASE | '_'
+[167s]  PN_CHARS              ::= PN_CHARS_U | '-' | [0-9]
+                                | [#x00B7] | [#x0300-#x036F] | [#x203F-#x2040]
+[168s]  PN_PREFIX             ::= PN_CHARS_BASE ((PN_CHARS | '.')* PN_CHARS)?
+[169s]  PN_LOCAL              ::= (PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
+[170s]  PLX                   ::= PERCENT | PN_LOCAL_ESC
+[171s]  PERCENT               ::= '%' HEX HEX
+[172s]  HEX                   ::= [0-9] | [A-F] | [a-f]
+[173s]  PN_LOCAL_ESC          ::= '\\' ('_' | '~' | '.' | '-' | '!' | '$' | '&' | "'" | '(' | ')' | '*' | '+' | ',' | ';' | '=' | '/' | '?' | '#' | '@' | '%')
