@@ -19,6 +19,7 @@
       url:        "http://www.w3.org/Team/Eric",
       company:    "Janeiro Digital, Micelio" }
       ],
+      edDraftURI: "https://shexspec.github.io/spec/ShExPath",
       // wg:           "Shape Expressions ",
       // wgURI:        "https://shex.io/",
       // wgPublicList: "public-shex-dev",
@@ -48,6 +49,14 @@
       </p>
     </section>
 
+    <section>
+      <h2>Document Conventions</h2>
+      <p>
+        This specification describes the structure of ShEx schemas in terms of <a href="http://shex.io/shex-semantics/index.html#shexj">ShExJ</a>.
+        Elements in the ShExJ are addressed in a javascript notation, e.g. <code>S.shapes[N]</code>.
+      </p>
+    </section>
+
     <section id="data-model">
       <h2>Data Model</h2>
       <p>
@@ -63,7 +72,7 @@
         <li>a ShapeNot expression</li>
         <li>a NodeConstraint</li>
         <li>a Shape</li>
-      </ul>some triple expression<ul>
+      </ul>some triple expression:<ul>
         <li>an EachOf triple expression</li>
         <li>a OneOf triple expression</li>
         <li>a Triple Constraint</li>
@@ -72,39 +81,114 @@
       <p>
         A <dfn>value</dfn> is a sequence of <a>items</a>.
       </p>
+      <p class="issue">This specification uses XPath's notion of <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-item">item</a>, <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-value">value</a>, <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-step">step</a> and <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-singleton">singleton</a> to leverage shared understanding. Would other terms be more useful?</p>
+      <p class="issue">is a value a set?</p>
       <p>
         A <dfn>singleton</dfn> is a sequence of exactly one <a>item</a>.
       </p>
-      <p class="issue">some way to say a singleton is expected? useful at end to say ShExPath should specify a single item; useful earlier in path for debugging.</p>
+      <p class="issue">Do we some way to say a singleton is expected?
+      This would be useful at end to say ShExPath should specify a single item, but also useful earlier in path for debugging.</p>
       <p>
-        <dfn>evaluation</dfn>(path, schema, optional value) is a process that takes as arguments a schema <code>S</code> and a <a>value</a> and produces a <a>value</a>.
+        A <dfn>context label</dfn> identifies the expected element type in the ShExJ where each <a>item</a> should be.
+        The context labels are: <code>ShapeAnd</code> | <code>ShapeOr</code> | <code>ShapeNot</code> | <code>EachOf</code> | <code>OneOf</code> | <code>NodeConstraint</code> | <code>TripleConstraint</code>.
+      </p>
+      <p>
+        A <dfn>index</dfn> may be an integer <code>i</code>, RDF node (URL or blank node label) <code>N</code> with an optional integer <code>Ni</code>.
+        Integer indexes are 1-based accessors to array elements in a schema.
+        Out of range indexes are ignored (they do not contribute any new <a>items</a> to a result <a>value</a>).
+        The function <dfn>evaluateIndex</dfn> maps a <a>value</a> to a new <a>value</a>:
+      </p>
+      <ul>
+        <li>For each <a>item</a> <code>I</code> in <a>value</a>:
+        <ul>
+          <li>If I.type = "Schema",
+          <ul>
+            <li>If i, add I.shapes[i-1] to the new value.</li>
+            <li>Otherwise, if there exists a shape expression <code>E</code> in I.shapes with E.id = N and there is no <code>Ni</code> or <code>Ni</code> = 1, add <code>E</code> to the new value</li>
+          </ul></li>
+          <li>If I.type = "ShapeOr" or I.type = "ShapeAnd",
+          <ul>
+            <li>If i, add I.shapeExprs[i-1] to the new value.</li>
+          </ul></li>
+          <li>If I.type = "ShapeNot",
+          <ul>
+            <li>If i and i = 1, add I.shapeExpr to the new value.</li>
+          </ul></li>
+          <li>If I.type = "NodeConstraint", ignore the index.</li>
+          <li>If I.type = "Shape",
+          <ul>
+            <li>if I has an expression, add the results of <a>evaluateIndex</a>(I.expression) to new value.</li>
+          </ul></li>
+          <li>If I.type = "EachOf" or I.type = "OneOf"
+          <ul>
+            <li>If i, add I.expressions[i] to the new value.</li>
+            <li>Otherwise,
+            <ul>
+              <li>Let <code>TCs</code> be the (possibly empty) set of triple constraints the shape expression I.expressions with a predicate of N.</li>
+              <li>If Ni, add TCs[Ni] to new value.</li>
+              <li>Otherwise, add TCs to new value</li>
+            </ul></li>
+          </ul></li>
+          <li>If I.type = "TripleConstraint" <span class="issue">can we get here?</span>
+          <ul>
+            <li>If i and i = 1, add I to new value.</li>
+            <li>Otherwise, if N = I.predicate and there is no <code>Ni</code> or <code>Ni</code> = 1, add <code>I</code> to the new value</li>
+          </ul></li>
+        </ul></li>
+      </ul>
+      <p class="issue">
+        ShExPath indexes are 1-based, following XPath's precedent. Change to 0-based?
+      </p>
+      <p>
+        A ShExPath is divided into <dfn>steps</dfn> (see StepExpr [@@ add link when grammar is markup] in the <a href="grammar">grammar</a>).
+        The initial step may be the character <code>/</code>.
+        All following steps are separated by <code>/</code> and include an optional <a>context label</a> followed by a required <a>index</a>.
+      </p>
+      <p>
+        <dfn>evaluateShExPath</dfn> takes as arguments a ShExPath <code>P</code>, a schema <code>S</code> and an initial <a>value</a> <code>V</code>.
+        It iteratively calls <a>evaluateStep</a> with each <a>step</a> and either the initial value or the results of the last invocation of <a>evaluateStep</a>.
+      </p>
+      <p>
+        <dfn>evaluateStep</dfn>(P, S, V) is a function that takes as arguments a ShExPath <code>P</code>, schema <code>S</code> and a value <code>V</code> and produces a new <a>value</a>.
         The operators are evaluated as follows:
       .</p>
-      <ul>
-        <li>
-          <code>/</code>: <code>value</code> = the list of shapes in the schema
-        </li>
-        <li>
-          axis label (<code>ShapeAnd</code> | <code>ShapeOr</code> | <code>ShapeNot</code> | <code>EachOf</code> | <code>OneOf</code> | <code>NodeConstraint</code> | <code>TripleConstraint</code>): the items in <code>value</code> are tested for alignment with the axis label.
-          It is a fatal error if the <code>item</code> is not the same as the axis label.
+      <table>
+        <thead>
+          <th><a>step</a></th> <th>action</th>
+        </thead>
+        <tbody>
+        <tr>
+          <td><code>/</code></td> <td><code>value</code> = the list of shapes in the schema</td>
+        </tr>
+        <tr>
+          <td><a>context label</a></td> <td>the items in <code>value</code> are tested for alignment with the <a>context label</a>.
+          It is a fatal error if the <code>item</code> is not the same as the <a>context label</a>.
           This does not change the <code>value</code>.
           <p class="issue">is an error or just a filter?</p>
-        </li>
-        <li>
-          <code>[index]/?</code>: <code>value</code> = a mapping of the <code>items</code> in <code>value</code> to<br/>
-          switch <code>item</code>:
-          <ul>
-            <li>(ShapeAnd | ShapeOr) and index a 1-based integer: <code>item</code> = item.tripleExprs[index-1]</li>
-            <li>(EachOf | OneOf) and index a 1-based integer: <code>item</code> = item.expressions[index-1]</li>
-            <li>(EachOf | OneOf) and index a URL: <code>item</code> = item.expressions[index-1]</li>
-          </ul>
-          )
-        </li>
-        <li>
-          <i>empty string</i>: the evaluation is terminated, the result is <code>value</code>.
-        </li>
-      </ul>
-      <p class="todo">advance through ShapeAnd automagically? doubles threads?</p>
+          </td>
+        </tr>
+        <tr>
+          <td><code><a>index</a></code></td> <td><code>value</code> = <a>evaluateIndex</a>(index, <code>value</code>)</td>
+        </tr>
+        <tr>
+          <td><i>empty string</i></td> <td>the evaluation is terminated, the result is <code>value</code>.</td>
+        </tr>
+
+
+        </tbody>
+      </table>
+      <div class="issue">
+        <p>
+          Should we advance through ShapeAnd automagically? This requires more aggressive searching but maybe that's worth it.
+          This would be useful when shape expr is a ShapeAnd of node constraint and a shape:
+        </p>
+        <pre>
+&lt;#UserShape&gt; IRI /User\?id=[0-9]+/ {
+  foaf:mbox IRI
+}
+        </pre>
+        Compare <code>@&lt;#UserShape&gt;/2/foaf:mbox</code> with <code>@&lt;#UserShape&gt;/foaf:mbox</code>.
+      </div>
     </section>
 
     <section id="issueExample">
@@ -203,7 +287,7 @@
           <thead>
             <th style="min-width: 20em;">ShExPath</th> <th>value</th>
           </thead>
-          <tbody>
+          <tbody> 
             <tr><td>/1/ShapeAnd 2/EachOf 2</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, explicitly labeling the <em>index</em> axes.</td></tr>
             <tr><td>/&lt;#UserShape&gt;/2/EachOf 1/OneOf 2</td><td>the <code>EachOf</code> containing <code>foaf:givenName</code> and <code>foaf:familyName</code> in the <code>#UserShape</code> shape.</td></tr>
             <tr><td>/&lt;#UserShape&gt;/2/EachOf 1/EachOf 2</td><td class="error">invalid path for the given schema.</td></tr>
@@ -215,10 +299,11 @@
     <section id="relative-shexpaths">
       <h2>Relative ShExPaths</h2>
       <p>
-        Evaluation of a ShExPath includes a context.
+        Invocation of <a>evaluateShExPath</a> includes a <a>value</a>.
         ShExPaths starting with a <code>/</code> force the context to be the schema.
-        When the schema is the context, indexes access entries in the ShExJ <code>.shapes</code> property.
-        The application may provide a context.
+        If the <a>value</a> is a schema, indexes access entries in the ShExJ <code>.shapes</code> property.
+        The application may provide a different <a>value</a>.
+        A <dfn>context path</dfn> is a ShExPath which, when evaluated against the schema, produces an equivalent <a>value</a>.
         For instance validation results MAY be reported using relative ShExPaths.
       </p>
       <table class="example">
@@ -267,7 +352,7 @@
 ShExPathExpr             ::= AbsolutePathExpr | RelativePathExpr
 AbsolutePathExpr         ::= "/" RelativePathExpr
 RelativePathExpr         ::= StepExpr ("/" StepExpr)*
-StepExpr                 ::= ContextTest? ExprIndex
+<dfn>StepExpr</dfn>                 ::= ContextTest? ExprIndex
 ContextTest              ::= ShapeExprContext | TripleExprContext
 ShapeExprContext         ::= "ShapeAnd" | "ShapeOr" | "ShapeNot"
                            | "NodeConstraint" | "Shape"
