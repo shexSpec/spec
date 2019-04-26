@@ -4509,7 +4509,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-iriRange">[<span class="prodNo">51</span>]   </td>
 <td><code class="production prod">iriRange</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>*)?</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-iriExclusion">iriExclusion</a></span>*)?</code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> matches with no "<code>~</code>", iriRange returns <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span>.</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-iriExclusion">iriExclusion</a></span>, iriRange returns a <a class="obj">IriStem</a> object:</td></tr>
