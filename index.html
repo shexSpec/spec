@@ -1687,10 +1687,57 @@ IMPORT &lt;http://schema.example/#schema1&gt;
             </div>
           </div>
       <p>
-        It is an error if there are any conflicting labels for shape expressions or triple expressions, or if any imported schema has either a <a class="jobjref">startActs</a> or a <a class="jobjref">start</a> member.
+        When some schema <span class="math">A</span> imports schema <span class="math">B</span>, <span class="math">B</span>'s <a class="jobjref">start</a> member is ignored.
       </p>
           <div class="example">
-            <div class="example-title marker"><span>Import example 3 - Erroneous Import</span></div>
+            <div class="example-title marker"><span>Import example 3 - Ignored Start In Import</span></div>
+            <div class="repchoice incomplete">
+              <pre class="json nohighlight"><span class="label">schema1:</span>
+{ "type": "Schema",
+  "imports": ["http://schema.example/#schema2"],
+  "shapes": [
+  { "id": "http://schema.example/#schema1#S1",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
+      "valueExpr": "http://schema.example/#schema1#S2"
+    } } ] }
+<span class="label">schema2:</span>
+{ "type": "Schema",
+  <span class="lookit">"start": "http://schema.example/#schema1#S2"</span>,
+  "shapes": [
+  { "id": "http://schema.example/#schema1#S2",
+    "type": "Shape", "expression": {
+      "type": "TripleConstraint", "predicate": "http://schema.example/#p2"
+    } } ] }
+</pre>
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                   
+
+IMPORT &lt;http://schema.example/#schema2&gt;
+
+&lt;http://schema.example/#schema1#S1&gt; {
+
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
+
+}
+<span class="label">schema2:</span>
+
+<span class="lookit">start=@&lt;http://schema.example/#schema1#S2&gt;</span>
+
+&lt;http://schema.example/#schema1#S2&gt; {
+
+  &lt;http://schema.example/#p2&gt; .
+}
+</pre>
+            </div>
+          <p>
+            <code>schema1</code> has no <code>start</code> even though it imports a schema with a <code>start</code>.
+          </p>
+          </div>
+        <p>
+        It is an error if <code>A</code> and <code>B</code> share any labels for shape expressions or triple expressions or if schema <code>B</code> has a <a class="jobjref">startActs</a> member.
+      </p>
+          <div class="example">
+            <div class="example-title marker"><span>Import example 4 - Erroneous Import</span></div>
             <div class="repchoice error incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
@@ -1703,8 +1750,8 @@ IMPORT &lt;http://schema.example/#schema1&gt;
     } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/#schema3"],
-  <span class="lookit">"start": "http://schema.example/#schema1#S2"</span>,
+<span class="lookit">"startActs": [ { "type": "semAct",
+                 "name": "http://schema.example/#schema1#A1" } ]</span>,
   "shapes": [
   { <span class="lookit">"id": "http://schema.example/#schema1#S1"</span>,
     "type": "Shape", "expression": {
@@ -1728,8 +1775,8 @@ IMPORT &lt;http://schema.example/#schema2&gt;
 }
 <span class="label">schema2:</span>
 
-IMPORT &lt;http://schema.example/#schema3&gt;
-<span class="lookit">start=@&lt;http://schema.example/#schema1#S2&gt;</span>
+<span class="lookit">%@&lt;http://schema.example/#schema1#A1&gt;%</span>
+
 
 <span class="lookit">&lt;http://schema.example/#schema1#S1&gt;</span> {
 
