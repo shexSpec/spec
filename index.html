@@ -1582,7 +1582,7 @@ _:User2
             <div class="example-title marker"><span>Import example 1 - Shape and Triple Expressions</span></div>
             <div class="repchoice incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
-{ "type": "Schema", "imports": ["http://schema.example/#schema2"], "shapes": [
+{ "type": "Schema", "imports": ["http://schema.example/schema2"], "shapes": [
   { "id": "http://schema.example/#EmployeeShape",
     "type": "Shape", "expression": {
       "type": "EachOf", "expressions": [
@@ -1631,57 +1631,57 @@ _:User2
             <div class="repchoice incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/#schema2", "http://schema.example/#schema3"],
+  "imports": ["http://schema.example/schema2", "http://schema.example/schema3"],
   "shapes": [
-  { "id": "http://schema.example/#schema1#S1",
+  { "id": "http://schema.example/schema1#S1",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
-      "valueExpr": "http://schema.example/#schema1#S2"
+      "valueExpr": "http://schema.example/schema1#S2"
     } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/#schema3"],
+  "imports": ["http://schema.example/schema3"],
   "shapes": [
-  { "id": "http://schema.example/#schema1#S2",
+  { "id": "http://schema.example/schema1#S2",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p2",
-      "valueExpr": "http://schema.example/#schema1#S3"
+      "valueExpr": "http://schema.example/schema1#S3"
     } } ] }
 <span class="label">schema3:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/#schema1"],
+  "imports": ["http://schema.example/schema1"],
   "shapes": [
-  { "id": "http://schema.example/#schema1#S3",
+  { "id": "http://schema.example/schema1#S3",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p3",
-      "valueExpr": "http://schema.example/#schema1#S1", "min": 0,
+      "valueExpr": "http://schema.example/schema1#S1", "min": 0,
     } } ] }
 </pre>
-              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                          
+              <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
 
-IMPORT &lt;http://schema.example/#schema2&gt; &lt;http://schema.example/#schema3&gt;
+IMPORT &lt;http://schema.example/schema2&gt; &lt;http://schema.example/schema3&gt;
 
-&lt;http://schema.example/#schema1#S1&gt; {
+&lt;http://schema.example/schema1#S1&gt; {
 
-  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/schema1#S2&gt;
 
 
 <span class="label">schema2:</span>
 
-IMPORT &lt;http://schema.example/#schema3&gt;
+IMPORT &lt;http://schema.example/schema3&gt;
 
-&lt;http://schema.example/#schema1#S2&gt; {
+&lt;http://schema.example/schema1#S2&gt; {
 
-  &lt;http://schema.example/#p2&gt; @&lt;http://schema.example/#schema1#S3&gt;
+  &lt;http://schema.example/#p2&gt; @&lt;http://schema.example/schema1#S3&gt;
 
 
 <span class="label">schema3:</span>
 
-IMPORT &lt;http://schema.example/#schema1&gt;
+IMPORT &lt;http://schema.example/schema1&gt;
 
-&lt;http://schema.example/#schema1#S3&gt; {
+&lt;http://schema.example/schema1#S3&gt; {
 
-  &lt;http://schema.example/#p3&gt; @&lt;http://schema.example/#schema1#S1&gt;?
+  &lt;http://schema.example/#p3&gt; @&lt;http://schema.example/schema1#S1&gt;?
 
  </pre>
             </div>
@@ -1694,36 +1694,36 @@ IMPORT &lt;http://schema.example/#schema1&gt;
             <div class="repchoice incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/#schema2"],
+  "imports": ["http://schema.example/schema2"],
   "shapes": [
-  { "id": "http://schema.example/#schema1#S1",
+  { "id": "http://schema.example/schema1#S1",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
-      "valueExpr": "http://schema.example/#schema1#S2"
+      "valueExpr": "http://schema.example/schema1#S2"
     } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema",
-  <span class="lookit">"start": "http://schema.example/#schema1#S2"</span>,
+  <span class="lookit">"start": "http://schema.example/schema1#S2"</span>,
   "shapes": [
-  { "id": "http://schema.example/#schema1#S2",
+  { "id": "http://schema.example/schema1#S2",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p2"
     } } ] }
 </pre>
               <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                   
 
-IMPORT &lt;http://schema.example/#schema2&gt;
+IMPORT &lt;http://schema.example/schema2&gt;
 
-&lt;http://schema.example/#schema1#S1&gt; {
+&lt;http://schema.example/schema1#S1&gt; {
 
-  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/schema1#S2&gt;
 
 }
 <span class="label">schema2:</span>
 
-<span class="lookit">start=@&lt;http://schema.example/#schema1#S2&gt;</span>
+<span class="lookit">start=@&lt;http://schema.example/schema1#S2&gt;</span>
 
-&lt;http://schema.example/#schema1#S2&gt; {
+&lt;http://schema.example/schema1#S2&gt; {
 
   &lt;http://schema.example/#p2&gt; .
 }
@@ -1741,51 +1741,51 @@ IMPORT &lt;http://schema.example/#schema2&gt;
             <div class="repchoice error incomplete">
               <pre class="json nohighlight"><span class="label">schema1:</span>
 { "type": "Schema",
-  "imports": ["http://schema.example/#schema2"],
+  "imports": ["http://schema.example/schema2"],
   "shapes": [
-  { "id": "http://schema.example/#schema1#S1",
+  { "id": "http://schema.example/schema1#S1",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
-      "valueExpr": "http://schema.example/#schema1#S2"
+      "valueExpr": "http://schema.example/schema1#S2"
     } } ] }
 <span class="label">schema2:</span>
 { "type": "Schema",
 <span class="lookit">"startActs": [ { "type": "semAct",
-                 "name": "http://schema.example/#schema1#A1" } ]</span>,
+                 "name": "http://schema.example/schema1#A1" } ]</span>,
   "shapes": [
-  { <span class="lookit">"id": "http://schema.example/#schema1#S1"</span>,
+  { <span class="lookit">"id": "http://schema.example/schema1#S1"</span>,
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p1",
-      "valueExpr": "http://schema.example/#schema1#S2"
+      "valueExpr": "http://schema.example/schema1#S2"
     } },
-  { "id": "http://schema.example/#schema1#S2",
+  { "id": "http://schema.example/schema1#S2",
     "type": "Shape", "expression": {
       "type": "TripleConstraint", "predicate": "http://schema.example/#p2",
-      "valueExpr": <span class="lookit">"http://schema.example/#schema1#S3"</span>
+      "valueExpr": <span class="lookit">"http://schema.example/schema1#S3"</span>
     } } ] }
 </pre>
               <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                   
 
-IMPORT &lt;http://schema.example/#schema2&gt;
+IMPORT &lt;http://schema.example/schema2&gt;
 
-&lt;http://schema.example/#schema1#S1&gt; {
+&lt;http://schema.example/schema1#S1&gt; {
 
-  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/schema1#S2&gt;
 
 }
 <span class="label">schema2:</span>
 
-<span class="lookit">%@&lt;http://schema.example/#schema1#A1&gt;%</span>
+<span class="lookit">%@&lt;http://schema.example/schema1#A1&gt;%</span>
 
 
-<span class="lookit">&lt;http://schema.example/#schema1#S1&gt;</span> {
+<span class="lookit">&lt;http://schema.example/schema1#S1&gt;</span> {
 
-  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/#schema1#S2&gt;
+  &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/schema1#S2&gt;
 
 }
-&lt;http://schema.example/#schema1#S2&gt; {
+&lt;http://schema.example/schema1#S2&gt; {
 
-  &lt;http://schema.example/#p2&gt; <span class="lookit">@&lt;http://schema.example/#schema1#S3&gt;</span>
+  &lt;http://schema.example/#p2&gt; <span class="lookit">@&lt;http://schema.example/schema1#S3&gt;</span>
 
 }
 </pre>
@@ -1794,9 +1794,9 @@ IMPORT &lt;http://schema.example/#schema2&gt;
             This import fails because:
           </p>
           <ul>
-            <li><code>&lt;http://schema.example/#schema1#S1&gt;</code> has conflicting definitions and</li>
+            <li><code>&lt;http://schema.example/schema1#S1&gt;</code> has conflicting definitions and</li>
             <li>an included schema has a <code>start</code> directive and</li>
-            <li>the reference to <code>&lt;http://schema.example/#schema1#S3&gt;</code> is not resolvable after imports.</li>
+            <li>the reference to <code>&lt;http://schema.example/schema1#S3&gt;</code> is not resolvable after imports.</li>
           </ul>
           </div>
     </section>
