@@ -57,7 +57,7 @@ function prepRep (elts, cls) {
     if (!container.hasClass("incomplete")) {
       try {
         let shexjStr = container.find("pre.json").text()
-        let shexj = ShEx.Util.ShExJtoAS(JSON.parse(shexjStr))
+        let shexj = JSON.parse(shexjStr)
         let shexcStr =
             "PREFIX ex: <http://schema.example/#>\n" +
             "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
@@ -66,7 +66,7 @@ function prepRep (elts, cls) {
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX Test: <http://shex.io/extensions/Test/>\n" +
             container.find("pre.shexc").text()
-        let shexc = ShEx.Parser.construct("http://schema.example/schema1").parse(shexcStr)
+        let shexc = shexParser.construct("http://schema.example/schema1").parse(shexcStr)
         delete shexc.prefixes
         delete shexc.base
         if (!deepEquals(shexj, shexc)) {
