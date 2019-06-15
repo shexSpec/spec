@@ -1,0 +1,403 @@
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Shape Expressions ShExPath Language</title>
+    <!-- link rel="stylesheet" href="css/wgio.min.css"/ ask Iovka -->
+    <link rel="stylesheet" href="local.css"/>
+
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            async="async" class='remove'></script>
+    <script src="https://www.w3.org/2013/ShEx/demobits/jquery.min.js" type="text/javascript"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+      specStatus: "base",
+      shortName:  "shexpath",
+      editors: [
+      {   name:       "Eric Prud'hommeaux",
+      url:        "http://www.w3.org/Team/Eric",
+      company:    "Janeiro Digital, Micelio" }
+      ],
+      edDraftURI: "https://shexspec.github.io/spec/ShExPath",
+      // wg:           "Shape Expressions ",
+      // wgURI:        "https://shex.io/",
+      // wgPublicList: "public-shex-dev",
+      // wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/424242/status",
+      };
+    </script>
+    <style type="text/css">
+      em { font-weight: bold; }
+      .error { background-color: #fdd; }
+    </style>
+  </head>
+  <body>
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p>
+        ShEx is a schema language for RDF graphs. It provides structural constraint on graph structures and lexical forms of literals.
+        ShExPath addresses elements in a ShEx schema.
+        This can be used to anchor validation results, identify regions of RDF graphs, or tie external annotations to elements in a schema.
+      </p>
+    </section>
+
+    <section id="scope">
+      <h2>Scope</h2>
+      <p>
+        ShExPath identifies <a href="">Shape Expressions</a> and <a href="">Triple Expressions</a>.
+        It does not, on its own, identify portions of <a href="">Node Constraint</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Document Conventions</h2>
+      <p>
+        This specification describes the structure of ShEx schemas in terms of <a href="http://shex.io/shex-semantics/index.html#shexj">ShExJ</a>.
+        Elements in the ShExJ are addressed in a javascript notation, e.g. <code>S.shapes[N]</code>.
+      </p>
+    </section>
+
+    <section id="data-model">
+      <h2>Data Model</h2>
+      <p>
+        A ShExPath is a Unicode string which defines a traversal of a Shape Expressions schema.
+      </p>
+      <p>
+        An <dfn>item</dfn> is one of these elements from a Shape Expressions schema:
+      </p>
+      <ul>
+        <li>some shape expression:<ul>
+        <li>a ShapeAnd expression</li>
+        <li>a ShapeOr expression</li>
+        <li>a ShapeNot expression</li>
+        <li>a NodeConstraint</li>
+        <li>a Shape</li>
+      </ul>some triple expression:<ul>
+        <li>an EachOf triple expression</li>
+        <li>a OneOf triple expression</li>
+        <li>a Triple Constraint</li>
+      </ul></li>
+      </ul>
+      <p>
+        A <dfn>value</dfn> is a sequence of <a>items</a>.
+      </p>
+      <p class="issue">This specification uses XPath's notion of <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-item">item</a>, <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-value">value</a>, <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-step">step</a> and <a href="https://www.w3.org/TR/2014/REC-xpath-30-20140408/#dt-singleton">singleton</a> to leverage shared understanding. Would other terms be more useful?</p>
+      <p class="issue">is a value a set?</p>
+      <p>
+        A <dfn>singleton</dfn> is a sequence of exactly one <a>item</a>.
+      </p>
+      <p class="issue">Do we some way to say a singleton is expected?
+      This would be useful at end to say ShExPath should specify a single item, but also useful earlier in path for debugging.</p>
+      <p>
+        A <dfn>context label</dfn> identifies the expected element type in the ShExJ where each <a>item</a> should be.
+        The context labels are: <code>ShapeAnd</code> | <code>ShapeOr</code> | <code>ShapeNot</code> | <code>EachOf</code> | <code>OneOf</code> | <code>NodeConstraint</code> | <code>TripleConstraint</code>.
+      </p>
+      <p>
+        A <dfn>index</dfn> may be an integer <code>i</code>, RDF node (URL or blank node label) <code>N</code> with an optional integer <code>Ni</code>.
+        Integer indexes are 1-based accessors to array elements in a schema.
+        Out of range indexes are ignored (they do not contribute any new <a>items</a> to a result <a>value</a>).
+        The function <dfn>evaluateIndex</dfn> maps a <a>value</a> to a new <a>value</a>:
+      </p>
+      <ul>
+        <li>For each <a>item</a> <code>I</code> in <a>value</a>:
+        <ul>
+          <li>If I.type = "Schema",
+          <ul>
+            <li>If i, add I.shapes[i-1] to the new value.</li>
+            <li>Otherwise, if there exists a shape expression <code>E</code> in I.shapes with E.id = N and there is no <code>Ni</code> or <code>Ni</code> = 1, add <code>E</code> to the new value</li>
+          </ul></li>
+          <li>If I.type = "ShapeOr" or I.type = "ShapeAnd",
+          <ul>
+            <li>If i, add I.shapeExprs[i-1] to the new value.</li>
+          </ul></li>
+          <li>If I.type = "ShapeNot",
+          <ul>
+            <li>If i and i = 1, add I.shapeExpr to the new value.</li>
+          </ul></li>
+          <li>If I.type = "NodeConstraint", ignore the index.</li>
+          <li>If I.type = "Shape",
+          <ul>
+            <li>if I has an expression, add the results of <a>evaluateIndex</a>(I.expression) to new value.</li>
+          </ul></li>
+          <li>If I.type = "EachOf" or I.type = "OneOf"
+          <ul>
+            <li>If i, add I.expressions[i] to the new value.</li>
+            <li>Otherwise,
+            <ul>
+              <li>Let <code>TCs</code> be the (possibly empty) set of triple constraints the shape expression I.expressions with a predicate of N.</li>
+              <li>If Ni, add TCs[Ni] to new value.</li>
+              <li>Otherwise, add TCs to new value</li>
+            </ul></li>
+          </ul></li>
+          <li>If I.type = "TripleConstraint" <span class="issue">can we get here?</span>
+          <ul>
+            <li>If i and i = 1, add I to new value.</li>
+            <li>Otherwise, if N = I.predicate and there is no <code>Ni</code> or <code>Ni</code> = 1, add <code>I</code> to the new value</li>
+          </ul></li>
+        </ul></li>
+      </ul>
+      <p class="issue">
+        ShExPath indexes are 1-based, following XPath's precedent. Change to 0-based?
+      </p>
+      <p>
+        A ShExPath is divided into <dfn>steps</dfn> (see StepExpr [@@ add link when grammar is markup] in the <a href="grammar">grammar</a>).
+        The initial step may be the character <code>/</code>.
+        All following steps are separated by <code>/</code> and include an optional <a>context label</a> followed by a required <a>index</a>.
+      </p>
+      <p>
+        <dfn>evaluateShExPath</dfn> takes as arguments a ShExPath <code>P</code>, a schema <code>S</code> and an initial <a>value</a> <code>V</code>.
+        It iteratively calls <a>evaluateStep</a> with each <a>step</a> and either the initial value or the results of the last invocation of <a>evaluateStep</a>.
+      </p>
+      <p>
+        <dfn>evaluateStep</dfn>(P, S, V) is a function that takes as arguments a ShExPath <code>P</code>, schema <code>S</code> and a value <code>V</code> and produces a new <a>value</a>.
+        The operators are evaluated as follows:
+      .</p>
+      <table>
+        <thead>
+          <th><a>step</a></th> <th>action</th>
+        </thead>
+        <tbody>
+        <tr>
+          <td><code>/</code></td> <td><code>value</code> = the list of shapes in the schema</td>
+        </tr>
+        <tr>
+          <td><a>context label</a></td> <td>the items in <code>value</code> are tested for alignment with the <a>context label</a>.
+          It is a fatal error if the <code>item</code> is not the same as the <a>context label</a>.
+          This does not change the <code>value</code>.
+          <p class="issue">is an error or just a filter?</p>
+          </td>
+        </tr>
+        <tr>
+          <td><code><a>index</a></code></td> <td><code>value</code> = <a>evaluateIndex</a>(index, <code>value</code>)</td>
+        </tr>
+        <tr>
+          <td><i>empty string</i></td> <td>the evaluation is terminated, the result is <code>value</code>.</td>
+        </tr>
+
+
+        </tbody>
+      </table>
+      <div class="issue">
+        <p>
+          Should we advance through ShapeAnd automagically? This requires more aggressive searching but maybe that's worth it.
+          This would be useful when shape expr is a ShapeAnd of node constraint and a shape:
+        </p>
+        <pre>
+&lt;#UserShape&gt; IRI /User\?id=[0-9]+/ {
+  foaf:mbox IRI
+}
+        </pre>
+        Compare <code>@&lt;#UserShape&gt;/2/foaf:mbox</code> with <code>@&lt;#UserShape&gt;/foaf:mbox</code>.
+      </div>
+    </section>
+
+    <section id="issueExample">
+      <h2>Issue Example</h2>
+      <p>
+        This schema excerpt describes an issue that might appear in an issue tracking system. 
+      </p>
+      <pre class="example">
+&lt;#IssueShape&gt; {
+  :name STRING MinLength 4;
+  :category ["bug" "feature request"];
+  :postedBy @&lt;#UserShape>;
+  :processing {
+    :reproduced [true false];
+    :priority xsd:integer
+  }?
+}
+
+&lt;#UserShape&gt; IRI /User\?id=[0-9]+/ {
+  (  foaf:name xsd:string
+   | foaf:givenName +;
+     foaf:familyName            
+  );
+  foaf:mbox IRI
+}
+      </pre>
+    </section>
+    <section id="simple-access">
+      <h2>Simple Access</h2>
+      <p>
+        Elements can be addressed either by label or index.
+        For shape expressions, the label is the name of the shape expression.
+        Shape expression labels or indexes are prefixed by "<code>@</code>".
+        For triple constraints, the label is the name of the predicate for that triple constraints.
+        Elements of triple expressions may be selected by index within the triple expression.
+      </p>
+      <table class="example">
+        <thead>
+          <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+        </thead>
+        <tbody>
+          <tr><td>/@&lt;#IssueShape&gt;/:category</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>name</em> of the shape expression followed by the <em>name</em> of the <code>:category</code> property.</td></tr>
+          <tr><td>/@&lt;#IssueShape&gt;/2</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>name</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
+          <tr><td>/@1/2</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>index</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
+        </tbody>
+      </table>
+      <section id="context-tests">
+        <h3>Nested Expressions</h3>
+        <p>
+          A traversal through a schema, for instance, the results of a validation, can be expressed as a ShExPath.
+          Such a ShExPath can include shape references in value expressions.
+          These are can be appended to the triple expression path with a <code>/</code> separator.
+        </p>
+        <table class="example">
+          <thead>
+            <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+          </thead>
+          <tbody>
+          <tr><td>/@&lt;#IssueShape&gt;/:postedBy/@&lt;#UserShape&gt;/foaf:mbox</td><td>the <code>:postedBy</code> constraint in the <code>#IssueShape</code> shape, which then references the <code>:category</code> property in the <code>#UserShape</code>.</td></tr>
+          <tr><td>/@1/3/@2/2</td><td>the same path, but with ordinals.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+
+    <section id="context-tests">
+      <h2>Context Tests</h2>
+      <p>
+        For added clarity and confidence, the ShExJ type of all shape expressions and triple expressions addressable can be tested.
+        If the expression type is specified and does not match the corresponding type in the schema, the path is invalid.
+      </p>
+
+      <section id="shape-expressions">
+        <h3>Shape Expressions</h3>
+        <p>
+          The axes <code>ShapeAnd</code>, <code>ShapeOr</code>, <code>ShapeNot</code>, <code>EachOf</code>, <code>OneOf</code>, <code>NodeConstraint</code> and <code>TripleConstraint</code> may be used to specify the expected expression type.
+        </p>
+        <table class="example">
+          <thead>
+            <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+          </thead>
+          <tbody>
+            <tr><td>/@&lt;#UserShape&gt;/shapeAnd 2/foaf:mbox</td><td>the <code>foaf:mbox</code> constraint in <code>#UserShape</code>'s shape.
+            Note that <code>IRI /User\?id=[0-9]+/ {...}</code> compiles to a <code>ShapeAnd</code> with the first component a <code>NodeConstraint</code> and the second being a shape..
+            </td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="triple-expressions">
+        <h3>Triple Expressions</h3>
+        <p>
+          The axes <code>EachOf</code>, <code>OneOf</code> and <code>TripleConstraint</code> may be used to specify the expected expression type.
+        </p>
+        <table class="example">
+          <thead>
+            <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+          </thead>
+          <tbody> 
+            <tr><td>/1/ShapeAnd 2/EachOf 2</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, explicitly labeling the <em>index</em> axes.</td></tr>
+            <tr><td>/&lt;#UserShape&gt;/2/EachOf 1/OneOf 2</td><td>the <code>EachOf</code> containing <code>foaf:givenName</code> and <code>foaf:familyName</code> in the <code>#UserShape</code> shape.</td></tr>
+            <tr><td>/&lt;#UserShape&gt;/2/EachOf 1/EachOf 2</td><td class="error">invalid path for the given schema.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </section>
+
+    <section id="relative-shexpaths">
+      <h2>Relative ShExPaths</h2>
+      <p>
+        Invocation of <a>evaluateShExPath</a> includes a <a>value</a>.
+        ShExPaths starting with a <code>/</code> force the context to be the schema.
+        If the <a>value</a> is a schema, indexes access entries in the ShExJ <code>.shapes</code> property.
+        The application may provide a different <a>value</a>.
+        A <dfn>context path</dfn> is a ShExPath which, when evaluated against the schema, produces an equivalent <a>value</a>.
+        For instance validation results MAY be reported using relative ShExPaths.
+      </p>
+      <table class="example">
+        <thead>
+          <th style="min-width: 2em;">Context</th> <th style="min-width: 7em;">ShExPath</th> <th>value</th>
+        </thead>
+        <tbody>
+          <tr><td>/@&lt;#IssueShape&gt;</td><td>:category</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape.</td ></tr>
+        </tbody>
+      </table>
+      <p>
+        Relative ShExPaths can be concatonated to their context with <code>/</code> separator.
+      </p>
+    </section>
+
+    <section id="disambiguation">
+      <h2>Disambiguation</h2>
+      <p>
+        If more than one triple constraint has the same predicate, they can be indexed by the order they would be encountered in a depth-first search.
+        If the index is omitted, it is assumed to be 1.
+      </p>
+      <pre class="example">
+&lt;BPObs&gt;  {
+  :component { code: "systolic"; value: xsd:double };
+  :component { code: "diastolic"; value: xsd:double };
+  :component { code: "posture"; value: @&lt;Postures&gt; }?;
+}
+      </pre>
+      <table class="example">
+        <thead>
+          <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+        </thead>
+        <tbody>
+          <tr><td>/&lt;BPObs&gt;/:component 3</td><td>the third <code>:component</code> triple expression (the one expecting a code of "posture").</td></tr>
+          <tr><td>/&lt;BPObs&gt;/:component</td><td>the first <code>:component</code> triple expression (the one expecting a code of "systolic").</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="grammar">
+      <h2>Grammar</h2>
+      <p>
+        [<a href="https://services.w3.org/yacker/uploads/ShExPath?lang=perl">Try it in yacker</a>], e.g. this <a href="https://services.w3.org/yacker/uploads/ShExPath?lang=perl&text=%2F%40%3Chttp%3A%2F%2Fa.example%2FShape1%3E%2FShapeAnd+1%2F1%2Fx%3Ay1+2%2FShapeOr+2%2F%40sch%3AShape2&amp;action=validate+text">nested validation result test</a>.
+      </p>
+      <pre>
+ShExPathExpr             ::= AbsolutePathExpr | RelativePathExpr
+AbsolutePathExpr         ::= "/" RelativePathExpr
+RelativePathExpr         ::= StepExpr ("/" StepExpr)*
+<dfn>StepExpr</dfn>                 ::= ContextTest? ExprIndex
+ContextTest              ::= ShapeExprContext | TripleExprContext
+ShapeExprContext         ::= "ShapeAnd" | "ShapeOr" | "ShapeNot"
+                           | "NodeConstraint" | "Shape"
+TripleExprContext        ::= "EachOf" | "OneOf" | "TripleConstraint"
+ExprIndex                ::= ShapeExprIndex | TripleExprIndex
+ShapeExprIndex           ::= "@" (INTEGER | ShapeExprLabel)
+ShapeExprLabel           ::= iri | BLANK_NODE_LABEL
+TripleExprIndex          ::= INTEGER | TripleExprLabel
+TripleExprLabel          ::= (iri | BLANK_NODE_LABEL) INTEGER?
+[136s]  iri              ::= IRIREF | prefixedName
+[137s]  prefixedName     ::= PNAME_LN | PNAME_NS
+
+@terminals
+[18t]   IRIREF           ::= '&lt;' ([^#x00-#x20&lt;&gt;\"{}|^`\\] | UCHAR)* '&gt;'
+[140s]  PNAME_NS         ::= PN_PREFIX? ':'
+[141s]  PNAME_LN         ::= PNAME_NS PN_LOCAL
+[142s]  BLANK_NODE_LABEL ::= '_:' (PN_CHARS_U | [0-9]) ((PN_CHARS | '.')* PN_CHARS)?
+[19t]   INTEGER          ::= [+-]? [0-9]+
+[26t]   UCHAR            ::= '\\u' HEX HEX HEX HEX
+                           | '\\U' HEX HEX HEX HEX HEX HEX HEX HEX
+[160s]  ECHAR            ::= '\\' [tbnrf\\\"\']
+[164s]  PN_CHARS_BASE    ::= [A-Z] | [a-z]
+                           | [#x00C0-#x00D6] | [#x00D8-#x00F6] | [#x00F8-#x02FF]
+                           | [#x0370-#x037D] | [#x037F-#x1FFF]
+                           | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF]
+                           | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD]
+                           | [#x10000-#xEFFFF]
+[165s]  PN_CHARS_U       ::= PN_CHARS_BASE | '_'
+[167s]  PN_CHARS         ::= PN_CHARS_U | '-' | [0-9]
+                           | [#x00B7] | [#x0300-#x036F] | [#x203F-#x2040]
+[168s]  PN_PREFIX        ::= PN_CHARS_BASE ((PN_CHARS | '.')* PN_CHARS)?
+[169s]  PN_LOCAL         ::= (PN_CHARS_U | ':' | [0-9] | PLX)
+                             ((PN_CHARS | '.' | ':' | PLX)*
+                             (PN_CHARS | ':' | PLX))?
+[170s]  PLX              ::= PERCENT | PN_LOCAL_ESC
+[171s]  PERCENT          ::= '%' HEX HEX
+[172s]  HEX              ::= [0-9] | [A-F] | [a-f]
+[173s]  PN_LOCAL_ESC     ::= '\\' ('_' | '~' | '.' | '-' | '!' | '$' | '&amp;' | "'"
+                           | '(' | ')' | '*' | '+' | ',' | ';' | '=' | '/' | '?'
+                           | '#' | '@' | '%')
+        </pre>
+        <p class="issue">
+          This grammar does not ensure that an absolute path start with a ShapeExprLabel and ShapeExprContext, which would require duplication of the <code>RelativePathExpr</code> and <code>StepExpr</code> productions.
+          Nor does it ensure a striping between a shape expression labels, triple expression labels, and any nested shape expression labels in triple expression value expressions.
+        </p>
+      </section>
+  </body>
+</html>
