@@ -5180,7 +5180,8 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td><code class="production directive">PASSED TOKENS</code></td>
 <td>   ::=   </td>
 <td>   <code class="content">[ \t\r\n]+<br/>
-| "#" [^\r\n]*</code></td>
+| "#" [^\r\n]*<br />
+| "/*" ([^*] | '*' ([^/] | '\\/'))* "*/"</code></td>
 </tr>
 </tbody>
 
