@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Shape Expressions Interface</title>
+    <!-- link rel="stylesheet" href="css/wgio.min.css"/ ask Iovka -->
+    <link rel="stylesheet" href="local.css"/>
+
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            async="async" class='remove'></script>
+    <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+      localBiblio: {
+        "shex-vocab": {
+          "authors": ["Gregg Kellogg"],
+          "title": "Shape Expression Vocabulary",
+          "href":  "http://www.w3.org/ns/shex#"
+        }
+      },
+      specStatus:     "ED",
+      shortName:      "shex-api",
+      edDraftURI:     "https://shexspec.github.io/spec/API",
+      testSuiteURI:   "https://github.com/shexSpec/shexTest",
+      issueBase:      "https://github.com/shexSpec/shex/issues",
+      githubAPI:      "https://api.github.com/repos/shexSpec/shex",
+      editors: [
+        { name:       "Gregg Kellogg",
+          url:        "http://greggkellogg.net/",
+          company:    "Spec-Ops",
+          companyURL: "https://spec-ops.io/",
+          w3cid:      "44770" },
+        { name:       "Eric Prud'hommeaux",
+          url:        "http://www.w3.org/People/Eric/",
+          company:    "W3C/MIT",
+          companyURL: "http://www.w3.org/" },
+      ],
+      wg:           "Shape Expressions Community Group",
+      wgURI:        "https://www.w3.org/community/shex/",
+      wgPublicList: "public-shex",
+      //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
+
+      bugTracker:             {
+        open: "https://github.com/shexSpec/shex/issues",
+        new:  "https://github.com/shexSpec/shex/issues/new"
+      },
+
+      otherLinks: [{
+        key: "Version control",
+        data: [{
+          value: "Github Repository",
+          href: "https://github.com/shexSpec/spec"
+        }]
+      }],
+      };
+    </script>
+
+    <script type="text/javascript" src="scripts.js"></script>
+  </head>
+  
+  <body>
+    <section id="abstract">
+      <p>
+        The Shape Expressions (ShEx) language describes <a>RDF nodes</a> and <a>graph</a> structures.
+        A <span class="math">node constraint</span> describes an RDF node (<a>IRI</a>, <a>blank node</a> or <a>literal</a>) and a <span class="math">shape</span> describes the <a>triples</a> involving nodes in an <a>RDF graph</a>.
+        These descriptions identify <a data-lt="predicate">predicates</a> and their associated cardinalities and datatypes.
+        ShEx shapes can be used to communicate data structures associated with some process or interface, generate or validate data, or drive user interfaces.
+      </p>
+      <p>
+        This document defines programming and REST interfaces for instantiating and executing validation services.
+        This includes the use of ShapeMaps to bind RDF data to ShEx schemas.
+        See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of shape maps.
+      </p>
+    </section>
+
+    <section id="sotd">
+      <p>This document will be presented to the
+      <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>.
+      </p>
+
+    </section>
+
+    <section id="introduction">
+      <h2>Introduction</h2>
+      <p>
+        The Shape Expressions (<dfn>ShEx</dfn>) language provides a structural schema for RDF data.
+        This can be used to document APIs or datasets, aid in development of API-conformant messages, minimize defensive programming, guide user interfaces, or anything else that involves a machine-readable description of data organization and typing requirements.
+      </p>
+      <p>
+        A practical use of ShEx is to test nodes in RDF nodes for conformance with shape expressions.
+        This document defines interfaces for doing that.
+      </p>
+      <p>To understand the programatic interface described in this specification and how it is
+        intended to operate in a programming environment, it is useful to have working
+        knowledge of WebIDL [[WebIDL]]. To understand how ShEx relates to RDF, it is helpful to be
+        familiar with the basic RDF concepts [[RDF11-CONCEPTS]].</p>
+    </section>
+
+    <section id="terminology">
+      <h2>Terminology</h2>
+      <p>The ShEx interface is defined using terms from RDF semantics [[!rdf11-mt]]:</p>
+      <ul>
+        <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <a>IRI</a>, <dfn data-cite="rdf11-concepts#dfn-blank-node">blank node</dfn>, <dfn data-cite="rdf11-concepts#dfn-literal">literal</dfn></li>
+        <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
+      </ul>
+      <p class="issue">For the purposes of the <a>ShExProcessor</a> interface,
+        a <dfn data-cite="ECMASCRIPT-6.0#sec-promise-objects" data-lt="promises">promise</dfn>
+        is an object that represents the eventual result of a single asynchronous operation.
+        Promises are defined in [[ECMASCRIPT-6.0]].</p>
+    </section>
+
+    <section id="conformance">
+      <p>Conformance criteria are relevant to authors and authoring tool implementers. As well
+        as sections marked as non-normative, all authoring guidelines, diagrams, examples,
+        and notes in this specification are non-normative. Everything else in this
+        specification is normative.</p>
+
+      <!-- ul>
+        <li>A <a>ShapeMap</a> document complies with this specification if it
+          conforms to the grammar described in <a href="#grammar" class="sectionRef"></a> resulting
+          in a valid <a>ShapeMap</a> structure.</li>
+      </ul -->
+    </section>
+
+    <section id="shapemap-structure">
+      <h2>ShapeMap structure</h2>
+      <p>
+        The ShEx specification defines two forms of <dfn data-cite="./#shape-map" data-lt="shapemap">ShapeMaps</dfn>:
+      </p>
+      <ul>
+        <li><dfn data-cite="./#dfn-fixed-shapemap" data-lt="fixed ShapeMap">fixed ShapeMap</dfn>: a ShapeMap in which all <dfn data-cite="rdf11-concepts#dfn-iri" data-lt="iri">IRIs</dfn> are absolute, and all shape expression identifiers are either a label that appears in the schema or, when relating to schemas which have a <dfn>start shape</dfn>, the value <code>start shape</code>.</li>
+        <li><dfn data-cite="./#dfn-annotated-shapemap" data-lt="annotated ShapeMap">annotated ShapeMap</dfn>: a ShapeMap with the <code>node</code> and <code>shape</code> properties of a fixed ShapeMap and unspecified extra properties.</li>
+      </ul>
+      <p class="leadup">
+        A <dfn data-cite="shex-semantics#dfn-shapemap" data-lt="result shapemap|result shape-map">result ShapeMap</dfn>: has the following properties:
+      </p>
+      <ul class="followup">
+        <li class="         leadup"><dfn>node</dfn>: an <a>RDF node</a> or a <a>node selector</a>.</li>
+        <li class="followup leadup"><dfn>shape</dfn>: a <a>ShEx shape expression</a>.</li>
+        <li class="followup leadup"><dfn>status</dfn>: <em>[default="conformant"]</em> "conformant" | "nonconformant".</li>
+        <li class="followup leadup"><dfn>reason</dfn>: <em>[optional]</em> a string stating a reason for failure or success.</li>
+        <li class="followup       "><dfn>appInfo</dfn>: <em>[optional]</em> application-specific JSON-LD structure</li>
+      </ul>
+
+      <p>
+        If the <a>status</a> property is absent, the <a>status</a> is assumed to be "conformant".
+        The <a>reason</a> and <a>appInfo</a> properties may also be absent but have no default value. 
+      </p>
+
+      <p>
+        A <dfn>node selector</dfn> is a subset of a <dfn data-cite="sparql11-query#sparqlTriplePatterns">SPARQL triple pattern</dfn> with these restrictions:
+      </p>
+      <ul>
+        <li><code>V</code> (the set of variables) is either a fresh variable or a known token to identify the <a>focus node</a>.</li>
+        <li>The focus node token appears in either the subject or the object position.</li>
+        <li>The predicate position is filled by an IRI (<code>I</code> in the SPARQL definitions).</li>
+          <li>Each optional focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>,
+            <span class="math">m</span> has a <a>start</a> <a>shapeExpr</a> <span class="math">se</span>, and
+            <code class="function">satisfies(<span class="math">f<sub>i</sub></span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">m</span>)</code>.<span class="issue">adjust to fit in this doc</span></li>
+      </ul>
+
+      <p>
+        A <dfn>query ShapeMap</dfn> is a ShapeMap with only a <a>node</a>, <a>shape</a> and possibly a <a>status</a> property.
+        A query ShapeMap with a status must have a status of <code>"conformant"</code> or <code>"nonconformant"</code>.
+      </p>
+
+      <p>
+        A <dfn>ground ShapeMap</dfn> is a ShapeMap in which all <a>node selector</a>/shape pairs have been replaced by a set of zero or more node/shape pairs.
+        The ShEx validation process takes as input a ground ShapeMap.
+      </p>
+      
+    </section>
+
+    <section id="APIasync">
+      <h2>async Application Programming Interface</h2>
+
+      <p>
+        This API provides a clean mechanism that enables developers to determine conformance of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.
+      </p>
+
+      <p>
+        Each function in the ShEx API defines a set of <dfn data-lt="result">results</dfn> and <dfn data-lt="error">errors</dfn>.
+        Errors are identified by their <a data-link-for="ShExError">error code</a>.
+      </p>
+
+      <section class="informative">
+        <h3>The <dfn>ShExProcessor</dfn> Interface</h3>
+
+        <p>The <a>ShExProcessor</a> interface is the high-level programming structure
+          that developers use to determine
+          <a>conformance</a> of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.
+          All input parameters are static; meaning they are not modified by any defined API opperation.
+        </p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          [Constructor]
+          interface ShExProcessor {
+            Schema parseSchema(
+              (USVString or RDFGraph) schemastring,
+              optional ShExParserOptions? options);
+            RDFGraph parseData(
+              (USVString) datastring,
+              optional DataParserOptions? options);
+            fixedShapeMap resolveShapeMap(
+              queryShapeMap map,
+              optional Graph? data);
+            resultShapeMap validate(
+              Schema schema,
+              RDFGraph graph,
+              fixedShapeMap shapeMap,
+              optional ShExOptions? options);
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-lt="ShExProcessor.parseSchema" data-lt-noDefault>parseSchema</dfn></dt><dd>
+            Checks <a>conformance</a> of the given <a data-lt="ShExProcessor.parseSchema.graph">parseSchema.graph</a>
+            with <a data-lt="ShExProcessor.parseSchema.schema">parseSchema.schema</a> using
+            <a data-lt="ShExProcessor.parseSchema.shapeMap">parseSchema.shapeMap</a> according to
+            <a href="#validation-requirement" class="sectionRef"></a>.
+
+            <ol class="algorithm">
+              <li>If <a data-lt="ShExProcessor.validate.schema">validate.schema</a> has the form of
+                an <a>IRI</a>, set <em>schema</em> to the result of dereferencing
+                the IRI, treating the result as <a>ShExC</a>, <a>ShExJ</a>, or some
+                other RDF serialization, depending on the content-type of the result, and transforming
+                into the <a>ShExJ</a> abstract syntax for processing.</li>
+              <li>Otherwise, if a <a data-cite="WebIDL#idl-USVString">USVString</a>, <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is treated
+                as a string, and parsed into the <a>ShExJ</a> abstract syntax, using
+                <a data-link-for="ShExOptions">format</a> as a hint to determine the
+                content-type.</li>
+              <li>Otherwise, if an <a>RDF Graph</a>, <a>schema</a> is transforming
+                into the <a>ShExJ</a> abstract syntax for processing.</li>
+              <li>If <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is parsed
+                as <a>ShExC</a>, and a syntax error is found, reject <em>promise</em>
+                passing <a data-link-for="ShExErrorCode">syntax error</a>.</li>
+              <li>If a transformation to the <a>ShExJ</a> abstract syntax does not result in valid ShExJ,
+                reject <em>promise</em>, passing <a data-link-for="ShExErrorCode">invalid schema</a>.</li>
+            </ol>
+
+            <dl class="parameters">
+              <dt><dfn data-lt="ShExProcessor.validate.schema" data-lt-noDefault>schemastring</dfn></dt>
+              <dd>The ShEx Schema, either as a dereferencable <a>IRI</a> (URL), an inline data string, or an <a>RDF Graph</a>
+               which is transformed into the <a>ShExJ</a> abstract syntax.</dd>
+              <dd>A set of options to configure parsing.</dd>
+            </dl>
+          </dd>
+
+          <dt><dfn data-lt="ShExProcessor.parseData" data-lt-noDefault>parseData</dfn></dt><dd>
+            Checks <a>conformance</a> of the given <a data-lt="ShExProcessor.parseData.graph">parseData.graph</a>
+            with <a data-lt="ShExProcessor.parseData.data">parseData.data</a> using
+            <a data-lt="ShExProcessor.parseData.shapeMap">parseData.shapeMap</a> according to
+            <a href="#validation-requirement" class="sectionRef"></a>.
+
+            <ol class="algorithm">
+              <li>If <a data-lt="ShExProcessor.validate.graph">validate.graph</a> has the form of
+                an <a>IRI</a>, set <em>graph</em> to the result of dereferencing
+                the IRI, treating the result an <a>RDF Graph</a> serialization, depending on the content-type of the result.
+                Otherwise, <a data-lt="ShExProcessor.validate.graph">validate.graph</a> either is
+                an <a>RDF Graph</a>, or a processor should use other means to transform it into an <a>RDF Graph</a>.</li>
+            </ol>
+
+            <dl class="parameters">
+              <dt><dfn data-lt="ShExProcessor.validate.data" data-lt-noDefault>datastring</dfn></dt>
+              <dd>The ShEx Data, either as a dereferencable <a>IRI</a> (URL), an inline data string, or an <a>RDF Graph</a>
+               which is transformed into the <a>ShExJ</a> abstract syntax.</dd>
+              <dd>A set of options to configure parsing.</dd>
+            </dl>
+          </dd>
+
+          <dt><dfn data-lt="ShExProcessor.resolveShapeMap" data-lt-noDefault>resolveShapeMap</dfn></dt><dd>
+            Checks <a>conformance</a> of the given <a data-lt="ShExProcessor.resolveShapeMap.graph">resolveShapeMap.graph</a>
+            with <a data-lt="ShExProcessor.resolveShapeMap.data">resolveShapeMap.data</a> using
+            <a data-lt="ShExProcessor.resolveShapeMap.shapeMap">resolveShapeMap.shapeMap</a> according to
+            <a href="#validation-requirement" class="sectionRef"></a>.
+
+            <ol class="algorithm">
+              <li class="issue">parse queryShapeMap string or JSON doc (resolve prefixes?).</li>
+              <li class="issue">construct <a>fixedShapeMap</a> with each fixed pairs and replacing <a>node selector</a>s with their corresponding nodes.</li>
+            </ol>
+
+            <dl class="parameters">
+              <dt><dfn data-lt="ShExProcessor.validate.data" data-lt-noDefault>datastring</dfn></dt>
+              <dd>The ShEx Data, either as a dereferencable <a>IRI</a> (URL), an inline data string, or an <a>RDF Graph</a>
+               which is transformed into the <a>ShExJ</a> abstract syntax.</dd>
+              <dd>A set of options to configure parsing.</dd>
+            </dl>
+          </dd>
+
+          <dt><dfn data-lt="ShExProcessor.validate" data-lt-noDefault>validate</dfn></dt><dd>
+            Checks <a>conformance</a> of the given <a data-lt="ShExProcessor.validate.graph">validate.graph</a>
+            with <a data-lt="ShExProcessor.validate.schema">validate.schema</a> using
+            <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a> according to
+            <a href="#validation-requirement" class="sectionRef"></a>.
+
+            <ol class="algorithm">
+              <li>Process <em>schema</em> and <em>graph</em> according to the requirements in
+                <a href="#validation-requirement" class="sectionRef"></a>, creating <span class="math">shapeResults</span>,
+                a <a>ShapeResults</a> dictionary based on a copy of <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>
+                with entries added, as necessary, for each focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>
+                associated with <code>http://www.w3.org/ns/shex#Start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
+                conforms with the referenced <a data-link-for="" data-lt="shape">shape(s)</a>, and an optional message, describing details conformance,
+                and <em>promise</em> is fulfilled using <span class="math">shapeResults</span>.</li>
+              <li>If <em>graph</em> is found not to <a>conform</a> using
+                <em>schema</em> and <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>,
+                reject <em>promise</em>, passing <a data-link-for="ShExErrorCode">non-conforming graph</a>
+                along with <span class="math">shapeResults</span>.</li>
+            </ol>
+
+            <dl class="parameters">
+              <dt><dfn data-lt="ShExProcessor.validate.schema" data-lt-noDefault>schema</dfn></dt>
+              <dd>The ShEx Schema, either as a dereferencable <a>IRI</a> (URL), an inline data string, or an <a>RDF Graph</a>
+               which is transformed into the <a>ShExJ</a> abstract syntax.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.graph" data-lt-noDefault>graph</dfn></dt>
+              <dd>The graph to check <a>conformance</a> with, either as a a dereferencable <a>IRI</a> to some RDF serialization,
+                or as an accessable <a>RDF Graph</a>.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.shapeMap" data-lt-noDefault>shapeMap</dfn></dt>
+              <dd>A dictionary mapping a <a>node</a> in <a data-lt="ShExProcessor.validate.graph">validate.graph</a>
+                to one ore more <a>shapeExprLabel</a>.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.options" data-lt-noDefault>options</dfn></dt>
+              <dd>A set of options to configure the algorithms.</dd>
+            </dl>
+          </dd>
+        </dl>
+      </section> <!-- end of ShExProcessor -->
+
+      <p>
+        The rest of this follows sections <a href="#the-rdfgraph-type-1">6.2 - 6.5 in the orig API</a>.
+      </p>
+    </section>
+
+    <section id="API">
+      <h2>The Application Programming Interface</h2>
+
+      <p>This API provides a clean mechanism that enables developers to determine
+        conformance of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
+
+      <p>The ShEx API uses <a>Promises</a> to represent
+        the result of the various asynchronous operations.
+        <a data-cite="ECMASCRIPT-6.0#sec-promise-objects">Promises</a> are defined in [[ECMASCRIPT-6.0]].
+        General use within specifications can be found in [[promises-guide]].
+        <span class="note">When using promises, an <a>error</a> is reported as a rejected promise and a <a>result</a> is reported as an accepted promise.</span>
+      </p>
+
+      <section class="informative">
+        <h3>The <dfn>ShExProcessor</dfn> Interface</h3>
+
+        <p>The <a>ShExProcessor</a> interface is the high-level programming structure
+          that developers use to determine
+          <a>conformance</a> of <a>RDF Graphs</a> to a ShEx <a>Schema</a>.</p>
+
+        <p>It is important to highlight that implementations do not modify the input parameters.
+          If an error is detected, the <a>Promise</a> is
+          rejected passing a <a>ShExError</a> with the corresponding error
+          <a data-link-for="ShExError">code</a>.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          [Constructor]
+          interface ShExProcessor {
+            Promise<ShapeResults> validate(
+              (USVString or RDFGraph) schema,
+              (USVString or RDFGraph) graph,
+              ShapeMap shapeMap,
+              optional ShExOptions? options);
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-lt="ShExProcessor.validate" data-lt-noDefault>validate</dfn></dt><dd>
+            Checks <a>conformance</a> of the given <a data-lt="ShExProcessor.validate.graph">validate.graph</a>
+            with <a data-lt="ShExProcessor.validate.schema">validate.schema</a> using
+            <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a> according to
+            <a href="#validation-requirement" class="sectionRef"></a>.
+
+            <ol class="algorithm">
+              <li>Create a new <a>Promise</a> <em>promise</em> and return it. The
+                following steps are then executed asynchronously.</li>
+              <li>If <a data-lt="ShExProcessor.validate.schema">validate.schema</a> has the form of
+                an <a>IRI</a>, set <em>schema</em> to the result of dereferencing
+                the IRI, treating the result as <a>ShExC</a>, <a>ShExJ</a>, or some
+                other RDF serialization, depending on the content-type of the result, and transforming
+                into the <a>ShExJ</a> abstract syntax for processing.</li>
+              <li>Otherwise, if a <a data-cite="WebIDL#idl-USVString">USVString</a>, <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is treated
+                as a string, and parsed into the <a>ShExJ</a> abstract syntax, using
+                <a data-link-for="ShExOptions">format</a> as a hint to determine the
+                content-type.</li>
+              <li>Otherwise, if an <a>RDF Graph</a>, <a>schema</a> is transforming
+                into the <a>ShExJ</a> abstract syntax for processing.</li>
+              <li>If <a data-lt="ShExProcessor.validate.schema">validate.schema</a> is parsed
+                as <a>ShExC</a>, and a syntax error is found, reject <em>promise</em>
+                passing <a data-link-for="ShExErrorCode">syntax error</a>.</li>
+              <li>If a transformation to the <a>ShExJ</a> abstract syntax does not result in valid ShExJ,
+                reject <em>promise</em>, passing <a data-link-for="ShExErrorCode">invalid schema</a>.</li>
+              <li>If <a data-lt="ShExProcessor.validate.graph">validate.graph</a> has the form of
+                an <a>IRI</a>, set <em>graph</em> to the result of dereferencing
+                the IRI, treating the result an <a>RDF Graph</a> serialization, depending on the content-type of the result.
+                Otherwise, <a data-lt="ShExProcessor.validate.graph">validate.graph</a> either is
+                an <a>RDF Graph</a>, or a processor should use other means to transform it into an <a>RDF Graph</a>.</li>
+              <li>Process <em>schema</em> and <em>graph</em> according to the requirements in
+                <a href="#validation-requirement" class="sectionRef"></a>, creating <span class="math">shapeResults</span>,
+                a <a>ShapeResults</a> dictionary based on a copy of <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>
+                with entries added, as necessary, for each focus node <span class="math">f<sub>i</sub></span> in <a data-link-for="ShExOptions">focusNodes</a>
+                associated with <code>http://www.w3.org/ns/shex#Start</code> as a <a>shapeExprLabel</a>, a <a>BOOL</a> result value, depending on if the <a>node</a>
+                conforms with the referenced <a data-link-for="" data-lt="shape">shape(s)</a>, and an optional message, describing details conformance,
+                and <em>promise</em> is fulfilled using <span class="math">shapeResults</span>.</li>
+              <li>If <em>graph</em> is found not to <a>conform</a> using
+                <em>schema</em> and <a data-lt="ShExProcessor.validate.shapeMap">validate.shapeMap</a>,
+                reject <em>promise</em>, passing <a data-link-for="ShExErrorCode">non-conforming graph</a>
+                along with <span class="math">shapeResults</span>.</li>
+            </ol>
+
+            <dl class="parameters">
+              <dt><dfn data-lt="ShExProcessor.validate.schema" data-lt-noDefault>schema</dfn></dt>
+              <dd>The ShEx Schema, either as a dereferencable <a>IRI</a> (URL), an inline data string, or an <a>RDF Graph</a>
+               which is transformed into the <a>ShExJ</a> abstract syntax.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.graph" data-lt-noDefault>graph</dfn></dt>
+              <dd>The graph to check <a>conformance</a> with, either as a a dereferencable <a>IRI</a> to some RDF serialization,
+                or as an accessable <a>RDF Graph</a>.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.shapeMap" data-lt-noDefault>shapeMap</dfn></dt>
+              <dd>A dictionary mapping a <a>node</a> in <a data-lt="ShExProcessor.validate.graph">validate.graph</a>
+                to one ore more <a>shapeExprLabel</a>.</dd>
+              <dt><dfn data-lt="ShExProcessor.validate.options" data-lt-noDefault>options</dfn></dt>
+              <dd>A set of options to configure the algorithms.</dd>
+            </dl>
+          </dd>
+        </dl>
+      </section> <!-- end of ShExProcessor -->
+
+      <section class="informative">
+        <h3>The RDFGraph Type</h3>
+
+        <p>The <dfn>RDFGraph</dfn> type is describe an <a>RDF Graph</a> accessed
+          as described in <a href="#graph-access" class="sectionRef">Graph access</a>.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          interface RDFGraph {
+            void bgp();
+          };
+        --></pre>
+
+        <dl data-dfn-for="RDFGraph">
+          <dt><dfn>bgp</dfn></dt><dd>
+            Performs a <a data-cite="sparql11-query#BGPsparql">SPARQL Basic Graph Pattern</a> query on the graph.
+          </dd>
+        </dl>
+      </section> <!-- end RDFGraph -->
+
+      <section class="informative">
+        <h3>The ShExOptions Type</h3>
+
+        <p>The <dfn>ShExOptions</dfn> type is used to pass various options to the
+          <a>ShExProcessor</a> methods.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          dictionary ShExOptions {
+            USVString?             base;
+            sequence<USVString>?   focusNodes;
+            USVString              format = "ShExC";
+            USVString              processingMode = "shex-2.0";
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-dfn-for="ShExOptions">base</dfn></dt>
+          <dd>The base IRI to use when parsing <a data-lt="ShExProcessor.validate.schema">validate.schema</a>. If set, this overrides
+            the <a data-lt="ShExProcessor.validate.schema">validate.schema</a>'s IRI.</dd>
+          <dt><dfn data-dfn-for="ShExOptions">focusNodes</dfn></dt>
+          <dd>One or more <a>nodes</a> in
+            <a data-lt="ShExProcessor.validate.graph">validate.graph</a> which
+            are are checked for <a>conformance</a> against <a>start</a>.</dd>
+          <dt><dfn data-dfn-for="ShExOptions">format</dfn></dt>
+          <dd>One of <code>ShExC</code> or <code>ShExJ</code>.</dd>
+          <dt><dfn data-dfn-for="ShExOptions">processingMode</dfn></dt>
+          <dd>If set to <code>shex-2.0</code>, the implementation has to produce
+            exactly the same results as the algorithms defined in this specification.
+            If set to another value, the ShEx processor is allowed to extend
+            or modify the algorithms defined in this specification to enable
+            application-specific optimizations. The definition of such
+            optimizations is beyond the scope of this specification and thus
+            not defined. Consequently, different implementations may implement
+            different optimizations. Developers must not define modes beginning
+            with <code>shex</code> as they are reserved for future versions
+            of this specification.</dd>
+        </dl>
+      </section> <!-- end ShExOptions -->
+      <section class="informative">
+        <h3>The ShapeResults Type</h3>
+
+        <p>The <dfn>ShapeResults</dfn> type is used for reporting the result of
+          <a>conformance</a> checking of an <a>RDF Graph</a> against a <a>schema</a>.</p>
+
+        <p><a>ShapeResults</a> is a dictionary mapping a <a>node</a> in
+          <a data-lt="ShExProcessor.validate.graph">validate.graph</a> to a sequence of <dfn>ShapeResult</dfn> entries.</p>
+
+        <pre class="idl" data-transform="unComment"><!--
+          typedef dictionary ShapeResults;
+
+          dictionary ShapeResult {
+            USVString  shape;
+            boolean    result;
+            USVString? reason;
+          };
+        --></pre>
+
+        <dl>
+          <dt><dfn data-dfn-for="ShapeResult">shape</dfn></dt>
+          <dd>A <a>shapeExprLabel</a> in <a data-lt="ShExProcessor.validate.schema">validate.schema</a>
+            against which <a>node</a> <a>conformance</a> was checked.</dd>
+          <dt><dfn data-dfn-for="ShapeResult">result</dfn></dt>
+          <dd>The result of the <a>conformance</a> check.</dd>
+          <dt><dfn data-dfn-for="ShapeResult">reason</dfn></dt>
+          <dd>An optional message describing the result of the <a>conformance</a> check.</dd>
+        </dl>
+      </section> <!-- end ShExOptions -->
+
+      <section class="informative">
+        <h3>Error Handling</h3>
+
+        <p>This section describes the datatype definitions used within the
+          ShEx API for error handling.</p>
+
+        <section>
+          <h4>ShExError</h4>
+
+          <p>The <dfn>ShExError</dfn> type is used to report processing errors.</p>
+
+          <pre class="idl" data-transform="unComment"><!--
+            dictionary ShExError {
+              ShExErrorCode code;
+              DOMString?      message = null;
+            };
+          --></pre>
+
+          <dl>
+            <dt><dfn data-dfn-for="ShExError">code</dfn></dt>
+            <dd>a string representing the particular error type, as described in
+              the various algorithms in this document.</dd>
+            <dt><dfn data-dfn-for="ShExError">message</dfn></dt>
+            <dd>an optional error message containing additional debugging information.
+              The specific contents of error messages are outside the scope of this
+              specification.</dd>
+          </dl>
+        </section>
+
+        <section class="informative">
+          <h4>ShExErrorCode</h4>
+          <p>The <dfn>ShExErrorCode</dfn> represents the collection of valid ShEx error
+            codes.</p>
+
+          <pre class="idl" data-transform="unComment"><!--
+            enum ShExErrorCode {
+                "invalid schema",
+                "non-conforming graph",
+                "syntax error"
+            };
+          --></pre>
+
+          <dl data-dfn-for="ShExErrorCode">
+            <dt><dfn>invalid schema</dfn></dt>
+            <dd>The <a data-lt="ShExProcessor.validate.schema">validate.schema</a> argument to <a data-lt="ShExProcessor.validate">validate</a> is invalid.
+              <span class="ednote">@gkellogg: This could use some improvement.</span></dd>
+            <dt><dfn>non-conforming graph</dfn></dt>
+            <dd>The <a data-lt="ShExProcessor.validate.graph">validate.graph</a> is found not to <a>conform</a> with
+              <a data-lt="ShExProcessor.validate.schema">validate.schema</a>.</dd>
+            <dt><dfn>syntax error</dfn></dt>
+            <dd>Parsing <a data-lt="ShExProcessor.validate.schema">validate.schema</a> as
+              <a>ShExC</a> failed with a syntax error.</dd>
+          </dl>
+        </section>
+      </section> <!-- end of Error Handling -->
+    </section>
+
+    <section id="syntax">
+      <h2>ShapeMap syntax</h2>
+      <p>
+        ShapeMaps can be easily transmitted an understood with a specialized syntax.
+      </p>
+      <aside class="example" title="Simple human-syntax ShapeMap">
+        <p>
+          A simple ShapeMap with one node/shape pair might be both a <a>query ShapeMap</a> and a  <a>result ShapeMap</a>:
+        </p>
+        <pre class="nohighlight">&lt;http://data.example/#n1&gt; @ &lt;http://data.example/#s&gt;, <span class="comment"># a simple node/shape pair</span>
+</pre>
+      </aside>
+
+      <p>
+        Relative and prefixed IRIs in the node position are resolved against the application-defined prefix map and base URL for the data.
+        Likewise, schema IRI forms are resolved against the Schema PREFIX and namespace.
+      </p>
+
+      <aside class="example" title="ShapeMap with prefixed names">
+        <pre class="nohighlight">d:n1 @ s:S1, <span class="comment"># d: prefix from data, s: from schema</span>
+</pre>
+      </aside>
+
+      <p>
+        ... <a>status</a>, <a>reason</a>, <a>appInfo</a> ...
+      </p>
+
+      <div class="example">
+        <pre class="nohighlight">d:n1 @ s:S1, <span class="comment"># d: prefix from data, s: from schema</span>
+"foo"^^xsd:string@START!           <span class="comment"># "foo" did not match the start shape.</span>
+  /"missing :p1"                   <span class="comment"># The reason given is "missing :p1".</span>
+  $"appinfo":{"myextra1":["..."]} ,<span class="comment"># The application provide structural data.</span>
+"chat"@en-fr@&lt;http://...S3&gt;?, <span class="comment"># validate a literal</span>
+{<span class="keyword">FOCUS</span> :p2 "abcd"@en-us}@START, <span class="comment"># validate subjects of :p2 "abcd"</span>
+{_ :p3 <span class="keyword">FOCUS</span>}@START <span class="comment"># valide all objects of :p3</span></pre>
+      </div>
+      <ul>
+        <li>The <a>node</a> or <a>node selector</a> is before the '@'.</li>
+        <li>The <a>shape expression</a> label is immediately after the '@'.</li>
+        <li>The '<code>!</code>' means <a>node</a> does not conform to the <a>shape expression</a>.</li>
+        <li>For systems that peform validation asynchronously, '<code>?</code>' means that conformance has not been tested.</li>
+        <li>The absense of '<code>!</code>' or '<code>?</code>' means that <a>node</a> conforms to the <a>shape expression</a>.</li>
+        <li>The '<code>/</code>' character introduces a url-encoded reason string.</li>
+        <li>The '<code>$</code>' character precedes a JSON string which precedes the '<code>:</code>' character and a JSON value. At present, the only string permitted here is <code>"appinfo"</code>.</li>
+      </ul>
+    </section>
+
+    <section id="grammar">
+      <h2>ShapeMap grammar</h2>
+      <div class="grammarTable">
+<table style="border: 0; border-top: thick solid white; ">
+
+<tbody class="prod">
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">1</span>]   </td>   <td><code class="production prod">shapeMap</code></td>       <td>   ::=   </td><td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-pair">pair</a></span> (',' <span class="prod"><a class="grammarRef" href="#prod-pair">pair</a></span>)*;</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">2</span>]   </td>   <td><code class="production prod">pair</code></td>           <td>   ::=   </td><td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-nodeSelector">nodeSelector</a></span> <span class="prod"><a class="grammarRef" href="#prod-shapeSelector">shapeSelector</a></span> <span class="prod"><a class="grammarRef" href="#prod-status">status</a></span>? <span class="prod"><a class="grammarRef" href="#prod-reason">reason</a></span>? <span class="prod"><a class="grammarRef" href="#prod-jsonAttributes">jsonAttributes</a></span>?</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">3</span>]   </td>   <td><code class="production prod">nodeSelector</code></td>   <td>   ::=   </td><td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-objectTerm">objectTerm</a></span> | <span class="prod"><a class="grammarRef" href="#prod-triplePattern">triplePattern</a></span></code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">4</span>]   </td>   <td><code class="production prod">subjectTerm</code></td>    <td>   ::=   </td><td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | <span class="prod"><a class="grammarRef" href="#term-BLANK_NODE_LABEL">BLANK_NODE_LABEL</a></span></code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">5</span>]   </td>   <td><code class="production prod">objectTerm</code></td>     <td>   ::=   </td><td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-subjectTerm">subjectTerm</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span></code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">6</span>]   </td>   <td><code class="production prod">triplePattern</code></td>  <td>   ::=   </td><td><code class="content">'{' "FOCUS" <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> (<span class="prod"><a class="grammarRef" href="#prod-objectTerm">objectTerm</a></span> | '_') '}'<br/>
+                                                                                                                                                                         | '{' (<span class="prod"><a class="grammarRef" href="#prod-subjectTerm">subjectTerm</a></span> | '_') <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> "FOCUS" '}'</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">7</span>]   </td>   <td><code class="production prod">shapeSelector</code></td>  <td>   ::=   </td><td><code class="content">'@' (<span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | "START") | <span class="prod"><a class="grammarRef" href="#term-ATSTART">ATSTART</a></span> | <span class="prod"><a class="grammarRef" href="#term-ATPNAME_NS">ATPNAME_NS</a></span> | <span class="prod"><a class="grammarRef" href="#term-ATPNAME_LN">ATPNAME_LN</a></span></code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">8</span>]   </td>   <td><code class="production prod">status</code></td>         <td>   ::=   </td><td><code class="content">'!' | '?'</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">9</span>]   </td>   <td><code class="production prod">reason</code></td>         <td>   ::=   </td><td><code class="content">'/' <span class="prod"><a class="grammarRef" href="#prod-string">string</a></span></code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">10</span>]   </td>  <td><code class="production prod">jsonAttributes</code></td> <td>   ::=   </td><td><code class="content">'$' '"<span class="prod"><a class="grammarRef" href="#prod-appinfo">appinfo</a></span>"' ':' <span class="prod"><a class="grammarRef" href="#prod-jsonValue">jsonValue</a></span></code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">11</span>]   </td>  <td><code class="production prod">jsonValue</code></td>      <td>   ::=   </td><td><code class="content">'<span class="prod"><a class="grammarRef" href="#prod-false">false</a></span>' | '<span class="prod"><a class="grammarRef" href="#prod-null">null</a></span>' | '<span class="prod"><a class="grammarRef" href="#prod-true">true</a></span>' | <span class="prod"><a class="grammarRef" href="#prod-jsonObject">jsonObject</a></span> | <span class="prod"><a class="grammarRef" href="#prod-jsonArray">jsonArray</a></span> | <span class="prod"><a class="grammarRef" href="#term-DOUBLE">DOUBLE</a></span> | <span class="prod"><a class="grammarRef" href="#term-STRING_LITERAL2">STRING_LITERAL2</a></span>;</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">12</span>]   </td>  <td><code class="production prod">jsonObject</code></td>     <td>   ::=   </td><td><code class="content">'{' (<span class="prod"><a class="grammarRef" href="#prod-jsonMember">jsonMember</a></span> (',' <span class="prod"><a class="grammarRef" href="#prod-jsonMember">jsonMember</a></span>)*)? '}';</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">13</span>]   </td>  <td><code class="production prod">jsonMember</code></td>     <td>   ::=   </td><td><code class="content"><span class="prod"><a class="grammarRef" href="#term-STRING_LITERAL2">STRING_LITERAL2</a></span> ':' <span class="prod"><a class="grammarRef" href="#prod-jsonValue">jsonValue</a></span>;</code></td></tr>
+<tr style="vertical-align: baseline"><td id="prod-literal">[<span class="prodNo">14</span>]   </td>  <td><code class="production prod">jsonArray</code></td>      <td>   ::=   </td><td><code class="content">'[' (<span class="prod"><a class="grammarRef" href="#prod-jsonValue">jsonValue</a></span> (',' <span class="prod"><a class="grammarRef" href="#prod-jsonValue">jsonValue</a></span>)*)? ']';</code></td></tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-literal">[<span class="prodNo">13t</span>]   </td>
+<td><code class="production prod">literal</code></td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-rdfLiteral">rdfLiteral</a></span> | <span class="prod"><a class="grammarRef" href="#prod-numericLiteral">numericLiteral</a></span> | <span class="prod"><a class="grammarRef" href="#prod-booleanLiteral">booleanLiteral</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-numericLiteral">[<span class="prodNo">16t</span>]   </td>
+<td><code class="production prod">numericLiteral</code></td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-INTEGER">INTEGER</a></span> | <span class="prod"><a class="grammarRef" href="#term-DECIMAL">DECIMAL</a></span> | <span class="prod"><a class="grammarRef" href="#term-DOUBLE">DOUBLE</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-rdfLiteral">[<span class="prodNo">65</span>]   </td>
+<td><code class="production prod">rdfLiteral</code></td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-langString">langString</a></span> | <span class="prod"><a class="grammarRef" href="#prod-string">string</a></span> ("^^" <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span>)?</code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-booleanLiteral">[<span class="prodNo">134s</span>]   </td>
+<td><code class="production prod">booleanLiteral</code></td>
+<td>   ::=   </td>
+<td><code class="content">"true" | "false"</code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-string">[<span class="prodNo">135s</span>]   </td>
+<td><code class="production prod">string</code></td>
+<td>   ::=   </td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#term-STRING_LITERAL1">STRING_LITERAL1</a></span> | <span class="prod"><a class="grammarRef" href="#term-STRING_LITERAL_LONG1">STRING_LITERAL_LONG1</a></span><br/>
+| <span class="prod"><a class="grammarRef" href="#term-STRING_LITERAL2">STRING_LITERAL2</a></span> | <span class="prod"><a class="grammarRef" href="#term-STRING_LITERAL_LONG2">STRING_LITERAL_LONG2</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-langString">[<span class="prodNo">66</span>]   </td>
+<td><code class="production prod">langString</code></td>
+<td>   ::=   </td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#term-LANG_STRING_LITERAL1">LANG_STRING_LITERAL1</a></span> | <span class="prod"><a class="grammarRef" href="#term-LANG_STRING_LITERAL_LONG1">LANG_STRING_LITERAL_LONG1</a></span><br/>
+| <span class="prod"><a class="grammarRef" href="#term-LANG_STRING_LITERAL2">LANG_STRING_LITERAL2</a></span> | <span class="prod"><a class="grammarRef" href="#term-LANG_STRING_LITERAL_LONG2">LANG_STRING_LITERAL_LONG2</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-iri">[<span class="prodNo">136s</span>]   </td>
+<td><code class="production prod">iri</code></td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-IRIREF">IRIREF</a></span> | <span class="prod"><a class="grammarRef" href="#prod-prefixedName">prefixedName</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="prod">
+<tr style="vertical-align: baseline">
+<td id="prod-prefixedName">[<span class="prodNo">137s</span>]   </td>
+<td><code class="production prod">prefixedName</code></td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PNAME_LN">PNAME_LN</a></span> | <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="grammarParagraph">
+  <tr><td colspan="4">
+    <h3 id="terminals">Terminals</h3>
+  </td></tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-IRIREF">[<span class="prodNo">18t</span>]   </td>
+<td>&lt;<code class="production term">IRIREF</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"&lt;" ([^#0000- &lt;&gt;\"{}|^`\\] | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* "&gt;"</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PNAME_NS">[<span class="prodNo">140s</span>]   </td>
+<td>&lt;<code class="production term">PNAME_NS</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PN_PREFIX">PN_PREFIX</a></span>? ":"</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PNAME_LN">[<span class="prodNo">141s</span>]   </td>
+<td>&lt;<code class="production term">PNAME_LN</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL">PN_LOCAL</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-ATPNAME_NS">[<span class="prodNo">70</span>]   </td>
+<td>&lt;<code class="production term">ATPNAME_NS</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PN_PREFIX">PN_PREFIX</a></span>? ":"</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-ATPNAME_LN">[<span class="prodNo">71</span>]   </td>
+<td>&lt;<code class="production term">ATPNAME_LN</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL">PN_LOCAL</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-BLANK_NODE_LABEL">[<span class="prodNo">142s</span>]   </td>
+<td>&lt;<code class="production term">BLANK_NODE_LABEL</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"_:" (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | [0-9]) ((<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | ".")* <span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span>)?</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-AT_PNAME_NS">[<span class="prodNo">15</span>]   </td>
+<td>&lt;<code class="production term">AT_PNAME_NS</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'@' <span class="prod"><a class="grammarRef" href="#term-PN_PNAME_NS">PNAME_NS</a></span></code></td>
+</tr>
+<tr style="vertical-align: baseline">
+<td id="term-AT_PNAME_LN">[<span class="prodNo">16</span>]   </td>
+<td>&lt;<code class="production term">AT_PNAME_LN</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'@' <span class="prod"><a class="grammarRef" href="#term-PN_PNAME_LN">PNAME_LN</a></span></code></td>
+</tr>
+<tr style="vertical-align: baseline">
+<td id="term-AT_START">[<span class="prodNo">17</span>]   </td>
+<td>&lt;<code class="production term">AT_START</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"@START"</code></td>
+</tr>
+    <tr><td colspan="4">This terminal has precendence over <a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></td></tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-LANGTAG">[<span class="prodNo">145s</span>]   </td>
+<td>&lt;<code class="production term">LANGTAG</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"@" ([a-zA-Z])+ ("-" ([a-zA-Z0-9])+)*</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-INTEGER">[<span class="prodNo">19t</span>]   </td>
+<td>&lt;<code class="production term">INTEGER</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">[+-]? [0-9]+</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-DECIMAL">[<span class="prodNo">20t</span>]   </td>
+<td>&lt;<code class="production term">DECIMAL</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">[+-]? [0-9]* "." [0-9]+</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-DOUBLE">[<span class="prodNo">21t</span>]   </td>
+<td>&lt;<code class="production term">DOUBLE</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">[+-]? ([0-9]+ "." [0-9]* <span class="prod"><a class="grammarRef" href="#term-EXPONENT">EXPONENT</a></span> | "."? [0-9]+ <span class="prod"><a class="grammarRef" href="#term-EXPONENT">EXPONENT</a></span>)</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-EXPONENT">[<span class="prodNo">155s</span>]   </td>
+<td>&lt;<code class="production term">EXPONENT</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">[eE] [+-]? [0-9]+</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-STRING_LITERAL1">[<span class="prodNo">156s</span>]   </td>
+<td>&lt;<code class="production term">STRING_LITERAL1</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"'" ([^'\\\n\r] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* "'"</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-STRING_LITERAL2">[<span class="prodNo">157s</span>]   </td>
+<td>&lt;<code class="production term">STRING_LITERAL2</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'"' ([^\"\\\n\r] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* '"'</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-STRING_LITERAL_LONG1">[<span class="prodNo">158s</span>]   </td>
+<td>&lt;<code class="production term">STRING_LITERAL_LONG1</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"'''" ( ("'" | "''")? ([^\\'\\] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>) )* "'''"</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-STRING_LITERAL_LONG2">[<span class="prodNo">159s</span>]   </td>
+<td>&lt;<code class="production term">STRING_LITERAL_LONG2</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'"""' ( ('"' | '""')? ([^\"\\] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>) )* '"""'</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-LANG_STRING_LITERAL1">[<span class="prodNo">73</span>]   </td>
+<td>&lt;<code class="production term">LANG_STRING_LITERAL1</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"'" ([^'\\\n\r] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* "'" <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-LANG_STRING_LITERAL2">[<span class="prodNo">74</span>]   </td>
+<td>&lt;<code class="production term">LANG_STRING_LITERAL2</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'"' ([^\"\\\n\r] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>)* '"' <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-LANG_STRING_LITERAL_LONG1">[<span class="prodNo">75</span>]   </td>
+<td>&lt;<code class="production term">LANG_STRING_LITERAL_LONG1</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"'''" ( ("'" | "''")? ([^\\'\\] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>) )* "'''" <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-LANG_STRING_LITERAL_LONG2">[<span class="prodNo">76</span>]   </td>
+<td>&lt;<code class="production term">LANG_STRING_LITERAL_LONG2</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">'"""' ( ('"' | '""')? ([^\"\\] | <span class="prod"><a class="grammarRef" href="#term-ECHAR">ECHAR</a></span> | <span class="prod"><a class="grammarRef" href="#term-UCHAR">UCHAR</a></span>) )* '"""' <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-UCHAR">[<span class="prodNo">26t</span>]   </td>
+<td>&lt;<code class="production term">UCHAR</code>&gt;</td>
+<td>   ::=   </td>
+<td>   <code class="content">"\\u" <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span><br/>
+| "\\U" <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-ECHAR">[<span class="prodNo">160s</span>]   </td>
+<td>&lt;<code class="production term">ECHAR</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"\\" [tbnrf\\\"\\']</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PN_CHARS_BASE">[<span class="prodNo">164s</span>]   </td>
+<td>&lt;<code class="production term">PN_CHARS_BASE</code>&gt;</td>
+<td>   ::=   </td>
+<td>   <code class="content">[A-Z] | [a-z]<br/>
+| [#00C0-#00D6] | [#00D8-#00F6] | [#00F8-#02FF]<br/>
+| [#0370-#037D] | [#037F-#1FFF]<br/>
+| [#200C-#200D] | [#2070-#218F] | [#2C00-#2FEF]<br/>
+| [#3001-#D7FF] | [#F900-#FDCF] | [#FDF0-#FFFD]<br/>
+| [#10000-#EFFFF]</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PN_CHARS_U">[<span class="prodNo">165s</span>]   </td>
+<td>&lt;<code class="production term">PN_CHARS_U</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PN_CHARS_BASE">PN_CHARS_BASE</a></span> | "_"</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PN_CHARS">[<span class="prodNo">167s</span>]   </td>
+<td>&lt;<code class="production term">PN_CHARS</code>&gt;</td>
+<td>   ::=   </td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | "-" | [0-9]<br/>
+| [#00B7] | [#0300-#036F] | [#203F-#2040]</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PN_PREFIX">[<span class="prodNo">168s</span>]   </td>
+<td>&lt;<code class="production term">PN_PREFIX</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PN_CHARS_BASE">PN_CHARS_BASE</a></span> ( (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | ".")* <span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> )?</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PN_LOCAL">[<span class="prodNo">169s</span>]   </td>
+<td>&lt;<code class="production term">PN_LOCAL</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">(<span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | ":" | [0-9] | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>) ( (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | "." | ":" | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>)* (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | ":" | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>) )?</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PLX">[<span class="prodNo">170s</span>]   </td>
+<td>&lt;<code class="production term">PLX</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PERCENT">PERCENT</a></span> | <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL_ESC">PN_LOCAL_ESC</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PERCENT">[<span class="prodNo">171s</span>]   </td>
+<td>&lt;<code class="production term">PERCENT</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"%" <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span> <span class="prod"><a class="grammarRef" href="#term-HEX">HEX</a></span></code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-HEX">[<span class="prodNo">172s</span>]   </td>
+<td>&lt;<code class="production term">HEX</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">[0-9] | [A-F] | [a-f]</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PN_LOCAL_ESC">[<span class="prodNo">173s</span>]   </td>
+<td>&lt;<code class="production term">PN_LOCAL_ESC</code>&gt;</td>
+<td>   ::=   </td>
+<td><code class="content">"\\" ( "_" | "~" | "." | "-" | "!" | "$" | "&amp;" | "'" | "(" | ")" | "*" | "+" | "," | ";" | "=" | "/" | "?" | "#" | "@" | "%" )</code></td>
+</tr>
+</tbody>
+
+<tbody class="term">
+<tr style="vertical-align: baseline">
+<td id="term-PASSED_TOKENS">[<span class="prodNo">98</span>]   </td>
+<td><code class="production directive">PASSED TOKENS</code></td>
+<td>   ::=   </td>
+<td>   <code class="content">[ \t\r\n]+<br/>
+| "#" [^\r\n]*</code></td>
+</tr>
+</tbody>
+
+</table>
+      </div>
+    </section>
+  </body>
+</html>
