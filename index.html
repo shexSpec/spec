@@ -445,7 +445,7 @@ _:User2
       </p>
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>+]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">imports</dfn>:[<a>IRI</a>+]? <dfn class="param">shapes</dfn>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">imports</dfn>:[<a>IRIREF</a>+]? <dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>+]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
         </table>
       </div>
       <p>
@@ -693,12 +693,12 @@ _:User2
   <tr class="nob"><th class="nob"><dfn>objectValue</dfn></th><td>=</td><td><a>IRIREF</a> | <a class="objref">ObjectLiteral</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>ObjectLiteral</dfn></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>IriStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>IRIREF</a> }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>IriStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>IRIREF</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">IRIREF</a>|<a class="objref">IriStem</a> +] }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>IriStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>IRIREF</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">IRIREF</a>|<a class="objref">IriStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>LiteralStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>STRING</a> }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>LiteralStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a class="nobref">STRING</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">STRING</a>|<a class="objref">LiteralStem</a> +] }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>LiteralStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a class="nobref">STRING</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">STRING</a>|<a class="objref">LiteralStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>Language</dfn></th><td>{</td><td><span class="param">languageTag</span>:<a>LANGTAG</a> }</td></tr>
   <tr class="obj"><th class="obj"><dfn>LanguageStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>LANGTAG</a> }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>LanguageStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a> +] }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>LanguageStemRange</dfn></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>Wildcard</dfn></th>             <td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
           </table>
         </div>
@@ -4548,7 +4548,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-exclusion">[<span class="prodNo">50</span>]   </td>
 <td><code class="production prod">exclusion</code></td>
 <td>   ::=   </td>
-<td><code class="content">'-' (<span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> | <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span>) '~'?</code></td>
+<td><code class="content">'.' '-' (<span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> | <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span>) '~'?</code></td>
 </tr>
 
 <tr style="vertical-align: baseline">
@@ -5280,7 +5280,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="nob"><th class="nob"><a>numericLiteral</a></th><td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
 -->
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix"></dfn>"@context": "http://www.w3.org/ns/shex.jsonld"<br/><span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">imports</a>:[<a>IRIREF</a>]? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="prefixes map|prefix"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"?<br/><a class="param">imports</a>:[<a>IRIREF</a>+]? <span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExpr</a></th>         <td>=</td> <td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExternal</a> | <a class="objref">shapeExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeOr</a></th>             <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeAnd</a></th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
@@ -5298,14 +5298,14 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="nob"><th class="nob"><a>objectValue</a></th><td>=</td><td><a>IRIREF</a> | <a>ObjectLiteral</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
   <tr class="obj"><th class="obj"><a>IriStem</a></th><td>{</td><td><span class="param">stem</span>:<a>IRIREF</a> }</td></tr>
-  <tr class="obj"><th class="obj"><a>IriStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>IRIREF</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">IRIREF</a>|<a class="objref">IriStem</a> +] }</td></tr>
+  <tr class="obj"><th class="obj"><a>IriStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>IRIREF</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">IRIREF</a>|<a class="objref">IriStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>LiteralStem</a></th><td>{</td><td><span class="param">stem</span>:<a>STRING</a> }</td></tr>
-  <tr class="obj"><th class="obj"><a>LiteralStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a class="nobref">STRING</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">STRING</a>|<a class="objref">LiteralStem</a> +] }</td></tr>
+  <tr class="obj"><th class="obj"><a>LiteralStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a class="nobref">STRING</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">STRING</a>|<a class="objref">LiteralStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>Language</a></th><td>{</td><td><span class="param">languageTag</span>:<a>LANGTAG</a> }</td></tr>
-  <tr class="obj"><th class="obj"><a>LanguageStem</a></th><td>{</td><td><span class="param">stem</span>:<a>LANGTAG</a> }</td></tr>
-  <tr class="obj"><th class="obj"><a>LanguageStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a> +] }</td></tr>
+  <tr class="obj"><th class="obj"><a>LanguageStem</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) }</td></tr>
+  <tr class="obj"><th class="obj"><a>LanguageStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>Wildcard</a></th>             <td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExpr</a></th>             <td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>EachOf</a></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>OneOf</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
@@ -5313,9 +5313,9 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="nob"><th class="nob"><a>tripleExprRef</a></th>       <td>=</td><td><a class="objref">tripleExprLabel</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExprLabel</a></th>   <td>=</td><td><a>IRIREF</a> | <a>BNODE</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>SemAct</a></th><td>{</td><td><span class="param">name</span>:<a>IRIREF</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
-  <tr class="obj"><th class="obj"><a>Annotation</a></th><td>{</td><td><span class="param"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-predicate">predicate</a></span>:<a href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRI</a> <span class="param">object</span>:<a class="nobref">objectValue</a> }</td></tr>
+  <tr class="obj"><th class="obj"><a>Annotation</a></th><td>{</td><td><span class="param"><a href="https://www.w3.org/TR/rdf11-concepts/#dfn-predicate">predicate</a></span>:<a href="https://www.w3.org/TR/rdf11-concepts/#dfn-iri">IRIREF</a> <span class="param">object</span>:<a class="nobref">objectValue</a> }</td></tr>
 
-  <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;">Terminals</th><td></td><td>These follow the <a href="http://www.w3.org/TR/2008/PER-xml-20080205/#sec-common-syn">rules for terminals in the XML 1.0 5th Edition</a></td></tr>
+  <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;"><span style="opacity: 0;"># </span>Terminals</th><td></td><td>These follow the <a href="http://www.w3.org/TR/2008/PER-xml-20080205/#sec-common-syn">rules for terminals in the XML 1.0 5th Edition</a></td></tr>
 
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment"><a href="http://www.w3.org/TR/turtle/#grammar-production-IRIREF">Turtle IRIREF</a> without enclosing "&lt;&gt;"s</span></td></tr>
   <tr class="trm"><th class="trm"><dfn>IRIREF</dfn></th>              <td>:</td><td>(<a>PN_CHARS</a> | '.' | ':' | '/' | '\\' | '#' | '@' | '%' | '&amp;' | <a>UCHAR</a>)* ;</td></tr>
@@ -5330,11 +5330,13 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment"><a href="http://www.w3.org/TR/turtle/#grammar-production-DOUBLE">Turtle DOUBLE</a></span></td></tr>
   <tr class="trm"><th class="trm"><dfn>DOUBLE</dfn></th>           <td>:</td><td>[+-]? ([0-9] + '.' [0-9]* <a>EXPONENT</a> | '.' [0-9]+ <a>EXPONENT</a> | [0-9]+ <a>EXPONENT</a>) ;</td></tr>
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment"><a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP47 Language-Tag</a></span></td></tr>
-  <tr class="trm"><th class="trm"><dfn>LANGTAG</dfn></th>          <td>:</td><td>([a-zA-Z])+('-'([a-zA-Z0-9])+)* ;</td></tr>
+  <tr class="trm"><th class="trm"><dfn>LANGTAG</dfn></th>          <td>:</td><td>[a-zA-Z]+ ('-' [a-zA-Z0-9]+)* ;</td></tr>
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment">any <a href="https://tools.ietf.org/html/rfc7159#section-7">JSON string</a></span></td></tr>
   <tr class="trm"><th class="trm"><dfn>STRING</dfn></th>           <td>:</td><td>.* ;</td></tr>
+  <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment">empty string</span></td></tr>
+  <tr class="trm @@" style="background:#FBE9E9;"><th class="trm"><dfn>EMPTY</dfn></th>           <td>:</td><td>^$ ;</td></tr>
 
-  <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;">Components</th><td></td><td>These terminals are referenced by other terminals but not by external productions.</td></tr>
+  <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;"><span style="opacity: 0;"># </span>Components</th><td></td><td>These terminals are referenced by other terminals but not by external productions.</td></tr>
   <tr class="trm"><th class="trm"><dfn>PN_PREFIX</dfn></th>        <td>:</td><td><a>PN_CHARS_BASE</a> ((<a>PN_CHARS</a> | '.')* <a>PN_CHARS</a>)? ;</td></tr>
   <tr class="trm"><th class="trm"><dfn>PN_CHARS_BASE</dfn></th>    <td>:</td><td>  [A-Z] | [a-z] | [\u00C0-\u00D6] | [\u00D8-\u00F6]<br/>
 | [\u00F8-\u02FF] | [\u0370-\u037D] | [\u037F-\u1FFF]<br/>
