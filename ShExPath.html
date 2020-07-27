@@ -352,7 +352,7 @@
 ShExPathExpr             ::= AbsolutePathExpr | RelativePathExpr
 AbsolutePathExpr         ::= "/" RelativePathExpr
 RelativePathExpr         ::= StepExpr ("/" StepExpr)*
-<dfn>StepExpr</dfn>                 ::= ContextTest? ExprIndex
+<dfn>StepExpr</dfn>                 ::= ContextTest? ExprIndex | ContextTest
 ContextTest              ::= ShapeExprContext | TripleExprContext
 ShapeExprContext         ::= "ShapeAnd" | "ShapeOr" | "ShapeNot"
                            | "NodeConstraint" | "Shape"

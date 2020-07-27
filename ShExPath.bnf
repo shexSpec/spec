@@ -1,7 +1,7 @@
 ShExPathExpr ::= AbsolutePathExpr | RelativePathExpr
 AbsolutePathExpr ::= "/" RelativePathExpr
 RelativePathExpr ::= StepExpr ("/" StepExpr)*
-StepExpr ::= ContextTest? Index
+StepExpr ::= ContextTest? Index | ContextTest
 ContextTest ::= Context
 Context ::= "shapeAnd" | "shapeOr" | "shapeNot" | "nodeConstraint" | "shape"
           | "eachOf" | "oneOf" | "tripleConstraint"
