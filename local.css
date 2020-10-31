@@ -451,3 +451,8 @@ ol.algorithm li:before {
 /* simupre (ab)uses respec's willingness to dive into non-<pre/>s */
 .simupre { white-space: pre; font-family: monospace; }
 
+dd > dl {
+    margin-left: -2em;
+    border-left: 2em solid #f7f7f7;
+    Margin-top: 0;
+}

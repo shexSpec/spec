@@ -5356,8 +5356,8 @@ tripleExprLabel = IRIREF | BNODE ;
     </section>
 
 
-<section id="shexr" class="appendix informative">
-  <h2>ShEx Shape</h2>
+<section id="shexr" class="appendix">
+  <h2>ShEx Schema for ShEx</h2>
 
   <p>The following schema describes the form of an <a>RDF Graph</a> conforming to a
     Shape Expression <a>schema</a>, consisten with the description of <a>ShExJ</a>.</p>
@@ -5379,7 +5379,10 @@ tripleExprLabel = IRIREF | BNODE ;
     <dd>shex</dd>
     <dt>Required parameters:</dt>
     <dd>None</dd>
+    <dt>Optional parameters:</dt>
+    <dd>None</dd>
     <dt>Encoding considerations:</dt>
+    <dd>8-bit text</dd>
     <dd>ShEx Compact Syntax (ShExC) is a text language which is encoded in UTF-8.</dd>
     <dt>Security considerations:</dt>
     <dd>Given that <a>ShExC</a> allows the substitution of long IRIs with short terms,
@@ -5389,39 +5392,46 @@ tripleExprLabel = IRIREF | BNODE ;
     <dt>Interoperability considerations:</dt>
     <dd>Not Applicable</dd>
     <dt>Published specification:</dt>
-    <dd><a href="">This document</a></dd>
+    <dd><a href="http://shex.io/shex-semantics/">http://shex.io/shex-semantics/</a></dd>
     <dt>Applications that use this media type:</dt>
     <dd>Any programming environment that requires the exchange of
       directed graphs. Implementations of ShEx have been created for
       JavaScript, Python, Ruby, and Java.
     </dd>
-    <dt>Additional information:</dt>
+    <dt>Fragment Identifier Considerations:</dt>
     <dd>
-      <dl>
-        <dt>Magic number(s):</dt>
-        <dd>Not Applicable</dd>
-        <dt>File extension(s):</dt>
-        <dd>.shex</dd>
-        <dt>Macintosh file type code(s):</dt>
-        <dd>TEXT</dd>
-      </dl>
-    </dd>
-    <dt>Person &amp; email address to contact for further information:</dt>
-    <dd>Eric Prud'hommeaux &lt;eric@w3.org&gt;</dd>
+      The structure of a ShEx schema is defined by its representation in JSON per <a href="#shexj">ShEx JSON Syntax (ShExJ)</a>.
+      The JSON-LD context &lt;<a href="http://www.w3.org/ns/shex.jsonld">http://www.w3.org/ns/shex.jsonld</a>&gt; defines the RDF representation (ShExR) for every ShEx schema.
+      A ShEx fragment identifies an instance of either the <a href="#dfn-shapeexpr">shapeExpr</a> or <a href="#dfn-tripleexpr">tripleExpr</a> ShExJ productions, as well as the RDF resource (see <a data-cite="RDF11-CONCEPTS#section-fragID">RDF 1.1 Concepts and Abstract Syntax</a> §6 [[RDF11-CONCEPTS]]) in the corresponding ShExR.</dd>
+    <dt>Restrictions on Usage:</dt>
+    <dd>None</dd>
+    <dt>Provisional Registrations:</dt>
+    <dd>Not Applicable</dd>
+    <dt>Additional information:</dt>
+    <dd><dl>
+      <dt>Deprecated alias names for this type:</dt>
+      <dd>None</dd>
+      <dt>Magic number(s):</dt>
+      <dd></dd>
+      <dt>File extension(s):</dt>
+      <dd>.shex</dd>
+      <dt>Macintosh file type code(s):</dt>
+      <dd>TEXT</dd>
+    </dl></dd>
     <dt>Intended usage:</dt>
     <dd>Common</dd>
-    <dt>Restrictions on usage:</dt>
+    <dt>Other Information &amp; Comments:</dt>
     <dd>None</dd>
-    <dt>Author(s):</dt>
-    <dd>Eric Prud'hommeaux, Iovka Boneva, Jose Labra Gayo, Gregg Kellogg, Niklas Lindström</dd>
-    <dt>Change controller:</dt>
-    <dd>W3C</dd>
+    <dt>Contact Person:</dt>
+    <dd><dl>
+      <dt>Contact Name:</dt>
+      <dd>Eric Prud'hommeaux</dd>
+      <dt>Contact Email Address:</dt>
+      <dd>eric@w3.org</dd>
+      <dt>Change controller:</dt>
+      <dd>W3C</dd>
+    </dl></dd>
   </dl>
-
-  <p>Fragment identifiers used with <a href="https://www.w3.org/TR/2014/REC-json-ld-20140116/#application-ld-json">application/ld+json</a>
-    are treated as in RDF syntaxes, as per
-    <a data-cite="RDF11-CONCEPTS#section-fragID">RDF 1.1 Concepts and Abstract Syntax</a>
-    [[RDF11-CONCEPTS]].</p>
 </section>
 
     <section id="security">
