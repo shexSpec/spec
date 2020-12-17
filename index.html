@@ -1560,9 +1560,26 @@ _:User2
           </div>
         </li>
       </ul>
+      XXX
+      
+	<li>
+	  <p id="extends">
+	    Let <a class="jobjref">extendedExpr = extendShape(expression)</a>  s/expression/extendedExpr/g, <span class="math">extendedExpr(s)</span>  is a function that takes a <span class="param">Shape</span> <span class="math">s</span> and returns a <a class="jobjref">tripleExpr</a>. </li>
+	
+	<li>
+	   let <a class="jobjref">exprs</a> = an empty array of <span class="math">tripleExprs</span></li>
+	<li>
+	  for each <span class="math">e</span> in s.extends <span class="math">e</span> MUST be label of a <a class="jobjref">shapeExpr</a> with exactly one <span class="param">Shape</span> <span class="math">s2</span></li>
+** add extendedExpr(s2) to exprs
+* add s.expression to exprs
+if exprs.length is 0 <span class="issue">return null or something like that?**</span>
+else if exprs.length = 1 return exprs[0]
+else return { type: EachOf, shapeExprs: exprs }
+
     </section>
       </section>
-
+      
+      
     <section id="import">
       <h3>ShEx Import</h3>
       <p>
