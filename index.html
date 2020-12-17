@@ -1238,7 +1238,7 @@ _:User2
           <li>If <span class="math">s</span> has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
           <li>if <a>conjuncts</a>.length is 0, <span class="param">effectiveExpression</span> = <a>EmptyExpression</a>.</li>
           <li>else if <a>conjuncts</a>.length is 1, <span class="param">effectiveExpression</span> = <a>conjuncts</a>[0].</li>
-          <li>else <span class="param">effectiveExpression</span> = { type: EachOf, shapeExprs: <a>conjuncts</a> }.</li>
+          <li>else <span class="param">effectiveExpression</span> = { "type": "EachOf", "shapeExprs": <a>conjuncts</a> }.</li>
         </ul>
         <p>
 	        For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
