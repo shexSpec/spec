@@ -1227,20 +1227,34 @@ _:User2
         <h4>Semantics</h4>
         <p id="satisfies-Shape">
           The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
-	  For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
+          A <a>shape</a> may have an <span class="param">expression</span>.
+          For the purposes of evaluation, we define an <dfn>EmptyExpression</dfn> which has no <span class="jobjref"><a class="obj">TripleConstraint</a>s</span>.
+          For a <a>shape</a> <span class="math">s</span>, an <dfn>effectiveExpression</dfn> is composed from a <span class="math">s</span>'s <span class="param">expression</span> and the list of <span class="math">s</span>'s <span class="param">extends</span>.
+        </p>
+        <ul>
+	        <li>Let <dfn>extendedExpr</dfn> = extendShape(expression)  s/expression/extendedExpr/g, <span class="math">extendedExpr(s)</span>  is a function that takes a <span class="param">Shape</span> <span class="math">s</span> and returns a <a class="jobjref">tripleExpr</a>.</li>
+	        <li>let <dfn>conjuncts</dfn> = an empty array of <span class="math">tripleExprs</span></li>
+	        <li>for each <span class="math">e</span> in s.extends <span class="math">e</span> is the label of a <a class="jobjref">shapeExpr</a> with exactly one <span class="param">Shape</span> <span class="math">s2</span>. If <span class="math">s2</span> has an <span class="param">exression</span>, add it to <a>conjuncts</a>.</li>
+          <li>If <span class="math">s</span> has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
+          <li>if <a>conjuncts</a>.length is 0, <span class="param">effectiveExpression</span> = <a>EmptyExpression</a>.</li>
+          <li>else if <a>conjuncts</a>.length is 1, <span class="param">effectiveExpression</span> = <a>conjuncts</a>[0].</li>
+          <li>else <span class="param">effectiveExpression</span> = { type: EachOf, shapeExprs: <a>conjuncts</a> }.</li>
+        </ul>
+        <p>
+	        For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
         </p>
         <ul>
           <li>
-            <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> such that <code class="function">matches(<span class="math">matched</span>, <span class="param">expression</span>, <span class="math">m</span>)</code>.
-            If <span class="param">expression</span> is absent, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
+            <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> such that <code class="function">matches(<span class="math">matched</span>, <span class="param">effectiveExpression</span>, <span class="math">m</span>)</code>.
+            If <span class="param">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
             Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in <span class="math">remainder</span>:
             <code class="function"><span class="math">outs</span> = <span class="math">remainder</span> ∩ <a>arcsOut</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
-            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">expression</span>.
-            If <span class="param">expression</span> is absent, <code class="function"><span class="math">matchables</span> = <span class="math">Ø</span> (the empty set)</code>.<br/>
+            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">effectiveExpression</span>.
+            If <span class="param">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">matchables</span> = <span class="math">Ø</span> (the empty set)</code>.<br/>
             The complexity of partitioning is described briefly in the <a href="../primer/#partition-complexity">ShEx2 Primer</a>.
           </li>
           <li>
-            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">expression</span>.<br/>
+            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">effectiveExpression</span>.<br/>
             Let <span class="label">unmatchables</span> be the triples in <span class="math">outs</span> which are not in <span class="math">matchables</span>.
             <code class="function"><span class="math">matchables</span> ∪ <span class="math">unmatchables</span> = <span class="math">outs</span></code>.
           </li>
@@ -1560,22 +1574,6 @@ _:User2
           </div>
         </li>
       </ul>
-      XXX
-      
-	<li>
-	  <p id="extends">
-	    Let <a class="jobjref">extendedExpr = extendShape(expression)</a>  s/expression/extendedExpr/g, <span class="math">extendedExpr(s)</span>  is a function that takes a <span class="param">Shape</span> <span class="math">s</span> and returns a <a class="jobjref">tripleExpr</a>. </li>
-	
-	<li>
-	   let <a class="jobjref">exprs</a> = an empty array of <span class="math">tripleExprs</span></li>
-	<li>
-	  for each <span class="math">e</span> in s.extends <span class="math">e</span> MUST be label of a <a class="jobjref">shapeExpr</a> with exactly one <span class="param">Shape</span> <span class="math">s2</span></li>
-** add extendedExpr(s2) to exprs
-* add s.expression to exprs
-if exprs.length is 0 <span class="issue">return null or something like that?**</span>
-else if exprs.length = 1 return exprs[0]
-else return { type: EachOf, shapeExprs: exprs }
-
     </section>
       </section>
       
