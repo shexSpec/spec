@@ -7,10 +7,10 @@
     <!-- link rel="stylesheet" href="css/wgio.min.css"/ ask Iovka -->
     <link rel="stylesheet" href="local.css"/>
 
-    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+    <script src='https://www.w3.org/Tools/respec/respec-w3c'
             defer class='remove'></script>
     <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
-    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script src="jquery-2.1.4.min.js"></script>
 
     <script class='remove'>
       var respecConfig = {
@@ -37,7 +37,6 @@
       previousMaturity:"Member-SUBM",
       testSuiteURI:   "https://github.com/shexSpec/shexTest",
       issueBase:      "https://github.com/shexSpec/shex/issues",
-      githubAPI:      "https://api.github.com/repos/shexSpec/spec",
       editors: [
         { name:       "Eric Prud'hommeaux",
           url:        "http://www.w3.org/People/Eric/",
@@ -57,8 +56,8 @@
           companyURL: "https://spec-ops.io/",
           w3cid:      "44770" },
       ],
-      wg:           "Shape Expressions Community Group",
-      wgURI:        "https://www.w3.org/community/shex/",
+      group:           "shex",
+      implementationReportURI: "http://shexspec.github.io/shexTest/reports/2.1/",
       //wgPublicList: "public-shex",
       //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
 
@@ -68,11 +67,18 @@
       },
 
       otherLinks: [{
-        key: "ShEx language",
+        key: "ShEx language ",
         data: [
           {value: "Homepage", href: "https://shex.io/"},
-          {value: "Issues", href: "https://github.com/shexSpec/shex/issues"},
+          {value: "Lanuagte design, feature requests, etc", href: "https://github.com/shexSpec/shex/issues"},
           {value: "Gitter chat", href: "https://gitter.im/shapeExpressions/Lobby"}
+        ]
+      }, {
+        key: "ShEx language specification ",
+        data: [
+          {value: "Issues", href: "https://github.com/shexSpec/spec/issues"},
+          {value: "Commit history", href: "https://github.com/shexSpec/spec/commits/gh-pages"},
+          {value: "Pull requests", href: "https://github.com/shexSpec/spec/pulls/"},
         ]
       }],
       };
@@ -502,14 +508,14 @@ _:User2
 
       
       <p>
-	Given a <a>stratification</a> <code class="function">stratum</code> of <span class="math">Sch</span> with <span class="math">k</span> strata, define inductively the series of <span class="math">k</span> typings <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> … <code class="function">completeTypingOn(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>.
+	Given a <a>stratification</a> <code class="function">stratum</code> of <span class="math">Sch</span> with <span class="math">k</span> <a>strata</a>, defines inductively the series of <span class="math">k</span> typings <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> … <code class="function">completeTypingOn(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>.
       </p>
       <ul>
 	<li>
-	  <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span>;
+	  <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all <a>correct typings</a> that contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span>;
 	</li>
 	<li>
-	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">completeTypingOn(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that:
+	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">completeTypingOn(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all <a>correct typings</a> that:
 	  <ul>
 	    <li> contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">i</span>
 	    </li>
@@ -670,7 +676,7 @@ _:User2
     </ul>
 
     <p>
-      If <span class="math">Sch</span>'s <a class="param">shapes</a> maps "<code>http://schema.example/#shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
+      If <span class="math">Sch</span>'s <a class="param">shapes</a> map "<code>http://schema.example/#shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
     </p>
   <ul class="codelist">
     <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
@@ -765,7 +771,7 @@ _:User2
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
-            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is an Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
+            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is a Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
             The lexical form and numeric value (where applicable) of all datatypes required by <a data-cite="sparql11-query#FunctionMapping">SPARQL XPath Constructor Functions</a> MUST be tested for conformance with the corresponding XML Schema form.
             ShEx extensions MAY add support for other datatypes.
           </p>
@@ -1064,7 +1070,7 @@ _:User2
           <ul>
             <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">IriStem</a></span> and <span class="math">n</span> is an <a>IRI</a> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(n, st)</span>.</li>
             <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">LiteralStem</a></span> and <span class="math">n</span> is an <a>RDF Literal</a> with a lexical value <span class="math">l</span> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(l, st)</span>.</li>
-            <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">LanguageStem</a></span>, <span class="math">n</span> is a <a>language-tagged string</a> with a <a>language tag</a> <span class="math">l</span>, <span class="math">st</span> is a basic language range  per <a class="norm" href="http://www.ietf.org/rfc/rfc4647.txt">Matching of Language Tags</a> [[!rfc4647]] section 2.1 and <span class="math">l</span> matches <span class="math">st</span> per the basic filtering scheme defined in [[!rfc4647]] section 3.3.1.</li>
+            <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">LanguageStem</a></span>, <span class="math">n</span> is a <a>language-tagged string</a> with a <a>language tag</a> <span class="math">l</span>, <span class="math">st</span> is a basic language range  per <a class="norm" href="http://www.ietf.org/rfc/rfc4647.txt">Matching of Language Tags</a> [[!rfc4647]] section 2.1 and <span class="math">l</span> matches <span class="math">st</span> per the basic filtering scheme defined in [[!rfc4647]] section 3.3.1. The basic language range wildcard ("*") is represented by an empty <span class="param">stem</span> ("").</li>
           </ul></li>
         </ul>
         <div class="example">
@@ -1673,8 +1679,8 @@ _:User2
 </pre>
               <pre class="shexc nohighlight"><span class="label">schema1:</span>                                                                        
 
-IMPORT &lt;http://schema.example/schema2&gt; &lt;http://schema.example/schema3&gt;
-
+IMPORT &lt;http://schema.example/schema2&gt;
+IMPORT &lt;http://schema.example/schema3&gt;
 &lt;http://schema.example/schema1#S1&gt; {
 
   &lt;http://schema.example/#p1&gt; @&lt;http://schema.example/schema1#S2&gt;
@@ -1864,7 +1870,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	  </li>
 	</ul>
 	<p>
-	  A shapes schema MUST NOT define a shape label <span class="math">sl</span> that belongs to the shapeExprRef closure of its definition  <code class="function">shapeExprWithId(<span class="math">sl</span>)</code>.
+	  A shapes schema MUST NOT define a shape label <span class="math">sl</span> that belongs to the <a>shapeExprRef closure</a> of its definition  <code class="function">shapeExprWithId(<span class="math">sl</span>)</code>.
 	</p>
 	
       <div class="example">
@@ -2082,7 +2088,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	  </li>
 	</ul>
 	<p>
-	  A shapes schema MUST NOT define a triple expression label <span class="math">tl</span> that belongs to the tripleExprRef closure of its definition <code class="function">tripleExprWithId(<span class="math">tl</span>)</code>.
+	  A shapes schema MUST NOT define a triple expression label <span class="math">tl</span> that belongs to the <a>tripleExprRef closure</a> of its definition <code class="function">tripleExprWithId(<span class="math">tl</span>)</code>.
 	</p>
 	
       <div class="example">
@@ -2170,7 +2176,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	</p>
         <ul class="followup leadup">
 	  <li>
-	    <span class="math">s</span> appears as an atomic shape in <span class="math">se</span>, or
+	    <span class="math">s</span> appears as an <a>atomic shape</a> in <span class="math">se</span>, or
 	  </li>
 	  <li>
 	    <span class="math">sid</span> is the <span class="param">id</span> of <span class="math">s</span> and <span class="math">sid</span> appears as an atomic shapeExprRef in <span class="math">se</span>, or
@@ -2195,15 +2201,15 @@ IMPORT &lt;http://schema.example/schema2&gt;
           A shapeExpr <span class="param">SE</span> <code>contains</code> shape <span class="param">S</span> if <span class="param">S</span> appears in the shapeExpr closure of <span class="param">SE</span>.
         </p -->
 
-        <p class="leadup">The set of <dfn>atomic triple constraints</dfn> of a <a>tripleExpr</a> <span class="math">te</span> includes every <a>TripleConstraint</a> <span class="math">tc</span> that appears directly or by <a>tripleExprRef</a> in <span class="math">te</span>.
+        <p class="leadup">The set of <dfn>atomic TripleConstraints</dfn> of a <a>tripleExpr</a> <span class="math">te</span> includes every <a>TripleConstraint</a> <span class="math">tc</span> that appears directly or by <a>tripleExprRef</a> in <span class="math">te</span>.
 	  That is, <span class="math">tc</span> belongs to <code class="function">atomicTripleConstraints(<span class="math">te</span>)</code> if and only if:
 	</p>
         <ul>
           <li>
-	    <span class="math">tc</span> is an atomic <a>TripleConstraint</a> in <span class="math">te</span>, or
+	    <span class="math">tc</span> is an <a>atomic TripleConstraint</a> in <span class="math">te</span>, or
 	  </li>
           <li>
-	    <span class="math">te</span> is an atomic <a>TripleConstraint</a> in <code class="function">tripleExprWithId(<span class="math">tl</span>)</code> for some <a>tripleExprLabel</a> <span class="math">tl</span> that belongs to <code class="function">tripleExprRefClosure(<span class="math">te</span>)</code>.
+	    <span class="math">te</span> is an <a>atomic TripleConstraint</a> in <code class="function">tripleExprWithId(<span class="math">tl</span>)</code> for some <a>tripleExprLabel</a> <span class="math">tl</span> that belongs to <code class="function">tripleExprRefClosure(<span class="math">te</span>)</code>.
 	  </li>
 <!--
 	  <li>
@@ -2250,7 +2256,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	</p>
 	<ul>
 	  <li>
-	    <span class="math">s2</span> appears under an odd number of <a>ShapeNot</a> in the shapeExprRef closure of <span class="math">tc</span>.<span class="param">valueExpr</span>, or
+	    <span class="math">s2</span> appears under an odd number of <a>ShapeNot</a> in the <a>shapeExprRef closure</a> of <span class="math">tc</span>.<span class="param">valueExpr</span>, or
           </li>
 	  <li>
 	    <span class="math">tc</span> has <span class="param">predicate</span> <span class="math">p</span> and <span class="math">s1</span> has <span class="param">extra</span> <span class="math">p</span>.
@@ -4570,7 +4576,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-iriRange">[<span class="prodNo">51</span>]   </td>
 <td><code class="production prod">iriRange</code></td>
 <td>   ::=   </td>
-<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>*)?</code></td>
+<td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> ('~' <span class="prod"><a class="grammarRef" href="#prod-iriExclusion">iriExclusion</a></span>*)?</code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> matches with no "<code>~</code>", iriRange returns <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span>.</td></tr>
   <tr class="params"><td></td><td colspan="3">If <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> and "<code>~</code>" match with no <span class="prod"><a class="grammarRef" href="#prod-iriExclusion">iriExclusion</a></span>, iriRange returns a <a class="obj">IriStem</a> object:</td></tr>
@@ -5149,7 +5155,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="term-PN_LOCAL">[<span class="prodNo">77</span>]   </td>
 <td>&lt;<code class="production term">PN_LOCAL</code>&gt;</td>
 <td>   ::=   </td>
-<td><code class="content">(<span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | ":" | [0-9] | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>) (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | "." | ":" | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>)* </code></td>
+<td><code class="content">(<span class="prod"><a class="grammarRef" href="#term-PN_CHARS_U">PN_CHARS_U</a></span> | ":" | [0-9] | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>) ((<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | "." | ":" | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>)* (<span class="prod"><a class="grammarRef" href="#term-PN_CHARS">PN_CHARS</a></span> | ":" | <span class="prod"><a class="grammarRef" href="#term-PLX">PLX</a></span>))? </code></td>
 </tr>
 </tbody>
 
@@ -5352,7 +5358,6 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="trm @@" style="background:#FBE9E9;"><th class="trm"><dfn>EMPTY</dfn></th>           <td>:</td><td>^$ ;</td></tr>
 
   <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;"><span style="opacity: 0;"># </span>Components</th><td></td><td>These terminals are referenced by other terminals but not by external productions.</td></tr>
-  <tr class="trm"><th class="trm"><dfn>PN_PREFIX</dfn></th>        <td>:</td><td><a>PN_CHARS_BASE</a> ((<a>PN_CHARS</a> | '.')* <a>PN_CHARS</a>)? ;</td></tr>
   <tr class="trm"><th class="trm"><dfn>PN_CHARS_BASE</dfn></th>    <td>:</td><td>  [A-Z] | [a-z] | [\u00C0-\u00D6] | [\u00D8-\u00F6]<br/>
 | [\u00F8-\u02FF] | [\u0370-\u037D] | [\u037F-\u1FFF]<br/>
 | [\u200C-\u200D] | [\u2070-\u218F] | [\u2C00-\u2FEF]<br/>
