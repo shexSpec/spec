@@ -57,7 +57,7 @@
           w3cid:      "44770" },
       ],
       group:           "shex",
-      implementationReportURI: "http://shexspec.github.io/shexTest/reports/2.1/",
+      implementationReportURI: "https://shexspec.github.io/shexTest/reports/2.1/",
       //wgPublicList: "public-shex",
       //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
 
@@ -81,6 +81,7 @@
           {value: "Pull requests", href: "https://github.com/shexSpec/spec/pulls/"},
         ]
       }],
+      highlightVars: true,
       };
     </script>
 
@@ -92,7 +93,7 @@
     <section id="abstract">
       <p>
         The Shape Expressions (ShEx) language describes <a>RDF nodes</a> and <a>graph</a> structures.
-        A <span class="math">node constraint</span> describes an RDF node (<a>IRI</a>, <a>blank node</a> or <a>literal</a>) and a <span class="math">shape</span> describes the <a>triples</a> involving nodes in an <a>RDF graph</a>.
+        A |node constraint| describes an RDF node (<a>IRI</a>, <a>blank node</a> or <a>literal</a>) and a |shape| describes the <a>triples</a> involving nodes in an <a>RDF graph</a>.
         These descriptions identify <a data-lt="predicate">predicates</a> and their associated cardinalities and datatypes.
         ShEx shapes can be used to communicate data structures associated with some process or interface, generate or validate data, or drive user interfaces.
       </p>
@@ -269,8 +270,8 @@
         <h3>Document style</h3>
         <p>
           JSON examples are rendered in a <span class="json">.json</span> CSS style.
-          Partial examples include ranges in a <span class="comment">.comment</span> CSS style to indicate text which would be substituted in a complete example.
-          For example  <span class="json">{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">…</span> ] }</span> indicates that both <span class="comment">SE<sub>1</sub></span> and <span class="comment">…</span> would be substituted in a complete example.
+          Partial examples include ranges in a <var class="subst">.subst</var> CSS style to indicate text which would be substituted in a complete example.
+          For example  <span class="json">{ "type": "ShapeAnd", "shapeExprs": [ <var class="subst">SE<sub>1</sub></var>, <span class="comment">…</span> ] }</span> indicates that both <var class="subst">SE<sub>1</sub></var> and <span class="comment">…</span> would be substituted in a complete example.
         </p>
         <p>
           In javascript-enabled browsers, schemas with a <button class="show-repchoice">json</button> button can be converted between the JSON representation and the compact syntax by clicking the button.
@@ -353,31 +354,31 @@
       </dl>
 
       <p>
-  The following functions access the elements of an <a>RDF graph</a> <span class="math">G</span> containing a node <span class="math">n</span>:</p>
+  The following functions access the elements of an <a>RDF graph</a> |G| containing a node |n|:</p>
   <ul>
     <li>
-      <span class="math"><dfn>arcsOut</dfn>(G, n)</span> is the set of <a>triples</a> in a <a>graph</a> <span class="math">G</span> with <a>subject</a> <span class="math">n</span>.
+      <span class="math"><dfn>arcsOut</dfn>(|G|, |n|)</span> is the set of <a>triples</a> in a <a>graph</a> |G| with <a>subject</a> |n|.
     </li>
     <li>
-      <span class="math"><dfn>predicatesOut</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsOut</a>(G, n)</span>.
+      <span class="math"><dfn>predicatesOut</dfn>(|G|, |n|)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsOut</a>(|G|, |n|)</span>.
     </li>
     <li>
-      <span class="math"><dfn>arcsIn</dfn>(G, n)</span> is the set of <a>triples</a> in a <a>graph</a> <span class="math">G</span> with <a>object</a> <span class="math">n</span>.
+      <span class="math"><dfn>arcsIn</dfn>(|G|, |n|)</span> is the set of <a>triples</a> in a <a>graph</a> |G| with <a>object</a> |n|.
     </li>
     <li>
-      <span class="math"><dfn>predicatesIn</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsIn</a>(G, n)</span>.
+      <span class="math"><dfn>predicatesIn</dfn>(|G|, |n|)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsIn</a>(|G|, |n|)</span>.
     </li>
     <li>
-      <span class="math"><dfn>neigh</dfn>(G, n)</span> is the neighbourhood of the <a>node</a> <span class="math">n</span> in the <a>graph</a> <span class="math">G</span>.<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>
+      <span class="math"><dfn>neigh</dfn>(|G|, |n|)</span> is the neighbourhood of the <a>node</a> |n| in the <a>graph</a> |G|.<br/><span class="math"><a>neigh</a>(|G|, |n|) = <a>arcsOut</a>(|G|, |n|) ∪ <a>arcsIn</a>(|G|, |n|)</span>
     </li>
     <li>
-      <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>
+      <span class="math"><dfn>predicates</dfn>(|G|, |n|)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(|G|, |n|)</span>.<br/><span class="math"><a>predicates</a>(|G|, |n|) = <a>predicatesOut</a>(|G|, |n|) ∪ <a>predicatesIn</a>(|G|, |n|)</span>
     </li>
   </ul>
 
       <div class="example">
   <p>
-    Consider the <a>RDF graph</a> <span class="math">G</span> represented in Turtle:
+    Consider the <a>RDF graph</a> |G| represented in Turtle:
   </p>
 
   <pre class="data">
@@ -395,20 +396,20 @@ _:User2
     foaf:mbox     &lt;mailto:bob@example.org&gt; .
         </pre>
   <p>
-    There are two arcs out of <span class="pre">_:User2</span>; <span class="math"><a>arcsOut</a>(G, <span class="pre">_:User2</span>)</span>:
+    There are two arcs out of <span class="pre">_:User2</span>; <span class="math"><a>arcsOut</a>(|G|, <span class="pre">_:User2</span>)</span>:
   </p>
   <pre class="data">
     _:User2  foaf:name  "Bob Smith" .
     _:User2  foaf:mbox  &lt;mailto:bob@example.org&gt; .
   </pre>
   <p>
-    There is one arc into <span class="pre">_:User2</span>; <span class="math"><a>arcsIn</a>(G, <span class="pre">_:User2</span>)</span>:
+    There is one arc into <span class="pre">_:User2</span>; <span class="math"><a>arcsIn</a>(|G|, <span class="pre">_:User2</span>)</span>:
   </p>
   <pre class="data">
     inst:Issue1 ex:reportedBy  _:User2 .
   </pre>
   <p>
-    There are three arcs in the neighbourhood of <span class="pre">_:User2</span> set, <span class="math"><a>neigh</a>(G, <span class="pre">_:User2</span>)</span>:
+    There are three arcs in the neighbourhood of <span class="pre">_:User2</span> set, <span class="math"><a>neigh</a>(|G|, <span class="pre">_:User2</span>)</span>:
   </p>
   <pre class="data">
     _:User2  foaf:name  "Bob Smith" .
@@ -461,12 +462,13 @@ _:User2
         <pre class="json nohighlight">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/#IssueShape", <span class="comment">…</span> },
   { "id": "_:UserShape", <span class="comment">…</span> },
-  { "id": "http://schema.example/#EmployeeShape", <span class="comment">…</span> } ] }</pre>
-        <pre class="shexc nohighlight">                                                             
+  { "id": "http://schema.example/#EmployeeShape", <span class="comment">…</span> } ]
+}</pre>
+        <pre class="shexc nohighlight">                                                       
     ex:IssueShape { … }
     _:UserShape { … }
     ex:EmployeeShape { … }
-</pre>
+ </pre>
       </div>
       </section>
 
@@ -474,32 +476,32 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed ShapeMap <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeLabel pair <span class="math">(n, sl)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
-	The latter is captured by the expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <a href="#completeTyping">completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>))</code>.
+	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every RDFnode/shapeLabel pair |(n, sl)| in |ism|, the node |n| satisfies the shape expression identified by |sl|.
+	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|))</code>.
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
       </p>
 
       
       <p>
-	The validation of an RDF graph <span class="math">G</span> against a ShEx schema <span class="math">Sch</span> is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code></a>.
-	For an RDF graph <span class="math">G</span> and a shapes schema <span class="math">Sch</span>, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(n, s)</span> where <span class="math">n</span> is a node in <span class="math">G</span> and <span class="math">s</span> is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of <span class="math">Sch</span>.
-	A <dfn label="correct typing">correct typing</dfn> is a <span class="math">typing</span> such that for every RDFnode/shape pair <span class="math">(n,s)</span> in <span class="math">typing</span>, <a href="#satisfies-Shape"><code class="function">matchesShape(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">typing</span>)</code></a> holds.
-	<code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
+	The validation of an RDF graph |G| against a ShEx schema |Sch| is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(|G|, |Sch|)</code></a>.
+	For an RDF graph |G| and a shapes schema |Sch|, a <dfn>typing</dfn> is a set of pairs of the form |(n, s)| where |n| is a node in |G| and |s| is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of |Sch|.
+	A <dfn label="correct typing">correct typing</dfn> is a |typing| such that for every RDFnode/shape pair |(n,s)| in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|)</code></a> holds.
+	<code class="function">completeTyping(|G|, |Sch|)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
       
 
       <p>
-	<dfn id="completeTyping">completeTyping</dfn>: the definition of <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is based on a <a>stratification</a> of <span class="math">Sch</span>.
+	<dfn id="completeTyping">completeTyping</dfn>: the definition of <code class="function">completeTyping(|G|, |Sch|)</code> is based on a <a>stratification</a> of |Sch|.
 	
-	The number of <dfn>strata</dfn> of <span class="math">Sch</span> is the number of maximal strongly connected components of the <a>dependency graph</a> of <span class="math">Sch</span>.
-	A <dfn>stratification</dfn> of a schema <span class="math">Sch</span> with <span class="math">k</span> strata is a function <code class="function">stratum</code> that associates with every <a>Shape</a> in <span class="math">Sch</span> a natural number between <span class="math">1</span> and <span class="math">k</span> such that:
+	The number of <dfn>strata</dfn> of |Sch| is the number of maximal strongly connected components of the <a>dependency graph</a> of |Sch|.
+	A <dfn>stratification</dfn> of a schema |Sch| with |k| strata is a function <code class="function">stratum</code> that associates with every <a>Shape</a> in |Sch| a natural number between |1| and |k| such that:
       </p>
       <ul>
 	<li>
-	  If <span class="math">s1</span> and <span class="math">s2</span> belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s1</span>)</code> = <code class="function">stratum(<span class="math">s2</span>)</code>.
+	  If |s1| and |s2| belong to the same maximal strongly connected component, then <code class="function">stratum(|s1|)</code> = <code class="function">stratum(|s2|)</code>.
 	</li>
 	<li>
-	  If there is a <a>reference</a> from <span class="math">s1</span> to <span class="math">s2</span> and <span class="math">s1</span> and <span class="math">s2</span> do not belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s2</span>)</code> &lt; <code class="function">stratum(<span class="math">s1</span>)</code>.
+	  If there is a <a>reference</a> from |s1| to |s2| and |s1| and |s2| do not belong to the same maximal strongly connected component, then <code class="function">stratum(|s2|)</code> &lt; <code class="function">stratum(|s1|)</code>.
 	</li>
       </ul>
       <p>
@@ -508,24 +510,24 @@ _:User2
 
       
       <p>
-	Given a <a>stratification</a> <code class="function">stratum</code> of <span class="math">Sch</span> with <span class="math">k</span> <a>strata</a>, defines inductively the series of <span class="math">k</span> typings <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> … <code class="function">completeTypingOn(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>.
+	Given a <a>stratification</a> <code class="function">stratum</code> of |Sch| with |k| <a>strata</a>, defines inductively the series of |k| typings <code class="function">completeTypingOn(|1|, |G|, |Sch|)</code> … <code class="function">completeTypingOn(|k|, |G|, |Sch|)</code>.
       </p>
       <ul>
 	<li>
-	  <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all <a>correct typings</a> that contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span>;
+	  <code class="function">completeTypingOn(|1|, |G|, |Sch|)</code> is the union of all <a>correct typings</a> that contain only RDFnode/shape pairs |(n,s)| with <code class="function">stratum(|s|)</code> = |1|;
 	</li>
 	<li>
-	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">completeTypingOn(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all <a>correct typings</a> that:
+	  for every |i| between |2| and |k|, <code class="function">completeTypingOn(|i|, |G|, |Sch|)</code> is the union of all <a>correct typings</a> that:
 	  <ul>
-	    <li> contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">i</span>
+	    <li> contain only RDFnode/shape pairs |(n,s)| with <code class="function">stratum(|s|)</code> ≤ |i|
 	    </li>
-	    <li> are equal to <code class="function">completeTypingOn(<span class="math">i</span>-1, <span class="math">G</span>, <span class="math">Sch</span>)</code> when restricted to their RDFnode/shape pairs <span class="math">(n1,s1)</span> for which <code class="function">stratum(<span class="math">s1</span>)</code> &lt; i.
+	    <li> are equal to <code class="function">completeTypingOn(|i|-1, |G|, |Sch|)</code> when restricted to their RDFnode/shape pairs |(n1,s1)| for which <code class="function">stratum(|s1|)</code> &lt; i.
 	    </li>
 	  </ul>
 	</li>
       </ul>
       <p>
-	Then <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> = <code class="function">completeTypingOn(<span class="math">k</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code>.
+	Then <code class="function">completeTyping(|G|, |Sch|)</code> = <code class="function">completeTypingOn(|k|, |G|, |Sch|)</code>.
       </p>
 
       <div class="note">
@@ -534,7 +536,7 @@ _:User2
       
       <div class="note">
 	<p>
-	  The schema <span class="math">Sch</span> might have several different stratifications but <code class="function">completeTyping(<span class="math">G</span>, <span class="math">Sch</span>)</code> is the same for all these stratifications.
+	  The schema |Sch| might have several different stratifications but <code class="function">completeTyping(|G|, |Sch|)</code> is the same for all these stratifications.
 	  This property is reminiscent of the use of stratified negation in Datalog.
 	</p>
 	<p>
@@ -551,7 +553,7 @@ _:User2
 <!--
       <div class="note">
       <p>
-  Validation of a <a>graph</a> <span class="math">G</span> does not necessarily require the construction of a <a>ShapeMap</a> with every node in <span class="math">G</span>.
+  Validation of a <a>graph</a> |G| does not necessarily require the construction of a <a>ShapeMap</a> with every node in |G|.
   The validation semantics defined below imply a set of dependencies for validating some node as a shape.
   A validation process that tests every <a>node</a> in a <a>graph</a> against every <a>shape</a> in a <a>schema</a> can be considered to have an input <a>ShapeMap</a> associating each node with the set of all shapes in the schema.
       </p>
@@ -559,7 +561,7 @@ _:User2
 
       <p>
         Validation of a node against a shape in a schema requires that there is a consistent mapping from node to <!-\- @@set of -\-> shape for every node and shape visited during a validation process.
-        The remainder of this document uses <span class="math">m</span> to indicate such a mapping.
+        The remainder of this document uses |m| to indicate such a mapping.
       </p>
 -->
       </section>
@@ -616,7 +618,7 @@ _:User2
     "http://schema.example/#IssueShape",
     { "type": "ShapeNot", "shapeExpr": { "type": "Shape", <span class="comment">…</span> } }
     ] } ] }</pre>
-    <pre class="shexc nohighlight">                                                                 
+    <pre class="shexc nohighlight">                                                                
   <span class="keyword">IRI</span> AND
   (
     @&lt;http://schema.example/#IssueShape&gt;
@@ -631,55 +633,55 @@ _:User2
       <section id="shape-expression-semantics">
       <h4>Semantics</h4>
       <p>
-        <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that a node <span class="math">n</span> and a <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>typing</a> <span class="math">t</span> for schema <span class="math">Sch</span>.<br/>
-        <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that <span class="math">n</span> and <span class="math">G</span> do not satisfy <span class="math">se</span> with the given <a>typing</a> <span class="math">t</span>.
+        <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(|n|, |se|, |G|, |Sch|, |t|)</code> indicates that a node |n| and a <a>graph</a> |G| satisfy a <a>shape expression</a> |se| with <a>typing</a> |t| for schema |Sch|.<br/>
+        <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(|n|, |se|, |G|, |Sch|, |t|)</code> indicates that |n| and |G| do not satisfy |se| with the given <a>typing</a> |t|.
       </p>
       <p>
-        <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>,<span class="math">Sch</span>, <span class="math">t</span>)</code> is true if and only if:
+        <code class="function">satisfies(|n|, |se|, |G|,|Sch|, |t|)</code> is true if and only if:
       </p>
 
       <ul>
-        <li id="satisfies-NodeConstraint"><span class="math">se</span> is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<span class="math">n</span>, <span class="math">se</span>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
+        <li id="satisfies-NodeConstraint">|se| is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(|n|, |se|)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>typing</a>.</li>
-        <li id="satisfies-Shape-proxy"><span class="math">se</span> is a <span class="jobjref"><a class="obj">Shape</a></span> and <span class="math">(n, se)</span> belongs to <span class="math">t</span>.
+        <li id="satisfies-Shape-proxy">|se| is a <span class="jobjref"><a class="obj">Shape</a></span> and |(n, se)| belongs to |t|.
 	</li>
-        <li id="satisfies-ShapeOr"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span> such that <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
-        <li id="satisfies-ShapeAnd"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span>, <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
-        <li id="satisfies-ShapeNot"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> <span class="math">se2</span> at <span class="math">se</span>.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
-        <li id="satisfies-ShapeExternal"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
-        <li id="satisfies-shapeExprRef"><span class="math">se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> where <span class="math">se2</span> is the shape expression having <span class="math">se</span> as <span class="param">id</span>.
+        <li id="satisfies-ShapeOr">|se| is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span> such that <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
+        <li id="satisfies-ShapeAnd">|se| is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span>, <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
+        <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
+        <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
+        <li id="satisfies-shapeExprRef">|se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code> where |se2| is the shape expression having |se| as <span class="param">id</span>.
 	</li>
       </ul>
 
       <div class="example">
   <p>
-    Given the three shape expressions <span class="math">SE<sub>1</sub></span>, <span class="math">SE<sub>2</sub></span>, <span class="math">SE<sub>3</sub></span> in a <span class="jobjref"><a class="obj">Schema</a></span> <span class="math">Sch</span>, such that:
+    Given the three shape expressions <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> in a <span class="jobjref"><a class="obj">Schema</a></span> |Sch|, such that:
   </p>
   <ul>
-    <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">SE<sub>1</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code></li>
-    <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">SE<sub>2</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code></li>
-    <li><code class="function">notSatisfies(<span class="math">n</span>, <span class="math">SE<sub>3</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code></li>
+    <li><code class="function">satisfies(|n|, <var>SE<sub>1</sub></var>, |G|, |Sch|, |m|)</code></li>
+    <li><code class="function">satisfies(|n|, <var>SE<sub>2</sub></var>, |G|, |Sch|, |m|)</code></li>
+    <li><code class="function">notSatisfies(|n|, <var>SE<sub>3</sub></var>, |G|, |Sch|, |m|)</code></li>
   </ul>
   <p>
     the following hold:
   </p>
 
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span> ] }</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>{ "type": "ShapeOr", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">SE<sub>2</sub></span>, <span class="comment">SE<sub>3</sub></span> ] }</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
-    <li><div><div style="float:left;" class="code function">notSatisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json code"><pre>{ "type": "ShapeNot", "shapeExpr": {
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre class="nohighlight">{ "type": "ShapeAnd", "shapeExprs": [ <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var> ] }</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre class="nohighlight">{ "type": "ShapeOr", "shapeExprs": [ <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> ] }</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">notSatisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json code"><pre class="nohighlight">{ "type": "ShapeNot", "shapeExpr": {
     { "type": "ShapeOr", "shapeExprs": [
-        <span class="comment">SE<sub>1</sub></span>,
-        { "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>2</sub></span>, <span class="comment">SE<sub>3</sub></span> ] }
+        <var>SE<sub>1</sub></var>,
+        { "type": "ShapeAnd", "shapeExprs": [ <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> ] }
       ] }
-  } }</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+  } }</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
     </ul>
 
     <p>
-      If <span class="math">Sch</span>'s <a class="param">shapes</a> map "<code>http://schema.example/#shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
+      If |Sch|'s <a class="param">shapes</a> map "<code>http://schema.example/#shape1</code>" to <var>SE<sub>1</sub></var> then the following holds:
     </p>
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
     </ul>
       </div>
       </section>
@@ -711,7 +713,7 @@ _:User2
         <section id="node-constraint-semantics">
           <h4>Semantics</h4>
           <p id="satisfies2-NodeConstraint">
-            For a node <span class="param">n</span> and constraint <span class="param">nc</span>, <code class="function">satisfies2(<span class="math">n</span>, <span class="math">nc</span>)</code> if and only if for every <span class="param">nodeKind</span>, <span class="param">datatype</span>, <span class="param">xsFacet</span> and <span class="param">values</span> constraint value <span class="math">v</span> present in <span class="param">nc</span> <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code>.
+            For a node <span class="param">n</span> and constraint <span class="param">nc</span>, <code class="function">satisfies2(|n|, |nc|)</code> if and only if for every <span class="param">nodeKind</span>, <span class="param">datatype</span>, <span class="param">xsFacet</span> and <span class="param">values</span> constraint value |v| present in <span class="param">nc</span> <code class="function">nodeSatisfies(|n|, |v|)</code>.
             The following sections define <code class="function">nodeSatisfies</code> for each of these types of constraints:
           </p>
           <ul>
@@ -726,13 +728,13 @@ _:User2
         <section id="nodeKind">
           <h4>Node Kind Constraints</h4>
           <p id="nodeSatisfies-nodeKind">
-            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if:
+            For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code> if:
           </p>
           <ul>
-            <li><span class="math">v</span> = "iri" and <span class="math">n</span> is an <a>IRI</a>.</li>
-            <li><span class="math">v</span> = "bnode" and <span class="math">n</span> is a <a>blank node</a>.</li>
-            <li><span class="math">v</span> = "literal" and <span class="math">n</span> is a <a>Literal</a>.</li>
-            <li><span class="math">v</span> = "nonliteral" and <span class="math">n</span> is an <a>IRI</a> or <a>blank node</a>.</li>
+            <li>|v| = "iri" and |n| is an <a>IRI</a>.</li>
+            <li>|v| = "bnode" and |n| is a <a>blank node</a>.</li>
+            <li>|v| = "literal" and |n| is a <a>Literal</a>.</li>
+            <li>|v| = "nonliteral" and |n| is an <a>IRI</a> or <a>blank node</a>.</li>
           </ul>
           <div class="example">
             <div class="example-title marker"><span>Node Kind example 1</span></div>
@@ -771,7 +773,7 @@ _:User2
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
-            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is a Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
+            For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code> if |n| is a Literal with the datatype |v| and, if |v| is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of |n| can be cast to the target type |v| per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
             The lexical form and numeric value (where applicable) of all datatypes required by <a data-cite="sparql11-query#FunctionMapping">SPARQL XPath Constructor Functions</a> MUST be tested for conformance with the corresponding XML Schema form.
             ShEx extensions MAY add support for other datatypes.
           </p>
@@ -861,23 +863,23 @@ _:User2
         </ul -->
         <p>
           String facet constraints apply to the lexical form of the <a>RDF Literals</a> and <a>IRIs</a> and <a>blank node identifiers</a> (see <a href="#blank-node-label">note below</a> regarding access to <a>blank node identifiers</a>).<br/>
-          Let <span class="math">lex</span> =
+          Let |lex| =
         </p>
         <ul>
-          <li>if the value <span class="math">n</span> is an <a>RDF Literal</a>, the <a data-cite="rdf11-concepts#dfn-lexical-form">lexical form</a> of the literal (see [[!rdf11-concepts]] <a data-cite="rdf11-concepts#section-Graph-Literal">section 3.3 Literals</a>).</li>
-          <li>if the value <span class="math">n</span> is an <a>IRI</a>, the <a data-cite="rdf11-concepts#dfn-iri">IRI string</a> (see [[!rdf11-concepts]] <a data-cite="rdf11-concepts#section-iris">section 3.2 IRIs</a>).</li>
-          <li>if the value <span class="math">n</span> is a <a>blank node</a>, the <a>blank node identifier</a> (see [[!rdf11-concepts]] <a data-cite="rdf11-concepts#section-blank-nodes">section 3.4 Blank Nodes</a>).</li>
+          <li>if the value |n| is an <a>RDF Literal</a>, the <a data-cite="rdf11-concepts#dfn-lexical-form">lexical form</a> of the literal (see [[!rdf11-concepts]] <a data-cite="rdf11-concepts#section-Graph-Literal">section 3.3 Literals</a>).</li>
+          <li>if the value |n| is an <a>IRI</a>, the <a data-cite="rdf11-concepts#dfn-iri">IRI string</a> (see [[!rdf11-concepts]] <a data-cite="rdf11-concepts#section-iris">section 3.2 IRIs</a>).</li>
+          <li>if the value |n| is a <a>blank node</a>, the <a>blank node identifier</a> (see [[!rdf11-concepts]] <a data-cite="rdf11-concepts#section-blank-nodes">section 3.4 Blank Nodes</a>).</li>
         </ul>
         <p>
-          Let <span class="math">len</span> = the number of unicode codepoints in <span class="math">lex</span><br/>
-          For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code>:
+          Let |len| = the number of unicode codepoints in |lex|<br/>
+          For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code>:
         </p>
         <ul>
-          <li id="nodeSatisfies-length">for "<code>length</code>" constraints, <span class="math">v = len</span>,</li>
-          <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, <span class="math">v &gt;= len</span>,</li>
-          <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <span class="math">v &lt;= len</span>,</li>
+          <li id="nodeSatisfies-length">for "<code>length</code>" constraints, |v = len|,</li>
+          <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, |v &gt;= len|,</li>
+          <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, |v &lt;= len|,</li>
           <li id="nodeSatisfies-pattern">
-            for "<code>pattern</code>" constraints, <span class="math">v</span> is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] <span class="math">re</span> and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">re</span>)</code> returns <code>fn:true</code>.
+            for "<code>pattern</code>" constraints, |v| is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] |re| and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(|lex|, |re|)</code> returns <code>fn:true</code>.
             If the <span class="param">flags</span> parameter is present, it is passed as a third argument to <code class="function">fn:matches</code>.
             The pattern may have XPath 3.1 regular expression escape sequences per the modified production [10] in <a href="https://www.w3.org/TR/xpath-functions-31/#matching-start-and-end">section 5.6.1.1</a> as well as numeric escape sequences of the form 'u' HEX HEX HEX HEX or 'U' HEX HEX HEX HEX HEX HEX HEX HEX.
             Unescaping replaces numeric escape sequences with the corresponding unicode codepoint.
@@ -999,19 +1001,19 @@ _:User2
           <code>totaldigits</code> and <code>fractiondigits</code> constraints on values not derived from <code>xsd:decimal</code> fail.
         </p>
         <p>
-          Let <span class="math">num</span> be the numeric value of <span class="math">n</span>.<br/>
-          For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code>:
+          Let |num| be the numeric value of |n|.<br/>
+          For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code>:
         </p>
         <ul>
-          <li id="nodeSatisfies-mininclusive">for "<code>mininclusive</code>" constraints, <span class="math">v &lt;= num</span>,</li>
-          <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, <span class="math">v &lt; num</span>,</li>
-          <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, <span class="math">v &gt;= num</span>,</li>
-          <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, <span class="math">v &gt; num</span>,</li>
-          <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <span class="math">v</span> is less than or equals the number of digits in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <span class="math">n</span>,</li>
-          <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <span class="math">v</span> is less than or equals the number of digits to the right of the decimal place in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <span class="math">n</span>, ignoring trailing zeros.</li>
+          <li id="nodeSatisfies-mininclusive">for "<code>mininclusive</code>" constraints, |v &lt;= num|,</li>
+          <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, |v &lt; num|,</li>
+          <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, |v &gt;= num|,</li>
+          <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, |v &gt; num|,</li>
+          <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, |v| is less than or equals the number of digits in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of |n|,</li>
+          <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, |v| is less than or equals the number of digits to the right of the decimal place in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of |n|, ignoring trailing zeros.</li>
         </ul>
         <p>
-          The operators <span class="math">&lt;=</span>, <span class="math">&lt;</span>, <span class="math">&gt;=</span> and <span class="math">&gt;</span> are evaluated after performing <a data-cite="xpath20#promotion">numeric type promotion</a>[[!xpath20]].
+          The operators |&lt;=|, |&lt;|, |&gt;=| and |&gt;| are evaluated after performing <a data-cite="xpath20#promotion">numeric type promotion</a>[[!xpath20]].
         </p>
         <div class="example">
           <div class="example-title marker"><span>Numeric Facets example 1</span></div>
@@ -1050,27 +1052,27 @@ _:User2
           The <code>nodeSatisfies</code> semantics for <span class="jobjref"><a class="obj">NodeConstraint</a></span> <span class="param">values</span> depends on a <code>nodeIn</code> function <a href="#nodeIn">defined below</a>.
         </p>
         <p>
-          For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> matches some <a class="nobref">valueSetValue</a> <span class="math">vsv</span> in <span class="math">v</span>.
+          For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code> if |n| matches some <a class="nobref">valueSetValue</a> |vsv| in |v|.
           A term matches a valueSetValue if:
         </p>
         <ul>
-          <li><span class="math" id="nodeSatisfies-objectValue">vsv</span> is an <a class="nobref">objectValue</a> and <span class="math">n = vsv</span>.</li>
-          <li><span class="math">vsv</span> is a <span class="jobjref"><a class="obj">Language</a></span> with <span class="param">languageTag</span> <span class="math">lt</span> and <span class="math">n</span> is a <a>language-tagged string</a> with a <a>language tag</a> <span class="math">l</span> and <span class="math function" >l = lt</span>.</li>
-          <li><span class="math" id="nodeSatisfies-Stem">vsv</span> is a <span class="jobjref"><a class="nobref">IriStem</a></span>, <span class="jobjref"><a class="nobref">LiteralStem</a></span> or <span class="jobjref"><a class="nobref">LanguageStem</a></span> with <span class="param">stem</span> <span class="math">st</span> and <span class="math">nodeIn(n, st)</span>.</li>
-          <li><span class="math" id="nodeSatisfies-StemRange">vsv</span> is a <span class="jobjref"><a class="nobref">IriStemRange</a></span>, <span class="jobjref"><a class="nobref">LiteralStemRange</a></span> or <span class="jobjref"><a class="nobref">LanguageStemRange</a></span> with <span class="param">stem</span> <span class="math">st</span> and <span class="param">exclusions</span> <span class="math">excls</span> and <span class="math function" >nodeIn(n, st)</span> and there is no <span class="math">x</span> in <span class="math">excls</span> such that <span class="math function" >nodeIn(n, excl)</span>.</li>
-          <li><span class="math" id="nodeSatisfies-Wildcard">vsv</span> is a <span class="jobjref"><a class="nobref">Wildcard</a></span> with <span class="param">exclusions</span> <span class="math">excls</span> and there is no <span class="math">x</span> in <span class="math">excls</span> such that <span class="math function" >nodeIn(n, excl)</span>.</li>
+          <li><var id="nodeSatisfies-objectValue">vsv</var> is an <a class="nobref">objectValue</a> and |n| = |vsv|.</li>
+          <li>|vsv| is a <span class="jobjref"><a class="obj">Language</a></span> with <span class="param">languageTag</span> |lt| and |n| is a <a>language-tagged string</a> with a <a>language tag</a> |l| and <span class="math function">|l| = |lt|</span>.</li>
+          <li><var id="nodeSatisfies-Stem">vsv</var> is a <span class="jobjref"><a class="nobref">IriStem</a></span>, <span class="jobjref"><a class="nobref">LiteralStem</a></span> or <span class="jobjref"><a class="nobref">LanguageStem</a></span> with <span class="param">stem</span> |st| and <span class="math">nodeIn(|n|, |st|)</span>.</li>
+          <li><var id="nodeSatisfies-StemRange">vsv</var> is a <span class="jobjref"><a class="nobref">IriStemRange</a></span>, <span class="jobjref"><a class="nobref">LiteralStemRange</a></span> or <span class="jobjref"><a class="nobref">LanguageStemRange</a></span> with <span class="param">stem</span> |st| and <span class="param">exclusions</span> |excls| and <span class="math function" >nodeIn(|n|, |st|)</span> and there is no |x| in |excls| such that <span class="math function" >nodeIn(|n|, |excl|)</span>.</li>
+          <li><var id="nodeSatisfies-Wildcard">vsv</var> is a <span class="jobjref"><a class="nobref">Wildcard</a></span> with <span class="param">exclusions</span> |excls| and there is no |excl| in |excls| such that <span class="math function" >nodeIn(|n|, |excl|)</span>.</li>
         </ul>
         <p>
-          <span class="label" id="nodeIn">nodeIn</span>: asserts that an RDF node <span class="math">n</span> is equal to an RDF term <span class="math">s</span> or is in a set defined by a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span>.<br/>
-          The expression <code class="function">nodeIn(<span class="math">n</span>, <span class="math">s</span>)</code> is satisfied if:
+          <span class="label" id="nodeIn">nodeIn</span>: asserts that an RDF node |n| is equal to an RDF term |s| or is in a set defined by a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span>.<br/>
+          The expression <code class="function">nodeIn(|n|, |s|)</code> is satisfied if:
         </p>
         <ul>
-          <li><span class="math">n = s</span>.</li>
-          <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span> with <span class="param">stem</span> <span class="math">st</span> and:
+          <li>|n = s|.</li>
+          <li>|s| is a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span> with <span class="param">stem</span> |st| and:
           <ul>
-            <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">IriStem</a></span> and <span class="math">n</span> is an <a>IRI</a> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(n, st)</span>.</li>
-            <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">LiteralStem</a></span> and <span class="math">n</span> is an <a>RDF Literal</a> with a lexical value <span class="math">l</span> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(l, st)</span>.</li>
-            <li><span class="math">s</span> is a <span class="jobjref"><a class="obj">LanguageStem</a></span>, <span class="math">n</span> is a <a>language-tagged string</a> with a <a>language tag</a> <span class="math">l</span>, <span class="math">st</span> is a basic language range  per <a class="norm" href="http://www.ietf.org/rfc/rfc4647.txt">Matching of Language Tags</a> [[!rfc4647]] section 2.1 and <span class="math">l</span> matches <span class="math">st</span> per the basic filtering scheme defined in [[!rfc4647]] section 3.3.1. The basic language range wildcard ("*") is represented by an empty <span class="param">stem</span> ("").</li>
+            <li>|s| is a <span class="jobjref"><a class="obj">IriStem</a></span> and |n| is an <a>IRI</a> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(|n|, |st|)</span>.</li>
+            <li>|s| is a <span class="jobjref"><a class="obj">LiteralStem</a></span> and |n| is an <a>RDF Literal</a> with a lexical value |l| and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(|l|, |st|)</span>.</li>
+            <li>|s| is a <span class="jobjref"><a class="obj">LanguageStem</a></span>, |n| is a <a>language-tagged string</a> with a <a>language tag</a> |l|, |st| is a basic language range  per <a class="norm" href="http://www.ietf.org/rfc/rfc4647.txt">Matching of Language Tags</a> [[!rfc4647]] section 2.1 and |l| matches |st| per the basic filtering scheme defined in [[!rfc4647]] section 3.3.1. The basic language range wildcard ("*") is represented by an empty <span class="param">stem</span> ("").</li>
           </ul></li>
         </ul>
         <div class="example">
@@ -1233,105 +1235,105 @@ _:User2
         <h4>Semantics</h4>
         <p id="satisfies-Shape">
           The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
-	  For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
+	  For a <a>node</a> |n|, <a>shape</a> |S|, <a>graph</a> |G|, a ShExSchema |Sch|, and <a>typing</a> |m|, <code class="function">matchesShape(|n|, |S|, |G|, |Sch|, |m|)</code> if and only if:
         </p>
         <ul>
           <li>
-            <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> such that <code class="function">matches(<span class="math">matched</span>, <span class="param">expression</span>, <span class="math">m</span>)</code>.
-            If <span class="param">expression</span> is absent, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
-            Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in <span class="math">remainder</span>:
-            <code class="function"><span class="math">outs</span> = <span class="math">remainder</span> ∩ <a>arcsOut</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
-            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">expression</span>.
-            If <span class="param">expression</span> is absent, <code class="function"><span class="math">matchables</span> = <span class="math">Ø</span> (the empty set)</code>.<br/>
+            <code class="function"><a>neigh</a>(|G|, |n|)</code> can be partitioned into two sets |matched| and |remainder| such that <code class="function">matches(|matched|, <span class="param">expression</span>, |m|)</code>.
+            If <span class="param">expression</span> is absent, <code class="function">|remainder| = <a>neigh</a>(|G|, |n|)</code>.<br/>
+            Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in |remainder|:
+            <code class="function">|outs| = |remainder| ∩ <a>arcsOut</a>(|G|, |n|)</code>.<br/>
+            Let <span class="label">matchables</span> be the triples in |outs| whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">expression</span>.
+            If <span class="param">expression</span> is absent, <code class="function">|matchables| = Ø</code> (the empty set).<br/>
             The complexity of partitioning is described briefly in the <a href="../primer/#partition-complexity">ShEx2 Primer</a>.
           </li>
           <li>
             There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">expression</span>.<br/>
-            Let <span class="label">unmatchables</span> be the triples in <span class="math">outs</span> which are not in <span class="math">matchables</span>.
-            <code class="function"><span class="math">matchables</span> ∪ <span class="math">unmatchables</span> = <span class="math">outs</span></code>.
+            Let <span class="label">unmatchables</span> be the triples in |outs| which are not in |matchables|.
+            <code class="function">|matchables| ∪ |unmatchables| = |outs|</code>.
           </li>
           <li>
-            There is no triple in <span class="math">matchables</span> whose <a>predicate</a> does not appear in <span class="param">extra</span>.
+            There is no triple in |matchables| whose <a>predicate</a> does not appear in <span class="param">extra</span>.
           </li>
-          <li><span class="param">closed</span> is false or <span class="math">unmatchables</span> is empty.</li>
+          <li><span class="param">closed</span> is false or |unmatchables| is empty.</li>
         </ul>
       <p>
         <span class="label" id="matches">matches</span>: asserts that a <a>triple expression</a> is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
-        The expression <code>matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> indicates that a set of triples <span class="math">T</span> can satisfy these rules:
+        The expression <code>matches(|T|, |expr|, |m|)</code> indicates that a set of triples |T| can satisfy these rules:
       </p>
       <ul>
         <li>
-          <p id="matches-semActs"><span class="math">expr</span> has <span class="param">semActs</span> and <code class="function">matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
+          <p id="matches-semActs">|expr| has <span class="param">semActs</span> and <code class="function">matches(|T|, |expr|, |m|)</code> by the remaining rules in this list and the evaluation of <span class="param">semActs</span> succeeds according to the section below on <a href="#semantic-actions">Semantic Actions</a>.</p>
           <div class="example">
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3,     
-  "semActs": [<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>] }</pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                     
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>], "min": 2, "max": 3,
+  "semActs": [<var class="subst">SemAct<sub>1</sub></var>, <var class="subst">SemAct<sub>2</sub></var>, <span class="subst">…</span>] }</pre>
+              <pre class="shexc nohighlight">(<var class="subst">te<sub>1</sub></var> | <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>) {2,3}                                                    
         %&lt;SemAct<sub>1</sub>&gt;% %&lt;SemAct2&gt;% …
 </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>], "min": 2, "max": 3 }     </pre>
+              <pre class="shexc nohighlight">(<var class="subst">te<sub>1</sub></var> | <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>) {2,3}                                                     </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;"></div>
-            <span class="math function" >and <a href="#semActsSatisfied">semActsSatisfied</a>(<span class="inline json">[<span class="comment">SemAct<sub>1</sub></span>, <span class="comment">SemAct<sub>2</sub>, …</span>]</span>)</span>
+            <span class="math function" >and <a href="#semActsSatisfied">semActsSatisfied</a>(<span class="inline json">[<var class="subst">SemAct<sub>1</sub></var>, <var class="subst">SemAct<sub>2</sub></var>, <span class="subst">…</span>]</span>)</span>
           </div>
         </li>
         <li>
-          <p id="matches-cardinality"><span class="math">expr</span> has a <dfn>cardinality</dfn> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1, where a <span class="param">max</span> of -1 is treated as unbounded, and <span class="math">T</span> can be partitioned into <span class="math">k</span> subsets <span class="math function" >T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,…<span class="math">T<sub>k</sub></span> such that <span class="math">min ≤ k ≤ max</span> and for each <span class="math">T<sub>n</sub></span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr</span>, <span class="math">m</span>)</code> by the remaining rules in this list.</p>
+          <p id="matches-cardinality">|expr| has a <dfn>cardinality</dfn> of <span class="param">min</span> and/or <span class="param">max</span> not equal to 1, where a <span class="param">max</span> of -1 is treated as unbounded, and |T| can be partitioned into |k| subsets <var>T<sub>1</sub></var>, <var>T<sub>2</sub></var>,…<var>T</var><var><sub>k</sub></var> such that <span class="math"><span class="param">min</span> ≤ |k| ≤ <span class="param">max</span></span> and for each <var>T<sub>n</sub></var>, <code class="function">matches(<var>T<sub>n</sub></var>, |expr|, |m|)</code> by the remaining rules in this list.</p>
           <div class="example">
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 3 }     </pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>) {2,3}                                                      </pre>
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>], "min": 2, "max": 3 }     </pre>
+              <pre class="shexc nohighlight">(<var class="subst">te<sub>1</sub></var> | <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>) {2,3}                                                     </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
-            <div class="math"><div style="float:left;">Let e = </div><div style="float:left;">
+            <div class="math"><div style="float:left;">Let |e| = </div><div style="float:left;">
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }     </pre>
-              <pre class="shexc nohighlight">(<span class="comment">te<sub>1</sub></span> | <span class="comment">te<sub>2</sub> …</span>)                                        </pre>
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>] }     </pre>
+              <pre class="shexc nohighlight">(<var class="subst">te<sub>1</sub></var> | <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>)                                       </pre>
             </div></div>
             <div style="clear:both;"></div>
-            (<span class="math function" >matches(T<sub>1</sub>, e, m)</span> and
-             <span class="math function" >matches(T<sub>2</sub>, e, m)</span><br/>
-              and T = T<sub>1</sub> ∪ T<sub>2</sub>)<br/>
+            (<span class="math function" >matches(<var class="subst">T<sub>1</sub></var>, |e|, |m|)</span> and
+             <span class="math function" >matches(<var class="subst">T<sub>2</sub></var>, |e|, |m|)</span><br/>
+              and |T| = <var class="subst">T<sub>1</sub></var> ∪ <var class="subst">T<sub>2</sub></var>)<br/>
             or<br/>
-            (<span class="math function" >matches(T<sub>1</sub>, e, m)</span> and
-              <span class="math function" >matches(T<sub>2</sub>, e, m)</span> and
-              <span class="math function" >matches(T<sub>3</sub>, e, m)</span><br/>
-               and T = T<sub>1</sub> ∪ T<sub>2</sub> ∪ T<sub>3</sub>)</div>
+            (<span class="math function" >matches(<var class="subst">T<sub>1</sub></var>, |e|, |m|)</span> and
+             <span class="math function" >matches(<var class="subst">T<sub>2</sub></var>, |e|, |m|)</span> and
+             <span class="math function" >matches(<var class="subst">T<sub>3</sub></var>, |e|, |m|)</span><br/>
+              and |T| = <var class="subst">T<sub>1</sub></var> ∪ <var class="subst">T<sub>2</sub></var> ∪ <var class="subst">T<sub>3</sub></var>)</div>
           </div>
           <!-- div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
             <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>], "min": 2, "max": 2 }</pre></div>,<br/>
+              <pre>{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>], "min": 2, "max": 2 }</pre></div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
             <div class="math"><div style="float:left;">Let subExpr = </div><div style="float:left;">
             <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div></div>
+              <pre>{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>] }</pre></div></div>
             </div>
             <div style="clear:both;"></div>
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;"><span class="math">T<sub>1</sub></span>,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;"><var>T<sub>1</sub></var>,<br/>
             <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div>,<br/>
+              <pre>{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>] }</pre></div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;"></div>
-            <div class="math"><div style="float:left;">and matches(</div><div style="float:left;"><span class="math">T<sub>2</sub></span>,<br/>
+            <div class="math"><div style="float:left;">and matches(</div><div style="float:left;"><var>T<sub>2</sub></var>,<br/>
             <div class="inline json">
-              <pre>{ "type": "OneOf", "shapeExprs": [<span class="comment">te<sub>1</sub></span>, <span class="comment">te<sub>2</sub>, …</span>] }</pre></div>,<br/>
+              <pre>{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>] }</pre></div>,<br/>
               m)</div>
             </div>
             <div style="clear:both;"></div>
@@ -1339,47 +1341,47 @@ _:User2
           </div -->
         </li>
         <li>
-          <p id="matches-OneOf"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="param">shapeExprs</span> such that <code class="function">matches(<span class="math">T</span>, <span class="math">se2</span>, <span class="math">m</span>)</code>.</p>
+          <p id="matches-OneOf">|expr| is a <span class="jobjref"><a class="obj">OneOf</a></span> and there is some <a>shape expression</a> |se2| in <span class="param">shapeExprs</span> such that <code class="function">matches(|T|, |se2|, |m|)</code>.</p>
           <div class="example">
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [
-  { "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] },
+  { "type": "EachOf", "shapeExprs": [<var class="subst">te<sub>3</sub></var>, <var class="subst">te<sub>4</sub></var>, <span class="subst">…</span>] },
   { "type": "TripleExpression", "min": 1, "max": -1,
     "predicate": "http://xmlns.com/foaf/0.1/name" }
 ] }</pre>
               <pre class="shexc nohighlight">                                                    
-  (<span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>)
+  (<var class="subst">te<sub>3</sub></var> ; <var class="subst">te<sub>4</sub></var> ; <span class="subst">…</span>)
   | &lt;http://xmlns.com/foaf/0.1/name&gt; . +
 
  </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [<span class="comment">te<sub>3</sub></span>, <span class="comment">te<sub>4</sub>, …</span>] }     </pre>
-              <pre class="shexc nohighlight"><span class="comment">te<sub>3</sub></span> ; <span class="comment">te<sub>4</sub> ; …</span>                                         </pre>
+              <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [<var class="subst">te<sub>3</sub></var>, <var class="subst">te<sub>4</sub></var>, <span class="subst">…</span>] }     </pre>
+              <pre class="shexc nohighlight"><var class="subst">te<sub>3</sub></var> ; <var class="subst">te<sub>4</sub></var> ; <span class="subst">…</span>                                         </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;"></div>
-            <div class="math"><div style="float:left;">or matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">or matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression", "min": 1, "max": -1,     
     "predicate": "http://xmlns.com/foaf/0.1/name" }</pre>
               <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/name&gt; . +                   
  </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
           </div>
         </li>
         <li>
-          <p id="matches-EachOf"><span class="math">expr</span> is an <span class="jobjref"><a class="obj">EachOf</a></span> and there is some partition of <span class="math">T</span> into <span class="math">T<sub>1</sub></span>, <span class="math">T<sub>2</sub></span>,… such that for every expression <span class="function"><span class="math">expr<sub>1</sub></span>, <span class="math">expr<sub>2</sub></span>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<span class="math">T<sub>n</sub></span>, <span class="math">expr<sub>n</sub></span>, <span class="math">m</span>)</code>.</p>
+          <p id="matches-EachOf">|expr| is an <span class="jobjref"><a class="obj">EachOf</a></span> and there is some partition of |T| into <var>T<sub>1</sub></var>, <var>T<sub>2</sub></var>,… such that for every expression <span class="function"><var>expr<sub>1</sub></var>, <var>expr<sub>2</sub></var>,…</span> in <span class="param">shapeExprs</span>, <code class="function">matches(<var>T<sub>n</sub></var>, <var>expr<sub>n</sub></var>, |m|)</code>.</p>
           <div class="example">
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": [
   { "type": "TripleExpression",
@@ -1394,71 +1396,71 @@ _:User2
 
  </pre>
              </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;">evaluates as:</div>
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T<sub>1</sub>,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;"><var class="subst">T<sub>1</sub></var>,<br/>
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
               <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; .                 
  </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;"></div>
-            <div class="math"><div style="float:left;">and matches(</div><div style="float:left;">T<sub>2</sub>,<br/>
+            <div class="math"><div style="float:left;">and matches(</div><div style="float:left;"><var class="subst">T<sub>2</sub></var>,<br/>
             <div class="inline repchoice incomplete">
               <pre class="json nohighlight">{ "type": "TripleExpression",
     "predicate": "http://xmlns.com/foaf/0.1/familyName" }</pre>
               <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/familyName&gt; .                 
  </pre>
               </div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;"></div>
-            <span class="math">and T = T<sub>1</sub> ∪ T<sub>2</sub></span>
+            <span class="math">and |T| = <var class="subst">T<sub>1</sub></var> ∪ <var class="subst">T<sub>2</sub></var></span>
           </div>
         </li>
         <li>
-          <p id="matches-TripleConstraint"><span class="math">expr</span> is a <span class="jobjref"><a class="obj">TripleConstraint</a></span> and:</p>
+          <p id="matches-TripleConstraint">|expr| is a <span class="jobjref"><a class="obj">TripleConstraint</a></span> and:</p>
           <ul>
             <li>
-              <span class="math">T</span> is a set of one triple.<br/>
-              Let <span class="label">t</span> be the sole triple in <span class="math">T</span>.
+              |T| is a set of one triple.<br/>
+              Let <span class="label">t</span> be the sole triple in |T|.
             </li>
             <li>
-              <span class="math">t</span>'s <a class="param">predicate</a> equals <span class="math">expr</span>'s <a>predicate</a>.<br/>
-              Let <span class="label">value</span> be <span class="math">t</span>'s subject if <span class="param">inverse</span> is true, else <span class="math">t</span>'s object.
+              |t|'s <a class="param">predicate</a> equals |expr|'s <a>predicate</a>.<br/>
+              Let <span class="label">value</span> be |t|'s subject if <span class="param">inverse</span> is true, else |t|'s object.
             </li>
             <li>
-              if <span class="param">inverse</span> is true, <span class="math">t</span> is in <span class="math"><a>arcsIn</a></span>, else <span class="math">t</span> is in <span class="math"><a>arcsOut</a></span>.
+              if <span class="param">inverse</span> is true, |t| is in <span class="math"><a>arcsIn</a></span>, else |t| is in <span class="math"><a>arcsOut</a></span>.
             </li>
             <li>either
             <ul>
               <li>
-                <p><span class="math">expr</span> has no <span class="param">valueExpr</span></p>
+                <p>|expr| has no <span class="param">valueExpr</span></p>
                 <div class="example">
-                  <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
                   <div class="inline repchoice incomplete">
                     <pre class="json nohighlight">{ "type": "TripleExpression",
   "predicate": "http://xmlns.com/foaf/0.1/givenName" }</pre>
                     <pre class="shexc nohighlight">&lt;http://xmlns.com/foaf/0.1/givenName&gt; . ;             
  </pre>
                   </div>,<br/>
-              m)</div>
+              |m|)</div>
                   </div>
                   <div style="clear:both;">holds if
                   <ul class="tight">
-                    <li><span class="math">T</span> has exactly one triple <span class="math">t</span>.</li>
-                    <li><span class="math">t</span> has the <a>predicate</a> "<code>http://xmlns.com/foaf/0.1/givenName</code>"</li>
+                    <li>|T| has exactly one triple |t|.</li>
+                    <li>|t| has the <a>predicate</a> "<code>http://xmlns.com/foaf/0.1/givenName</code>"</li>
                   </ul></div>
                 </div>
               </li>
               <li>
-                <p>or <code class="function">satisfies(<span class="math">value</span>, <span class="param">valueExpr</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>.</p>
+                <p>or <code class="function">satisfies(|value|, <span class="param">valueExpr</span>, |G|, |Sch|, |m|)</code>.</p>
                 <div class="example">
-                  <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
                   <div class="inline repchoice incomplete">
                     <pre class="json nohighlight">{ "type": "TripleConstraint", "inverse": true,
   "predicate": "http://purl.org/dc/elements/1.1/author",
@@ -1467,15 +1469,15 @@ _:User2
 ^&lt;http://purl.org/dc/elements/1.1/author&gt;
         @&lt;http://schema.example/#IssueShape&gt;</pre>
                   </div>,<br/>
-              m)</div>
+              |m|)</div>
                   </div>
                   <div style="clear:both;">holds if
                   <ul class="tight">
-                    <li><span class="math">T</span> has exactly one triple <span class="math">t</span>.</li>
-                    <li><span class="math">t</span> has the <a>predicate</a> "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
-                    <li><span class="math">t</span> has a subject <span class="math">n2</span></li>
-                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to <span class="math">se2</span></li>
-                    <li><span class="math function" >satisfies(n2, se2, G, Sch, m)</span></li>
+                    <li>|T| has exactly one triple |t|.</li>
+                    <li>|t| has the <a>predicate</a> "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
+                    <li>|t| has a subject |n2|</li>
+                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to |se2|</li>
+                    <li><span class="math function" >satisfies(|n2|, |se2|, |G|, |Sch|, |m|)</span></li>
                   </ul></div>
                 </div>
                 <!--
@@ -1495,20 +1497,20 @@ _:User2
         ] } } },
   { "id": "http://schema.example/#IssueShape", "type": "Shape" } ] }</pre>
                   </div><div style="clear:both;"></div>
-                  <span class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+                  <span class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
                   <div class="inline json">
                     <pre>{ "type": "TripleConstraint", "inverse": true,
   "predicate": "http://purl.org/dc/elements/1.1/author",
   "valueExpr": { … } }</pre></div>,<br/>
-              m)</div>
+              |m|)</div>
                   </span>
                   <div style="clear:both;">holds if
                   <ul class="tight">
-                    <li><span class="math">T</span> has exactly one triple <span class="math">t</span>.</li>
-                    <li><span class="math">t</span> has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
-                    <li><span class="math">t</span> has a subject <span class="math">n2</span></li>
-                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to <span class="math">se2</span></li>
-                    <li><span class="math function" >satisfies(n2, se2, G, m)</span></li>
+                    <li>|T| has exactly one triple |t|.</li>
+                    <li>|t| has the predicate "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
+                    <li>|t| has a subject |n2|</li>
+                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to |se2|</li>
+                    <li><span class="math function" >satisfies(|n2|, |se2|, |G|, |m|)</span></li>
                   </ul></div>
                 </div>
                 -->
@@ -1518,7 +1520,7 @@ _:User2
         </li>
         <li>
           <p id="matches-tripleExprRef">
-            <span class="math">expr</span> is a <span class="jobjref"><a class="obj">tripleExprRef</a></span> and <code class="function">satisfies(<span class="math">value</span>, tripleExprWithId(<span class="param">tripleExprRef</span>), <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>.<br/>
+            |expr| is a <span class="jobjref"><a class="obj">tripleExprRef</a></span> and <code class="function">satisfies(|value|, tripleExprWithId(<span class="param">tripleExprRef</span>), |G|, |Sch|, |Sch|, |m|)</code>.<br/>
             The <code class="function">tripleExprWithId</code> function is defined in <a href="#tripleExprRef-requirement">Triple Expression Reference Requirement</a> below.
           </p>
           <div class="example">
@@ -1553,15 +1555,15 @@ _:User2
     &lt;http://xmlns.com/foaf/0.1/name&gt; . ;
 }</pre>
             </div><div style="clear:both;"></div>
-            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
+            <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline json">
               <pre>"http://schema.example/#PersonShape"</pre></div>,<br/>
-              m)</div>
+              |m|)</div>
             </div>
             <div style="clear:both;">holds if
             <ul class="tight">
-              <li>The schema has a shape <span class="math">se2</span> with the <span class="param">id</span> "<code>http://schema.example/#PersonShape</code>"</li>
-              <li><span class="math function" >satisfies(n, se2, G, Sch, m)</span></li>
+              <li>The schema has a shape |se2| with the <span class="param">id</span> "<code>http://schema.example/#PersonShape</code>"</li>
+              <li><span class="math function" >satisfies(|n|, |se2|, |G|, |Sch|, |m|)</span></li>
             </ul></div>
           </div>
         </li>
@@ -1576,8 +1578,8 @@ _:User2
       </p>
       <ul>
         <li>each IRI in <span class="param">imports</span> be resolved and</li>
-        <li>the returned representation of that IRI be interpreted as a ShEx <span class="math">S</span> and</li>
-        <li>each <a class="jobjref">shapeExpr</a> in <span class="math">S</span>.<span class="param">shapes</span> be in scope for resolving shape expression references and</li>
+        <li>the returned representation of that IRI be interpreted as a ShEx |S| and</li>
+        <li>each <a class="jobjref">shapeExpr</a> in |S|.<span class="param">shapes</span> be in scope for resolving shape expression references and</li>
         <li>each <a class="jobjref">tripleExpr</a> with a <a class="jobjref">tripleExprLabel</a> be in scope for resolving triple expression references.</li>
       </ul>
       <p>
@@ -1692,7 +1694,7 @@ IMPORT &lt;http://schema.example/schema1&gt;
             </div>
           </div>
       <p>
-        When some schema <span class="math">A</span> imports schema <span class="math">B</span>, <span class="math">B</span>'s <a class="jobjref">start</a> member is ignored.
+        When some schema |A| imports schema |B|, |B|'s <a class="jobjref">start</a> member is ignored.
       </p>
           <div class="example">
             <div class="example-title marker"><span>Import example 3 - Ignored Start In Import</span></div>
@@ -1817,18 +1819,18 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="validation-requirement">
         <h4>Schema Validation Requirement</h4>
 
-        <p>A <a>graph</a> <span class="math">G</span> is said to <dfn data-lt="conforms|conformance">conform</dfn> with
-          a <a>schema</a> <span class="math">S</span> with a <a>ShapeMap</a> <span class="math">m</span> when:</p>
+        <p>A <a>graph</a> |G| is said to <dfn data-lt="conforms|conformance">conform</dfn> with
+          a <a>schema</a> |S| with a <a>ShapeMap</a> |m| when:</p>
         <ol class="algorithm">
-          <li>Every, <a>SemAct</a> in the <a>startActs</a> of <span class="math">S</span>
+          <li>Every, <a>SemAct</a> in the <a>startActs</a> of |S|
             has a successful evaluation of <a href="#semActsSatisfied">semActsSatisfied</a>.</li>
-          <li>Every <a>node</a> <span class="math">n</span> in <span class="math">m</span> <a>conforms</a> to its associated
-            <a>shapeExprRefs</a> <span class="math">se<sub>n</sub></span> where
-            for each <a>shapeExprRef</a> <span class="math">se<sub>i</sub></span> in <span class="math">se<sub>n</sub></span>:
+          <li>Every <a>node</a> |n| in |m| <a>conforms</a> to its associated
+            <a>shapeExprRefs</a> <var>se<sub>n</sub></var> where
+            for each <a>shapeExprRef</a> <var>se<sub>i</sub></var> in <var>se<sub>n</sub></var>:
             <ol class="algorithm">
-              <li><span class="math">se<sub>i</sub></span> references a <a>ShapeExpr</a> in <a>shapes</a>, and</li>
-              <li><code class="function">satisfies(<span class="math">n</span>, <span class="math">se<sub>i</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>
-                for each <a>shape</a> <span class="math">se<sub>i</sub></span> in <span class="math">se<sub>n</sub></span>.</li>
+              <li><var>se<sub>i</sub></var> references a <a>ShapeExpr</a> in <a>shapes</a>, and</li>
+              <li><code class="function">satisfies(|n|, <var>se<sub>i</sub></var>, |G|, |Sch|, |m|)</code>
+                for each <a>shape</a> <var>se<sub>i</sub></var> in <var>se<sub>n</sub></var>.</li>
             </ol>
           </li>
         </ol>
@@ -1837,25 +1839,25 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
         <p>A <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map (or an <a href="#import">imported schema's</a> map) and the corresponding <a>shape expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
-          The function <code>shapeExprWithId(<span class="math">shapeExprRef</span>)</code> returns the shape expression with an <span class="param">id</span> of <span class="math">shapeExprRef</span>.
+          The function <code>shapeExprWithId(|shapeExprRef|)</code> returns the shape expression with an <span class="param">id</span> of |shapeExprRef|.
 	</p>
 	
 	<p>
 	  Additionally, a <span class="jobjref"><a>shapeExprLabel</a></span> cannot refer to itself through a shape reference either directly or recursively.
-	  The <dfn>shapeExprRef closure</dfn> of a <a>shape expression</a> <span class="math">se</span> is the set of shape expression labels used as references in <span class="math">se</span>.
-	  The <a>shapeExprLabel</a> <span class="math">sl</span> belongs to <code class="function">shapeExprRefClosure(<span class="math">se</span>)</code> if and only if:
+	  The <dfn>shapeExprRef closure</dfn> of a <a>shape expression</a> |se| is the set of shape expression labels used as references in |se|.
+	  The <a>shapeExprLabel</a> |sl| belongs to <code class="function">shapeExprRefClosure(|se|)</code> if and only if:
 	</p>
 	<ul>
 	  <li>
-	    <span class="math">sl</span> appears as an atomic <span class="jobjref"><a>shapeExprRef</a></span> in <span class="math">se</span>, or
+	    |sl| appears as an atomic <span class="jobjref"><a>shapeExprRef</a></span> in |se|, or
 	  </li>
 	  <li>
 
-	    <span class="math">sl</span> belongs to <code class="function">shapeExprRefClosure(shapeExprWithId(<span class="math">sl2</span>))</code> for some <a>shapeExprLabel</a> <span class="math">sl2</span> that belongs to <code class="function">shapeExprRefClosure(<span class="math">se</span>)</code>.
+	    |sl| belongs to <code class="function">shapeExprRefClosure(shapeExprWithId(|sl2|))</code> for some <a>shapeExprLabel</a> |sl2| that belongs to <code class="function">shapeExprRefClosure(|se|)</code>.
 	  </li>
 	</ul>
 	<p>
-	  A shapes schema MUST NOT define a shape label <span class="math">sl</span> that belongs to the <a>shapeExprRef closure</a> of its definition  <code class="function">shapeExprWithId(<span class="math">sl</span>)</code>.
+	  A shapes schema MUST NOT define a shape label |sl| that belongs to the <a>shapeExprRef closure</a> of its definition  <code class="function">shapeExprWithId(|sl|)</code>.
 	</p>
 	
       <div class="example">
@@ -2055,25 +2057,25 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="tripleExprRef-requirement">
         <h4>Triple Expression Reference Requirement</h4>
         <p>An <span class="jobjref"><a>tripleExprRef</a></span> MUST identify a <a>triple expression</a> in the schema.
-        The function <code>tripleExprWithId(<span class="math">tripleExprRef</span>)</code> returns the <a>triple expression</a> with the id <span class="math">tripleExprRef</span>.
+        The function <code>tripleExprWithId(|tripleExprRef|)</code> returns the <a>triple expression</a> with the id |tripleExprRef|.
 	</p>
 
 	<p>
 	  Additionally, a <span class="jobjref"><a>tripleExprLabel</a></span> cannot refer to itself through a triple expression reference either directly or recursively.
-	  The <dfn>tripleExprRef closure</dfn> of a <a>triple expression</a> <span class="math">te</span> is the set of triple expression labels used as references in <span class="math">te</span>.
-	  The <a>tripleExprLabel</a> <span class="math">tl</span> belongs to <code class="function">tripleExprRefClosure(<span class="math">te</span>)</code> if and only if:
+	  The <dfn>tripleExprRef closure</dfn> of a <a>triple expression</a> |te| is the set of triple expression labels used as references in |te|.
+	  The <a>tripleExprLabel</a> |tl| belongs to <code class="function">tripleExprRefClosure(|te|)</code> if and only if:
 	</p>
 	<ul>
 	  <li>
-	    <span class="math">tl</span> appears as an atomic <span class="jobjref"><a>tripleExprRef</a></span> in <span class="math">te</span>, or
+	    |tl| appears as an atomic <span class="jobjref"><a>tripleExprRef</a></span> in |te|, or
 	  </li>
 	  <li>
 
-	    <span class="math">tl</span> belongs to <code class="function">tripleExprRefClosure(tripleExprWithId(<span class="math">tl2</span>))</code> for some <a>tripleExprLabel</a> <span class="math">tl2</span> that belongs to <code class="function">tripleExprRefClosure(<span class="math">te</span>)</code>.
+	    |tl| belongs to <code class="function">tripleExprRefClosure(tripleExprWithId(|tl2|))</code> for some <a>tripleExprLabel</a> |tl2| that belongs to <code class="function">tripleExprRefClosure(|te|)</code>.
 	  </li>
 	</ul>
 	<p>
-	  A shapes schema MUST NOT define a triple expression label <span class="math">tl</span> that belongs to the <a>tripleExprRef closure</a> of its definition <code class="function">tripleExprWithId(<span class="math">tl</span>)</code>.
+	  A shapes schema MUST NOT define a triple expression label |tl| that belongs to the <a>tripleExprRef closure</a> of its definition <code class="function">tripleExprWithId(|tl|)</code>.
 	</p>
 	
       <div class="example">
@@ -2156,28 +2158,28 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	  This is formalized by the requirement that the <a>dependency graph</a> of a schema MUST NOT have a cycle that traverses some <a>negated reference</a>.
         </p>
         <p class="leadup">
-	  The set of <dfn>atomic shapes</dfn> of a <a>shapeExpr</a> <span class="math">se</span> contains a <a>Shape</a> <span class="math">s</span> if <span class="math">s</span> or its <span class="path">id</span> appears either directly or by <a>shapeExprRef</a> in <span class="math">se</span>.
-	  That is, <span class="math">s</span> belongs to <code class="function">atomicShapes(<span class="math">se</span>)</code> if and only if 
+	  The set of <dfn>atomic shapes</dfn> of a <a>shapeExpr</a> |se| contains a <a>Shape</a> |s| if |s| or its <span class="path">id</span> appears either directly or by <a>shapeExprRef</a> in |se|.
+	  That is, |s| belongs to <code class="function">atomicShapes(|se|)</code> if and only if
 	</p>
         <ul class="followup leadup">
 	  <li>
-	    <span class="math">s</span> appears as an <a>atomic shape</a> in <span class="math">se</span>, or
+	    |s| appears as an <a>atomic shape</a> in |se|, or
 	  </li>
 	  <li>
-	    <span class="math">sid</span> is the <span class="param">id</span> of <span class="math">s</span> and <span class="math">sid</span> appears as an atomic shapeExprRef in <span class="math">se</span>, or
+	    |sid| is the <span class="param">id</span> of |s| and |sid| appears as an atomic shapeExprRef in |se|, or
 	  </li>
           <li>
-	    <span class="math">s</span> belongs to <code>atomicShapes(se2)</code> for some shape expression <span class="math">se2</span> such that the <span class="param">id</span> of <span class="math">se2</span> belongs to the shapeExprRefClosure of <span class="math">se</span>.
+	    |s| belongs to <code>atomicShapes(se2)</code> for some shape expression |se2| such that the <span class="param">id</span> of |se2| belongs to the shapeExprRefClosure of |se|.
 	  </li>
 <!--
           <li>
-	    <span class="math">se</span> is a <a>ShapeOr</a> and <span class="math">te</span> belongs to the tripleExpr closure of some <span class="math">se1</span> in <span class="math">se</span>.<span class="param">shapeExprs</span> or
+	    |se| is a <a>ShapeOr</a> and |te| belongs to the tripleExpr closure of some |se1| in |se|.<span class="param">shapeExprs</span> or
 	  </li>
           <li>
-	    <span class="math">se</span> is a <a>ShapeNot</a> and <span class="math">te</span> belongs to the tripleExpr closure of <span class="math">se</span>.<span class="param">shapeExpr</span>
+	    |se| is a <a>ShapeNot</a> and |te| belongs to the tripleExpr closure of |se|.<span class="param">shapeExpr</span>
 	  </li>
 	  <li>
-	    <span class="math">se</span> is a <a>shapeExprRef</a> and <span class="math">te</span> belongs to the tripleExpr closure of the shapeExpr <span class="math">se1</span> that has <span class="math">se</span> as <span class="param">id</span> (that is, <span class="math">se1</span>.<span class="param">id</span> = <span class="math">se</span>).
+	    |se| is a <a>shapeExprRef</a> and |te| belongs to the tripleExpr closure of the shapeExpr |se1| that has |se| as <span class="param">id</span> (that is, |se1|.<span class="param">id</span> = |se|).
 	  </li>
 -->
         </ul>
@@ -2186,22 +2188,22 @@ IMPORT &lt;http://schema.example/schema2&gt;
           A shapeExpr <span class="param">SE</span> <code>contains</code> shape <span class="param">S</span> if <span class="param">S</span> appears in the shapeExpr closure of <span class="param">SE</span>.
         </p -->
 
-        <p class="leadup">The set of <dfn>atomic TripleConstraints</dfn> of a <a>tripleExpr</a> <span class="math">te</span> includes every <a>TripleConstraint</a> <span class="math">tc</span> that appears directly or by <a>tripleExprRef</a> in <span class="math">te</span>.
-	  That is, <span class="math">tc</span> belongs to <code class="function">atomicTripleConstraints(<span class="math">te</span>)</code> if and only if:
+        <p class="leadup">The set of <dfn>atomic TripleConstraints</dfn> of a <a>tripleExpr</a> |te| includes every <a>TripleConstraint</a> |tc| that appears directly or by <a>tripleExprRef</a> in |te|.
+	  That is, |tc| belongs to <code class="function">atomicTripleConstraints(|te|)</code> if and only if:
 	</p>
         <ul>
           <li>
-	    <span class="math">tc</span> is an <a>atomic TripleConstraint</a> in <span class="math">te</span>, or
+	    |tc| is an <a>atomic TripleConstraint</a> in |te|, or
 	  </li>
           <li>
-	    <span class="math">te</span> is an <a>atomic TripleConstraint</a> in <code class="function">tripleExprWithId(<span class="math">tl</span>)</code> for some <a>tripleExprLabel</a> <span class="math">tl</span> that belongs to <code class="function">tripleExprRefClosure(<span class="math">te</span>)</code>.
+	    |te| is an <a>atomic TripleConstraint</a> in <code class="function">tripleExprWithId(|tl|)</code> for some <a>tripleExprLabel</a> |tl| that belongs to <code class="function">tripleExprRefClosure(|te|)</code>.
 	  </li>
 <!--
 	  <li>
-	    <span class="math">te</span> is a <a>EachOf</a> and <span class="math">tc</span> belongs to the tripleConstraint closure of some <span class="math">te1</span> in <span class="math">te</span>.<span class="param">expressions</span> or
+	    |te| is a <a>EachOf</a> and |tc| belongs to the tripleConstraint closure of some |te1| in |te|.<span class="param">expressions</span> or
 	  </li>
 	  <li>
-	    <span class="math">te</span> is a <a>tripleExprLabel</a> and <span class="math">tc</span> belongs to the tripleConstraint closure of the triple expression <span class="math">te1</span> that has <span class="math">te</span> as id (that is, <span class="math">te1</span>.<span class="param">id</span> = <span class="math">te</span>)
+	    |te| is a <a>tripleExprLabel</a> and |tc| belongs to the tripleConstraint closure of the triple expression |te1| that has |te| as id (that is, |te1|.<span class="param">id</span> = |te|)
 	  </li>
 -->
         </ul>
@@ -2211,20 +2213,20 @@ IMPORT &lt;http://schema.example/schema2&gt;
         </p -->
 
         <p class="leadup">
-	  The <a>Shape</a> <span class="math">s1</span> has a <dfn>reference</dfn> to the <a>Shape</a> <span class="math">s2</span> if
+	  The <a>Shape</a> |s1| has a <dfn>reference</dfn> to the <a>Shape</a> |s2| if
         </p>
         <ul class="followup">
 	  <li>
-	    <span class="math">s1</span>.<span class="param">expression</span> is present, and
+	    |s1|.<span class="param">expression</span> is present, and
 	  </li>
 	  <li>
-	    there is a triple constraint <span class="math">tc</span> that belongs to <code class="function">atomicTripleConstraints(<span class="math">s1</span>.<span class="param">expression</span>)</code>, and
+	    there is a triple constraint |tc| that belongs to <code class="function">atomicTripleConstraints(|s1|.<span class="param">expression</span>)</code>, and
 	  </li>
           <li>
-	    <span class="math">tc</span>.<span class="param">valueExpr</span> is present, and
+	    |tc|.<span class="param">valueExpr</span> is present, and
 	  </li>
 	  <li>
-	    <span class="math">s2</span> belongs to <code>atomicShapes(<span class="math">tc</span>.<span class="param">valueExpr</span>)</code>.
+	    |s2| belongs to <code>atomicShapes(|tc|.<span class="param">valueExpr</span>)</code>.
 	  </li>
 	</ul>
 <!--
@@ -2237,21 +2239,21 @@ IMPORT &lt;http://schema.example/schema2&gt;
         </ul>
 -->
         <p class="leadup">
-	  The reference from <span class="math">s1</span> to <span class="math">s2</span> is a <dfn>negated reference</dfn> if
+	  The reference from |s1| to |s2| is a <dfn>negated reference</dfn> if
 	</p>
 	<ul>
 	  <li>
-	    <span class="math">s2</span> appears under an odd number of <a>ShapeNot</a> in the <a>shapeExprRef closure</a> of <span class="math">tc</span>.<span class="param">valueExpr</span>, or
+	    |s2| appears under an odd number of <a>ShapeNot</a> in the <a>shapeExprRef closure</a> of |tc|.<span class="param">valueExpr</span>, or
           </li>
 	  <li>
-	    <span class="math">tc</span> has <span class="param">predicate</span> <span class="math">p</span> and <span class="math">s1</span> has <span class="param">extra</span> <span class="math">p</span>.
+	    |tc| has <span class="param">predicate</span> |p| and |s1| has <span class="param">extra</span> |p|.
 	  </li>
 	</ul>
-	    <!-- appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>. -->
+	    <!-- appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> |p| inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> |p|, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>. -->
 	<p>
-	  The <dfn>dependency graph</dfn> of the schema <span class="math">Sch</span> is the graph which vertices are all the <a>Shape</a>s that appear in some shape expression in the <span class="param">shapes</span> of <span class="math">Sch</span>, and that has two kinds of edges: negative and positive.
-	  There is a negative edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a <a>negated reference</a> to <span class="math">s2</span>.
-	  There is a positive edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a reference but not a negated reference to <span class="math">s2</span>.
+	  The <dfn>dependency graph</dfn> of the schema |Sch| is the graph which vertices are all the <a>Shape</a>s that appear in some shape expression in the <span class="param">shapes</span> of |Sch|, and that has two kinds of edges: negative and positive.
+	  There is a negative edge from |s1| to |s2| if |s1| has a <a>negated reference</a> to |s2|.
+	  There is a positive edge from |s1| to |s2| if |s1| has a reference but not a negated reference to |s2|.
 	</p>
         <div class="example">
             <h3 class="followup">Examples with <span class="jobjref"><a>ShapeNot</a></span></h3>
@@ -2760,8 +2762,8 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
           -->
           <div class="example">
               <span class="exsec">Schema:</span><br/>
-              <pre class="line-labels">
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 
 <span class="lineno schema">nc1</span>
@@ -2780,8 +2782,8 @@ ex:IntConstraint
             </div>
             <div style="clear:both;"></div>
 <!--             Data:<br/>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
@@ -2810,7 +2812,7 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
           </div>
 
           <p class="leadup">
-            Validating a shape requires evaluating it's <a>triple expression</a> as well as the variables and functions <span class="math"><a>neigh</a>(G, n)</span>, <span class="math">matched</span>, <span class="math">remainder</span>, <span class="math">outs</span>, <span class="math">matchables</span> and <span class="math">unmatchables</span>:<br/>
+            Validating a shape requires evaluating it's <a>triple expression</a> as well as the variables and functions <span class="math"><a>neigh</a>(|G|, |n|)</span>, |matched|, |remainder|, |outs|, |matchables| and |unmatchables|:<br/>
           </p>
           <div class="example">
             <!--
@@ -2822,8 +2824,8 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
                 &lt;UserShape&gt; { ex:shoeSize . }
             -->
             <span class="exsec">Schema:</span><br/>
-            <pre class="line-labels"> 
-
+            <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 <span class="lineno schema">tc1</span>
 </pre>
@@ -2842,11 +2844,12 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
-              <pre>BASE &lt;http://a.example/&gt;
+              <pre class="nohighlight">BASE &lt;http://a.example/&gt;
 PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 &lt;Alice&gt; ex:shoeSize "30"^^xsd:integer .
 </pre>
@@ -2884,8 +2887,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
                 }
             -->
             <span class="exsec">Schema:</span><br/>
-            <pre class="line-labels"> 
-
+            <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 <span class="lineno schema">tc1</span>
 
@@ -2905,21 +2908,21 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
       { "type": "NodeConstraint",
         "values": ["http://schema.example/#Teacher"]
       } } } ] }</pre>
-              <pre class="shexc nohighlight">                                                                     
-
-  ex:UserShape EXTRA a {
+              <pre class="shexc nohighlight">  ex:UserShape EXTRA a {                                             
     a
-
 
 
 
       [ex:Teacher]
   }
+
+
+
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
-
+            <pre class="line-labels nohighlight">
+ 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
 <span class="lineno data">t3</span>
@@ -2972,9 +2975,10 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
           -->
           <div class="example">
               <div class="exsec">Schema:</div><br/>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
 
@@ -3035,8 +3039,8 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -3057,7 +3061,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </div>
             <div style="clear:both;"></div>
             <p class="leadup">Per <a href="#shape-expression-semantics">Shape Expression Semantics</a>, &lt;Alice&gt; satisfies <span class="lineno">S1</span> with the simple <a>ShapeMap</a></p>
-            <pre class="line-labels">m:</pre>
+            <pre class="line-labels nohighlight">m:</pre>
             <div class="inline json">
               <pre>{ "http://a.example/Alice": "http://a.example/UserShape }</pre>
             </div>
@@ -3094,7 +3098,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
                       <ul>
                         <li><a href="#satisfies2-NodeConstraint">satisfies2 NodeConstraint</a> ("Walker", <span class="lineno schema">nc3</span>)</li>
                 </ul></li></ul></li></ul></li></ul></li>
-                <li>outs = [<span class="lineno data">t4</span>] <span class="comment">/* <span class="lineno data">t5</span> is in <span class="math"><a>ArcsIn</a>(G, &lt;Alice&gt;)></span>, <span class="lineno data">t6</span> is not in <span class="math"><a>neigh</a>(G, &lt;Alice&gt;)></span>. */</span></li>
+                <li>outs = [<span class="lineno data">t4</span>] <span class="comment">/* <span class="lineno data">t5</span> is in <span class="math"><a>ArcsIn</a>(|G|, &lt;Alice&gt;)></span>, <span class="lineno data">t6</span> is not in <span class="math"><a>neigh</a>(|G|, &lt;Alice&gt;)></span>. */</span></li>
                 <li>matchables = Ø, unmatchables = [<span class="lineno data">t5</span>], <span class="parameter">closed</span> is false</li>
               </ul>
               </li>
@@ -3104,8 +3108,8 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
               Replacing triples 1-3 with a single foaf:name property will also satisfy the schema.
             </p>
             <div class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t4</span>
 <span class="lineno data">t5</span>
@@ -3141,11 +3145,11 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </ul>
 
             <p class="leadup">
-              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that's not used in the <a>triple expression</a> <span class="lineno schema">te1</span>.
+              Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that is not used in the <a>triple expression</a> <span class="lineno schema">te1</span>.
             </p>
             <div class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t3</span>
 <span class="lineno data">t4</span>
@@ -3183,10 +3187,10 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             </ul>
 
             <p class="leadup">
-              Adding a <code>foaf:familyName</code> to <span class="math"><span class="lineno schema">S1</span></span>'s <span class="param">extra</span> would allow this <a>graph</a> to satisfy the schema.
+              Adding a <code>foaf:familyName</code> to <span class="math"><span class="lineno schema">S1</span></span>&apos;s <span class="param">extra</span> would allow this <a>graph</a> to satisfy the schema.
             </p>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 </pre>
             <div class="inline json">
@@ -3198,10 +3202,10 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <div style="clear:both;"></div>
 
             <p class="leadup">
-              Closing <span class="math"><span class="lineno schema">S1</span></span> would also cause a validation failure if <span class="math">unmatchables</span> were not empty:
+              Closing <span class="math"><span class="lineno schema">S1</span></span> would also cause a validation failure if |unmatchables| were not empty:
             </p>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 </pre>
             <div class="inline json">
@@ -3240,8 +3244,8 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 <span class="lineno schema">tc1</span>
 
@@ -3255,8 +3259,8 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
 <span class="lineno schema">nc2</span>
 
-
-</pre>
+ 
+              </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/#IssueShape",
@@ -3290,7 +3294,8 @@ ex:TesterShape
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
@@ -3302,7 +3307,7 @@ inst:Tester2 ex:role ex:testingRole .</pre>
             </div>
             <div style="clear:both;"></div>
             <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the <a>ShapeMap</a></p>
-            <pre class="line-labels">m:</pre>
+            <pre class="line-labels nohighlight">m:</pre>
             <div class="inline json">
               <pre>{ "http://inst.example/Issue1": "http://schema.example/#IssueShape",
   "http://inst.example/Tester2": "http://schema.example/#TesterShape",
@@ -3353,15 +3358,16 @@ PREFIX ex: <http://schema.example/#>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">tc1</span>
 
 
 <span class="lineno schema">nc1</span>
-
-</pre>
+ 
+              </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/#IssueShape",
@@ -3374,14 +3380,15 @@ PREFIX ex: <http://schema.example/#>
               <pre class="shexc nohighlight">                                                      
   ex:IssueShape {
 
-
     ex:related
+
 
       @ex:IssueShape*
 }</pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -3395,7 +3402,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
             </div>
             <div style="clear:both;"></div>
             <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the <a>ShapeMap</a></p>
-            <pre class="line-labels">m:</pre>
+            <pre class="line-labels nohighlight">m:</pre>
             <div class="inline json">
               <pre>{ "http://inst.example/Issue1": "http://schema.example/#IssueShape",
   "http://inst.example/Issue2": "http://schema.example/#IssueShape",
@@ -3464,8 +3471,8 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 <span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
@@ -3478,7 +3485,9 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
 
 <span class="lineno schema">nc2</span>
 
-</pre>
+
+ 
+              </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
     { "id": "http://schema.example/#TestResultsShape",
@@ -3496,9 +3505,7 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
               "values": [ {"value": "b"}, {"value": "c"}, {"value": "d"} ] } }
         ] } } ] }</pre>
               <pre class="shexc nohighlight">                                                                               
-            &lt;http://schema.example/#TestResultsShape&gt;
-{
-
+            &lt;http://schema.example/#TestResultsShape&gt; {
 
                          &lt;http://schema.example/#val&gt;
 
@@ -3509,11 +3516,13 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
 
 
                          ["b" "c" "d"]+
+
+
 }              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -3529,9 +3538,9 @@ PREFIX ex: &lt;http://schema.example/#&gt;
             </div>
             <div style="clear:both;"></div>
             <p class="leadup">&lt;s&gt; satisfies <span class="lineno schema">S1</span> with:</p>
-            <pre class="line-labels">m:</pre>
+            <pre class="line-labels nohighlight">m:</pre>
             <div class="inline json">
-              <pre>{ "http://a.example/s": "http://a.example/S1 }</pre>
+              <pre>{ "http://a.example/s": "http://a.example/S1" }</pre>
             </div>
             <div style="clear:both;" class="validation"><span>Validate</span> <span class="hljs-name">&lt;s&gt;</span> as <span class="hljs-string">http://schema.example/#TestResultShape</span>:</div>
             <p class="leadup followup">If <span class="math"><span class="lineno schema">tc1</span></span> consumes as many triples as it can, it consumes three and <span class="math"><span class="lineno schema">tc2</span></span> consumes one:</p>
@@ -3643,16 +3652,17 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
-<span class="lineno schema">te1</span>
 
+<span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
 
-<span class="lineno schema">nc1</span>
 
+<span class="lineno schema">nc1</span>
 <span class="lineno schema">tc2</span>
+
 
 <span class="lineno schema">nc2</span>
 
@@ -3669,7 +3679,9 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
 
 <span class="lineno schema">nc4</span>
-</pre>
+
+ 
+              </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/#IssueShape",
@@ -3678,11 +3690,11 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/#reproducedBy",
           "valueExpr":
-          "http://schema.example/#TesterShape" },
+              "http://schema.example/#TesterShape" },
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/#reproducedBy",
           "valueExpr":
-          "http://schema.example/#ProgrammerShape" }
+              "http://schema.example/#ProgrammerShape" }
       ] } },
   { "id": "http://schema.example/#TesterShape",
     "type": "Shape", "expression":
@@ -3703,33 +3715,34 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 ex:IssueShape {
 
 
-
   ex:reproducedBy
+
 
     @ex:TesterShape;
-
   ex:reproducedBy
+
 
     @ex:ProgrammerShape
 }
 ex:TesterShape {
 
-
   ex:role
+
 
     [ex:testingRole]
 }
 ex:ProgrammerShape {
 
-
   ex:department
+
 
     [ex:ProgrammingDepartment]
 }
- </pre>
+              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
+            <pre class="line-labels nohighlight">
+ 
 
 
 <span class="lineno data">t1</span>
@@ -3740,7 +3753,8 @@ ex:ProgrammerShape {
 
 
 <span class="lineno data">t4</span>
-<span class="lineno data">t5</span></pre>
+<span class="lineno data">t5</span>
+            </pre>
             <div class="inline json">
               <pre>PREFIX ex: &lt;http://schema.example/#&gt;
 PREFIX inst: &lt;http://inst.example/&gt;
@@ -3757,7 +3771,7 @@ inst:Testgrammer23
             </div>
             <div style="clear:both;"></div>
             <p class="leadup">inst:Issue1 satisfies <span class="lineno schema">S1</span> with the <a>ShapeMap</a></p>
-            <pre class="line-labels">m:</pre>
+            <pre class="line-labels nohighlight">m:</pre>
             <div class="inline json">
               <pre>{ "http://inst.example/Issue1": "http://schema.example/#IssueShape",
   "http://inst.example/Tester2": "http://schema.example/#TesterShape",
@@ -3821,7 +3835,7 @@ inst:Testgrammer23
         <section id="example-negation">
           <h4>Negation Example</h4>
           <p>
-            Setting the maximum <a>cardinality</a> of a TripleConstraint with <a>predicate</a> <span class="math">p</span> to zero (i.e. <span>"max": 0</span> in <a>ShExJ</a> or <code>{0}</code> or <code>{0, 0}</code> in <a>ShExC</a>) asserts that matching nodes must have no triples with <a>predicate</a> <span class="math">p</span>.
+            Setting the maximum <a>cardinality</a> of a TripleConstraint with <a>predicate</a> |p| to zero (i.e. <span>"max": 0</span> in <a>ShExJ</a> or <code>{0}</code> or <code>{0, 0}</code> in <a>ShExC</a>) asserts that matching nodes must have no triples with <a>predicate</a> |p|.
           </p>
           <!--
               BASE <http://schema.example/#>
@@ -3836,8 +3850,8 @@ inst:Testgrammer23
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels nohighlight">
+ 
 <span class="lineno schema">S1</span>
 <span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
@@ -3848,7 +3862,8 @@ inst:Testgrammer23
 <span class="lineno schema">tc2</span>
 
 
-</pre>
+ 
+              </pre>
             <div class="inline repchoice">
               <pre class="json nohighlight">{ "type": "Schema", "shapes": [
     { "id": "http://schema.example/#TestResultsShape",
@@ -3876,8 +3891,8 @@ inst:Testgrammer23
 }              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
@@ -3887,7 +3902,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
             </div>
             <div style="clear:both;"></div>
             <p class="leadup">&lt;s&gt; satisfies <span class="lineno schema">S1</span> with:</p>
-            <pre class="line-labels">m:</pre>
+            <pre class="line-labels nohighlight">m:</pre>
             <div class="inline json">
               <pre>{ "http://a.example/s": "http://a.example/S1" }</pre>
             </div>
@@ -3923,8 +3938,8 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 
             <p class="leadup">If we add a <span class="math"><span class="lineno data">t2</span></span> which matches <span class="math"><span class="lineno schema">tc2</span></span>:</p>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels nohighlight">
+ 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
