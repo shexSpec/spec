@@ -420,20 +420,29 @@ _:User2
     </section>
 
     <section id="conformance">
-      <p>Conformance criteria are relevant to authors and authoring tool implementers. As well
-        as sections marked as non-normative, all authoring guidelines, diagrams, examples,
-        and notes in this specification are non-normative. Everything else in this
-        specification is normative.</p>
+      <p>
+        Conformance criteria are relevant to authors and authoring tool implementers.
+        As well as sections marked as non-normative, all authoring guidelines, diagrams, examples, and notes in this specification are non-normative.
+        Everything else in this specification is normative.
+      </p>
+
+      <p>
+        All ShEx documents MUST conform to the <a href="#schema-requirements" class="sectionRef">Schema Requirements</a>.
+        Additional constraints for the specific types of ShEx documents (<a>ShExC</a>, <a>ShExJ</a>, and <a>ShExR</a>) follow:
+      </p>
 
       <ul>
-        <li>A <a>ShExC</a> document complies with this specification if it
-          conforms to the grammar described in <a href="#shexc" class="sectionRef"></a> resulting
-          in a valid <a>ShExJ</a> document.</li>
-        <li>A <a>ShExJ</a> document complies with this specification if it is a valid
-          JSON-LD document [[!JSON-LD]], and conforms to the <a>ShExJ</a> syntax, as described in <a href="#shexj" class="sectionRef"></a>.</li>
-        <li>JSON documents can be interpreted as <a>ShExJ</a> by following the normative statements in
-          <a data-cite="JSON-LD#interpreting-json-as-json-ld">Section 4.8 Interpreting JSON as JSON-LD</a> in [[!JSON-LD]].</li>
-        <li>Other RDF documents comply with this specification, if they are <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-graph-isomorphism">graph isomorphic</a>[[!rdf11-concepts]] to the RDF interpretation of some <a>ShExJ</a> document.</li>
+        <li>
+          A <a>ShExC</a> document is a UTF-8 document which conforms to the grammar described in <a href="#shexc" class="sectionRef"></a>.
+        <li>
+          A <a>ShExJ</a> document complies with this specification if it is a valid JSON-LD document [[!JSON-LD]], and conforms to the <a>ShExJ</a> syntax, as described in <a href="#shexj" class="sectionRef"></a>.
+        </li>
+        <li>
+          JSON documents can be interpreted as <a>ShExJ</a> by following the normative statements in <a data-cite="JSON-LD#interpreting-json-as-json-ld">Section 4.8 Interpreting JSON as JSON-LD</a> in [[!JSON-LD]].
+        </li>
+        <li>
+          A <a>ShExR</a> RDF document complies with this specification if it conforms to the schema in <a href="#shexr" class="sectionRef"></a>.
+        </li>
       </ul>
     </section>
 
@@ -1235,34 +1244,33 @@ _:User2
         <h4>Semantics</h4>
         <p id="satisfies-Shape">
           The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
-          A <a>shape</a> may have an <span class="param">expression</span>.
-          For the purposes of evaluation, we define an <dfn>EmptyExpression</dfn> which has no <span class="jobjref"><a class="obj">TripleConstraint</a>s</span>.
-          For a <a>shape</a> |s|, an <dfn>effectiveExpression</dfn> is composed from a |s|'s <span class="param">expression</span> and the list of |s|'s <span class="param">extends</span>.
+          Informally, evaluation of a <a>typing</a> for a <a>shape</a> requires finding a partition of the triples in the neighborhood that satisfies an <a>EachOf</a> comprised of the shape&apos;s <span class="param">expression</span> and each of its <span class="param">extends</span>.
+          The term <dfn>EmptyExpression</dfn> identifes the case where the shape has no <span class="param">expression</span> and no <span class="param">extends</span>.
+          For a <a>shape</a> |s|, an <dfn>effectiveExpression</dfn> is composed from a |s|'s <span class="param">expression</span> and the list of |s|'s <span class="param">extends</span> as follows:.
         </p>
         <ul>
-          <li>Let <dfn>extendedExpr</dfn> = extendShape(expression)  s/expression/extendedExpr/g, |extendedExpr(s)|  is a function that takes a <span class="param">Shape</span> |s| and returns a <a class="jobjref">tripleExpr</a>.</li>
-          <li>let <dfn>conjuncts</dfn> = an empty array of |tripleExprs|</li>
-          <li>for each |e| in s.extends |e| is the label of a <a class="jobjref">shapeExpr</a> with exactly one <span class="param">Shape</span> |s2|. If |s2| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
+          <li>Let <dfn>conjuncts</dfn> = an empty array of |tripleExprs|</li>
+          <li>For each |e| in s.extends, |e| is <a>shapeExpr</a> with exactly one <span class="param">Shape</span> |s2| (see the <a href="#extends-single-shape-requirement" class="sectionRef"></a>). If |s2| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
           <li>If |s| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
-          <li>if <a>conjuncts</a>.length is 0, <span class="param">effectiveExpression</span> = <a>EmptyExpression</a>.</li>
-          <li>else if <a>conjuncts</a>.length is 1, <span class="param">effectiveExpression</span> = <a>conjuncts</a>[0].</li>
-          <li>else <span class="param">effectiveExpression</span> = { "type": "EachOf", "shapeExprs": <a>conjuncts</a> }.</li>
+          <li>If <a>conjuncts</a>.length is 0, <a>effectiveExpression</a> = <a>EmptyExpression</a>.</li>
+          <li>Else if <a>conjuncts</a>.length is 1, <a>effectiveExpression</a> = <a>conjuncts</a>[0].</li>
+          <li>Else <a>effectiveExpression</a> = <div class="json"><pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": <a>conjuncts</a> }</pre></div>.</li>
         </ul>
         <p>
           For a <a>node</a> |n|, <a>shape</a> |S|, <a>graph</a> |G|, a ShExSchema |Sch|, and <a>typing</a> |m|, <code class="function">matchesShape(|n|, |S|, |G|, |Sch|, |m|)</code> if and only if:
         </p>
         <ul>
           <li>
-            <code class="function"><a>neigh</a>(|G|, |n|)</code> can be partitioned into two sets |matched| and |remainder| such that <code class="function">matches(|matched|, <span class="param">effectiveExpression</span>, |m|)</code>.
-            If <span class="param">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function">|remainder| = <a>neigh</a>(|G|, |n|)</code>.<br/>
+            <code class="function"><a>neigh</a>(|G|, |n|)</code> can be partitioned into two sets |matched| and |remainder| such that <code class="function">matches(|matched|, <a>effectiveExpression</a>, |m|)</code>.
+            If <a>effectiveExpression</a> is <a>EmptyExpression</a>, <code class="function">|remainder| = <a>neigh</a>(|G|, |n|)</code>.<br/>
             Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in |remainder|:
             <code class="function">|outs| = |remainder| ∩ <a>arcsOut</a>(|G|, |n|)</code>.<br/>
-            Let <span class="label">matchables</span> be the triples in |outs| whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">effectiveExpression</span>.
-            If <span class="param">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function">|matchables| = Ø</code> (the empty set).<br/>
+            Let <span class="label">matchables</span> be the triples in |outs| whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <a>effectiveExpression</a>.
+            If <a>effectiveExpression</a> is <a>EmptyExpression</a>, <code class="function">|matchables| = Ø</code> (the empty set).<br/>
             The complexity of partitioning is described briefly in the <a href="../primer/#partition-complexity">ShEx2 Primer</a>.
           </li>
           <li>
-            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">effectiveExpression</span>.<br/>
+            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <a>effectiveExpression</a>.<br/>
             Let <span class="label">unmatchables</span> be the triples in |outs| which are not in |matchables|.
             <code class="function">|matchables| ∪ |unmatchables| = |outs|</code>.
           </li>
@@ -1281,7 +1289,7 @@ _:User2
           <div class="example">
             <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
             <div class="inline repchoice incomplete">
-              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>], "min": 2, "max": 3,
+              <pre class="json nohighlight">{ "type": "OneOf", "shapeExprs": [<var class="subst">te<sub>1</sub></var>, <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>], "min": 2, "max": 3,     
   "semActs": [<var class="subst">SemAct<sub>1</sub></var>, <var class="subst">SemAct<sub>2</sub></var>, <span class="subst">…</span>] }</pre>
               <pre class="shexc nohighlight">(<var class="subst">te<sub>1</sub></var> | <var class="subst">te<sub>2</sub></var>, <span class="subst">…</span>) {2,3}                                                    
         %&lt;SemAct<sub>1</sub>&gt;% %&lt;SemAct2&gt;% …
@@ -2162,6 +2170,38 @@ IMPORT &lt;http://schema.example/schema2&gt;
     }
 
           </pre>
+        </div>
+      </div>
+      </section>
+
+      <section id="extends-single-shape-requirement">
+        <h4>EXTENDS single shape requirement</h4>
+        <p>
+          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> with a single <a>Shape</a> arbitrarily nested in <a>ShapeOr</a> and <a>ShapeAnd</a>s.
+          <a>shapeExpr</a>s directly or indirectly within a <a>ShapeNot</a> are not counted in this requirement.
+	</p>
+
+      <div class="example">
+        <p>
+          Following is a valid example with a shape with an <span class="param">extends</span> and two <span class="param">extends</span>:
+        </p>
+        <div class="repchoice">
+          <pre class="json nohighlight"></pre>
+          <pre class="shexc nohighlight"></pre>
+        </div>
+        <p>
+          This <span class="param">extends</span> is invalid because it contains multiple (non-negated) shapes:
+        </p>
+        <div class="repchoice error">
+          <pre class="json nohighlight"></pre>
+          <pre class="shexc nohighlight"></pre>
+        </div>
+        <p>
+          This <span class="param">extends</span> is invalid because it contains zero shapes:
+        </p>
+        <div class="repchoice error incomplete">
+          <pre class="json nohighlight"></pre>
+          <pre class="shexc nohighlight"></pre>
         </div>
       </div>
       </section>
@@ -5394,8 +5434,10 @@ tripleExprLabel = IRIREF | BNODE ;
 <section id="shexr" class="appendix">
   <h2>ShEx Schema for ShEx</h2>
 
-  <p>The following schema describes the form of an <a>RDF Graph</a> conforming to a
-    Shape Expression <a>schema</a>, consisten with the description of <a>ShExJ</a>.</p>
+  <p>
+    A <dfn>ShExR</dfn> graph is any <a>RDF Graph</a> which conforms to this Shape Expressions <a>schema</a> and meets the <a href="#schema-requirements">Schema Requirements</a>.
+    Every <a>ShExR</a> document is <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-graph-isomorphism">graph isomorphic</a>[[!rdf11-concepts]] to the RDF interpretation of some <a>ShExJ</a> document.
+  </p>
 
   <pre class="example nohighlight" title="ShExR Shape Expression Schema" data-include="ShExR.shex" data-oninclude="highlightShExC"></pre>
 </section>
