@@ -44,8 +44,8 @@ function prepRep (elts, cls) {
         widths[c] = Math.round(bbox.width);
         heights[c] = Math.round(bbox.height);
       });
-      if (widths.json !== widths.shexc ||
-          heights.json !== heights.shexc) {
+      if (Math.abs(widths.json - widths.shexc) > 10 ||
+          Math.abs(heights.json - heights.shexc) > 4) {
         console.dir([container.get(0),
                      widths.json-widths.shexc,
                      heights.json-heights.shexc]);
