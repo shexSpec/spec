@@ -485,16 +485,16 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every RDFnode/shapeLabel pair |(n, sl)| in |ism|, the node |n| satisfies the shape expression identified by |sl|.
+	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every (RDFnode, shapeExprLabel) pair <span class="math">(|n|, |s|)</span> in |ism|, the node |n| satisfies the shape expression |s|.
 	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|))</code>.
-	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
+	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>, including |s| as a <a>shapeExprLabel</a>.
       </p>
 
       
       <p>
 	The validation of an RDF graph |G| against a ShEx schema |Sch| is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(|G|, |Sch|)</code></a>.
-	For an RDF graph |G| and a shapes schema |Sch|, a <dfn>typing</dfn> is a set of pairs of the form |(n, s)| where |n| is a node in |G| and |s| is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of |Sch|.
-	A <dfn label="correct typing">correct typing</dfn> is a |typing| such that for every RDFnode/shape pair |(n,s)| in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|)</code></a> holds.
+	For an RDF graph |G| and a shapes schema |Sch|, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(|n|, |s|)</span> where |n| is a node in |G| and |s| is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of |Sch|.
+	A <dfn label="correct typing">correct typing</dfn> is a |typing| such that for every RDFnode/shape pair <span class="math">(|n|, |s|)</span> in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|)</code></a> holds.
 	<code class="function">completeTyping(|G|, |Sch|)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
       
@@ -523,14 +523,14 @@ _:User2
       </p>
       <ul>
 	<li>
-	  <code class="function">completeTypingOn(|1|, |G|, |Sch|)</code> is the union of all <a>correct typings</a> that contain only RDFnode/shape pairs |(n,s)| with <code class="function">stratum(|s|)</code> = |1|;
+	  <code class="function">completeTypingOn(|1|, |G|, |Sch|)</code> is the union of all <a>correct typings</a> that contain only RDFnode/shape pairs <span class="math">(|n|, |s|)</span> with <code class="function">stratum(|s|)</code> = |1|;
 	</li>
 	<li>
 	  for every |i| between |2| and |k|, <code class="function">completeTypingOn(|i|, |G|, |Sch|)</code> is the union of all <a>correct typings</a> that:
 	  <ul>
-	    <li> contain only RDFnode/shape pairs |(n,s)| with <code class="function">stratum(|s|)</code> ≤ |i|
+	    <li> contain only RDFnode/shape pairs <span class="math">(|n|, |s|)</span> with <code class="function">stratum(|s|)</code> ≤ |i|
 	    </li>
-	    <li> are equal to <code class="function">completeTypingOn(|i|-1, |G|, |Sch|)</code> when restricted to their RDFnode/shape pairs |(n1,s1)| for which <code class="function">stratum(|s1|)</code> &lt; i.
+	    <li> are equal to <code class="function">completeTypingOn(|i|-1, |G|, |Sch|)</code> when restricted to their RDFnode/shape pairs <span class="math">(|n1|, |s1|)</span> for which <code class="function">stratum(|s1|)</code> &lt; i.
 	    </li>
 	  </ul>
 	</li>
@@ -652,13 +652,16 @@ _:User2
       <ul>
         <li id="satisfies-NodeConstraint">|se| is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(|n|, |se|)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>typing</a>.</li>
-        <li id="satisfies-Shape-proxy">|se| is a <span class="jobjref"><a class="obj">Shape</a></span> and |(n, se)| belongs to |t|.
+        <li id="satisfies-Shape-proxy">|se| is a <span class="jobjref"><a class="obj">Shape</a></span> and <span class="math">(|n|, |se|)</span> belongs to |t|.
 	</li>
         <li id="satisfies-ShapeOr">|se| is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span> such that <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
         <li id="satisfies-ShapeAnd">|se| is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span>, <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
         <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
         <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
-        <li id="satisfies-shapeExprRef">|se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code> where |se2| is the shape expression having |se| as <span class="param">id</span>.
+        <li id="satisfies-shapeExprRef">
+          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any shape |se3| which directly or indirectly extends |se|.
+          A shape |se3| directly extends |se| if |se3| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd<a/> that transitively references |se|.
+          A shape |se3| indirectly extends |se| if |se3| extends some shape |se4| which indirectly extends |se|.
 	</li>
       </ul>
 
@@ -884,9 +887,9 @@ _:User2
           For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code>:
         </p>
         <ul>
-          <li id="nodeSatisfies-length">for "<code>length</code>" constraints, |v = len|,</li>
-          <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, |v &gt;= len|,</li>
-          <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, |v &lt;= len|,</li>
+          <li id="nodeSatisfies-length">for "<code>length</code>" constraints, <span class="math">v = len</span>,</li>
+          <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, <span class="math">v &gt;= len</span>,</li>
+          <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <span class="math">v &lt;= len</span>,</li>
           <li id="nodeSatisfies-pattern">
             for "<code>pattern</code>" constraints, |v| is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] |re| and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(|lex|, |re|)</code> returns <code>fn:true</code>.
             If the <span class="param">flags</span> parameter is present, it is passed as a third argument to <code class="function">fn:matches</code>.
@@ -1014,15 +1017,15 @@ _:User2
           For a node |n| and constraint value |v|, <code class="function">nodeSatisfies(|n|, |v|)</code>:
         </p>
         <ul>
-          <li id="nodeSatisfies-mininclusive">for "<code>mininclusive</code>" constraints, |v &lt;= num|,</li>
-          <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, |v &lt; num|,</li>
-          <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, |v &gt;= num|,</li>
-          <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, |v &gt; num|,</li>
+          <li id="nodeSatisfies-mininclusive">for "<code>mininclusive</code>" constraints, <span class="math">v &lt;= num</span>,</li>
+          <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, <span class="math">v &lt; num</span>,</li>
+          <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, <span class="math">v &gt;= num</span>,</li>
+          <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, <span class="math">v &gt; num</span>,</li>
           <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, |v| is less than or equals the number of digits in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of |n|,</li>
           <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, |v| is less than or equals the number of digits to the right of the decimal place in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of |n|, ignoring trailing zeros.</li>
         </ul>
         <p>
-          The operators |&lt;=|, |&lt;|, |&gt;=| and |&gt;| are evaluated after performing <a data-cite="xpath20#promotion">numeric type promotion</a>[[!xpath20]].
+          The operators <span class="math">&lt;=</span>, <span class="math">&lt;</span>, <span class="math">&gt;=</span> and <span class="math">&gt;</span> are evaluated after performing <a data-cite="xpath20#promotion">numeric type promotion</a>[[!xpath20]].
         </p>
         <div class="example">
           <div class="example-title marker"><span>Numeric Facets example 1</span></div>
@@ -1076,7 +1079,7 @@ _:User2
           The expression <code class="function">nodeIn(|n|, |s|)</code> is satisfied if:
         </p>
         <ul>
-          <li>|n = s|.</li>
+          <li><span class="math">n = s</span>.</li>
           <li>|s| is a <span class="jobjref"><a class="obj">IriStem</a></span>, <span class="jobjref"><a class="obj">LiteralStem</a></span> or <span class="jobjref"><a class="obj">LanguageStem</a></span> with <span class="param">stem</span> |st| and:
           <ul>
             <li>|s| is a <span class="jobjref"><a class="obj">IriStem</a></span> and |n| is an <a>IRI</a> and <span class="math function" ><a data-cite="xpath-functions-31#func-starts-with">fn:starts-with</a>(|n|, |st|)</span>.</li>
@@ -1244,17 +1247,17 @@ _:User2
         <h4>Semantics</h4>
         <p id="satisfies-Shape">
           The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
-          Informally, evaluation of a <a>typing</a> for a <a>shape</a> requires finding a partition of the triples in the neighborhood that satisfies an <a>EachOf</a> comprised of the shape&apos;s <span class="param">expression</span> and each of its <span class="param">extends</span>.
-          The term <dfn>EmptyExpression</dfn> identifes the case where the shape has no <span class="param">expression</span> and no <span class="param">extends</span>.
+          Informally, evaluation of a <a>typing</a> for a <a>shape</a> requires finding a partition of the triples in the neighborhood that satisfies an <a>EachOf</a> comprised of the shape&apos;s <span class="param">expression</span> and the <span class="param">expression</span>s for each of the <a>Shapes</a> in its <span class="param">extends</span>.
+          The term <dfn>EmptyExpression</dfn> identifes the case where the shape has no <span class="param">expression</span> and no <span class="param">expressions</span> it its <span class="param">extends</span>.
           For a <a>shape</a> |s|, an <dfn>effectiveExpression</dfn> is composed from a |s|'s <span class="param">expression</span> and the list of |s|'s <span class="param">extends</span> as follows:.
         </p>
         <ul>
-          <li>Let <dfn>conjuncts</dfn> = an empty array of |tripleExprs|</li>
+          <li>Let <dfn>conjuncts</dfn> = an empty list of |tripleExprs|</li>
           <li>For each |e| in s.extends, |e| is <a>shapeExpr</a> with exactly one <span class="param">Shape</span> |s2| (see the <a href="#extends-single-shape-requirement" class="sectionRef"></a>). If |s2| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
           <li>If |s| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
           <li>If <a>conjuncts</a>.length is 0, <a>effectiveExpression</a> = <a>EmptyExpression</a>.</li>
-          <li>Else if <a>conjuncts</a>.length is 1, <a>effectiveExpression</a> = <a>conjuncts</a>[0].</li>
-          <li>Else <a>effectiveExpression</a> = <div class="json"><pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": <a>conjuncts</a> }</pre></div>.</li>
+          <li>else if <a>conjuncts</a>.length is 1, <a>effectiveExpression</a> is the sole <a>conjunct</a>.</li>
+          <li>else <a>effectiveExpression</a> = <div class="json"><pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": <a>conjuncts</a> }</pre></div>.</li>
         </ul>
         <p>
           For a <a>node</a> |n|, <a>shape</a> |S|, <a>graph</a> |G|, a ShExSchema |Sch|, and <a>typing</a> |m|, <code class="function">matchesShape(|n|, |S|, |G|, |Sch|, |m|)</code> if and only if:
@@ -2177,9 +2180,14 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="extends-single-shape-requirement">
         <h4>EXTENDS single shape requirement</h4>
         <p>
-          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> with a single <a>Shape</a> arbitrarily nested in <a>ShapeOr</a> and <a>ShapeAnd</a>s.
-          <a>shapeExpr</a>s directly or indirectly within a <a>ShapeNot</a> are not counted in this requirement.
+          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> which is a <a>Shape</a> or a <a>ShapeAnd</a> transitively containing a single <a>Shape</a>.
+          This implies that the other leaves of the <a>ShapeAnd</a>(s) are <a>NodeConstraints</a>.
+          <!-- <a>shapeExpr</a>s directly or indirectly within a <a>ShapeNot</a> are not counted in this requirement. -->
 	</p>
+
+        <p class="issue">
+          It is likely that this restriction will be relaxed in the future. If you have use cases, please add them to the GitHub <a href="https://github.com/shexSpec/shex/issues/117">issue #117</a>.
+        </p>
 
       <div class="example">
         <p>
