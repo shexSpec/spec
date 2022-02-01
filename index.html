@@ -1391,9 +1391,22 @@ _:User2
           <li>else if <a>conjuncts</a>.length is 1, <a>effectiveExpression</a> is the sole <a>conjunct</a>.</li>
           <li>else <a>effectiveExpression</a> = <div class="json"><pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": <a>conjuncts</a> }</pre></div>.</li>
         </ul>
+        <div class="issue">
+          <p>
+            The <a>effectiveExpression</a> approach has to capture that all of the expressions in <span class="param">extends</span> and <span class="param">expression</span> must be simultaneously satisfied by the same partition (i.e. you can't use a triple to satisfy a TC in an extends and another in expression).
+            However, current wording fails to capture that the partition must more generally satisfy the entire <a>shapeExpr</a>s in <span class="param">extends</span> (i.e. NodeConstraints).
+            It also (needlessly?) constrains the semantics to ShapeAnds.
+          </p>
+          <p>
+            Alternative: There's some partition across the <span class="param">extends</span> and the <span class="param">expression</span> that satisfies them all with the same <a>typing</a>.
+            When evaluating a <a>Shape</a> |s| in <span class="param">extends</span>, ignore |s|.<span class="param">extra</span> and |s|.<span class="param">closed</span>.
+          </p>
+        </div>
+
         <p>
           For a <a>node</a> |n|, <a>shape</a> |S|, <a>graph</a> |G|, a ShExSchema |Sch|, and <a>typing</a> |m|, <code class="function">matchesShape(|n|, |S|, |G|, |Sch|, |m|)</code> if and only if:
         </p>
+
         <ul>
           <li>
             <code class="function"><a>neigh</a>(|G|, |n|)</code> can be partitioned into two sets |matched| and |remainder| such that <code class="function">matches(|matched|, <a>effectiveExpression</a>, |m|)</code>.
@@ -1414,6 +1427,7 @@ _:User2
           </li>
           <li><span class="param">closed</span> is false or |unmatchables| is empty.</li>
         </ul>
+
       <p>
         <span class="label" id="matches">matches</span>: asserts that a <a>triple expression</a> is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
         The expression <code>matches(|T|, |expr|, |m|)</code> indicates that a set of triples |T| can satisfy these rules:
@@ -2312,7 +2326,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="extends-single-shape-requirement">
         <h4>EXTENDS single shape requirement</h4>
         <p>
-          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> which is a <a>Shape</a> or a <a>ShapeAnd</a> transitively containing a single <a>Shape</a>.
+          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> which is a <a>Shape</a> or a <a>ShapeAnd</a> transitively containing zero or one <a>Shape</a>s.
           This implies that the other leaves of the <a>ShapeAnd</a>(s) are <a>NodeConstraints</a>.
           <!-- <a>shapeExpr</a>s directly or indirectly within a <a>ShapeNot</a> are not counted in this requirement. -->
 	</p>
@@ -2430,14 +2444,6 @@ IMPORT &lt;http://schema.example/schema2&gt;
     }
 
 </pre>
-        </div>
-        <p>
-          This <span class="param">extends</span> is invalid because the extended shape expression contains zero shapes:
-          hmm, maybe that's fine.
-        </p>
-        <div class="repchoice error incomplete">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
         </div>
       </div>
       </section>
