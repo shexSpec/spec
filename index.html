@@ -659,9 +659,16 @@ _:User2
         <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
         <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
         <li id="satisfies-shapeExprRef">
-          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any shape |se3| which directly or indirectly extends |se|.
-          A shape |se3| directly extends |se| if |se3| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd<a/> that transitively references |se|.
-          A shape |se3| indirectly extends |se| if |se3| extends some shape |se4| which indirectly extends |se|.
+          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any <a>non-abstract</a> shape |se3| which directly or transitively extends |se|.
+          <ul>
+            <li>A shape is <dfn class="export">abstract</dfn> if the <span class="param">abstract</span> property is set to true, otherwise it is <dfn>non-abstract</dfn>.</li>
+            <li>A shape |se3| <dfn data-lt="directly">directly extends</dfn> |se| if |se3| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd</a> that directly or transitively references |se|.<ul>
+                <li>|se3| <dfn class="export">directly references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with with |se| in |se3|.<span class="param">expressions</span>.</li>
+                <li>|se3| <dfn>transitively references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with with some shape expression |se4| in |se3|.<span class="param">expressions</span> and |se4| directly or transtively references |se|.</li>
+              </ul>
+            </li>
+            <li>A shape |se3| <dfn data-lt="transitively">transitively extends</dfn> |se| if |se3| extends some shape |se5| which directly or transitively extends |se|.</li>
+          </ul>
 	</li>
       </ul>
 
@@ -696,6 +703,131 @@ _:User2
     <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
     </ul>
       </div>
+
+      <div class="example">
+        <p>
+          In this example, EmployeeShape <a>directly extends</a> of PersonShape and <a>transitively extends</a> EntityShape
+        </p>
+        <div class="repchoice">
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id" : "http://schema.example/#EntityShape",
+    "type" : "Shape",
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#entityId"
+    }
+  },  {
+    "id" : "http://schema.example/#PersonShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#EntityShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://xmlns.com/foaf/0.1/name"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#PersonShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#employeeNumber"
+    }
+  } ] }</pre>
+          <pre class="shexc nohighlight">                                                            
+
+    ex:EntityShape {
+
+
+
+      ex:entityId .
+    }
+
+    ex:PersonShape EXTENDS @ex:EntityShape {
+
+
+
+
+      foaf:name .
+    }
+
+    ex:EmployeeShape EXTENDS @ex:PersonShape {
+
+
+
+
+      ex:employeeNumber .
+    }
+          </pre>
+        </div>
+
+      </div>
+
+      <div class="example" id="tmp">
+        <p>
+          In this example, IssueShape <a>transitively references</a> EngineerShape and ManagerShape (i.e. someone who is both an engineer and a manager):
+        </p>
+        <div class="repchoice">
+          <pre class="json nohighlight">{ "type": "Schema",
+  "shapes": [ {
+    "id": "http://schema.example/#IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#approvedBy",
+      "valueExpr": {
+        "type": "ShapeAnd",
+        "shapeExprs": [
+          "http://schema.example/#EngineerShape",
+          "http://schema.example/#ManagerShape"
+    ] } }
+  }, {
+    "id": "http://schema.example/#Engineer",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#specialty"
+    }
+  }, {
+    "id": "http://schema.example/#ManagerShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#managagesDepartment"
+    }
+  } ] }</pre>
+          <pre class="shexc nohighlight">                                                               
+
+    ex:IssueShape {
+
+
+
+      ex:approvedBy
+
+
+
+          @ex:EngineerShape
+          AND @ex:ManagerShape
+    }
+
+    ex:EngineerShape {
+
+
+
+      ex:specialty .
+    }
+
+    ex:ManagerShape {
+
+
+
+      ex:managagesDepartment .
+    }
+          </pre>
+        </div>
+
+      </div>
+
       </section>
       </section>
 
@@ -2208,6 +2340,30 @@ IMPORT &lt;http://schema.example/schema2&gt;
           This <span class="param">extends</span> is invalid because it contains zero shapes:
         </p>
         <div class="repchoice error incomplete">
+          <pre class="json nohighlight"></pre>
+          <pre class="shexc nohighlight"></pre>
+        </div>
+      </div>
+      </section>
+
+      <section id="shapeExprRef-non-abstract-shape-requirement">
+        <h4>shapeExprRef non-abstract shape requirement</h4>
+        <p>
+          Every <a>shapeExprRef</a> |referer| MUST identify at least one <a>non-abstract</a> shape.
+	</p>
+
+      <div class="example">
+        <p>
+          Following is a valid example with a shape with a <a>shapeExprRef</a> that references an abstract shape with two non-abstract descendants:
+        </p>
+        <div class="repchoice">
+          <pre class="json nohighlight"></pre>
+          <pre class="shexc nohighlight"></pre>
+        </div>
+        <p>
+          This <a>shapeExprRef</a> is invalid because it references only abstract descendants:
+        </p>
+        <div class="repchoice error">
           <pre class="json nohighlight"></pre>
           <pre class="shexc nohighlight"></pre>
         </div>
