@@ -175,6 +175,7 @@
 	  margin: 0
       }
       pre.nohighlight { background: #fafafa; font-size: .9em; color: black; }
+      .repchoice.error > pre.nohighlight { background: inherit; }
 
       .subst {  }
 

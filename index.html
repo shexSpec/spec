@@ -763,7 +763,7 @@ _:User2
 
       </div>
 
-      <div class="example" id="tmp">
+      <div class="example">
         <p>
           In this example, IssueShape <a>transitively references</a> EngineerShape and ManagerShape (i.e. someone who is both an engineer and a manager):
         </p>
@@ -2284,7 +2284,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
           </pre>
         </div>
         <p>This triple expression reference is invalid because the referenced object is a <a>shape expression</a> instead of a triple expression:</p>
-        <div class="repchoice error incomplete">
+        <div class="repchoice error incomplete error">
           <pre class="json nohighlight">{ "type":"Schema", "shapes": [
     { "id": "http://schema.example/#CustomerShape",
       "type":"ShapeAnd", "shapeExprs": [ <span class="comment">…</span> ]
@@ -2323,21 +2323,117 @@ IMPORT &lt;http://schema.example/schema2&gt;
 
       <div class="example">
         <p>
-          Following is a valid example with a shape with an <span class="param">extends</span> and two <span class="param">extends</span>:
+          Following is a valid example with a shape with an <span class="param">expression</span> and two <span class="param">extends</span>:
         </p>
         <div class="repchoice">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id" : "http://schema.example/#EntityShape",
+    "type" : "Shape",
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#entityId"
+    }
+  },  {
+    "id" : "http://schema.example/#PersonShape",
+    "type" : "Shape",
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://xmlns.com/foaf/0.1/name"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#PersonShape",
+                  "http://schema.example/#EntityShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#employeeNumber"
+    }
+  } ] }</pre>
+          <pre class="shexc nohighlight">                                                           
+
+    ex:EntityShape {
+
+
+
+      ex:entityId .
+    }
+
+    ex:PersonShape {
+
+
+
+      foaf:name .
+    }
+
+    ex:EmployeeShape
+
+                  EXTENDS @ex:EntityShape
+                  EXTENDS @ex:PersonShape {
+
+
+      ex:employeeNumber .
+    }
+          </pre>
         </div>
         <p>
-          This <span class="param">extends</span> is invalid because it contains multiple (non-negated) shapes:
+          This <span class="param">extends</span> is invalid because the extended shape expression contains multiple (non-negated) shapes:
         </p>
         <div class="repchoice error">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
+          <pre class="json nohighlight">{ "type": "Schema",
+  "shapes": [ { "type": "ShapeAnd",
+    "id": "http://schema.example/#PersonShape",
+    "shapeExprs": [
+      { "type": "Shape",
+        "expression": {
+          "type": "TripleConstraint",
+          "predicate": "http://schema.example/#entityId"
+        } },
+      { "type": "Shape",
+        "expression": {
+          "type": "TripleConstraint",
+          "predicate": "http://xmlns.com/foaf/0.1/name"
+        } } ] }
+  { "type": "Shape",
+    "id": "http://schema.example/#EmployeeShape",
+    "extends": [
+      "http://schema.example/#EntityShape"
+    ],
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#employeeNumber"
+    } }
+] }</pre>
+          <pre class="shexc nohighlight">                                                          
+
+    ex:PersonShape {
+
+
+
+
+          ex:entityId .
+
+      } AND {
+
+
+          foaf:name .
+    }
+
+    ex:EmployeeShape
+
+      EXTENDS @ex:EntityShape {
+
+
+
+      ex:employeeNumber .
+    }
+
+</pre>
         </div>
         <p>
-          This <span class="param">extends</span> is invalid because it contains zero shapes:
+          This <span class="param">extends</span> is invalid because the extended shape expression contains zero shapes:
+          hmm, maybe that's fine.
         </p>
         <div class="repchoice error incomplete">
           <pre class="json nohighlight"></pre>
