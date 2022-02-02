@@ -486,7 +486,8 @@ _:User2
 
       <p>
 	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every (RDFnode, shapeExprLabel) pair <span class="math">(|n|, |s|)</span> in |ism|, the node |n| satisfies the shape expression |s|.
-	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|))</code>.
+	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|), |ext|)</code>.
+        (|ext| is an optional list of triples (or "neighborhood") used for recursive validation of extended <a>Shapes</a>.)
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>, including |s| as a <a>shapeExprLabel</a>.
       </p>
 
@@ -1392,7 +1393,7 @@ _:User2
           The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
           Informally, evaluation of a <a>typing</a> for a <a>shape</a> requires finding a partition of the triples in the neighborhood that satisfies an <a>EachOf</a> comprised of the shape&apos;s <span class="param">expression</span> and the <span class="param">expression</span>s for each of the <a>Shapes</a> in its <span class="param">extends</span>.
         </p>
-        <p><code class="function">flattenTCs(|expr|)</code> is a function which takes a <code>ShapeExpression</code> or <code>TripleExpression</code> and returns a set of <a>TripleConstraints</a>.</p>
+        <p><span class="math"><dfn class="function">flattenTCs</dfn>(|expr|)<span> is a function which takes a <code>ShapeExpression</code> or <code>TripleExpression</code> and returns a set of <a>TripleConstraints</a>.</p>
         <ul>
           <li>If |expr| is a <a>ShapeAnd</a> or <a>ShapeOr</a>, <code class="function">flattenTCs(|expr|)</code> returns the combined set of <code class="function">flattenTCs(|sexpr2|)</code> for each |sexpr2| in |expr|.<span class="param">shapeExprs</span>.</li>
           <li>If |expr| is a <a>ShapeNot</a>, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|expr|.<span class="param">shapeExprs</span>)</code>.</li>
@@ -1419,7 +1420,7 @@ _:User2
 
         <ul>
           <li>
-            |S| has |i| <span class="param">extends</span> (0 - ∞) and |j| <span class="param">expression</span>s (0 - 1), |nei| can be partitioned into |i| + |j| sets <var>p<sub>k</sub></var> and a remainder |r| such that for each <span class="param">extends</span> |ext|, <code class="function">satisfies(|n|, <span class="param">extends</span><sub>ext</sub>, |G|, |Sch|, |m|, <var>p<sub>ext</sub></var>)</code> and <code class="function">matches(<var>p<sub>i+j</sub></var>, |expression|, |m|)</code>.
+            |S| has |i| <span class="param">extends</span> (0 - ∞) and |j| <span class="param">expression</span>s (0 - 1), |nei| can be partitioned into |i| + |j| sets <var>p</var><sub>k</sub> and a remainder |r| such that for the index |iExt| of each <a>shapeExpr</a> in |S|.<span class="param">extends</span>, <code class="function">satisfies(|n|, |S|.<span class="param">extends</span><sub>|iExt|</sub>, |G|, |Sch|, |m|, <var>p</var><sub>|iExt|</sub>)</code>, and <code class="function">matches(<var>p<sub>i+j</sub></var>, |S|.<span class="param">expression</span>, |m|)</code>.
             If |tcs| is empty, <code class="function">|r| = |nei|</code>.<br/>
             Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in |r|:
             <code class="function">|outs| = |r| ∩ <a>arcsOut</a>(|G|, |n|)</code>.<br/>
@@ -2333,12 +2334,10 @@ IMPORT &lt;http://schema.example/schema2&gt;
       </div>
       </section>
 
-      <section id="extends-single-shape-requirement">
-        <h4>EXTENDS single shape requirement</h4>
+      <section id="no-extends-external-shape-requirement">
+        <h4>no EXTENDS of external shapes requirement</h4>
         <p>
-          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> which is a <a>Shape</a> or a <a>ShapeAnd</a> transitively containing zero or one <a>Shape</a>s.
-          This implies that the other leaves of the <a>ShapeAnd</a>(s) are <a>NodeConstraints</a>.
-          <!-- <a>shapeExpr</a>s directly or indirectly within a <a>ShapeNot</a> are not counted in this requirement. -->
+          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span> or some shape traversed by <a>flattenTCs</a>, |parent| MUST NOT be an <code>ExternalShape</code>.
 	</p>
 
         <p class="issue">
@@ -2349,7 +2348,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
         <p>
           Following is a valid example with a shape with an <span class="param">expression</span> and two <span class="param">extends</span>:
         </p>
-        <div class="repchoice">
+        <div class="repchoice error">
           <pre class="json nohighlight">{"type" : "Schema",
   "shapes" : [ {
     "id" : "http://schema.example/#EntityShape",
@@ -2360,11 +2359,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
     }
   },  {
     "id" : "http://schema.example/#PersonShape",
-    "type" : "Shape",
-    "expression" : {
-      "type" : "TripleConstraint",
-      "predicate" : "http://xmlns.com/foaf/0.1/name"
-    }
+    "type" : "ExternalShape"
   }, {
     "id" : "http://schema.example/#EmployeeShape",
     "type" : "Shape",
@@ -2384,12 +2379,8 @@ IMPORT &lt;http://schema.example/schema2&gt;
       ex:entityId .
     }
 
-    ex:PersonShape {
+    EXTERNAL ex:PersonShape
 
-
-
-      foaf:name .
-    }
 
     ex:EmployeeShape
 
@@ -2400,60 +2391,6 @@ IMPORT &lt;http://schema.example/schema2&gt;
       ex:employeeNumber .
     }
           </pre>
-        </div>
-        <p>
-          This <span class="param">extends</span> is invalid because the extended shape expression contains multiple (non-negated) shapes:
-        </p>
-        <div class="repchoice error">
-          <pre class="json nohighlight">{ "type": "Schema",
-  "shapes": [ { "type": "ShapeAnd",
-    "id": "http://schema.example/#PersonShape",
-    "shapeExprs": [
-      { "type": "Shape",
-        "expression": {
-          "type": "TripleConstraint",
-          "predicate": "http://schema.example/#entityId"
-        } },
-      { "type": "Shape",
-        "expression": {
-          "type": "TripleConstraint",
-          "predicate": "http://xmlns.com/foaf/0.1/name"
-        } } ] }
-  { "type": "Shape",
-    "id": "http://schema.example/#EmployeeShape",
-    "extends": [
-      "http://schema.example/#EntityShape"
-    ],
-    "expression": {
-      "type": "TripleConstraint",
-      "predicate": "http://schema.example/#employeeNumber"
-    } }
-] }</pre>
-          <pre class="shexc nohighlight">                                                          
-
-    ex:PersonShape {
-
-
-
-
-          ex:entityId .
-
-      } AND {
-
-
-          foaf:name .
-    }
-
-    ex:EmployeeShape
-
-      EXTENDS @ex:EntityShape {
-
-
-
-      ex:employeeNumber .
-    }
-
-</pre>
         </div>
       </div>
       </section>
