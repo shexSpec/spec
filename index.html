@@ -1436,7 +1436,7 @@ _:User2
           <li>
             |matchables| is empty or |ext| is empty and the <a>predicate</a> of every triple in |matchables| appears in <span class="param">extra</span>.
           </li>
-          <li><span class="param">closed</span> is false or |nei| is empty or |unmatchables| is empty.</li>
+          <li><span class="param">closed</span> is false or |ext| is empty or |unmatchables| is empty.</li>
         </ul>
 
       <p>
@@ -2403,18 +2403,148 @@ IMPORT &lt;http://schema.example/schema2&gt;
 
       <div class="example">
         <p>
-          Following is a valid example with a shape with a <a>shapeExprRef</a> that references an abstract shape with two non-abstract descendants:
+          Following is a valid example with a shape with a <a>shapeExprRef</a> that references an abstract shape with two <a>non-abstract</a> descendants:
         </p>
         <div class="repchoice">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id": "http://schema.example/#IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#approvedBy",
+      "valueExpr": "http://schema.example/#EngineerShape"
+    }
+  },  {
+    "id" : "http://schema.example/#EntityShape",
+    "type" : "Shape", "abstract": true,
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#entityId"
+    }
+  },  {
+    "id" : "http://schema.example/#PersonShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#EntityShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://xmlns.com/foaf/0.1/name"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#PersonShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#employeeNumber"
+    }
+} ] }</pre>
+          <pre class="shexc nohighlight">                                                           
+
+    ex:IssueShape {
+
+
+
+      ex:approvedBy
+          @ex:EntityShape
+    }
+
+    ABSTRACT ex:EntityShape {
+
+
+
+      ex:entityId .
+    }
+
+    ex:PersonShape EXTENDS @ex:EntityShape {
+
+
+
+
+      foaf:name .
+    }
+
+    ex:EmployeeShape EXTENDS @ex:EntityShape {
+
+
+
+
+      ex:employeeNumber .
+    }
+ 
+</pre>
         </div>
         <p>
           This <a>shapeExprRef</a> is invalid because it references only abstract descendants:
         </p>
         <div class="repchoice error">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id": "http://schema.example/#IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#approvedBy",
+      "valueExpr": "http://schema.example/#EngineerShape"
+    }
+  },  {
+    "id" : "http://schema.example/#EntityShape",
+    "type" : "Shape", "abstract": true,
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#entityId"
+    }
+  },  {
+    "id" : "http://schema.example/#PersonShape",
+    "type" : "Shape", "abstract": true,
+    "extends" : [ "http://schema.example/#EntityShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://xmlns.com/foaf/0.1/name"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape", "abstract": true,
+    "extends" : [ "http://schema.example/#PersonShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#employeeNumber"
+    }
+} ] }</pre>
+          <pre class="shexc nohighlight">                                                           
+
+    ex:IssueShape {
+
+
+
+      ex:approvedBy
+          @ex:EntityShape
+    }
+
+    ABSTRACT ex:EntityShape {
+
+
+
+      ex:entityId .
+    }
+
+    ABSTRACT ex:PersonShape EXTENDS @ex:EntityShape {
+
+
+
+
+      foaf:name .
+    }
+
+    ABSTRACT ex:EmployeeShape EXTENDS @ex:EntityShape {
+
+
+
+
+      ex:employeeNumber .
+    }
+ 
+</pre>
         </div>
       </div>
       </section>
