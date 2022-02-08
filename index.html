@@ -663,8 +663,8 @@ _:User2
           <ul>
             <li>A shape is <dfn class="export">abstract</dfn> if the <span class="param">abstract</span> property is set to true, otherwise it is <dfn>non-abstract</dfn>.</li>
             <li>A shape |se3| <dfn data-lt="directly">directly extends</dfn> |se| if |se3| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd</a> that directly or transitively references |se|.<ul>
-                <li>|se3| <dfn class="export">directly references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with with |se| in |se3|.<span class="param">expressions</span>.</li>
-                <li>|se3| <dfn>transitively references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with with some shape expression |se4| in |se3|.<span class="param">expressions</span> and |se4| directly or transtively references |se|.</li>
+                <li>|se3| <dfn class="export">directly references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with |se| in |se3|.<span class="param">expressions</span>.</li>
+                <li>|se3| <dfn>transitively references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with some shape expression |se4| in |se3|.<span class="param">expressions</span> and |se4| directly or transtively references |se|.</li>
               </ul>
             </li>
             <li>A shape |se3| <dfn data-lt="transitively">transitively extends</dfn> |se| if |se3| extends some shape |se5| which directly or transitively extends |se|.</li>
