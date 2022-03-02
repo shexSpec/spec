@@ -485,7 +485,7 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every (RDFnode, shapeExprLabel) pair <span class="math">(|n|, |s|)</span> in |ism|, the node |n| satisfies the shape expression |s|.
+	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every (RDFnode, shapeExprLabel) pair <span class="math">(|n|, |s|)</span> in |ism|, the node |n| satisfies |s|.
 	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|))</code>.
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>, including |s| as a <a>shapeExprLabel</a>.
       </p>
