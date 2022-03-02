@@ -86,7 +86,7 @@
     </script>
 
     <script src="./shex-parser-browserify.js"></script>
-    <script type="text/javascript" src="scripts.js"></script>
+    <script src="scripts.js"></script>
   </head>
   
   <body>
@@ -485,8 +485,9 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every (RDFnode, shapeExprLabel) pair <span class="math">(|n|, |s|)</span> in |ism|, the node |n| satisfies |s|.
-	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|))</code>.
+	<dfn id="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every (RDFnode, shapeExprLabel) pair <span class="math">(|n|, |s|)</span> in |ism|, the node |n| satisfies |s|.
+	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|), |ext|)</code>.
+        (|ext| is an optional list of triples (or "neighborhood") used for recursive validation of extended <a>Shapes</a>.)
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>, including |s| as a <a>shapeExprLabel</a>.
       </p>
 
@@ -494,7 +495,7 @@ _:User2
       <p>
 	The validation of an RDF graph |G| against a ShEx schema |Sch| is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(|G|, |Sch|)</code></a>.
 	For an RDF graph |G| and a shapes schema |Sch|, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(|n|, |s|)</span> where |n| is a node in |G| and |s| is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of |Sch|.
-	A <dfn label="correct typing">correct typing</dfn> is a |typing| such that for every RDFnode/shape pair <span class="math">(|n|, |s|)</span> in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|)</code></a> holds.
+	A <dfn>correct typing</dfn> is a |typing| such that for every RDFnode/shape pair <span class="math">(|n|, |s|)</span> in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|, |ext|)</code></a> holds.
 	<code class="function">completeTyping(|G|, |Sch|)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
       
@@ -642,11 +643,22 @@ _:User2
       <section id="shape-expression-semantics">
       <h4>Semantics</h4>
       <p>
-        <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(|n|, |se|, |G|, |Sch|, |t|)</code> indicates that a node |n| and a <a>graph</a> |G| satisfy a <a>shape expression</a> |se| with <a>typing</a> |t| for schema |Sch|.<br/>
-        <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(|n|, |se|, |G|, |Sch|, |t|)</code> indicates that |n| and |G| do not satisfy |se| with the given <a>typing</a> |t|.
+        <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(|n|, |se|, |G|, |Sch|, |t|, |ext|)</code> indicates that a node |n| in |G| satisfiues a shape expression |se| in |Sch| with <a>typing</a> |t|.<br/>
+        <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(|n|, |se|, |G|, |Sch|, |t|, |ext|)</code> indicates that |n| and |G| do not satisfy |se| with the given <a>typing</a> |t|.
+      </p>
+      <ul>
+        <li>|n|: RDF <a>node</a></li>
+        <li>|G|: RDF <a>graph</a></li>
+        <li>|se|: <a>shape expression</a></li>
+        <li>|t|: <a>typing</a></li>
+        <li>|Sch|: schema</li>
+        <li>|ext| (extended neighborhood): optional neighborhood</li>
+      </ul>
+      <p>
+        |ext| is used when evaluating extended shapes; otherwise it is empty.
       </p>
       <p>
-        <code class="function">satisfies(|n|, |se|, |G|,|Sch|, |t|)</code> is true if and only if:
+        <code class="function">satisfies(|n|, |se|, |G|,|Sch|, |t|, |ext|)</code> is true if and only if:
       </p>
 
       <ul>
@@ -654,12 +666,12 @@ _:User2
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>typing</a>.</li>
         <li id="satisfies-Shape-proxy">|se| is a <span class="jobjref"><a class="obj">Shape</a></span> and <span class="math">(|n|, |se|)</span> belongs to |t|.
 	</li>
-        <li id="satisfies-ShapeOr">|se| is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span> such that <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
-        <li id="satisfies-ShapeAnd">|se| is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span>, <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
-        <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|)</code>.</li>
+        <li id="satisfies-ShapeOr">|se| is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span> such that <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
+        <li id="satisfies-ShapeAnd">|se| is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span>, <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
+        <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
         <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
         <li id="satisfies-shapeExprRef">
-          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any <a>non-abstract</a> shape |se3| which directly or transitively extends |se|.
+          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any <a>non-abstract</a> shape |se3| which directly or transitively extends |se|.
           <ul>
             <li>A shape is <dfn class="export">abstract</dfn> if the <span class="param">abstract</span> property is set to true, otherwise it is <dfn>non-abstract</dfn>.</li>
             <li>A shape |se3| <dfn data-lt="directly">directly extends</dfn> |se| if |se3| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd</a> that directly or transitively references |se|.<ul>
@@ -677,30 +689,30 @@ _:User2
     Given the three shape expressions <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> in a <span class="jobjref"><a class="obj">Schema</a></span> |Sch|, such that:
   </p>
   <ul>
-    <li><code class="function">satisfies(|n|, <var>SE<sub>1</sub></var>, |G|, |Sch|, |m|)</code></li>
-    <li><code class="function">satisfies(|n|, <var>SE<sub>2</sub></var>, |G|, |Sch|, |m|)</code></li>
-    <li><code class="function">notSatisfies(|n|, <var>SE<sub>3</sub></var>, |G|, |Sch|, |m|)</code></li>
+    <li><code class="function">satisfies(|n|, <var>SE<sub>1</sub></var>, |G|, |Sch|, |m|, |ext|)</code></li>
+    <li><code class="function">satisfies(|n|, <var>SE<sub>2</sub></var>, |G|, |Sch|, |m|, |ext|)</code></li>
+    <li><code class="function">notSatisfies(|n|, <var>SE<sub>3</sub></var>, |G|, |Sch|, |m|, |ext|)</code></li>
   </ul>
   <p>
     the following hold:
   </p>
 
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre class="nohighlight">{ "type": "ShapeAnd", "shapeExprs": [ <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var> ] }</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre class="nohighlight">{ "type": "ShapeOr", "shapeExprs": [ <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> ] }</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre class="nohighlight">{ "type": "ShapeAnd", "shapeExprs": [ <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var> ] }</pre></div>,<br/> |G|, |Sch|, |m|, |ext|)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre class="nohighlight">{ "type": "ShapeOr", "shapeExprs": [ <var>SE<sub>1</sub></var>, <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> ] }</pre></div>,<br/> |G|, |Sch|, |m|, |ext|)</div><div style="clear:both;"></div></div></li>
     <li><div><div style="float:left;" class="code function">notSatisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json code"><pre class="nohighlight">{ "type": "ShapeNot", "shapeExpr": {
     { "type": "ShapeOr", "shapeExprs": [
         <var>SE<sub>1</sub></var>,
         { "type": "ShapeAnd", "shapeExprs": [ <var>SE<sub>2</sub></var>, <var>SE<sub>3</sub></var> ] }
       ] }
-  } }</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
+  } }</pre></div>,<br/> |G|, |Sch|, |m|, |ext|)</div><div style="clear:both;"></div></div></li>
     </ul>
 
     <p>
       If |Sch|'s <a class="param">shapes</a> map "<code>http://schema.example/#shape1</code>" to <var>SE<sub>1</sub></var> then the following holds:
     </p>
   <ul class="codelist">
-    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> |G|, |Sch|, |m|)</div><div style="clear:both;"></div></div></li>
+    <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code">|n|,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> |G|, |Sch|, |m|, |ext|)</div><div style="clear:both;"></div></div></li>
     </ul>
       </div>
 
@@ -1380,52 +1392,51 @@ _:User2
         <p id="satisfies-Shape">
           The semantics of the <code>matchesShape</code> function are based on the <code>matches</code> function <a href="#matches">defined below</a>.
           Informally, evaluation of a <a>typing</a> for a <a>shape</a> requires finding a partition of the triples in the neighborhood that satisfies an <a>EachOf</a> comprised of the shape&apos;s <span class="param">expression</span> and the <span class="param">expression</span>s for each of the <a>Shapes</a> in its <span class="param">extends</span>.
-          The term <dfn>EmptyExpression</dfn> identifes the case where the shape has no <span class="param">expression</span> and no <span class="param">expressions</span> it its <span class="param">extends</span>.
-          For a <a>shape</a> |s|, an <dfn>effectiveExpression</dfn> is composed from a |s|'s <span class="param">expression</span> and the list of |s|'s <span class="param">extends</span> as follows:.
+        </p>
+        <p><span class="math"><dfn class="function">flattenTCs</dfn>(|expr|)<span> is a function which takes a <code>ShapeExpression</code> or <code>TripleExpression</code> and returns a set of <a>TripleConstraints</a>.</p>
+        <ul>
+          <li>If |expr| is a <a>ShapeAnd</a> or <a>ShapeOr</a>, <code class="function">flattenTCs(|expr|)</code> returns the combined set of <code class="function">flattenTCs(|sexpr2|)</code> for each |sexpr2| in |expr|.<span class="param">shapeExprs</span>.</li>
+          <li>If |expr| is a <a>ShapeNot</a>, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|expr|.<span class="param">shapeExprs</span>)</code>.</li>
+          <li>If |expr| is a <a>NodeConstraint</a>, <code class="function">flattenTCs(|expr|)</code> returns Ø (the empty set).</li>
+          <li>If |expr| is a <a>shapeExprRef</a> to a <a>Shape</a> |refd|, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|refd|)</code>.</li>
+          <li>If |expr| is an <a>EachOf</a> or <a>OneOf</a>, <code class="function">flattenTCs(|expr|)</code> returns the combined set of <code class="function">flattenTCs(|texpr2|)</code> for each |texpr2| in |expr|.<span class="param">expressions</span>.</li>
+          <li>If |expr| is a <a>TripleConstraint</a>, <code class="function">flattenTCs(|expr|)</code> returns |expr|.</li>
+        </ul>
+        <p>
+          For a <a>shape</a> |s|, a list of <a>TripleConstraint</a> |tcs| is composed from a |s|.<span class="param">expression</span> and |s|.<span class="param">extends</span> as follows:.
         </p>
         <ul>
-          <li>Let <dfn>conjuncts</dfn> = an empty list of |tripleExprs|</li>
-          <li>For each |e| in s.extends, |e| is <a>shapeExpr</a> with exactly one <span class="param">Shape</span> |s2| (see the <a href="#extends-single-shape-requirement" class="sectionRef"></a>). If |s2| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
-          <li>If |s| has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
-          <li>If <a>conjuncts</a>.length is 0, <a>effectiveExpression</a> = <a>EmptyExpression</a>.</li>
-          <li>else if <a>conjuncts</a>.length is 1, <a>effectiveExpression</a> is the sole <a>conjunct</a>.</li>
-          <li>else <a>effectiveExpression</a> = <div class="json"><pre class="json nohighlight">{ "type": "EachOf", "shapeExprs": <a>conjuncts</a> }</pre></div>.</li>
+          <li>Let |tcs| = an empty list</li>
+          <li>For each |e| in |s|.<span class="param">extends</span>, add <code class="function">flattenTCs(|e|)</code> to |tcs|.</li>
+          <li>If |s| has an <span class="param">expression</span>, add <code class="function">flattenTCs(|s|.<span class="param">expression</span>)</code> to |tcs|.</li>
         </ul>
-        <div class="issue">
-          <p>
-            The <a>effectiveExpression</a> approach has to capture that all of the expressions in <span class="param">extends</span> and <span class="param">expression</span> must be simultaneously satisfied by the same partition (i.e. you can't use a triple to satisfy a TC in an extends and another in expression).
-            However, current wording fails to capture that the partition must more generally satisfy the entire <a>shapeExpr</a>s in <span class="param">extends</span> (i.e. NodeConstraints).
-            It also (needlessly?) constrains the semantics to ShapeAnds.
-          </p>
-          <p>
-            Alternative: There's some partition across the <span class="param">extends</span> and the <span class="param">expression</span> that satisfies them all with the same <a>typing</a>.
-            When evaluating a <a>Shape</a> |s| in <span class="param">extends</span>, ignore |s|.<span class="param">extra</span> and |s|.<span class="param">closed</span>.
-          </p>
-        </div>
+        <p class="issue">
+          Compare with <a href="http://shex.io/shex-next/#triple-expressions-semantics">alternate definition in extends branch</a>.
+        </p>
 
         <p>
-          For a <a>node</a> |n|, <a>shape</a> |S|, <a>graph</a> |G|, a ShExSchema |Sch|, and <a>typing</a> |m|, <code class="function">matchesShape(|n|, |S|, |G|, |Sch|, |m|)</code> if and only if:
+          For a <a>node</a> |n|, <a>shape</a> |S|, <a>graph</a> |G|, a ShExSchema |Sch|, <a>typing</a> |m| and optional neighborhood |ext|, let |nei| be the neightborhood |ext| if it is not empty, otherwise evaluated as <code class="function"><a>neigh</a>(|G|, |n|)</code>. <code class="function">matchesShape(|n|, |S|, |G|, |Sch|, |m|, |ext|)</code> if and only if:
         </p>
 
         <ul>
           <li>
-            <code class="function"><a>neigh</a>(|G|, |n|)</code> can be partitioned into two sets |matched| and |remainder| such that <code class="function">matches(|matched|, <a>effectiveExpression</a>, |m|)</code>.
-            If <a>effectiveExpression</a> is <a>EmptyExpression</a>, <code class="function">|remainder| = <a>neigh</a>(|G|, |n|)</code>.<br/>
-            Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in |remainder|:
-            <code class="function">|outs| = |remainder| ∩ <a>arcsOut</a>(|G|, |n|)</code>.<br/>
-            Let <span class="label">matchables</span> be the triples in |outs| whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <a>effectiveExpression</a>.
-            If <a>effectiveExpression</a> is <a>EmptyExpression</a>, <code class="function">|matchables| = Ø</code> (the empty set).<br/>
+            |S| has |i| <span class="param">extends</span> (0 - ∞) and |j| <span class="param">expression</span>s (0 - 1), |nei| can be partitioned into |i| + |j| sets <var>p</var><sub>k</sub> and a remainder |r| such that for the index |iExt| of each <a>shapeExpr</a> in |S|.<span class="param">extends</span>, <code class="function">satisfies(|n|, |S|.<span class="param">extends</span><sub>|iExt|</sub>, |G|, |Sch|, |m|, <var>p</var><sub>|iExt|</sub>)</code>, and <code class="function">matches(<var>p<sub>i+j</sub></var>, |S|.<span class="param">expression</span>, |m|)</code>.
+            If |tcs| is empty, <code class="function">|r| = |nei|</code>.<br/>
+            Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in |r|:
+            <code class="function">|outs| = |r| ∩ <a>arcsOut</a>(|G|, |n|)</code>.<br/>
+            Let <span class="label">matchables</span> be the triples in |outs| whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in |tcs|.
+            If there is no <a>TripleConstraint</a> in |tcs|, <code class="function">|matchables| = Ø</code> (the empty set).<br/>
             The complexity of partitioning is described briefly in the <a href="../primer/#partition-complexity">ShEx2 Primer</a>.
           </li>
           <li>
-            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <a>effectiveExpression</a>.<br/>
+            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in |tcs|.<br/>
             Let <span class="label">unmatchables</span> be the triples in |outs| which are not in |matchables|.
             <code class="function">|matchables| ∪ |unmatchables| = |outs|</code>.
           </li>
           <li>
-            There is no triple in |matchables| whose <a>predicate</a> does not appear in <span class="param">extra</span>.
+            |matchables| is empty or |ext| is empty and the <a>predicate</a> of every triple in |matchables| appears in <span class="param">extra</span>.
           </li>
-          <li><span class="param">closed</span> is false or |unmatchables| is empty.</li>
+          <li><span class="param">closed</span> is false or |ext| is empty or |unmatchables| is empty.</li>
         </ul>
 
       <p>
@@ -1629,7 +1640,7 @@ _:User2
                 </div>
               </li>
               <li>
-                <p>or <code class="function">satisfies(|value|, <span class="param">valueExpr</span>, |G|, |Sch|, |m|)</code>.</p>
+                <p>or <code class="function">satisfies(|value|, <span class="param">valueExpr</span>, |G|, |Sch|, |m|, |ext|)</code>.</p>
                 <div class="example">
                   <div class="math"><div style="float:left;">matches(</div><div style="float:left;">|T|,<br/>
                   <div class="inline repchoice incomplete">
@@ -1648,7 +1659,7 @@ _:User2
                     <li>|t| has the <a>predicate</a> "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
                     <li>|t| has a subject |n2|</li>
                     <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to |se2|</li>
-                    <li><span class="math function" >satisfies(|n2|, |se2|, |G|, |Sch|, |m|)</span></li>
+                    <li><span class="math function" >satisfies(|n2|, |se2|, |G|, |Sch|, |m|, |ext|)</span></li>
                   </ul></div>
                 </div>
                 <!--
@@ -1691,7 +1702,7 @@ _:User2
         </li>
         <li>
           <p id="matches-tripleExprRef">
-            |expr| is a <span class="jobjref"><a class="obj">tripleExprRef</a></span> and <code class="function">satisfies(|value|, tripleExprWithId(<span class="param">tripleExprRef</span>), |G|, |Sch|, |Sch|, |m|)</code>.<br/>
+            |expr| is a <span class="jobjref"><a class="obj">tripleExprRef</a></span> and <code class="function">satisfies(|value|, tripleExprWithId(<span class="param">tripleExprRef</span>), |G|, |Sch|, |Sch|, |m|, |ext|)</code>.<br/>
             The <code class="function">tripleExprWithId</code> function is defined in <a href="#tripleExprRef-requirement">Triple Expression Reference Requirement</a> below.
           </p>
           <div class="example">
@@ -1734,7 +1745,7 @@ _:User2
             <div style="clear:both;">holds if
             <ul class="tight">
               <li>The schema has a shape |se2| with the <span class="param">id</span> "<code>http://schema.example/#PersonShape</code>"</li>
-              <li><span class="math function" >satisfies(|n|, |se2|, |G|, |Sch|, |m|)</span></li>
+              <li><span class="math function" >satisfies(|n|, |se2|, |G|, |Sch|, |m|, |ext|)</span></li>
             </ul></div>
           </div>
         </li>
@@ -2001,7 +2012,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
             for each <a>shapeExprRef</a> <var>se<sub>i</sub></var> in <var>se<sub>n</sub></var>:
             <ol class="algorithm">
               <li><var>se<sub>i</sub></var> references a <a>ShapeExpr</a> in <a>shapes</a>, and</li>
-              <li><code class="function">satisfies(|n|, <var>se<sub>i</sub></var>, |G|, |Sch|, |m|)</code>
+              <li><code class="function">satisfies(|n|, <var>se<sub>i</sub></var>, |G|, |Sch|, |m|, |ext|)</code>
                 for each <a>shape</a> <var>se<sub>i</sub></var> in <var>se<sub>n</sub></var>.</li>
             </ol>
           </li>
@@ -2323,12 +2334,10 @@ IMPORT &lt;http://schema.example/schema2&gt;
       </div>
       </section>
 
-      <section id="extends-single-shape-requirement">
-        <h4>EXTENDS single shape requirement</h4>
+      <section id="no-extends-external-shape-requirement">
+        <h4>no EXTENDS of external shapes requirement</h4>
         <p>
-          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span>, |parent| MUST be a <a>shapeExpr</a> which is a <a>Shape</a> or a <a>ShapeAnd</a> transitively containing zero or one <a>Shape</a>s.
-          This implies that the other leaves of the <a>ShapeAnd</a>(s) are <a>NodeConstraints</a>.
-          <!-- <a>shapeExpr</a>s directly or indirectly within a <a>ShapeNot</a> are not counted in this requirement. -->
+          If any <a>Shape</a> |parent| appears in some <a>Shape</a>.<span class="param">extends</span> or some shape traversed by <a>flattenTCs</a>, |parent| MUST NOT be an <code>ExternalShape</code>.
 	</p>
 
         <p class="issue">
@@ -2339,7 +2348,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
         <p>
           Following is a valid example with a shape with an <span class="param">expression</span> and two <span class="param">extends</span>:
         </p>
-        <div class="repchoice">
+        <div class="repchoice error">
           <pre class="json nohighlight">{"type" : "Schema",
   "shapes" : [ {
     "id" : "http://schema.example/#EntityShape",
@@ -2350,11 +2359,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
     }
   },  {
     "id" : "http://schema.example/#PersonShape",
-    "type" : "Shape",
-    "expression" : {
-      "type" : "TripleConstraint",
-      "predicate" : "http://xmlns.com/foaf/0.1/name"
-    }
+    "type" : "ExternalShape"
   }, {
     "id" : "http://schema.example/#EmployeeShape",
     "type" : "Shape",
@@ -2374,12 +2379,8 @@ IMPORT &lt;http://schema.example/schema2&gt;
       ex:entityId .
     }
 
-    ex:PersonShape {
+    EXTERNAL ex:PersonShape
 
-
-
-      foaf:name .
-    }
 
     ex:EmployeeShape
 
@@ -2390,60 +2391,6 @@ IMPORT &lt;http://schema.example/schema2&gt;
       ex:employeeNumber .
     }
           </pre>
-        </div>
-        <p>
-          This <span class="param">extends</span> is invalid because the extended shape expression contains multiple (non-negated) shapes:
-        </p>
-        <div class="repchoice error">
-          <pre class="json nohighlight">{ "type": "Schema",
-  "shapes": [ { "type": "ShapeAnd",
-    "id": "http://schema.example/#PersonShape",
-    "shapeExprs": [
-      { "type": "Shape",
-        "expression": {
-          "type": "TripleConstraint",
-          "predicate": "http://schema.example/#entityId"
-        } },
-      { "type": "Shape",
-        "expression": {
-          "type": "TripleConstraint",
-          "predicate": "http://xmlns.com/foaf/0.1/name"
-        } } ] }
-  { "type": "Shape",
-    "id": "http://schema.example/#EmployeeShape",
-    "extends": [
-      "http://schema.example/#EntityShape"
-    ],
-    "expression": {
-      "type": "TripleConstraint",
-      "predicate": "http://schema.example/#employeeNumber"
-    } }
-] }</pre>
-          <pre class="shexc nohighlight">                                                          
-
-    ex:PersonShape {
-
-
-
-
-          ex:entityId .
-
-      } AND {
-
-
-          foaf:name .
-    }
-
-    ex:EmployeeShape
-
-      EXTENDS @ex:EntityShape {
-
-
-
-      ex:employeeNumber .
-    }
-
-</pre>
         </div>
       </div>
       </section>
@@ -2456,18 +2403,148 @@ IMPORT &lt;http://schema.example/schema2&gt;
 
       <div class="example">
         <p>
-          Following is a valid example with a shape with a <a>shapeExprRef</a> that references an abstract shape with two non-abstract descendants:
+          Following is a valid example with a shape with a <a>shapeExprRef</a> that references an abstract shape with two <a>non-abstract</a> descendants:
         </p>
         <div class="repchoice">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id": "http://schema.example/#IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#approvedBy",
+      "valueExpr": "http://schema.example/#EngineerShape"
+    }
+  },  {
+    "id" : "http://schema.example/#EntityShape",
+    "type" : "Shape", "abstract": true,
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#entityId"
+    }
+  },  {
+    "id" : "http://schema.example/#PersonShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#EntityShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://xmlns.com/foaf/0.1/name"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape",
+    "extends" : [ "http://schema.example/#PersonShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#employeeNumber"
+    }
+} ] }</pre>
+          <pre class="shexc nohighlight">                                                           
+
+    ex:IssueShape {
+
+
+
+      ex:approvedBy
+          @ex:EntityShape
+    }
+
+    ABSTRACT ex:EntityShape {
+
+
+
+      ex:entityId .
+    }
+
+    ex:PersonShape EXTENDS @ex:EntityShape {
+
+
+
+
+      foaf:name .
+    }
+
+    ex:EmployeeShape EXTENDS @ex:EntityShape {
+
+
+
+
+      ex:employeeNumber .
+    }
+ 
+</pre>
         </div>
         <p>
           This <a>shapeExprRef</a> is invalid because it references only abstract descendants:
         </p>
         <div class="repchoice error">
-          <pre class="json nohighlight"></pre>
-          <pre class="shexc nohighlight"></pre>
+          <pre class="json nohighlight">{"type" : "Schema",
+  "shapes" : [ {
+    "id": "http://schema.example/#IssueShape",
+    "type": "Shape",
+    "expression": {
+      "type": "TripleConstraint",
+      "predicate": "http://schema.example/#approvedBy",
+      "valueExpr": "http://schema.example/#EngineerShape"
+    }
+  },  {
+    "id" : "http://schema.example/#EntityShape",
+    "type" : "Shape", "abstract": true,
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#entityId"
+    }
+  },  {
+    "id" : "http://schema.example/#PersonShape",
+    "type" : "Shape", "abstract": true,
+    "extends" : [ "http://schema.example/#EntityShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://xmlns.com/foaf/0.1/name"
+    }
+  }, {
+    "id" : "http://schema.example/#EmployeeShape",
+    "type" : "Shape", "abstract": true,
+    "extends" : [ "http://schema.example/#PersonShape" ],
+    "expression" : {
+      "type" : "TripleConstraint",
+      "predicate" : "http://schema.example/#employeeNumber"
+    }
+} ] }</pre>
+          <pre class="shexc nohighlight">                                                           
+
+    ex:IssueShape {
+
+
+
+      ex:approvedBy
+          @ex:EntityShape
+    }
+
+    ABSTRACT ex:EntityShape {
+
+
+
+      ex:entityId .
+    }
+
+    ABSTRACT ex:PersonShape EXTENDS @ex:EntityShape {
+
+
+
+
+      foaf:name .
+    }
+
+    ABSTRACT ex:EmployeeShape EXTENDS @ex:EntityShape {
+
+
+
+
+      ex:employeeNumber .
+    }
+ 
+</pre>
         </div>
       </div>
       </section>
