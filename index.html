@@ -55,6 +55,9 @@
           company:    "Spec-Ops",
           companyURL: "https://spec-ops.io/",
           w3cid:      "44770" },
+        { name:       "Katherine Thornton",
+          url:        "http://github.com/emulatingkat",
+          w3cid:      "96733" },
       ],
       group:           "shex",
       implementationReportURI: "https://shexspec.github.io/shexTest/reports/2.1/",
@@ -671,15 +674,15 @@ _:User2
         <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
         <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
         <li id="satisfies-shapeExprRef">
-          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any <a>non-abstract</a> shape |se3| which directly or transitively extends |se|.
+          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any <a>non-abstract</a> shape which directly or transitively extends |se|.
           <ul>
             <li>A shape is <dfn class="export">abstract</dfn> if the <span class="param">abstract</span> property is set to true, otherwise it is <dfn>non-abstract</dfn>.</li>
-            <li>A shape |se3| <dfn data-lt="directly">directly extends</dfn> |se| if |se3| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd</a> that directly or transitively references |se|.<ul>
-                <li>|se3| <dfn class="export">directly references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with |se| in |se3|.<span class="param">expressions</span>.</li>
-                <li>|se3| <dfn>transitively references</dfn> |se| if |se3| is a <a>ShapeAnd</a> with some shape expression |se4| in |se3|.<span class="param">expressions</span> and |se4| directly or transtively references |se|.</li>
+            <li>A shape |se2| <dfn data-lt="directly">directly extends</dfn> |se| if |se2| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd</a> that directly or transitively references |se|.<ul>
+                <li>|se2| <dfn class="export">directly references</dfn> |se| if |se2| is a <a>ShapeAnd</a> with |se| in |se2|.<span class="param">expressions</span>.</li>
+                <li>|se2| <dfn>transitively references</dfn> |se| if |se2| is a <a>ShapeAnd</a> with some shape expression |se3| in |se2|.<span class="param">expressions</span> and |se3| directly or transtively references |se|.</li>
               </ul>
             </li>
-            <li>A shape |se3| <dfn data-lt="transitively">transitively extends</dfn> |se| if |se3| extends some shape |se5| which directly or transitively extends |se|.</li>
+            <li>A shape |se2| <dfn data-lt="transitively">transitively extends</dfn> |se| if |se2| extends some shape |se4| which directly or transitively extends |se|.</li>
           </ul>
 	</li>
       </ul>
@@ -718,7 +721,7 @@ _:User2
 
       <div class="example">
         <p>
-          In this example, EmployeeShape <a>directly extends</a> of PersonShape and <a>transitively extends</a> EntityShape
+          In this example, EmployeeShape <a>directly extends</a> PersonShape and <a>transitively extends</a> EntityShape
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{"type" : "Schema",
@@ -777,63 +780,79 @@ _:User2
 
       <div class="example">
         <p>
-          In this example, IssueShape <a>transitively references</a> EngineerShape and ManagerShape (i.e. someone who is both an engineer and a manager):
+          In this example, UserShape <a>directly extends</a> PersonShape, and PersonShape <a>directly references</a> a conjunct which <a>directly extends</a> EntityShape. Through this, UserShape <a>transitively references</a> EntityShape.
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{ "type": "Schema",
-  "shapes": [ {
-    "id": "http://schema.example/#IssueShape",
-    "type": "Shape",
-    "expression": {
-      "type": "TripleConstraint",
-      "predicate": "http://schema.example/#approvedBy",
-      "valueExpr": {
-        "type": "ShapeAnd",
-        "shapeExprs": [
-          "http://schema.example/#EngineerShape",
-          "http://schema.example/#ManagerShape"
-    ] } }
-  }, {
-    "id": "http://schema.example/#Engineer",
-    "type": "Shape",
-    "expression": {
-      "type": "TripleConstraint",
-      "predicate": "http://schema.example/#specialty"
+  "shapes": [
+    { "id": "http://schema.example/#EntityShape",
+      "type": "Shape",
+      "closed": true,
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/#entityId"
+    } },
+    { "id": "http://schema.example/#PersonShape",
+      "type": "ShapeAnd",
+      "shapeExprs": [
+        { "type": "Shape",
+          "extends": [ "http://schema.example/#EntityShape" ],
+          "closed": true,
+          "expression": {
+            "type": "TripleConstraint",
+            "predicate": "http://xmlns.com/foaf/0.1/name"
+        } },
+        { "type": "Shape",
+          "expression": {
+            "type": "TripleConstraint",
+            "predicate": "http://schema.example/#entityId",
+            "valueExpr": {
+              "type": "NodeConstraint",
+              "datatype": "http://www.w3.org/2001/XMLSchema#integer"
+        } } }
+    ] },
+    { "id": "http://schema.example/#UserShape",
+      "type": "Shape",
+      "extends": [ "http://schema.example/#PersonShape" ],
+      "expression": {
+        "type": "TripleConstraint",
+        "predicate": "http://schema.example/#userId"
+    } }
+] }</pre>
+          <pre class="shexc nohighlight">                                                                    
+
+    &lt;#EntityShape&gt; CLOSED {
+
+
+
+
+        :entityId .
     }
-  }, {
-    "id": "http://schema.example/#ManagerShape",
-    "type": "Shape",
-    "expression": {
-      "type": "TripleConstraint",
-      "predicate": "http://schema.example/#managagesDepartment"
-    }
-  } ] }</pre>
-          <pre class="shexc nohighlight">                                                               
-
-    ex:IssueShape {
+    &lt;#PersonShape&gt; EXTENDS @&lt;#EntityShape&gt; CLOSED {
 
 
 
-      ex:approvedBy
+          
 
 
 
-          @ex:EngineerShape
-          AND @ex:ManagerShape
-    }
-
-    ex:EngineerShape {
+            foaf:name .
+        } AND {
 
 
 
-      ex:specialty .
-    }
-
-    ex:ManagerShape {
+            :entityId
 
 
+              xsd:integer
+        }
 
-      ex:managagesDepartment .
+    &lt;#UserShape&gt; EXTENDS @&lt;PersonShape&gt;{
+
+      
+
+
+        :userId .
     }
           </pre>
         </div>
@@ -5724,7 +5743,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>LanguageStem</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) }</td></tr>
   <tr class="obj"><th class="obj"><a>LanguageStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>Wildcard</a></th>             <td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">extends</span>:[<a>shapeExpr</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExpr</a></th>             <td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>EachOf</a></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>OneOf</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
