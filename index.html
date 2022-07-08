@@ -678,7 +678,7 @@ _:User2
             <li>A shape is <dfn class="export">abstract</dfn> if the <span class="param">abstract</span> property is set to true, otherwise it is <dfn>non-abstract</dfn>.</li>
             <li>A shape expression label |sl| <dfn class="export">extends</dfn> a shape expression label |se| if
               <ul>
-                <li>(directly extends) <code class="function">shapeExprWithId(|sl|)</code> is a <a>Shape</a> and <code class="function">shapeExprWithId(|sl|)</code>.<span class="param">extends</span> contains some shape expression |se3| such that |se| belongs to the <a>shapeExprRef closure</a> of |se3|, or</li>
+                <li>(directly extends) <code class="function">shapeExprWithId(|sl|)</code> contains a <a>Shape</a> |se3| as atomic element, |se3|.<span class="param">extends</span> contains a shape expression |se4|, and |se| belongs to the <a>shapeExprRef closure</a> of |se4|, or</li>
                 <li>(transitively extends) there is a shape expression label |sl2| such that |sl| (directly) extends |sl2| end |sl2| extends |se|.</li>
               </ul>
             </li>
@@ -720,7 +720,7 @@ _:User2
 
       <div class="example">
         <p>
-          In this example, EmployeeShape <a>directly extends</a> PersonShape and <a>transitively extends</a> EntityShape
+          In this example, EmployeeShape directly <a>extends</a> PersonShape and transitively <a>extends</a> EntityShape
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{"type" : "Schema",
@@ -779,7 +779,7 @@ _:User2
 
       <div class="example">
         <p>
-          In this example, UserShape <a>directly extends</a> PersonShape, and PersonShape <a>directly references</a> a conjunct which <a>directly extends</a> EntityShape. Through this, UserShape <a>transitively references</a> EntityShape.
+          In this example, UserShape directly <a>extends</a> PersonShape, PersonShape directly <a>extends</a> EntityShape. Through this, UserShape transitively <a>extends</a> EntityShape.
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{ "type": "Schema",
