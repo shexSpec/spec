@@ -667,24 +667,23 @@ _:User2
       <ul>
         <li id="satisfies-NodeConstraint">|se| is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(|n|, |se|)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>typing</a>.</li>
-        <li id="satisfies-Shape-proxy">|se| is a <span class="jobjref"><a class="obj">Shape</a></span> and <span class="math">(|n|, |se|)</span> belongs to |t|.
-	</li>
+        <li id="satisfies-Shape-proxy">|se| is a <span class="jobjref"><a class="obj">Shape</a></span> and <span class="math">(|n|, |se|)</span> belongs to |t|.</li>
         <li id="satisfies-ShapeOr">|se| is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span> such that <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
         <li id="satisfies-ShapeAnd">|se| is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> |se2| in |se|.<span class="param">shapeExprs</span>, <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
         <li id="satisfies-ShapeNot">|se| is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> |se2| at |se|.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code>.</li>
-        <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
+        <li id="satisfies-ShapeExternal">|se| is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechanisms not defined in this specification indicate success.</li>
         <li id="satisfies-shapeExprRef">
-          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code> where |se2| is the shape expression with <span class="math"><span class="param">id</span> = |se|</span> or any <a>non-abstract</a> shape which directly or transitively extends |se|.
+          |se| is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(|n|, |se2|, |G|, |Sch|, |t|, |ext|)</code> where either <span class="math">|se2|=<code class="function">shapeExprWithId(|se|)</code></span>, or |se2| is a <a>non-abstract</a> shape and <span class="math">|sl|=|se2|.<span class="param">id</span></span> <a>extends</a> |se|.
           <ul>
             <li>A shape is <dfn class="export">abstract</dfn> if the <span class="param">abstract</span> property is set to true, otherwise it is <dfn>non-abstract</dfn>.</li>
-            <li>A shape |se2| <dfn data-lt="directly">directly extends</dfn> |se| if |se2| has an <span class="param">extends</span> with a <span class="jobjref"><a class="obj">shapeExprRef</a></span> of |se| or some <a>ShapeAnd</a> that directly or transitively references |se|.<ul>
-                <li>|se2| <dfn class="export">directly references</dfn> |se| if |se2| is a <a>ShapeAnd</a> with |se| in |se2|.<span class="param">expressions</span>.</li>
-                <li>|se2| <dfn>transitively references</dfn> |se| if |se2| is a <a>ShapeAnd</a> with some shape expression |se3| in |se2|.<span class="param">expressions</span> and |se3| directly or transtively references |se|.</li>
+            <li>A shape expression label |sl| <dfn class="export">extends</dfn> a shape expression label |se| if
+              <ul>
+                <li>(directly extends) <code class="function">shapeExprWithId(|sl|)</code> contains a <a>Shape</a> |se3| as atomic element, |se3|.<span class="param">extends</span> contains a shape expression |se4|, and |se| belongs to the <a>shapeExprRef closure</a> of |se4|, or</li>
+                <li>(transitively extends) there is a shape expression label |sl2| such that |sl| (directly) extends |sl2| end |sl2| extends |se|.</li>
               </ul>
             </li>
-            <li>A shape |se2| <dfn data-lt="transitively">transitively extends</dfn> |se| if |se2| extends some shape |se4| which directly or transitively extends |se|.</li>
           </ul>
-	</li>
+	      </li>
       </ul>
 
       <div class="example">
@@ -721,7 +720,7 @@ _:User2
 
       <div class="example">
         <p>
-          In this example, EmployeeShape <a>directly extends</a> PersonShape and <a>transitively extends</a> EntityShape
+          In this example, EmployeeShape directly <a>extends</a> PersonShape and transitively <a>extends</a> EntityShape
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{"type" : "Schema",
@@ -780,7 +779,7 @@ _:User2
 
       <div class="example">
         <p>
-          In this example, UserShape <a>directly extends</a> PersonShape, and PersonShape <a>directly references</a> a conjunct which <a>directly extends</a> EntityShape. Through this, UserShape <a>transitively references</a> EntityShape.
+          In this example, UserShape directly <a>extends</a> PersonShape, PersonShape directly <a>extends</a> EntityShape. Through this, UserShape transitively <a>extends</a> EntityShape.
         </p>
         <div class="repchoice">
           <pre class="json nohighlight">{ "type": "Schema",
@@ -1413,22 +1412,15 @@ _:User2
           Informally, evaluation of a <a>typing</a> for a <a>shape</a> requires finding a partition of the triples in the neighborhood that satisfies an <a>EachOf</a> comprised of the shape&apos;s <span class="param">expression</span> and the <span class="param">expression</span>s for each of the <a>Shapes</a> in its <span class="param">extends</span>.
         </p>
         <p><span class="math"><dfn class="function">flattenTCs</dfn>(|expr|)<span> is a function which takes a <code>ShapeExpression</code> or <code>TripleExpression</code> and returns a set of <a>TripleConstraints</a>.</p>
-        <ul>
-          <li>If |expr| is a <a>ShapeAnd</a> or <a>ShapeOr</a>, <code class="function">flattenTCs(|expr|)</code> returns the combined set of <code class="function">flattenTCs(|sexpr2|)</code> for each |sexpr2| in |expr|.<span class="param">shapeExprs</span>.</li>
-          <li>If |expr| is a <a>ShapeNot</a>, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|expr|.<span class="param">shapeExprs</span>)</code>.</li>
-          <li>If |expr| is a <a>NodeConstraint</a>, <code class="function">flattenTCs(|expr|)</code> returns Ø (the empty set).</li>
-          <li>If |expr| is a <a>shapeExprRef</a> to a <a>Shape</a> |refd|, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|refd|)</code>.</li>
-          <li>If |expr| is an <a>EachOf</a> or <a>OneOf</a>, <code class="function">flattenTCs(|expr|)</code> returns the combined set of <code class="function">flattenTCs(|texpr2|)</code> for each |texpr2| in |expr|.<span class="param">expressions</span>.</li>
-          <li>If |expr| is a <a>TripleConstraint</a>, <code class="function">flattenTCs(|expr|)</code> returns |expr|.</li>
-        </ul>
-        <p>
-          For a <a>shape</a> |s|, a list of <a>TripleConstraint</a> |tcs| is composed from a |s|.<span class="param">expression</span> and |s|.<span class="param">extends</span> as follows:.
-        </p>
-        <ul>
-          <li>Let |tcs| = an empty list</li>
-          <li>For each |e| in |s|.<span class="param">extends</span>, add <code class="function">flattenTCs(|e|)</code> to |tcs|.</li>
-          <li>If |s| has an <span class="param">expression</span>, add <code class="function">flattenTCs(|s|.<span class="param">expression</span>)</code> to |tcs|.</li>
-        </ul>
+            <ul>
+              <li>If |expr| is a <a>NodeConstraint</a>, <code class="function">flattenTCs(|expr|)</code> returns Ø (the empty set).</li>
+              <li>If |expr| is a <a>ShapeAnd</a> or <a>ShapeOr</a>, <code class="function">flattenTCs(|expr|)</code> returns the union of the sets <code class="function">flattenTCs(|sexpr2|)</code> for each |sexpr2| in |expr|.<span class="param">shapeExprs</span>.</li>
+              <li>If |expr| is a <a>ShapeNot</a>, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|expr|.<span class="param">shapeExpr</span>)</code>.</li>
+              <li>If |expr| is a <a>shapeExprRef</a> to a shape expression |refd|, <code class="function">flattenTCs(|expr|)</code> returns <code class="function">flattenTCs(|refd|)</code>.</li>
+              <li>If |expr| is a <a>Shape</a>, <code class="function">flattenTCs(|expr|)</code> returns the union of <code class="function">flattenTCs(|expr|.<span class="param">expression</span>)</code> and the sets <code class="function">flattenTCs(|sexpr2|)</code> for each |sexpr2| in |expr|.<span class="param">extends</span>.</li>
+              <li>If |expr| is an <a>EachOf</a> or <a>OneOf</a>, <code class="function">flattenTCs(|expr|)</code> returns the union of the sets <code class="function">flattenTCs(|texpr2|)</code> for each |texpr2| in |expr|.<span class="param">expressions</span>.</li>
+              <li>If |expr| is a <a>TripleConstraint</a>, <code class="function">flattenTCs(|expr|)</code> returns the singleton set |expr|.</li>
+            </ul>
         <p class="issue">
           Compare with <a href="http://shex.io/shex-next/#triple-expressions-semantics">alternate definition in extends branch</a>.
         </p>
