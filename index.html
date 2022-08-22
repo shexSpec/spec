@@ -86,7 +86,7 @@
     </script>
 
     <script src="./shex-parser-browserify.js"></script>
-    <script type="text/javascript" src="scripts.js"></script>
+    <script src="scripts.js"></script>
   </head>
   
   <body>
@@ -479,7 +479,7 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every RDFnode/shapeLabel pair |(n, sl)| in |ism|, the node |n| satisfies the shape expression identified by |sl|.
+	<dfn id="isValid">isValid</dfn>: For a graph |G|, a schema  |Sch| and a fixed ShapeMap |ism|, <code class="function">isValid(|G|, |Sch|, |ism|)</code> indicates that for every RDFnode/shapeLabel pair |(n, sl)| in |ism|, the node |n| satisfies the shape expression identified by |sl|.
 	The latter is captured by the expression <code class="function">satisfies(|n|, |s|, |G|, |Sch|, <a href="#completeTyping">completeTyping</a>(|G|, |Sch|))</code>.
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
       </p>
@@ -488,7 +488,7 @@ _:User2
       <p>
 	The validation of an RDF graph |G| against a ShEx schema |Sch| is based on the existence of <a href="#completeTyping"><code class="function">completeTyping(|G|, |Sch|)</code></a>.
 	For an RDF graph |G| and a shapes schema |Sch|, a <dfn>typing</dfn> is a set of pairs of the form |(n, s)| where |n| is a node in |G| and |s| is a <a>Shape</a> that appears in some shape expression in the <span class="param">shapes</span> mapping of |Sch|.
-	A <dfn label="correct typing">correct typing</dfn> is a |typing| such that for every RDFnode/shape pair |(n,s)| in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|)</code></a> holds.
+	A <dfn>correct typing</dfn> is a |typing| such that for every RDFnode/shape pair |(n,s)| in |typing|, <a href="#satisfies-Shape"><code class="function">matchesShape(|n|, |s|, |G|, |Sch|, |typing|)</code></a> holds.
 	<code class="function">completeTyping(|G|, |Sch|)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
       
