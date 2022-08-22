@@ -213,6 +213,9 @@
       <p>
         signifies that a <code>NodeConstraint</code> has a <code class="param">nodeKind</code> of one of the four literals followed by any number of <a class="objref .shexj">xsFacet</a> and an <a class="objref .shexj">xsFacet</a> is either a <a class="objref .shexj">stringFacet</a> or a <a class="objref .shexj">numericFacet</a>.
       </p>
+        <p class="note">
+          The <a href="https://github.com/shexSpec/shexTest/blob/main/doc/ShExJ.jsg#L11">executable JSON grammar for ShExJ</a> specifically disables the requirement for a matching <code>"type"</code> attribute in <code>ObjectLiteral</code> as <code>"type"</code> is instead used for the datatype of a <a href="https://www.w3.org/TR/json-ld11/#dfn-typed-value">JSON-LD typed value</a>.
+        </p>
       </section>
 
       <section id="shex-references">
