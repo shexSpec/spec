@@ -1392,29 +1392,38 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
           </li>
           <li><span class="param">closed</span> is false or <span class="math">unmatchables</span> is empty.</li>
         </ul>
-	<pre>
-	  ### The matches function
-
+	<section>
+	  <h5>The matches function</h5>
+	  <p>
 It takes six parameters: the graph `G`, the schema `Sch`, a typing `t` over `G` and `Sch`, a node `n` in `G`, a tripleExpr `te` from `Sch`, and a (non optional) neighborhood set of triples `npart` : `matches(n, te, typing, npart, G, Sch)`. The value of the function is a Boolean. The function is defined recursively on the structure of the triple expression:
-
-- `te` is a TripleConstraint and `npart` is a singleton set with unique triple `t` and the predicate of `t` is the same as the predicate of `te` and ... TODO define inverse or not as before ... and:
-    - `te` does not have a `valueExpr`, or
-    - `te` has a valueExpr that is a shapeExprRef with label `L` and **there exists a label `L'` in `baseSubtypes(L)` s.t. `(n', L')` belongs to `typing` (note: this is the unique place in the recursive definition of the semantics where substitutability is considered. Substitution is also considered when validating a shape map)**, or 
-    - `te` has a valueExpr that is not a shapeExprRef, then `satisfies(n', te.valueExpr, typing, _, G, Sch)` holds, where `n'` is the object ( ... TODO ... or the subject if inverse ) of `t`
-- `te` is tripleExprRef with label `L`, and `matches(n, def(L), typing, npart, G, Sch)` holds
-- `te` has a cardinality `[min, max]` and `npart` can be partitioned into `k` pairwise disjoint sets `npart_1` ... `npart_k` for some `min <= k <= max` and `matches(n, te, typing, npart_i, G, Sch)` for every `i` in `1..k`
-- `te` is a OneOf and `matches(n, te', typing, npart, G, Sch)` for some `te'` in `te`.tripleExprs
-																		   - `te` is a EachOf and `matches(n, te', typing, npart, G, Sch)` for every `te'` in `te`.tripleExprs
-
-### Validating a shape map
-
+	  </p>
+	  <ul>
+	    <li>`te` is a TripleConstraint and `npart` is a singleton set with unique triple `t` and the predicate of `t` is the same as the predicate of `te` and ... TODO define inverse or not as before ... and:
+	    <ul>
+	      <li>`te` does not have a `valueExpr`, or</li>
+	      <li>`te` has a valueExpr that is a shapeExprRef with label `L` and **there exists a label `L'` in `baseSubtypes(L)` s.t. `(n', L')` belongs to `typing` (note: this is the unique place in the recursive definition of the semantics where substitutability is considered. Substitution is also considered when validating a shape map)**, or </li>
+	      <li> `te` has a valueExpr that is not a shapeExprRef, then `satisfies(n', te.valueExpr, typing, _, G, Sch)` holds, where `n'` is the object ( ... TODO ... or the subject if inverse ) of `t`</li>
+	    </ul>
+	    </li>
+	    
+	    <li>`te` is tripleExprRef with label `L`, and `matches(n, def(L), typing, npart, G, Sch)` holds</li>
+	    <li>`te` has a cardinality `[min, max]` and `npart` can be partitioned into `k` pairwise disjoint sets `npart_1` ... `npart_k` for some `min <= k <= max` and `matches(n, te, typing, npart_i, G, Sch)` for every `i` in `1..k`</li>
+																				 <li>`te` is a OneOf and `matches(n, te', typing, npart, G, Sch)` for some `te'` in `te`.tripleExprs</li>
+	  																			 <li> `te` is EachOf and `matches(n, te', typing, npart, G, Sch)` for every `te'` in `te`.tripleExprs</li>
+	  </ul>
+	</section>
+	<section>
+	  <h5>Validating a shape map</h5>
+	  <p>
 A shape map is ... TODO precise definition ... a kind of a typing, i.e. a set of pairs `(n, L)` where `n` is a node and `L` is a shape expression label. 
 A shape map is satisfied if for every `(n, L)` in the map, there exists a label `L'` in `baseSubtypes(L)` s.t. `(n', L')` belongs to the maximal typing
-
-### Definition of the maximal typing
-
-*Similar to before, through stratification, but now the elements of the typing are pairs (node, label) where label is a **shapeExprLabel**. Before we had pairs (node, Shape) in the typing. With this new definition of typing the stratification is easier to define. What we lose is that some schemas that would have been considered stratified with the old definition won't be considered stratified with the new one. This breaks backwards compatibility, provided that there exists somewhere a schema with negations that has non trivial stratification structure, ... which would surprise me a lot*.																		   
-	</pre>
+	  </p>
+	</section>
+	<section>
+	  <h5>Definition of the maximal typing</h5>
+	  <p>
+	    *Similar to before, through stratification, but now the elements of the typing are pairs (node, label) where label is a **shapeExprLabel**. Before we had pairs (node, Shape) in the typing. With this new definition of typing the stratification is easier to define. What we lose is that some schemas that would have been considered stratified with the old definition won't be considered stratified with the new one. This breaks backwards compatibility, provided that there exists somewhere a schema with negations that has non trivial stratification structure, ... which would surprise me a lot*.						</p>
+	</section>
       <p>
         <span class="label" id="matches">matches</span>: asserts that a <a>triple expression</a> is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
         The expression <code>matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> indicates that a set of triples <span class="math">T</span> can satisfy these rules:
