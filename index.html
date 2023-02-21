@@ -677,7 +677,7 @@ The <b>extension hierarchy graph</b> of a shapes schema is a directed graph whic
 
       </p>
       <p>
-	**Schema requirement**: the extension hierarchy graph must be acyclic. 
+	<b>Schema requirement</b>: the extension hierarchy graph must be acyclic.
       </p>
       <p>
 	For a shape label `L`, we define
@@ -689,70 +689,85 @@ The <b>extension hierarchy graph</b> of a shapes schema is a directed graph whic
       <p>
 	Note that because an empty path is allowed in the above definitions, every label belongs to its set of supertypes and every non abstract label belongs to its set of base subtypes.
       </p>
-      <pre>
-	### Definition of *extendable shape expression*
-
-
-
+      <section>
+	<h5>Definition of *extendable shape expression*</h5>
+	<p>
 A shapeExpr is called *extendable* if:
-
-- it is named, say with label `L`,  
-- it is of the form either `s` or `s AND se`, where `s` is a Shape and `se` is a shapeExpr. In this case we denote `s` as `mainShape(L)` and `se` as `constraint(L)`:
-- `se` does not contain an EXTENDS, that is, `s'.extends` is empty for every `s'` in `shapes(se)`,
-- `def(L')` is an extendable shape expression for every `L'` in `s.extends` (note that this condition is trivially met when `s.extends` is empty),
-- the set `predicates(se)` is included the union of the sets `predicates(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`. 
-
+	</p>
+	<ul>
+	  <li>it is named, say with label `L`,  </li>
+	  <li>it is of the form either `s` or `s AND se`, where `s` is a Shape and `se` is a shapeExpr. In this case we denote `s` as `mainShape(L)` and `se` as `constraint(L)`:</li>
+	  <li>`se` does not contain an EXTENDS, that is, `s'.extends` is empty for every `s'` in `shapes(se)`,</li>
+	  <li>`def(L')` is an extendable shape expression for every `L'` in `s.extends` (note that this condition is trivially met when `s.extends` is empty),</li>
+	  <li>the set `predicates(se)` is included the union of the sets `predicates(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`. </li>
+	</ul>
+	<p>
 Note that a named Shape is always an extendable shape expression.
-
+	</p>
+	<p>
 For an extendable shape expression with label `L` we define:
-
-- `superTcs(L)` as the union of the sets `tcs(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`,
-- `superPredicates(L)` as the union of the sets `predicates(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`.
-
-
-**Schema requirement** EXTENDS appears only in extendable shape expressions. That is, for every Shape `s` that appears in the schema, if `s.extends` is non empty and for every shapeExpr `se` in the schema, if `s` belongs to `shapes(se)`, then `se` is an extendable shape expression.
-
-### Stratified schema
-
-**[TODO precise definition + how negation and stratification are to be adapted]**
-
+	</p>
+	<ul>
+	  <li>`superTcs(L)` as the union of the sets `tcs(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`,</li>
+	  <li>`superPredicates(L)` as the union of the sets `predicates(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`.</li>
+	</ul>
+	<p>
+	  <b>Schema requirement</b> EXTENDS appears only in extendable shape expressions. That is, for every Shape `s` that appears in the schema, if `s.extends` is non empty and for every shapeExpr `se` in the schema, if `s` belongs to `shapes(se)`, then `se` is an extendable shape expression.
+	</p>
+      </section>
+      <section>
+	<h5>Stratified schema</h5>
+	<p>
+	  <b>[TODO precise definition + how negation and stratification are to be adapted]</b>
+	</p>
+<p>
 Briefly: stratification is defined on shape expression labels (and not on Shapes as it used to be).
-
-# Semantics
-
-### Definitions
-
+</p>
+<p>
+# Semantics<br/>
+@@Indicates this should be moved?
+</p>
+      </section>
+      <section>
+	<h5>Definitions</h5>
+	<p>
 Consider a ShEx schema `Sch` and a graph `G`, and let `U` be the set of shape expression labels of `Sch` and `N` be the set of nodes of `G`.(TODO : which labels to consider ? Only the top level ones, or any label ?)
 Then a *typing* over `G` and `Sch` is a subset of `N x U`.
-
+	</p>
+	<p>
 The satisfaction of the schema is defined w.r.t. a so called maximal typing, which is guaranteed to exist.
 The maximal typing is such that whenever `(n,L)` belongs to it, it holds that the neighborhood of the node `n` *satisfies* `def(L)` w.r.t. the maximal typing. Formally, `satisfies(G, Sch, maximalTyping, n, def(L), _)` holds, where `satisfies` is the function defined below and the underscore indicates that no value is given for the corresponding optional parameter.
-
-### The satisfies function
-
+	</p>
+      </section>
+      <section>
+	<h5>The satisfies function</h5>
+	<p>
 It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over `G` and `Sch`, a node `n` in `G`, a shapeExpr `se` from `Sch`, and an optional neighborhood set of triples `npart` : `satisfies(n, se, typing, npart, G, Sch)`. The value of the function is a Boolean. The function is defined recursively on the structure of the shape expression:
-
-**[TODO : fix the order of the parameters in the satisfies function as it is not always the same]**
-
-- `se` is node constraint and `satisfies2(n, se)` ... as before
-- `se` is ShapeOr and `satisfies(n, se', typing, npart, G, Sch)` holds for some `se'` in `se.shapeExprs`
-- `se` is a ShapeNot and `satisfies(n, npart, se, typing, G, Sch)` does not hold
-- `se` is a ShapeExternal and implementation-specific mechanisms not defined in this specification indicate success
-- `se` is a shapeExprRef with label `L` and `satisfies(n, npart, def(L), typing, G, Sch)` **[Note : here we unfold the definition of L and do not look for base subtypes. Base subtypes are considered only for the whole neighborhood, that is in TripleConstr]**
-- `se` is an extendible shape expression, let `L` be the label of `se`. Let `neigh = npart` if `npart` is given, or `neigh` be the neighbourhood of the node `n` is `npart = _`. Then
-    - there exist sets of triples `matchables`, `unmatchables` and `remainder` s.t.
-        - `matchables`, `unmatchables` and `remainder` are pairwise dijoint and their union is equal to `neigh`,
-        - `remainder` is the set of triples from the neighborhood of `n` whose predicates do not appear neither in `superPredicates(L)` nor in `mainShape(L).extra`
-        - if `mainShape(s).closed`, then `remainder` is empty 
-        - `matchables` contains all the triples `t` s.t. `matches(n, {t}, tc, typing, G, Sch)` holds for some `tc` in `superTcs(L)`,
-        - (therefore, `unmatchables` contains all the triples `t` whose predicate is in `superPredicates(L)` or in `mainShape(L).extra`, and such that `matches(n, {t}, tc, typing)` does not hold for no `tc` in `superTcs(L)`),
-        - all predicates in `unmatchables` appear in `mainShape(L).extra`,
-    - there exists a partition of `matchables` that with every `L'` in `supertypes(L)` associates a set of triples denoted `npart(L')` s.t.
-        - `matchables` is the union of the sets `npart(L')` for all the `L'`s in `supertypes(L)` and these sets are mutually disjoint,
-        - `matches(n, npart(L'), mainShape(L').tripleExpr, typing, G, Sch)` holds for every `L'` in `supertypes(L)`,
-        - `satisfies(n, supernpart(L'), constraint(L'), typing, G, Sch)` holds for every `L'` in `supertypes(L)` whenever `constraint(L')` exists, where `supernparts(L')` is the union of the `npart(L'')` for all the shape expression labels `L''` in `supertypes(L')`
-- `se` is a ShapeAnd without EXTENDS and `satisfies(n, se', typing, npart, G, Sch)` holds for every `se'` in `se`.shapeExprs
-	</pre>
+	</p>
+	<p>
+<b>[TODO : fix the order of the parameters in the satisfies function as it is not always the same]</b>
+	</p>
+	<ul>
+	  <li>`se` is node constraint and `satisfies2(n, se)` ... as before</li>
+	  <li>`se` is ShapeOr and `satisfies(n, se', typing, npart, G, Sch)` holds for some `se'` in `se.shapeExprs`</li>
+	  <li>`se` is a ShapeNot and `satisfies(n, npart, se, typing, G, Sch)` does not hold</li>
+	  <li>`se` is a ShapeExternal and implementation-specific mechanisms not defined in this specification indicate success</li>
+	  <li>`se` is a shapeExprRef with label `L` and `satisfies(n, npart, def(L), typing, G, Sch)` **[Note : here we unfold the definition of L and do not look for base subtypes. Base subtypes are considered only for the whole neighborhood, that is in TripleConstr]**</li>
+	  <li>`se` is an extendible shape expression, let `L` be the label of `se`. Let `neigh = npart` if `npart` is given, or `neigh` be the neighbourhood of the node `n` is `npart = _`. Then<ul>
+	      <li>there exist sets of triples `matchables`, `unmatchables` and `remainder` s.t.<ul>
+		  <li>`matchables`, `unmatchables` and `remainder` are pairwise dijoint and their union is equal to `neigh`,</li>
+		  <li>`remainder` is the set of triples from the neighborhood of `n` whose predicates do not appear neither in `superPredicates(L)` nor in `mainShape(L).extra`</li>
+		  <li>if `mainShape(s).closed`, then `remainder` is empty </li>
+		  <li>`matchables` contains all the triples `t` s.t. `matches(n, {t}, tc, typing, G, Sch)` holds for some `tc` in `superTcs(L)`,</li>
+		  <li>(therefore, `unmatchables` contains all the triples `t` whose predicate is in `superPredicates(L)` or in `mainShape(L).extra`, and such that `matches(n, {t}, tc, typing)` does not hold for no `tc` in `superTcs(L)`),</li>
+		  <li>all predicates in `unmatchables` appear in `mainShape(L).extra`,</li></ul></li>
+	      <li>there exists a partition of `matchables` that with every `L'` in `supertypes(L)` associates a set of triples denoted `npart(L')` s.t.
+		<ul>
+		  <li>`matchables` is the union of the sets `npart(L')` for all the `L'`s in `supertypes(L)` and these sets are mutually disjoint,</li>
+		  <li>`matches(n, npart(L'), mainShape(L').tripleExpr, typing, G, Sch)` holds for every `L'` in `supertypes(L)`,</li>
+		  <li>`satisfies(n, supernpart(L'), constraint(L'), typing, G, Sch)` holds for every `L'` in `supertypes(L)` whenever `constraint(L')` exists, where `supernparts(L')` is the union of the `npart(L'')` for all the shape expression labels `L''` in `supertypes(L')`</li>
+   		  <li>`se` is a ShapeAnd without EXTENDS and `satisfies(n, se', typing, npart, G, Sch)` holds for every `se'` in `se`.shapeExprs</li></ul></li></ul></li></ul>
+	</section>
       <p>
         <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that a node <span class="math">n</span> and a <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>typing</a> <span class="math">t</span> for schema <span class="math">Sch</span>.<br/>
         <span class="label" id="notSatisfies">notSatisfies</span>: Conversely, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that <span class="math">n</span> and <span class="math">G</span> do not satisfy <span class="math">se</span> with the given <a>typing</a> <span class="math">t</span>.
