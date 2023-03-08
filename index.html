@@ -622,23 +622,34 @@ _:User2
   </p>
       </div>
 	</section>
-	<pre>
-	  #### Preliminary defintions
+        <section id="preliminary-defintions">
+          <h4>Preliminary defintions</h4>
 
-Consider a fixed schema `Sch`.
+          <p>
+            Consider a fixed schema `Sch`.
+          </p>
 
-A schema MUST NOT contain any shapeExprLabel that has a negated reference to itself, either directly or transitively. This is formalized by the requirement that the dependency graph of a schema MUST NOT have a cycle that traverses some negated reference. 
+          <p>
+            A schema MUST NOT contain any shapeExprLabel that has a negated reference to itself, either directly or transitively.
+            This is formalized by the requirement that the dependency graph of a schema MUST NOT have a cycle that traverses some negated reference.
+          </p>
 
-We construct a graph which nodes are the shapeExprLabels that appear in `Sch`.
-We say that a label `L` *has a reference to* a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` s.t. a shapeExprRef `L'` appears in `tc.valueExpr` either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, tripleContr.valueExpr, but w/o traversing shapeExprRefs.
-Such reference is called *negated reference* if:
+          <p>
+            We construct a graph which nodes are the shapeExprLabels that appear in `Sch`.
+            We say that a label `L` *has a reference to* a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` such that a shapeExprRef `L'` appears in `tc.valueExpr` either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, tripleContr.valueExpr, but w/o traversing shapeExprRefs.
+            Such reference is called *negated reference* if:
+          </p>
 
-- an odd number of ShapeNot is traversed before reaching `tc`, or
-- an odd number of ShapeNot after `tc.valueExpr`, or
-- **[TODO : something about extra]**
+          <ul>
+            <li>an odd number of ShapeNot is traversed before reaching `tc`, or</li>
+            <li>an odd number of ShapeNot after `tc.valueExpr`, or</li>
+            <li>**[TODO : something about extra]**</li>
+          </ul>
 
-The dependency graph ... as before, using negated reference.
-	</pre>
+          <p>
+            The dependency graph ... as before, using negated reference.
+	</p>
+        </section>
       <section id="shape-expression-semantics">
       <h4>Semantics</h4>
       <p>
