@@ -456,3 +456,7 @@ dd > dl {
     border-left: 2em solid #f7f7f7;
     Margin-top: 0;
 }
+
+.iovka-added {
+    background-color: #afeeee;
+}
