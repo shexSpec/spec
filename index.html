@@ -638,18 +638,18 @@ _:User2
 
           <p>
             We construct a graph which nodes are the shapeExprLabels that appear in `Sch`.
-            We say that a label `L` *has a reference to* a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` such that a shapeExprRef `L'` appears in `tc.valueExpr` either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, tripleContr.valueExpr, but w/o traversing shapeExprRefs.
-            Such reference is called *negated reference* if:
+            We say that a label `L` <dfn>has a reference to</dfn> a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` such that a shapeExprRef `L'` appears in <span class="math">tc</span>.<span class="param">valueExpr</span> either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, in te TripleContraint's <span class="param">valueExpr</span>, but without traversing <a>shapeExprRefs</a>.
+            Such reference is called <dfn>negated reference</dfn> if:
           </p>
 
           <ul>
             <li>an odd number of ShapeNot is traversed before reaching `tc`, or</li>
-            <li>an odd number of ShapeNot after `tc.valueExpr`, or</li>
-            <li>**[TODO : something about extra]**</li>
+            <li>an odd number of ShapeNot after <span class="math">tc</span>.<span class="param">valueExpr</span>, or</li>
+            <li><span class="issue">[TODO : something about extra]</span></li>
           </ul>
 
           <p>
-            The dependency graph ... as before, using negated reference.
+            The dependency graph <span class="issue">...</span> as before, using negated reference.
 	</p>
         </section>
       <section id="shape-expression-semantics">
