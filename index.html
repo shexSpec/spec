@@ -468,7 +468,7 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed ShapeMap <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDFnode/shapeLabel pair <span class="math">(n, sl)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
+	<dfn id="isValid" label="isValid">isValid</dfn>: For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed ShapeMap <span class="math">ism</span>, <code class="function">isValid(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every RDF node/shapeLabel pair <span class="math">(n, sl)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
 	<strike>The latter</strike><span class="ericP">This</span> is captured by the expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, completeTyping(<span class="math">G</span>, <span class="math">Sch</span>))</code> <span class="ericP">where <span class="math">s</span> is the shape expression identified by <span class="math">sl</span></span>.
 	The function <code class="function">satisfies</code>  is defined for every kind of <a>shape expression</a>.
       </p>
@@ -506,14 +506,14 @@ _:User2
       </p>
       <ul>
 	<li>
-	  <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span>;
+	  <code class="function">completeTypingOn(<span class="math">1</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that contain only RDF node/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> = <span class="math">1</span>;
 	</li>
 	<li>
 	  for every <span class="math">i</span> between <span class="math">2</span> and <span class="math">k</span>, <code class="function">completeTypingOn(<span class="math">i</span>, <span class="math">G</span>, <span class="math">Sch</span>)</code> is the union of all correct typings that:
 	  <ul>
-	    <li> contain only RDFnode/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">i</span>
+	    <li> contain only RDF node/shape pairs <span class="math">(n,s)</span> with <code class="function">stratum(<span class="math">s</span>)</code> ≤ <span class="math">i</span>
 	    </li>
-	    <li> are equal to <code class="function">completeTypingOn(<span class="math">i</span>-1, <span class="math">G</span>, <span class="math">Sch</span>)</code> when restricted to their RDFnode/shape pairs <span class="math">(n1,s1)</span> for which <code class="function">stratum(<span class="math">s1</span>)</code> &lt; i.
+	    <li> are equal to <code class="function">completeTypingOn(<span class="math">i</span>-1, <span class="math">G</span>, <span class="math">Sch</span>)</code> when restricted to their RDF node/shape pairs <span class="math">(n1,s1)</span> for which <code class="function">stratum(<span class="math">s1</span>)</code> &lt; i.
 	    </li>
 	  </ul>
 	</li>
@@ -2451,7 +2451,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	</ul>
 	    <!-- appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>. -->
 	<p>
-	  The <dfn>dependency graph</dfn> of the schema <span class="math">Sch</span> is the graph which vertices are all the <a>Shape</a>s that appear in some shape expression in the <span class="param">shapes</span> of <span class="math">Sch</span>, and that has two kinds of edges: negative and positive.
+	  The <dfn>dependency graph</dfn> of the schema <span class="math">Sch</span> is the graph whose vertices are all the <a>Shape</a>s that appear in some shape expression in the <span class="param">shapes</span> of <span class="math">Sch</span>, and that has two kinds of edges: negative and positive.
 	  There is a negative edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a <a>negated reference</a> to <span class="math">s2</span>.
 	  There is a positive edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a reference but not a negated reference to <span class="math">s2</span>.
 	</p>
