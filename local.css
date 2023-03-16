@@ -460,3 +460,10 @@ dd > dl {
 .iovka-added {
     background-color: #afeeee;
 }
+
+.cut {
+    font-style: strike-through;
+}
+.ericP {
+    background-color: #eeeeaf;
+}
