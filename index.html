@@ -639,7 +639,7 @@ _:User2
           <p>
             We construct a graph which nodes are the shapeExprLabels that appear in `Sch`.
             We say that a label `L` <dfn>has a reference to</dfn> a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` such that a shapeExprRef `L'` appears in <span class="math">tc</span>.<span class="param">valueExpr</span> either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, in te TripleContraint's <span class="param">valueExpr</span>, but without traversing <a>shapeExprRefs</a>.
-            Such reference is called <dfn>negated reference</dfn> if:
+            A reference is a <a>negated reference</a> if:
           </p>
 
           <ul>
