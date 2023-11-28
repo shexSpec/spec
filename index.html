@@ -4572,7 +4572,28 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td id="prod-exclusion">[<span class="prodNo">50</span>]   </td>
 <td><code class="production prod">exclusion</code></td>
 <td>   ::=   </td>
-<td><code class="content">'.' '-' (<span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> | <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span>) '~'?</code></td>
+<td><code class="content">'.' (<span class="prod"><a class="grammarRef" href="#prod-iriExclusion">iriExclusion</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literalExclusion">literalExclusion</a></span> | <span class="prod"><a class="grammarRef" href="#prod-languageExclusion">languageExclusion</a></span>) +</code></td>
+</tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-iriExclusion">[<span class="prodNo">50.1</span>]   </td>
+<td><code class="production prod">iriExclusion</code></td>
+<td>   ::=   </td>
+<td><code class="content">'-' <span class="prod"><a class="grammarRef" href="#prod-iri">iri</a></span> '~'?</code></td>
+</tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-literalExclusion">[<span class="prodNo">50.2</span>]   </td>
+<td><code class="production prod">literalExclusion</code></td>
+<td>   ::=   </td>
+<td><code class="content">'-' <span class="prod"><a class="grammarRef" href="#prod-literal">literal</a></span> '~'?</code></td>
+</tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-languageExclusion">[<span class="prodNo">50.3</span>]   </td>
+<td><code class="production prod">languageExclusion</code></td>
+<td>   ::=   </td>
+<td><code class="content">'-' <span class="prod"><a class="grammarRef" href="#term-LANGTAG">LANGTAG</a></span> '~'?</code></td>
 </tr>
 
 <tr style="vertical-align: baseline">
