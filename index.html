@@ -17,7 +17,7 @@ h1, h2, h3 {
 }
     </style>
 
-    <script src='respec-ieee.js'
+    <script src='../../ericprud/respec-ieee/builds/respec-ieee.js'
             defer class='remove'></script>
     <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
     <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
@@ -85,6 +85,7 @@ h1, h2, h3 {
           {value: "Gitter chat", href: "https://gitter.im/shapeExpressions/Lobby"}
         ]
       }],
+      baseURL: "http://a.example/my/base/"
       };
     </script>
 
@@ -1403,29 +1404,29 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
           For a <a>shape</a> <span class="math">s</span>, an <dfn>effectiveExpression</dfn> is composed from a <span class="math">s</span>'s <span class="param">expression</span> and the list of <span class="math">s</span>'s <span class="param">extends</span>.
         </p>
         <ul>
-	        <li>Let <dfn>extendedExpr</dfn> = extendShape(expression)  s/expression/extendedExpr/g, <span class="math">extendedExpr(s)</span>  is a function that takes a <span class="param">Shape</span> <span class="math">s</span> and returns a <a class="jobjref">tripleExpr</a>.</li>
+	        <li>Let <dfn>extendedExpr</dfn> = extendShape(expression), <span class="math">extendedExpr(s)</span>  is a function that takes a <span class="param">Shape</span> <span class="math">s</span> and returns a <a class="jobjref">tripleExpr</a>.</li>
 	        <li>let <dfn>conjuncts</dfn> = an empty array of <span class="math">tripleExprs</span></li>
 	        <li>for each <span class="math">e</span> in s.extends <span class="math">e</span> is the label of a <a class="jobjref">shapeExpr</a> with exactly one <span class="param">Shape</span> <span class="math">s2</span>. If <span class="math">s2</span> has an <span class="param">exression</span>, add it to <a>conjuncts</a>.</li>
           <li>If <span class="math">s</span> has an <span class="param">expression</span>, add it to <a>conjuncts</a>.</li>
-          <li>if <a>conjuncts</a>.length is 0, <span class="param">effectiveExpression</span> = <a>EmptyExpression</a>.</li>
-          <li>else if <a>conjuncts</a>.length is 1, <span class="param">effectiveExpression</span> = <a>conjuncts</a>[0].</li>
-          <li>else <span class="param">effectiveExpression</span> = { type: EachOf, shapeExprs: <a>conjuncts</a> }.</li>
+          <li>if <a>conjuncts</a>.length is 0, <span class="math">effectiveExpression</span> = <a>EmptyExpression</a>.</li>
+          <li>else if <a>conjuncts</a>.length is 1, <span class="math">effectiveExpression</span> = <a>conjuncts</a>[0].</li>
+          <li>else <span class="math">effectiveExpression</span> = { type: EachOf, shapeExprs: <a>conjuncts</a> }.</li>
         </ul>
         <p>
 	        For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
         </p>
         <ul>
           <li>
-            <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> such that <code class="function">matches(<span class="math">matched</span>, <span class="param">effectiveExpression</span>, <span class="math">m</span>)</code>.
-            If <span class="param">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
+            <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> such that <code class="function">matches(<span class="math">matched</span>, <span class="math">effectiveExpression</span>, <span class="math">m</span>)</code>.
+            If <span class="math">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
             Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in <span class="math">remainder</span>:
             <code class="function"><span class="math">outs</span> = <span class="math">remainder</span> ∩ <a>arcsOut</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>
-            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">effectiveExpression</span>.
-            If <span class="param">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">matchables</span> = <span class="math">Ø</span> (the empty set)</code>.<br/>
+            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="math">effectiveExpression</span>.
+            If <span class="math">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">matchables</span> = <span class="math">Ø</span> (the empty set)</code>.<br/>
             The complexity of partitioning is described briefly in the <a href="../primer/#partition-complexity">ShEx2 Primer</a>.
           </li>
           <li>
-            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="param">effectiveExpression</span>.<br/>
+            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="math">effectiveExpression</span>.<br/>
             Let <span class="label">unmatchables</span> be the triples in <span class="math">outs</span> which are not in <span class="math">matchables</span>.
             <code class="function"><span class="math">matchables</span> ∪ <span class="math">unmatchables</span> = <span class="math">outs</span></code>.
           </li>
@@ -1437,30 +1438,40 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
 	<section class="iovka-added">
 	  <h5>The matches function</h5>
 	  <p>
-            It takes six parameters: the graph `G`, the schema `Sch`, a typing `t` over `G` and `Sch`, a node `n` in `G`, a tripleExpr `te` from `Sch`, and a (non optional) neighborhood set of triples `npart` : `matches(n, te, typing, npart, G, Sch)`.
-            The value of the function is a Boolean. The function is defined recursively on the structure of the triple expression:
+            <span class="function">matches(<span class="math">n</span>, <span class="math">te</span>, <span class="math">typing</span>, <span class="math">npart</span>, <span class="math">G</span>, <span class="math">Sch</span>)</span> is a Boolean function that takes six parameters:
+          </p>
+          <ul>
+            <li>the graph <span class="math">G</span></li>
+            <li>the schema <span class="math">Sch</span></li>
+            <li>a typing <span class="math">t</span> over <span class="math">G</span> and <span class="math">Sch</span></li>
+            <li>a node <span class="math">n</span> in <span class="math">G</span></li>
+            <li>a tripleExpr <span class="math">te</span> from <span class="math">Sch</span></li>
+            <li>a (non optional) neighborhood set of triples <span class="math">npart</span></li>
+          </ul>
+          <p>
+            <span class="function">matches</span> is defined recursively on the structure of the type of <span class="math">te</span>:
 	  </p>
 	  <ul>
-	    <li>`te` is a TripleConstraint and `npart` is a singleton set with unique triple `t` and the predicate of `t` is the same as the predicate of `te` and ... TODO define inverse or not as before ... and:
+	    <li><span class="math">te</span> is a <span class="jobjref"><a class="obj">TripleConstraint</a></span> and <span class="math">npart</span> is a singleton set with unique triple <span class="math">t</span> and the predicate of <span class="math">t</span> is the same as the predicate of <span class="math">te</span> and ... TODO define inverse or not as before ... and either:
 	    <ul>
-	      <li>`te` does not have a `valueExpr`, or</li>
-	      <li>`te` has a valueExpr that is a shapeExprRef with label `L` and **there exists a label `L'` in `baseSubtypes(L)` such that `(n', L')` belongs to `typing` (note: this is the unique place in the recursive definition of the semantics where substitutability is considered.
+	      <li><span class="math">te</span> does not have a <span class="param">valueExpr</span>, or</li>
+	      <li><span class="math">te</span> has a <span class="param">valueExpr</span> that is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> with label <span class="math">L</span> and **there exists a label <span class="math">L'</span>` in <span class="math">baseSubtypes(L)</span> such that <span class="function">(<span class="math">n'</span>, <span class="math">L'</span>)</span> belongs to <span class="math">typing</span>. (Note: this is the unique place in the recursive definition of the semantics where substitutability is considered.)
                 Substitution is also considered when validating a shape map)**, or </li>
-	      <li> `te` has a valueExpr that is not a shapeExprRef, then `satisfies(n', te.valueExpr, typing, _, G, Sch)` holds, where `n'` is the object ( ... TODO ... or the subject if inverse ) of `t`</li>
+	      <li><span class="math">te</span> has a <span class="param">valueExpr</span> that is not a <span class="jobjref"><a class="obj">shapeExprRef</a></span>, then <span class="function">satisfies(<span class="math">value</span>, <span class="math">te</span>.<span class="param">valueExpr</span>, <span class="math">typing</span>, _, <span class="math">G</span>, <span class="math">Sch</span>)</span> holds, where <span class="math">value</span> is <span class="math">t</span>.<span class="param">subject</span> if <span class="math">te</span>.<span class="param">inverse</span>, otherwise <span class="math">t</span>.<span class="param">object</span>.</li>
 	    </ul>
 	    </li>
 
-	    <li>`te` is tripleExprRef with label `L`, and `matches(n, def(L), typing, npart, G, Sch)` holds</li>
-	    <li>`te` has a cardinality `[min, max]` and `npart` can be partitioned into `k` pairwise disjoint sets `npart_1` ... `npart_k` for some `min &lt;= k &lt;= max` and `matches(n, te, typing, npart_i, G, Sch)` for every `i` in `1..k`</li>
-            <li>`te` is a OneOf and `matches(n, te', typing, npart, G, Sch)` for some `te'` in `te`.tripleExprs</li>
-	    <li> `te` is EachOf and `matches(n, te', typing, npart, G, Sch)` for every `te'` in `te`.tripleExprs</li>
+	    <li><span class="math">te</span> is <span class="jobjref"><a class="obj">tripleExprRef</a></span> with label <span class="math">L</span>, and <span class="function">matches(<span class="math">n</span>, <span class="function">def(<span class="math">L</span>)</span>, <span class="math">typing</span>, <span class="math">npart</span>, <span class="math">G</span>, <span class="math">Sch</span>)</span> holds</li>
+	    <li><span class="math">te</span> has a cardinality <span class="function">[<span class="math">min</span>, <span class="math">max</span>]</span> and <span class="math">npart</span> can be partitioned into <span class="math">k</span> pairwise disjoint sets <span class="math">npart<sub>1</sub></span> ... <span class="math">npart<sub>k</sub></span> for some <span class="function"><span class="math">te</span>.<span class="param">min</span> &lt;= <span class="math">k</span> &lt;= <span class="math">te</span>.<span class="param">max</span></span> and <span class="function">matches(<span class="math">n</span>, <span class="math">te</span>, <span class="math">typing</span>, <span class="math">npart<sub>i</sub></span>, <span class="math">G</span>, <span class="math">Sch</span>)</span> for every <span class="math">i</span> in <span class="math">1..k</span></li>
+            <li><span class="math">te</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> and <span class="function">matches(<span class="math">n</span>, <span class="math">te'</span>, <span class="math">typing</span>, <span class="math">npart</span>, <span class="math">G</span>, <span class="math">Sch</span>)</span> for some <span class="math">te'</span> in <span class="math">te</span>.<span class="param">tripleExprs</span></li>
+	    <li> <span class="math">te</span> is <span class="jobjref"><a class="obj">EachOf</a></span> and <span class="function">matches(<span class="math">n</span>, <span class="math">te'</span>, <span class="math">typing</span>, <span class="math">npart</span>, <span class="math">G</span>, <span class="math">Sch</span>)</span> for every <span class="math">te'</span> in <span class="math">te</span>.tripleExprs</li>
 	  </ul>
 	</section>
 	<section class="iovka-added">
 	  <h5>Validating a shape map</h5>
 	  <p>
-            A shape map is ... TODO precise definition ... a kind of a typing, i.e. a set of pairs `(n, L)` where `n` is a node and `L` is a shape expression label. 
-            A shape map is satisfied if for every `(n, L)` in the map, there exists a label `L'` in `baseSubtypes(L)` s.t. `(n', L')` belongs to the maximal typing
+            A shape map is ... TODO precise definition ... a kind of a typing, i.e. a set of pairs `(n, L)` where <span class="math">n</span> is a node and <span class="math">L</span> is a shape expression label. 
+            A shape map is satisfied if for every `(n, L)` in the map, there exists a label <span class="math">L'</span> in `baseSubtypes(L)` s.t. `(n', L')` belongs to the maximal typing
 	  </p>
 	</section>
 	<section class="iovka-added">

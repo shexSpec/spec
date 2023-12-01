@@ -329,7 +329,7 @@ div.shexjTable th { text-align: right; }
     display: inline-flex; /* inline-flex works but I've not researched why. */
 }
 
-.function { white-space: nowrap; }
+.function { white-space: nowrap; color: #c83500; }
 
       .example {
       display: inline-block;
@@ -458,7 +458,7 @@ dd > dl {
 }
 
 .iovka-added {
-    background-color: #afeeee;
+    border: thick solid #afeeee;
 }
 
 .cut {
