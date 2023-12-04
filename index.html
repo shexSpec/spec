@@ -4288,6 +4288,13 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-litNodeConstraint">[<span class="prodNo">24</span>]   </td>
 <td><code class="production prod">litNodeConstraint</code></td>
 <td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-litInlineNodeConstraint">litInlineNodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
+</tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-litInlineNodeConstraint">[<span class="prodNo">24½</span>]   </td>
+<td><code class="production prod">litInlineNodeConstraint</code></td>
+<td>   ::=   </td>
 <td>   <code class="content">"LITERAL" <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
                                 | <span class="prod"><a class="grammarRef" href="#prod-datatype">datatype</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
                                 | <span class="prod"><a class="grammarRef" href="#prod-valueSet">valueSet</a></span> <span class="prod"><a class="grammarRef" href="#prod-xsFacet">xsFacet</a></span>*<br/>
@@ -4298,11 +4305,18 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td id="prod-nonLitNodeConstraint">[<span class="prodNo">25</span>]   </td>
 <td><code class="production prod">nonLitNodeConstraint</code></td>
 <td>   ::=   </td>
+<td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLitInlineNodeConstraint">nonLitInlineNodeConstraint</a></span> <span class="prod"><a class="grammarRef" href="#prod-annotation">annotation</a></span>* <span class="prod"><a class="grammarRef" href="#prod-semanticActions">semanticActions</a></span></code></td>
+</tr>
+
+<tr style="vertical-align: baseline">
+<td id="prod-nonLitInlineNodeConstraint">[<span class="prodNo">25½</span>]   </td>
+<td><code class="production prod">nonLitInlineNodeConstraint</code></td>
+<td>   ::=   </td>
 <td>   <code class="content"><span class="prod"><a class="grammarRef" href="#prod-nonLiteralKind">nonLiteralKind</a></span> <span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span>*<br/>
                                 | <span class="prod"><a class="grammarRef" href="#prod-stringFacet">stringFacet</a></span>+</code></td>
 </tr>
 
-<tr class="obj"><td></td><td><a class="obj">NodeConstraint</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
+<tr class="obj"><td></td><td><a class="obj">NodeConstraint</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
 <tr style="vertical-align: baseline">
 <td id="prod-nonLiteralKind">[<span class="prodNo">26</span>]   </td>
 <td><code class="production prod">nonLiteralKind</code></td>
@@ -5333,7 +5347,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>ShapeExternal</a></th> <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? }</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExprRef</a></th>           <td>=</td> <td><a class="objref">shapeExprLabel</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExprLabel</a></th>       <td>=</td> <td><a>IRIREF</a> | <a>BNODE</a> ;</td></tr>
-  <tr class="obj"><th class="obj"><a>NodeConstraint</a></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>NodeConstraint</a></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>xsFacet</a></th>               <td>=</td><td><a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>stringFacet</a></th>       <td>=</td><td>(<span class="param">length</span>|<span class="param">minlength</span>|<span class="param">maxlength</span>):<a>INTEGER</a> | <span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? ;</td></tr>
   <tr class="nob"><th class="nob"><a>numericFacet</a></th>     <td>=</td><td>(<span class="param">mininclusive</span>|<span class="param">minexclusive</span>|<span class="param">maxinclusive</span>|<span class="param">maxexclusive</span>):<a class="nobref">numericLiteral</a> </td></tr>
