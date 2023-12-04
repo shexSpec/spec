@@ -17,7 +17,7 @@ h1, h2, h3 {
 }
     </style>
 
-    <script src='../../ericprud/respec-ieee/builds/respec-ieee.js'
+    <script src='respec-ieee.js'
             defer class='remove'></script>
     <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
     <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
@@ -223,7 +223,7 @@ h1, h2, h3 {
         <h3>References</h3>
         <p>
           <a>ShExJ</a> is a dialect of JSON-LD [[!JSON-LD]] and the member <dfn class="param">id</dfn> is used as a <a data-cite="JSON-LD#node-identifiers">node identifier</a>.
-          An object may be represented inline or referenced by its <span class="param">id</span> which may be either a <a>blank node</a> or an <a>IRI</a>.
+          An ShapeDecl or tripleExpr may be represented inline or referenced by its <span class="param">id</span> which may be either a <a>blank node</a> or an <a>IRI</a>.
         </p>
         <div class="shexj simupre"><a class="obj">ShapeOr</a>         { <a class="param">id</a>:<a class="nobjref">shapeExprLabel</a>? <a class="param">shapeExprs</a>:[<a class="nobjref">shapeExpr</a>{2,}] }
 <a class="nob">shapeExprLabel</a>  = <a class="nobref">IRIREF</a> | <a class="objref">BNODE</a> ;
@@ -373,11 +373,18 @@ h1, h2, h3 {
       <span class="math"><dfn>predicatesIn</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsIn</a>(G, n)</span>.
     </li>
     <li>
-      <span class="math"><dfn>neigh</dfn>(G, n)</span> is the neighbourhood of the <a>node</a> <span class="math">n</span> in the <a>graph</a> <span class="math">G</span>.<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>
+      <span class="math"><dfn>neigh</dfn>(G, n)</span> is the neighbourhood of the <a>node</a> <span class="math">n</span> in the <a>graph</a> <span class="math">G</span>.<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>.
     </li>
     <li>
-      <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>
+      <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>.
     </li>
+    <li><dfn>def</dfn>(Sch, label)</span> is the <span class="math">decl</span>.<span class="param">shapeExpr</span> where <span class="math">decl</span>.<span class="param">label</span> = <code>label</code>. <code>Sch</code> must have exactly one <code>def(Sch, label)</code>.</li>
+    <li class="issue">superPredicates(label)</li>
+    <li class="issue">mainShape(label)</li>
+    <li class="issue">superTcs(label)</li>
+    <li class="issue">npart(label)</li>
+    <li class="issue">supernpart(sExpr)</li>
+    <li class="issue">supertypes(label)</li>
   </ul>
 
       <div class="example">
@@ -457,11 +464,11 @@ _:User2
       <div class="shexjTable">
         <table class="shexj">
   <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">imports</dfn>:[<a>IRIREF</a>+]? <dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>+]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="objref">ShapeDecl</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <dfn class="param">shapeExpr</dfn>:<a class="nobref">shapeExpr</a> }</td></tr>
+  <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <dfn class="param">shapeExpr</dfn>:<a class="nobref">shapeExpr</a> }</td></tr>
         </table>
       </div>
       <p>
-        where <a class="param">shapes</a> is a mapping from shape label to <a>shape expression</a>.
+        where <a class="param">shapes</a> is a list of <a>ShapeDecls</a>.
       </p>
       <div class="repchoice incomplete">
         <pre class="json nohighlight">{ "type": "Schema", "shapes": [
@@ -578,7 +585,7 @@ _:User2
         <ul>
           <li>
             A node constraint (<span class="jobjref"><a>NodeConstraint</a></span>) defines the set of allowed values of a node.
-            These include specification of RDF node kind, literal datatype, XML String and numeric facets and enumeration of value sets.
+            These include specification of RDF node kind, literal datatype, XML string and numeric facets and enumeration of value sets.
           </li>
           <li>
             A shape constraint (<span class="jobjref"><a>Shape</a></span>) defines a constraint on the allowed neighbourhood of a node, that is, the allowed triples that contain this node as subject or object.
@@ -770,31 +777,32 @@ The maximal typing is such that whenever `(n,L)` belongs to it, it holds that th
       <section class="iovka-added">
 	<h5>The satisfies function</h5>
 	<p>
-It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over `G` and `Sch`, a node `n` in `G`, a shapeExpr `se` from `Sch`, and an optional neighborhood set of triples `npart` : `satisfies(n, se, typing, npart, G, Sch)`. The value of the function is a Boolean. The function is defined recursively on the structure of the shape expression:
+It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over `G` and `Sch`, a node `n` in `G`, a shapeExpr `se` from `Sch`, and an optional neighborhood set of triples `npart` : `satisfies(n, se, typing, G, Sch, npart)`. The value of the function is a Boolean. The function is defined recursively on the structure of the shape expression:
 	</p>
 	<p>
 <b>[TODO : fix the order of the parameters in the satisfies function as it is not always the same]</b>
 	</p>
 	<ul>
-	  <li>`se` is node constraint and `satisfies2(n, se)` ... as before</li>
-	  <li>`se` is ShapeOr and `satisfies(n, se', typing, npart, G, Sch)` holds for some `se'` in `se.shapeExprs`</li>
-	  <li>`se` is a ShapeNot and `satisfies(n, npart, se, typing, G, Sch)` does not hold</li>
+	  <li>`se` is NodeConstraint and `satisfies2(n, se)` ... as before</li>
+	  <li>`se` is ShapeOr and `satisfies(n, se', typing, G, Sch, npart)` holds for some `se'` in `se.shapeExprs`</li>
+	  <li>`se` is a ShapeNot and `satisfies(n, se, typing, G, Sch, npart)` does not hold</li>
 	  <li>`se` is a ShapeExternal and implementation-specific mechanisms not defined in this specification indicate success</li>
-	  <li>`se` is a shapeExprRef with label `L` and `satisfies(n, npart, def(L), typing, G, Sch)` **[Note : here we unfold the definition of L and do not look for base subtypes. Base subtypes are considered only for the whole neighborhood, that is in TripleConstr]**</li>
-	  <li>`se` is an extendible shape expression, let `L` be the label of `se`. Let `neigh = npart` if `npart` is given, or `neigh` be the neighbourhood of the node `n` is `npart = _`. Then<ul>
+	  <li>`se` is a shapeExprRef with label `<span class="param">seLabel</span>` and `satisfies(n, def(<span class="param">seLabel</span>), typing, G, Sch, npart)` **[Note : here we unfold the definition of <span class="param">seLabel</span> and do not look for base subtypes. Base subtypes are considered only for the whole neighborhood, that is in TripleConstr]**</li>
+	  <li>`se` is an extendible shape expression, let `<span class="param">seLabel</span>` be the label of `se`. Let `neigh = npart` if `npart` is given, or `neigh` be the neighbourhood of the node `n` is `npart = _`. Then<ul>
 	      <li>there exist sets of triples `matchables`, `unmatchables` and `remainder` s.t.<ul>
 		  <li>`matchables`, `unmatchables` and `remainder` are pairwise dijoint and their union is equal to `neigh`,</li>
-		  <li>`remainder` is the set of triples from the neighborhood of `n` whose predicates do not appear neither in `superPredicates(L)` nor in `mainShape(L).extra`</li>
+		  <li>`remainder` is the set of triples from the neighborhood of `n` whose predicates do not appear neither in `superPredicates(<span class="param">seLabel</span>)` nor in `mainShape(<span class="param">seLabel</span>).extra`</li>
 		  <li>if `mainShape(s).closed`, then `remainder` is empty </li>
-		  <li>`matchables` contains all the triples `t` s.t. `matches(n, {t}, tc, typing, G, Sch)` holds for some `tc` in `superTcs(L)`,</li>
-		  <li>(therefore, `unmatchables` contains all the triples `t` whose predicate is in `superPredicates(L)` or in `mainShape(L).extra`, and such that `matches(n, {t}, tc, typing)` does not hold for no `tc` in `superTcs(L)`),</li>
-		  <li>all predicates in `unmatchables` appear in `mainShape(L).extra`,</li></ul></li>
-	      <li>there exists a partition of `matchables` that with every `L'` in `supertypes(L)` associates a set of triples denoted `npart(L')` s.t.
+		  <li>`matchables` contains all the triples `t` s.t. `matches(n, {t}, tc, typing, G, Sch)` holds for some `tc` in `superTcs(<span class="param">seLabel</span>)`,</li>
+		  <li>(therefore, `unmatchables` contains all the triples `t` whose predicate is in `superPredicates(<span class="param">seLabel</span>)` or in `mainShape(<span class="param">seLabel</span>).extra`, and such that `matches(n, {t}, tc, typing)` does not hold for no `tc` in `superTcs(<span class="param">seLabel</span>)`),</li>
+		  <li>all predicates in `unmatchables` appear in `mainShape(<span class="param">seLabel</span>).extra`,</li></ul></li>
+	      <li>there exists a partition of `matchables` that with every `<span class="param">seLabel</span>'` in `supertypes(<span class="param">seLabel</span>)` associates a set of triples denoted `npart(<span class="param">seLabel</span>')` s.t.
 		<ul>
-		  <li>`matchables` is the union of the sets `npart(L')` for all the `L'`s in `supertypes(L)` and these sets are mutually disjoint,</li>
-		  <li>`matches(n, npart(L'), mainShape(L').tripleExpr, typing, G, Sch)` holds for every `L'` in `supertypes(L)`,</li>
-		  <li>`satisfies(n, supernpart(L'), constraint(L'), typing, G, Sch)` holds for every `L'` in `supertypes(L)` whenever `constraint(L')` exists, where `supernparts(L')` is the union of the `npart(L'')` for all the shape expression labels `L''` in `supertypes(L')`</li>
-   		  <li>`se` is a ShapeAnd without EXTENDS and `satisfies(n, se', typing, npart, G, Sch)` holds for every `se'` in `se`.shapeExprs</li></ul></li></ul></li></ul>
+		  <li>`matchables` is the union of the sets `npart(<span class="param">seParent</span>)` for all the `<span class="param">seParent</span>`s in `supertypes(<span class="param">seLabel</span>)` and these sets are mutually disjoint,</li>
+		  <li>`matches(n, mainShape(<span class="param">seParent</span>).tripleExpr, typing, G, Sch, npart(<span class="param">seParent</span>))` holds for every `<span class="param">seParent</span>` in `supertypes(<span class="param">seLabel</span>)`,</li>
+		  <li>`satisfies(n, def(<span class="param">seParent</span>), typing, G, Sch, supernpart(<span class="param">seParent</span>))` holds for every `<span class="param">seParent</span>` in `supertypes(<span class="param">seLabel</span>)` whenever `def(<span class="param">seParent</span>)` exists, where `supernpart(<span class="param">seParent</span>)` is the union of the `npart(<span class="param">seGrandParent</span>)` for all the shape expression labels `<span class="param">seGrandParent</span>` in `supertypes(<span class="param">seParent</span>)`</li>
+   		  <li>`se` is a ShapeAnd without EXTENDS and `satisfies(n, se', typing, G, Sch, npart)` holds for every `se'` in `se`.shapeExprs</li></ul></li></ul></li></ul>
+
 	</section>
       <p>
         <span class="label" id="satisfies">satisfies</span>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that a node <span class="math">n</span> and a <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>typing</a> <span class="math">t</span> for schema <span class="math">Sch</span>.<br/>
@@ -813,7 +821,7 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
         <li id="satisfies-ShapeAnd"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span>, <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
         <li id="satisfies-ShapeNot"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> <span class="math">se2</span> at <span class="math">se</span>.<span class="param">shapeExpr</span>, <code class="function">notSatisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
         <li id="satisfies-ShapeExternal"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
-        <li id="satisfies-shapeExprRef"><span class="math">se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> where <span class="math">se2</span> is the shape expression having <span class="math">se</span> as <span class="param">id</span>.
+        <li id="satisfies-shapeExprRef"><span class="math">se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> and <code class="function">satisfies(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> where <span class="math">se2</span> is the shape declaration having <span class="math">se</span> as <span class="param">id</span>.
 	</li>
       </ul>
 
@@ -1384,7 +1392,7 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
 
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><dfn>Shape</dfn></th>                       <td>{</td><td><!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>Shape</dfn></th>                       <td>{</td><td><!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><dfn>tripleExpr</dfn></th>             <td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><dfn>EachOf</dfn></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <dfn class="param">expressions</dfn>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>OneOf</dfn></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
@@ -1468,6 +1476,7 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
 	  </ul>
 	</section>
 	<section class="iovka-added">
+          <p class="issue">Propose to remove; can be in ShapeMap spec. It's sufficient for this semantics doc to specify validity of a node/shape pair</p>
 	  <h5>Validating a shape map</h5>
 	  <p>
             A shape map is ... TODO precise definition ... a kind of a typing, i.e. a set of pairs `(n, L)` where <span class="math">n</span> is a node and <span class="math">L</span> is a shape expression label. 
@@ -1475,9 +1484,13 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
 	  </p>
 	</section>
 	<section class="iovka-added">
-	  <h5>Definition of the maximal typing</h5>
+	  <h5>Definition of the maximal typing <span class="issue">Labra: "final typing"?</span></h5>
 	  <p>
-	    *Similar to before, through stratification, but now the elements of the typing are pairs (node, label) where label is a **shapeExprLabel**. Before we had pairs (node, Shape) in the typing. With this new definition of typing the stratification is easier to define. What we lose is that some schemas that would have been considered stratified with the old definition won't be considered stratified with the new one. This breaks backwards compatibility, provided that there exists somewhere a schema with negations that has non trivial stratification structure, ... which would surprise me a lot*.						</p>
+	    *Similar to before, through stratification, but now the elements of the typing are pairs (node, label) where label is a **shapeExprLabel**. Before we had pairs (node, Shape) in the typing. With this new definition of typing the stratification is easier to define. What we lose is that some schemas that would have been considered stratified with the old definition won't be considered stratified with the new one.
+          </p>
+          <p class="issue">
+            Iokva: This breaks backwards compatibility, provided that there exists somewhere a schema with negations that has non trivial stratification structure, ... which would surprise me a lot*.
+          </p>
 	</section>
       <p>
         <span class="label" id="matches">matches</span>: asserts that a <a>triple expression</a> is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
@@ -4239,7 +4252,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 <a class="param">startActs</a>:[<a class="objref">SemAct</a>+]?
 <a class="param">start</a>:<a class="nobref">shapeExpr</a>?
 <a class="param">imports</a>:[<a>IRIREF</a>+]?
-<a class="param">shapes</a>:[<a class="nobref">shapeExpr</a>+]? }
+<a class="param">shapes</a>:[<a class="nobref">ShapeDecl</a>+]? }
 </td></tr>
 </tbody>
 
@@ -4313,8 +4326,17 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#prod-shapeExprLabel">shapeExprLabel</a></span> (<span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span> | "EXTERNAL")</code></td>
 </tr>
   <tr class="params"><td></td><td colspan="3">If the "<code>EXTERNAL</code>" keyword is present, <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> returns a <a class="obj">ShapeDecl</a> object whose <span class="param">shapeExpr</span> is a <a class="obj">ShapeExternal</a>:</td></tr>
-  <tr class="obj"><td></td><td><a class="obj">ShapeDecl</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>, <span class="param">shapeExpr</span>: { <span class="param">type</span>: "ShapeExternal" } }</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">ShapeDecl</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>: { <span class="param">type</span>: "ShapeExternal" } }</td></tr>
+  <tr class="params"><td></td><td colspan="3"><ul>
+        <li><span class="param">abstract</span> is true if "<code>ABSTRACT</code>" was matched.</li>
+  </ul></td></tr>
   <tr class="params"><td></td><td colspan="3">otherwise <span class="prod"><a class="grammarRef" href="#prod-shapeExprDecl">shapeExprDecl</a></span> returns a <span class="obj">ShapeDecl</span> object whose <span class="param">shapeExpr</span> is a <span class="prod"><a class="grammarRef" href="#prod-shapeExpression">shapeExpression</a></span>.</td></tr>
+  <tr class="obj"><td></td><td><a class="obj">ShapeDecl</a></td><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>: <a class="nobref">shapeExpr</a> }</td></tr>
+  <tr class="params"><td></td><td colspan="3"><ul>
+        <li><span class="param">abstract</span> is true if "<code>ABSTRACT</code>" was matched.</li>
+  </ul></td></tr>
+</ul>
+  </td></tr>
 </tbody>
 
 <tbody class="grammarParagraph">
@@ -4586,8 +4608,7 @@ otherwise the result is the <a class="grammarRef" href="#prod-shapeAtom">shapeAt
 <td><code class="content">(<!-- <span class="prod"><a class="grammarRef" href="#prod-includeSet">includeSet</a></span> | --><span class="prod"><a class="grammarRef" href="#prod-extraPropertySet">extraPropertySet</a></span> | "CLOSED")* '{' <span class="prod"><a class="grammarRef" href="#prod-tripleExpression">tripleExpression</a></span>? '}'</code></td>
 </tr>
 <tr class="obj"><td></td><td><a class="obj">Shape</a></td><td>{</td><td>
-<span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? 
-<!-- <span class="param">virtual</span>:<a>BOOL</a>? -->
+<span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? 
 <span class="param">closed</span>:<a>BOOL</a>?
 <span class="param">extra</span>:[<a>IRIREF</a>+]?
 <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?
@@ -5482,7 +5503,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>ShapeAnd</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeNot</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
   <tr class="obj"><th class="obj"><a>NodeConstraint</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th><td>{</td><td><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? }</td></tr>
   <tr class="obj"><th class="nob"><a>shapeExprRef</a></th><td>=</td><td><a>shapeExprLabel</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeExternal</a></th><td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExpr</a></th><td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
@@ -5515,7 +5536,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
 -->
   <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="context"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"?<br/><a class="param">imports</a>:[<a>IRIREF</a>+]? <span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">ShapeDecl</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
+  <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> }</td></tr>
   <tr class="nob"><th class="obj"><a>shapeExpr</a></th>         <td>=</td> <td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExternal</a> | <a class="objref">shapeExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeOr</a></th>             <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeAnd</a></th>           <td>{</td> <td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
@@ -5540,7 +5561,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>LanguageStem</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) }</td></tr>
   <tr class="obj"><th class="obj"><a>LanguageStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>Wildcard</a></th>             <td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExpr</a></th>             <td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>EachOf</a></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>OneOf</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
