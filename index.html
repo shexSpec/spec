@@ -656,7 +656,7 @@ _:User2
 
           <p>
             We construct a graph which nodes are the shapeExprLabels that appear in `Sch`.
-            We say that a label `L` <dfn>has a reference to</dfn> a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` such that a shapeExprRef `L'` appears in <span class="math">tc</span>.<span class="param">valueExpr</span> either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, in te TripleContraint's <span class="param">valueExpr</span>, but without traversing <a>shapeExprRefs</a>.
+            We say that a label <span class="math">L</span> <dfn>has a reference to</dfn> a label `L'` if there exists a TripleConstraint `tc` in `tcs(def(L))` such that a shapeExprRef `L'` appears in <span class="math">tc</span>.<span class="param">valueExpr</span> either directly or by traversing any ShapeAnd, ShapeOr, ShapeNot, tripleExprRef, in te TripleContraint's <span class="param">valueExpr</span>, but without traversing <a>shapeExprRefs</a>.
             A reference is a <a>negated reference</a> if:
           </p>
 
@@ -674,28 +674,28 @@ _:User2
         <h4>Semantics</h4>
         <div class="iovka-added">
       <p>
-	For a shape expression `se` we define its set of shapes `shapes(se)` recursively on the structure of `se`:
+	For a shape expression <span class="math">se</span> we define its set of shapes `shapes(se)` recursively on the structure of <span class="math">se</span>:
       </p>
       <ul>
-	<li>if `se` is a NodeConstraint, then `shapes(se) = emptyset`</li>
-	<li>if `se` is a Shape, then `shapes(se) = {se}`</li>
-	<li>if `se` is a ShapeNot, then `shapes(se) = shapes(se.shapeExpr)`</li>
-	<li>if `se` is ShapeAnd or ShapeOr, then `shapes(se)` is the union of the sets `shapes(se')` for all `se'` in `se.shapeExprs`</li>
-	<li>if `se` is a shapeExprRef with label `L`, then `shapes(se) = shapes(def(L))`</li>
+	<li>if <span class="math">se</span> is a <span class="jobjref"><a class="obj">NodeConstraint</a></span>, then `shapes(se) = emptyset`</li>
+	<li>if <span class="math">se</span> is a <span class="jobjref"><a class="obj">Shape</a></span>, then `shapes(se) = {se}`</li>
+	<li>if <span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span>, then `shapes(se) = shapes(se.shapeExpr)`</li>
+	<li>if <span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> or <span class="jobjref"><a class="obj">ShapeOr</a></span>, then `shapes(se)` is the union of the sets `shapes(se')` for all `se'` in `se.shapeExprs`</li>
+	<li>if <span class="math">se</span> is a <span class="jobjref"><a class="obj">shapeExprRef</a></span> with label <span class="math">L</span>, then `shapes(se) = shapes(def(L))`</li>
 	<li></li>
 	<li></li>
       </ul>
-      <p>For a tripleExpr `te` we define its set of TripleConstraints `tcs(te)` recursively on the structure of `te`:</p>
+      <p>For a tripleExpr <span class="math">te</span> we define its set of TripleConstraints `tcs(te)` recursively on the structure of <span class="math">te</span>:</p>
       <ul>
-      <li>if `te` is a TripleConstr, then `tcs(te)` is the singleton set `{te}`,</li>
-      <li>if `te` is OneOf or EachOf, then `tcs(te)` is the union of the sets `tcs(te')` for all the `se'` in `te.trileExprs`</li>
-      <li>if `te` is a tripleExpreRef with label `L`, then `tcs(te) = tcs(def(L))`</li>
+        <li>if <span class="math">te</span> is a <span class="jobjref"><a class="obj">TripleConstraint</a></span>, then `tcs(te)` is the singleton set `{te}`,</li>
+        <li>if <span class="math">te</span> is a <span class="jobjref"><a class="obj">OneOf</a></span> or <span class="jobjref"><a class="obj">EachOf</a></span>, then `tcs(te)` is the union of the sets `tcs(te')` for all the `se'` in `te.trileExprs`</li>
+        <li>if <span class="math">te</span> is a <span class="jobjref"><a class="obj">tripleExpreRef</a></span> with label <span class="math">L</span>, then `tcs(te) = tcs(def(L))`</li>
       </ul>
       <p>
 	For a Shape `s`, we define `tcs(s) = tcs(s.expression)`.
       </p>
       <p>
-      For a shapeExpr `se`, we define `tcs(se)` as the union of the sets `tcs(s)` for all Shape `s` in `shapes(se)`.
+      For a shapeExpr <span class="math">se</span>, we define `tcs(se)` as the union of the sets `tcs(s)` for all Shape `s` in `shapes(se)`.
       </p>
       <p>
 Finally, for a triple expression or a shape expression `e` we define `predicates(e)` as the set that contains exactly the `tc.predicate` for all the TripleConstraints `tc` in `tcs(e)`.
@@ -714,11 +714,11 @@ The <b>extension hierarchy graph</b> of a shapes schema is a directed graph whic
 	<b>Schema requirement</b>: the extension hierarchy graph must be acyclic.
       </p>
       <p>
-	For a shape label `L`, we define
+	For a shape label <span class="math">L</span>, we define
       </p>
       <ul>
-	<li>the set `supertypes(L)` is the set of labels `L'` such that there is a possibly empty path from `L` to `L'` in the extension hierarchy graph,</li>
-	<li>the set `baseSubtypes(L)` is the set of labels `L'` which definition is not abstract, and s.t. there is a possibly empty path from `L'` to `L` in the extension hierarchy graph.</li>
+	<li>the set `supertypes(L)` is the set of labels `L'` such that there is a possibly empty path from <span class="math">L</span> to `L'` in the extension hierarchy graph,</li>
+	<li>the set `baseSubtypes(L)` is the set of labels `L'` which definition is not abstract, and s.t. there is a possibly empty path from `L'` to <span class="math">L</span> in the extension hierarchy graph.</li>
       </ul>
       <p>
 	Note that because an empty path is allowed in the above definitions, every label belongs to its set of supertypes and every non abstract label belongs to its set of base subtypes.
@@ -730,9 +730,9 @@ The <b>extension hierarchy graph</b> of a shapes schema is a directed graph whic
 A shapeExpr is called *extendable* if:
 	</p>
 	<ul>
-	  <li>it is named, say with label `L`,  </li>
-	  <li>it is of the form either `s` or `s AND se`, where `s` is a Shape and `se` is a shapeExpr. In this case we denote `s` as `mainShape(L)` and `se` as `constraint(L)`:</li>
-	  <li>`se` does not contain an EXTENDS, that is, `s'.extends` is empty for every `s'` in `shapes(se)`,</li>
+	  <li>it is named, say with label <span class="math">L</span>,  </li>
+	  <li>it is of the form either `s` or `s AND se`, where `s` is a Shape and <span class="math">se</span> is a shapeExpr. In this case we denote `s` as `mainShape(L)` and <span class="math">se</span> as `constraint(L)`:</li>
+	  <li><span class="math">se</span> does not contain an EXTENDS, that is, `s'.extends` is empty for every `s'` in `shapes(se)`,</li>
 	  <li>`def(L')` is an extendable shape expression for every `L'` in `s.extends` (note that this condition is trivially met when `s.extends` is empty),</li>
 	  <li>the set `predicates(se)` is included the union of the sets `predicates(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`. </li>
 	</ul>
@@ -740,14 +740,14 @@ A shapeExpr is called *extendable* if:
 Note that a named Shape is always an extendable shape expression.
 	</p>
 	<p>
-For an extendable shape expression with label `L` we define:
+For an extendable shape expression with label <span class="math">L</span> we define:
 	</p>
 	<ul>
 	  <li>`superTcs(L)` as the union of the sets `tcs(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`,</li>
 	  <li>`superPredicates(L)` as the union of the sets `predicates(mainShape(L'))` for all shape expression names `L'` that belong to `supertypes(L)`.</li>
 	</ul>
 	<p>
-	  <b>Schema requirement</b> EXTENDS appears only in extendable shape expressions. That is, for every Shape `s` that appears in the schema, if `s.extends` is non empty and for every shapeExpr `se` in the schema, if `s` belongs to `shapes(se)`, then `se` is an extendable shape expression.
+	  <b>Schema requirement</b> EXTENDS appears only in extendable shape expressions. That is, for every Shape `s` that appears in the schema, if `s.extends` is non empty and for every shapeExpr <span class="math">se</span> in the schema, if `s` belongs to `shapes(se)`, then <span class="math">se</span> is an extendable shape expression.
 	</p>
       </section>
       <section class="iovka-added">
@@ -777,18 +777,18 @@ The maximal typing is such that whenever `(n,L)` belongs to it, it holds that th
       <section class="iovka-added">
 	<h5>The satisfies function</h5>
 	<p>
-It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over `G` and `Sch`, a node `n` in `G`, a shapeExpr `se` from `Sch`, and an optional neighborhood set of triples `npart` : `satisfies(n, se, typing, G, Sch, npart)`. The value of the function is a Boolean. The function is defined recursively on the structure of the shape expression:
+It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over `G` and `Sch`, a node `n` in `G`, a shapeExpr <span class="math">se</span> from `Sch`, and an optional neighborhood set of triples `npart` : `satisfies(n, se, typing, G, Sch, npart)`. The value of the function is a Boolean. The function is defined recursively on the structure of the shape expression:
 	</p>
 	<p>
 <b>[TODO : fix the order of the parameters in the satisfies function as it is not always the same]</b>
 	</p>
 	<ul>
-	  <li>`se` is NodeConstraint and `satisfies2(n, se)` ... as before</li>
-	  <li>`se` is ShapeOr and `satisfies(n, se', typing, G, Sch, npart)` holds for some `se'` in `se.shapeExprs`</li>
-	  <li>`se` is a ShapeNot and `satisfies(n, se, typing, G, Sch, npart)` does not hold</li>
-	  <li>`se` is a ShapeExternal and implementation-specific mechanisms not defined in this specification indicate success</li>
-	  <li>`se` is a shapeExprRef with label `<span class="param">seLabel</span>` and `satisfies(n, def(<span class="param">seLabel</span>), typing, G, Sch, npart)` **[Note : here we unfold the definition of <span class="param">seLabel</span> and do not look for base subtypes. Base subtypes are considered only for the whole neighborhood, that is in TripleConstr]**</li>
-	  <li>`se` is an extendible shape expression, let `<span class="param">seLabel</span>` be the label of `se`. Let `neigh = npart` if `npart` is given, or `neigh` be the neighbourhood of the node `n` is `npart = _`. Then<ul>
+	  <li><span class="math">se</span> is NodeConstraint and `satisfies2(n, se)` ... as before</li>
+	  <li><span class="math">se</span> is ShapeOr and `satisfies(n, se', typing, G, Sch, npart)` holds for some `se'` in `se.shapeExprs`</li>
+	  <li><span class="math">se</span> is a ShapeNot and `satisfies(n, se, typing, G, Sch, npart)` does not hold</li>
+	  <li><span class="math">se</span> is a ShapeExternal and implementation-specific mechanisms not defined in this specification indicate success</li>
+	  <li><span class="math">se</span> is a shapeExprRef with label `<span class="param">seLabel</span>` and `satisfies(n, def(<span class="param">seLabel</span>), typing, G, Sch, npart)` **[Note : here we unfold the definition of <span class="param">seLabel</span> and do not look for base subtypes. Base subtypes are considered only for the whole neighborhood, that is in TripleConstr]**</li>
+	  <li><span class="math">se</span> is an extendible shape expression, let `<span class="param">seLabel</span>` be the label of <span class="math">se</span>. Let `neigh = npart` if `npart` is given, or `neigh` be the neighbourhood of the node `n` is `npart = _`. Then<ul>
 	      <li>there exist sets of triples `matchables`, `unmatchables` and `remainder` s.t.<ul>
 		  <li>`matchables`, `unmatchables` and `remainder` are pairwise dijoint and their union is equal to `neigh`,</li>
 		  <li>`remainder` is the set of triples from the neighborhood of `n` whose predicates do not appear neither in `superPredicates(<span class="param">seLabel</span>)` nor in `mainShape(<span class="param">seLabel</span>).extra`</li>
@@ -801,7 +801,7 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
 		  <li>`matchables` is the union of the sets `npart(<span class="param">seParent</span>)` for all the `<span class="param">seParent</span>`s in `supertypes(<span class="param">seLabel</span>)` and these sets are mutually disjoint,</li>
 		  <li>`matches(n, mainShape(<span class="param">seParent</span>).tripleExpr, typing, G, Sch, npart(<span class="param">seParent</span>))` holds for every `<span class="param">seParent</span>` in `supertypes(<span class="param">seLabel</span>)`,</li>
 		  <li>`satisfies(n, def(<span class="param">seParent</span>), typing, G, Sch, supernpart(<span class="param">seParent</span>))` holds for every `<span class="param">seParent</span>` in `supertypes(<span class="param">seLabel</span>)` whenever `def(<span class="param">seParent</span>)` exists, where `supernpart(<span class="param">seParent</span>)` is the union of the `npart(<span class="param">seGrandParent</span>)` for all the shape expression labels `<span class="param">seGrandParent</span>` in `supertypes(<span class="param">seParent</span>)`</li>
-   		  <li>`se` is a ShapeAnd without EXTENDS and `satisfies(n, se', typing, G, Sch, npart)` holds for every `se'` in `se`.shapeExprs</li></ul></li></ul></li></ul>
+   		  <li><span class="math">se</span> is a ShapeAnd without EXTENDS and `satisfies(n, se', typing, G, Sch, npart)` holds for every `se'` in <span class="math">se</span>.shapeExprs</li></ul></li></ul></li></ul>
 
 	</section>
       <p>
@@ -1423,7 +1423,7 @@ It takes six parameters: the graph `G`, the schema `Sch`, a typing `typing` over
         <p>
 	        For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function">matchesShape(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
         </p>
-        <ul>
+        <ul class="old">
           <li>
             <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> such that <code class="function">matches(<span class="math">matched</span>, <span class="math">effectiveExpression</span>, <span class="math">m</span>)</code>.
             If <span class="math">effectiveExpression</span> is <a>EmptyExpression</a>, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.<br/>

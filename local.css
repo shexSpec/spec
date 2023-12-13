@@ -461,6 +461,10 @@ dd > dl {
     border: thick solid #afeeee;
 }
 
+.old {
+    border: thick solid #eeafee;
+}
+
 .cut {
     font-style: strike-through;
 }
