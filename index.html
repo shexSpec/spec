@@ -24,67 +24,101 @@ h1, h2, h3 {
 
     <script class='remove'>
       var respecConfig = {
-      github: "https://github.com/shexSpec/spec/",
-      localBiblio: {
-        "shex-vocab": {
-          "authors": ["Gregg Kellogg"],
-          "title": "Shape Expression Vocabulary",
-          "href":  "http://www.w3.org/ns/shex#"
+        "varDesignation": "987.6",
+        "varDraftNumber": "3",
+        "GorRPorSTD": "RP",
+        "varTitlePAR": "Preparing an IEEE Standards Draft",
+        "varCommittee": "Standards Staff Engineering Committee",
+        "varSociety": "Template Society",
+        "varApprovedDate": "<Date Approved>",
+        "github": {
+          "repoURL": "https://github.com/shexSpec/spec/",
+          "branch": "main",
         },
-        "shape-map": {
-          "authors": ["Eric Prud'hommeaux", "Thomas Baker"],
-          "title": "ShapeMap Structure and Language",
-          "href":  "http://shex.io/shape-map/"
-        }
-      },
-      specStatus:     "CG-DRAFT",
-      shortName:      "shex-semantics",
-      latestVersion:  "http://shex.io/shex-semantics/",
-      // thisVersion:    "http://shex.io/shex-semantics-20170713",
-      prevVersion:    "http://shex.io/shex-semantics-20170713",
-      edDraftURI:     "https://shexspec.github.io/spec/",
-      previousPublishDate:  "2014-06-02",
-      previousMaturity:"Member-SUBM",
-      testSuiteURI:   "https://github.com/shexSpec/shexTest",
-      issueBase:      "https://github.com/shexSpec/shex/issues",
-      editors: [
-        { name:       "Eric Prud'hommeaux",
-          url:        "http://www.w3.org/People/Eric/",
-          company:    "W3C/MIT",
-          companyURL: "http://www.w3.org/" },
-        { name:       "Iovka Boneva",
-          url:        "http://cristal.univ-lille.fr/~boneva/",
-          company:    "University of Lille",
-          companyURL: "http://www.univ-lille1.fr/" },
-        { name:       "Jose Emilio Labra Gayo",
-          url:        "http://di002.edv.uniovi.es/~labra/",
-          company:    "University of Oviedo",
-          companyURL: "http://www.uniovi.es/" },
-        { name:       "Gregg Kellogg",
-          url:        "http://greggkellogg.net/",
-          company:    "Spec-Ops",
-          companyURL: "https://spec-ops.io/",
-          w3cid:      "44770" },
-      ],
-      wg:           "Shape Expressions Community Group",
-      wgURI:        "https://www.w3.org/community/shex/",
-      //wgPublicList: "public-shex",
-      //wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/73865/status",
-
-      bugTracker:             {
-        open: "https://github.com/shexSpec/spec/issues",
-        new:  "https://github.com/shexSpec/spec/issues/new"
-      },
-
-      otherLinks: [{
-        key: "ShEx language",
-        data: [
-          {value: "Homepage", href: "https://shex.io/"},
-          {value: "Issues", href: "https://github.com/shexSpec/shex/issues"},
-          {value: "Gitter chat", href: "https://gitter.im/shapeExpressions/Lobby"}
-        ]
-      }],
-      baseURL: "http://a.example/my/base/"
+        "localBiblio": {
+          "shex-vocab": {
+            "authors": [
+              "Gregg Kellogg"
+            ],
+            "title": "Shape Expression Vocabulary",
+            "href": "http://www.w3.org/ns/shex#",
+            "id": "shex-vocab"
+          },
+          "shape-map": {
+            "authors": [
+              "Eric Prud'hommeaux",
+              "Thomas Baker"
+            ],
+            "title": "ShapeMap Structure and Language",
+            "href": "http://shex.io/shape-map/",
+            "id": "shape-map"
+          }
+        },
+        "specStatus": "CG-FINAL",
+        "shortName": "shex-semantics",
+        "latestVersion": "http://shex.io/shex-semantics/",
+        "prevVersion": "http://shex.io/shex-semantics-20170713",
+        "edDraftURI": "https://shexspec.github.io/spec/",
+        "previousPublishDate": "2014-06-02",
+        "previousMaturity": "Member-SUBM",
+        "testSuiteURI": "https://github.com/shexSpec/shexTest",
+        "DISABLED_implementationReportURI": "https://shexspec.github.io/shexTest/reports/#ShEx-validation-tests",
+        "DISABLED_issueBase": "https://github.com/shexSpec/shex/issues",
+        "editors": [
+          {
+            "name": "Eric Prud'hommeaux",
+            "url": "http://www.w3.org/People/Eric/",
+            "company": "W3C/MIT",
+            "companyURL": "http://www.w3.org/"
+          },
+          {
+            "name": "Iovka Boneva",
+            "url": "http://cristal.univ-lille.fr/~boneva/",
+            "company": "University of Lille",
+            "companyURL": "http://www.univ-lille1.fr/"
+          },
+          {
+            "name": "Jose Emilio Labra Gayo",
+            "url": "http://di002.edv.uniovi.es/~labra/",
+            "company": "University of Oviedo",
+            "companyURL": "http://www.uniovi.es/"
+          },
+          {
+            "name": "Katherine Thornton",
+            "url": "https://www.softwarepreservationnetwork.org/kat-thornton/",
+            "company": "Yale University",
+            "companyURL": "https://www.yale.edu/"
+          },
+        ],
+        "formerEditors": [
+          {
+            "name": "Gregg Kellogg",
+            "url": "http://greggkellogg.net/",
+            "company": "Spec-Ops",
+            "companyURL": "https://spec-ops.io/",
+            "w3cid": "44770"
+          },
+        ],
+        "wg": "Shape Expressions Community Group",
+        "wgURI": "https://www.w3.org/community/shex/",
+        "otherLinks": [
+          {
+            "key": "ShEx language",
+            "data": [
+              {
+                "value": "Homepage",
+                "href": "https://shex.io/"
+              },
+              {
+                "value": "Gitter chat",
+                "href": "https://gitter.im/shapeExpressions/Lobby"
+              }
+            ]
+          }
+        ],
+        "publishISODate": "2019-07-31T00:00:00.000Z",
+        "generatedSubtitle": "Final Community Group Report 9 August 2019",
+        specStatus: "ED",
       };
     </script>
 
@@ -103,6 +137,11 @@ h1, h2, h3 {
       <p>
         This document defines the ShEx language.
         See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of ShEx.
+      </p>
+    </section>
+    <section id="keywords">
+      <p>
+        RDF, Schema, Shape Expressions, Structure Definition, Structural Validation
       </p>
     </section>
 
@@ -1455,7 +1494,7 @@ _:User2
           </p>
         </ul>
         <section class="iovka-added">
-	  <h5>Definition of the maximal typing <span class="issue">Labra: "final typing"?</span></h5>
+	  <h5>Definition of the maximal typing</h5>
 	  <p>
 	    *Similar to before, through stratification, but now the elements of the typing are pairs (node, label) where label is a **shapeExprLabel**. Before we had pairs (node, Shape) in the typing. With this new definition of typing the stratification is easier to define. What we lose is that some schemas that would have been considered stratified with the old definition won't be considered stratified with the new one.
           </p>

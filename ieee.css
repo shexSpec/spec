@@ -1,0 +1,69 @@
+/* details:not([hidden]) { */
+/*   border-left: thin solid red; */
+/* } */
+div.head details {
+    border-left: thick solid gray;
+    padding-left: 1em;
+    & h2 {
+        margin-top: 1ex;
+        margin-bottom: 1ex;
+    }
+}
+
+dl.leftDL {
+    & dt {
+        font-weight: normal;
+    }
+    & dd {
+        margin: 0 0 0.5em 0;
+        & .ieeeBold {
+            font-weight: bold;
+        }
+    }
+}
+
+.flat {
+    & * {
+        display: initial;
+    }
+    & h2 {
+        font-size: unset;
+        font-weight: bold;
+        &::after {
+            content: ":";
+            font-weight: bold;
+        }
+    }
+}
+
+:is(h2,h3,h4,h5,h6):not(#toch2)+a.self-link {
+    /* display: none !important; */
+    visibility: hidden;
+}
+
+h1, h2, h3 {
+    color: #000 !important;
+}
+
+.fineprint {
+    margin-top: 5ex;
+    font-size: small;
+}
+
+.bibliography {
+    & > dt { 
+        float: left;
+        clear: left;
+        /* width: 110px;  */
+        font-weight: bold;
+        color: green;
+    }
+
+    & > dt::after {
+        content: " ";
+    }
+
+    & > dd {
+        margin: 0;
+    }
+}
