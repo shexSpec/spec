@@ -519,9 +519,9 @@ _:User2
       <p>
         For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed ShapeMap <span class="math">ism</span>, <code class="function"><dfn>isValid</dfn>(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every shape association <span class="math">(<span class="param">node</span>: n, <span class="param">shape</span>: sl, <span class="param">exact</span>: exact)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
         If <span class="param">exact</span> is true, the result is
-        <code class="function"><a>satisfies</a>(<span class="math">n</span>, <a>def</a>(<span class="math">s.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>))</code>
+        <code class="function"><a>satisfies</a>(<span class="math">n</span>,  <a>def</a>(<span class="math">s.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>), <span class="math">neigh(n)</span>)</code>
         , otherwise, the result is
-        <code class="function"><a>satisfiesDescendant</a>(<span class="math">n</span>, <a>def</a>(<span class="math">s.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>)</code>).
+        <code class="function"><a>satisfiesDescendant</a>(<span class="math">n</span>, <a>def</a>(<span class="math">s.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>)</code>, <span class="math">neigh(n)</span>).
 	The function <code class="function"><a>satisfies</a></code>  is defined for every kind of <a>shape expression</a>.
       </p>
 
@@ -676,6 +676,9 @@ _:User2
 	</section>
       <section id="shape-expression-semantics">
         <h4>Semantics</h4>
+        <p>
+          For a node n of the graph G, we define <dfn>neigh</dfn>(n) as the set of triples adjacent to n in the graph; these are the triples that have n either as subject or as object.
+        </p>
       <p>
 	For a shape expression <span class="var">se</span> we define its set of shapes <dfn>nestedShapes</dfn><span class="math">(<span class="param">se</span>)</span> recursively on the structure of <span class="var">se</span>:
       </p>
@@ -692,23 +695,23 @@ _:User2
             The <dfn>extension hierarchy graph</dfn> of a shapes schema is a directed graph whose nodes are the shape expression labels of the schema and that has an edge from <span class="var">label2</span> to <span class="var">label1</span> whenever <span class="var">label2</span> <a>directly extends</a> <span class="var">label1</span>. 
       </p>
       <p>
-        <dfn>satisfies</dfn>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that a node <span class="math">n</span> and a <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>typing</a> <span class="math">t</span> for schema <span class="math">Sch</span>.<br/>
-        <dfn>satisfiesDescendant</dfn>: The expression <code class="function">satisfiesDescendant(<span class="math">n</span>, <span class="var">shapeExprLabel</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> indicates that <span class="math">n</span> and <span class="math">G</span> and some non-abstract <span class="var">child</span> of <span class="var">shapeExprLabel</span> in the <a>extension hierarchy graph</a> <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="var">child</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>, with the given <a>typing</a> <span class="math">t</span>.
+        <dfn>satisfies</dfn>: The expression <code class="function">satisfies(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code> indicates that a node <span class="math">n</span>, a subset <span class="math">R</span> of <span class="math">neigh(n)</span>, and a <a>graph</a> <span class="math">G</span> satisfy a <a>shape expression</a> <span class="math">se</span> with <a>typing</a> <span class="math">t</span> for schema <span class="math">Sch</span>.<br/>
+        <dfn>satisfiesDescendant</dfn>: The expression <code class="function">satisfiesDescendant(<span class="math">n</span>, <span class="var">shapeExprLabel</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code> indicates that <span class="math">n</span>, a subset <span class="math">R</span> of <span class="math">neigh(n)</span>, and <span class="math">G</span> and some non-abstract <span class="var">child</span> of <span class="var">shapeExprLabel</span> in the <a>extension hierarchy graph</a> <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="var">child</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code>, with the given <a>typing</a> <span class="math">t</span>.
       </p>
       <p>
-        <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>,<span class="math">Sch</span>, <span class="math">t</span>)</code> is true if and only if:
+        <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code> is true if and only if:
       </p>
 
       <ul>
         <li id="satisfies-NodeConstraint"><span class="math">se</span> is a <span class="jobjref"><a class="obj">NodeConstraint</a></span> and <code class="function"><a href="#satisfies2-NodeConstraint">satisfies2</a>(<span class="math">n</span>, <span class="math">se</span>)</code> as described below in <a href="#node-constraints">Node Constraints</a>.
         Note that testing if a node satisfies a node constraint does not require a <a>graph</a> or <a>typing</a>.</li>
-        <li id="satisfies-Shape-proxy"><span class="math">se</span> is a <span class="jobjref"><a class="obj">Shape</a></span> and <span class="math">(n, se)</span> belongs to <span class="math">t</span>.
+        <li id="satisfies-Shape-proxy"><span class="math">se</span> is a <span class="jobjref"><a class="obj">Shape</a></span> and <code class="function"><a>matchesShape</a>(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>, <span class="math">R</span>)</code> is true.
 	</li>
-        <li id="satisfies-ShapeOr"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span> such that <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
-        <li id="satisfies-ShapeAnd"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span>, <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.</li>
-        <li id="satisfies-ShapeNot"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> <span class="math">se2</span> at <span class="math">se</span>.<span class="param">shapeExpr</span>, <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code> is false.</li>
+        <li id="satisfies-ShapeOr"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeOr</a></span> and there is some <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span> such that <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code>.</li>
+        <li id="satisfies-ShapeAnd"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeAnd</a></span> and for every <a>shape expression</a> <span class="math">se2</span> in <span class="math">se</span>.<span class="param">shapeExprs</span>, <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code>.</li>
+        <li id="satisfies-ShapeNot"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeNot</a></span> and for the <a>shape expression</a> <span class="math">se2</span> at <span class="math">se</span>.<span class="param">shapeExpr</span>, <code class="function"><a>satisfies</a>(<span class="math">n</span>, <span class="math">se2</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code> is false.</li>
         <li id="satisfies-ShapeExternal"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeExternal</a></span> and implementation-specific mechansims not defined in this specification indicate success.</li>
-        <li id="satisfies-shapeExprRef"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeExprRef</a></span>. If <span class="param">ShapeExprRef.exact</span>, <code class="function"><a>satisfies</a>(<span class="math">n</span>, <a>def</a>(<span class="math">se.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>, otherwise <code class="function"><a>satisfiesDescendant</a>(<span class="math">n</span>, <span class="math">se.label</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>)</code>.
+        <li id="satisfies-shapeExprRef"><span class="math">se</span> is a <span class="jobjref"><a class="obj">ShapeExprRef</a></span>. If <span class="param">ShapeExprRef.exact</span>, <code class="function"><a>satisfies</a>(<span class="math">n</span>, <a>def</a>(<span class="math">se.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code>, otherwise <code class="function"><a>satisfiesDescendant</a>(<span class="math">n</span>, <span class="math">se.label</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">t</span>, <span class="math">R</span>)</code>.
 	</li>
       </ul>
 
@@ -1442,44 +1445,27 @@ _:User2
           For the purposes of evaluation, we define an <dfn>EmptyExpression</dfn> which has no <span class="jobjref"><a class="obj">TripleConstraint</a>s</span>.
         </p>
         <p>
-          <dfn>getEffectiveTEs</dfn> is a function from a <a>shapeExprLabel</a> <span class="var">label</span> to a list of <a>tripleExprs</a>.
-          <span class="var">d</span> is the <a>ShapeDecl</a> with <span class="param">id</span> = <span class="var">label</span>.
-        </p>
-        <ul>
-          <li>if <span class="param">d</span> has no shapeExpr the result is the empty set</li>
-          <li>if <span class="param">d.shapeExpr</span> is a <a>Shape</a> <span class="param">s</span>, if <span class="param">s.expression</span> the result is the the singleton list of <span class="param">s.expression</span>, otherwise the result is the empty set</li>
-          <li><span class="param">d.shapeExpr</span> is a ShapeAnd _and,<ul>
-              <li><span class="param">effectiveTEs</span> is the list of <a>getEffectiveTE</a>(<span class="param">x</span>) for every <span class="param">x</span> in <span class="param">_and.shapeExprs</span></li>
-              <li>if <span class="param">effectiveTEs</span> has 0 elemenents the result is the empty set</li>
-              <li>otherwise if <span class="param">effectiveTEs</span> has more more than 1 element the result is the empty set</li>
-              <li>otherwise the result is the list <span class="param">effectiveTEs</span></li>
-          </ul></li>
-          <li><span class="param">se</span> is a <a>shapeExprRef</a> the result is <a>getEffectiveTEs</a>(<span class="param">shapeExprRef</span>)</li>
-          <li>for all other types the result is the empty set</li>
-        </ul>
-        <p>
-	  <dfn>parentShapeLabels</dfn> is a function from a <a>shapeExprLabel</a> <span class="var">label</span> to the set of <a>shapeExprLabels</a> parents of <span class="var">label</span> in the <a>extension hierarchy graph</a>.
+	  <dfn>parentShapeLabels</dfn> is a function from a <a>shape</a> <span class="var">label</span> to the set of <a>shapeExprLabels</a> parents of the labels in shape.extends as well as their parents in the <a>extension hierarchy graph</a>.
         </p>
         <p>
-	  For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, and <a>typing</a> <span class="math">m</span>, <code class="function"><dfn>matchesShape</dfn>(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code> if and only if:
+	  For a <a>node</a> <span class="math">n</span>, <a>shape</a> <span class="math">S</span>, <a>graph</a> <span class="math">G</span>, a ShExSchema <span class="math">Sch</span>, a <a>typing</a> <span class="math">m</span>, and a subset  <span class="math">R</span> of neigh(n), <code class="function"><dfn>matchesShape</dfn>(<span class="math">n</span>, <span class="math">S</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>, <span class="math">R</span>)</code> if and only if:
         </p>
         <ul>
-          <li><dfn>slices</dfn> is the concatenation of getEffectiveTEs for each label in parentShapeLabels(s).</li>
-          <li><dfn class="math">nCard</dfn> is the length of slices.</li>
+          <li><dfn>parents</dfn> is the set parentShapeLabels(S). If s.extends does not exist, then parentShapeLabels(s) is the empty set. </li>
+          <li><dfn class="math">nCard</dfn> is the length of parents.</li>
           <li>
-            <code class="function"><a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code> can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span> and <span class="math">matched</span> is partitioned into <code class="math">nCard</code> partitions <code class="math">p<sub>i</sub></code> such that <code class="function">matches(<span class="math">p<sub>i</sub></span>, <span class="math"><a>slices</a><sub>i</sub></span>, <span class="math">m</span>)</code>.
-            If <span class="math"><a>nCard</a></span> is 0, <code class="function"><span class="math">remainder</span> = <a>neigh</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.
+            R can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span></li>
+          <li><span class="math">matched</span> is partitioned into <code class="math">nCard+1</code> parts <code class="math">R<sub>0</sub></code>, <code class="math">R<sub>1</sub></code> ... <code class="math">R<sub>nCard</sub></code> such that for i in 1..nCard, <code class="function">matches(<span class="math">R<sub>i</sub></span>, mainShape(parents<sub>i</sub>), <span class="math">m</span>)</code> and satisfies(n, constraint(parent<sub>i</sub>), G, Sch, m, R<sub>1</sub> ∪ ... ∪ R<sub>i</sub>), and <code class="function">matches(<span class="math">R<sub>0</sub></span>, S.tripleExpr, <span class="math">m</span>)</code> and satisfies(n, constraint(L), G, Sch, m, matched).
           </li>
           <li>
             Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in <span class="math">remainder</span>:
             <code class="function"><span class="math">outs</span> = <span class="math">remainder</span> ∩ <a>arcsOut</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.
           </li>
           <li>
-            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="math"><a>slices</a></span>.
-            If <span class="math"><a>nCard</a></span> is 0, <code class="function"><span class="math">matchables</span> = <span class="math">Ø</span> (the empty set)</code>.
+            Let <span class="label">matchables</span> be the triples in <span class="math">outs</span> whose <a>predicate</a> appears in a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in one of the mainShape(parents<sub>i</sub>) or in S.expression.
           </li>
           <li>
-            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in <span class="math"><a>slices</a></span>.<br/>
+            There is no triple in <span class="label">matchables</span> which matches a <span class="jobjref"><a class="obj">TripleConstraint</a></span> in one of the mainShape(parents<sub>i</sub>) nor one of the TripleConstraint in S.expression.<br/>
             Let <span class="label">unmatchables</span> be the triples in <span class="math">outs</span> which are not in <span class="math">matchables</span>.
             <code class="function"><span class="math">matchables</span> ∪ <span class="math">unmatchables</span> = <span class="math">outs</span></code>.
           </li>
