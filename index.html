@@ -528,24 +528,23 @@ _:User2
       
       <p>
 	The validation of an RDF graph <span class="math">G</span> against a ShEx schema <span class="math">Sch</span> is based on the existence of <code class="function"><a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>)</code>.
-	For an RDF graph <span class="math">G</span> and a shapes schema <span class="math">Sch</span>, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(n, s)</span> where <span class="math">n</span> is a node in <span class="math">G</span> and <span class="math">s</span> is a <a>Shape</a> that appears in some shape expression in <span class="math">Sch</span>.<span class="param">shapes</span>.
-	A <dfn label="correct typing">correct typing</dfn> is a <span class="math">typing</span> such that for every RDF node/shape pair <span class="math">(n,s)</span>, <code class="function"><a>matchesShape</a>(<span class="math">n</span>, <span class="math">s</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">typing</span>)</code> holds.
-	A <code class="function"><a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
+	For an RDF graph <span class="math">G</span> and a shapes schema <span class="math">Sch</span>, a <dfn>typing</dfn> is a set of pairs of the form <span class="math">(n, l)</span> where <span class="math">n</span> is a node in <span class="math">G</span> and <span class="math">l</span> is a shape label that appears in the shape declarations of the schema. 
+  A <dfn label="correct typing">correct typing</dfn> is a <span class="math">typing</span> such that for every RDF node/shape pair <span class="math">(n,l)</span>, satisfies(n, def(l), G, Sch, typing, neigh(n)) holds or satisfiesDescendant(n, def(l), G, Sch, typing, neigh(n)) holds.
+  A <code class="function"><a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>)</code> is a unique correct typing that exists for every graph and every ShEx schema that satisfies the <a href="#schema-requirements">schema requirements</a>.
       </p>
-      
 
       <p>
 	The definition of <code class="function"><dfn>completeTyping</dfn>(<span class="math">G</span>, <span class="math">Sch</span>)</code> is based on a <a>stratification</a> of <span class="math">Sch</span>.
 	
-	The number of <dfn>strata</dfn> of <span class="math">Sch</span> is the number of maximal strongly connected components of the <a>dependency graph</a> of <span class="math">Sch</span>.
-	A <dfn>stratification</dfn> of a schema <span class="math">Sch</span> with <span class="math">k</span> strata is a function <code class="function">stratum</code> that associates with every <a>Shape</a> in <span class="math">Sch</span> a natural number between <span class="math">1</span> and <span class="math">k</span> such that:
+	The number of <dfn>strata</dfn> of <span class="math">Sch</span> is the number of maximal strongly connected components of the <a>hierarchy and dependency graph</a> of <span class="math">Sch</span>.
+	A <dfn>stratification</dfn> of a schema <span class="math">Sch</span> with <span class="math">k</span> strata is a function <code class="function">stratum</code> that associates with every shape label from the shape declarations of <span class="math">Sch</span> a natural number between <span class="math">1</span> and <span class="math">k</span> such that:
       </p>
       <ul>
 	<li>
-	  If <span class="math">s1</span> and <span class="math">s2</span> belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s1</span>)</code> = <code class="function">stratum(<span class="math">s2</span>)</code>.
+	  If <span class="math">l1</span> and <span class="math">l2</span> belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">l1</span>)</code> = <code class="function">stratum(<span class="math">l2</span>)</code>.
 	</li>
 	<li>
-	  If there is a <a>reference</a> from <span class="math">s1</span> to <span class="math">s2</span> and <span class="math">s1</span> and <span class="math">s2</span> do not belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s2</span>)</code> &lt; <code class="function">stratum(<span class="math">s1</span>)</code>.
+	  If there is a <a>reference</a> from <span class="math">l1</span> to <span class="math">l2</span> and <span class="math">l1</span> and <span class="math">l2</span> do not belong to the same maximal strongly connected component, then <code class="function">stratum(<span class="math">s2</span>)</code> &lt; <code class="function">stratum(<span class="math">s1</span>)</code>.
 	</li>
       </ul>
       <p>
@@ -1455,8 +1454,14 @@ _:User2
           <li><dfn class="math">nCard</dfn> is the length of parents.</li>
           <li>
             R can be partitioned into two sets <span class="math">matched</span> and <span class="math">remainder</span></li>
-          <li><span class="math">matched</span> is partitioned into <code class="math">nCard+1</code> parts <code class="math">R<sub>0</sub></code>, <code class="math">R<sub>1</sub></code> ... <code class="math">R<sub>nCard</sub></code> such that for i in 1..nCard, <code class="function">matches(<span class="math">R<sub>i</sub></span>, mainShape(parents<sub>i</sub>), <span class="math">m</span>)</code> and satisfies(n, constraint(parent<sub>i</sub>), G, Sch, m, R<sub>1</sub> ∪ ... ∪ R<sub>i</sub>), and <code class="function">matches(<span class="math">R<sub>0</sub></span>, S.tripleExpr, <span class="math">m</span>)</code> and satisfies(n, constraint(L), G, Sch, m, matched).
-          </li>
+          <li><span class="math">matched</span> is partitioned into <code class="math">nCard+1</code> parts <code class="math">R<sub>0</sub></code>, <code class="math">R<sub>1</sub></code> ... <code class="math">R<sub>nCard</sub></code> such that
+            <ul>
+            <li><code class="function">matches(<span class="math">R<sub>0</sub></span>, S.tripleExpr, <span class="math">m</span>)</code></li>
+            <li>satisfies(n, constraint(L), G, Sch, m, matched)</li>
+            <li> for every i in 1..nCard, <code class="function">matches(<span class="math">R<sub>i</sub></span>, mainShape(parents<sub>i</sub>), <span class="math">m</span>)</code> </li>
+            <li> for every i in 1..nCard, satisfies(n, constraint(parent<sub>i</sub>), G, Sch, m, R<sub>i</sub> ∪ Q) where Q is the union of all the R<sub>j</sub> s.t. parent<sub>j</sub> is a parent of parent<sub>i</sub>.</li>
+            </ul>
+            </li>
           <li>
             Let <span class="label">outs</span> be the <span class="math"><a>arcsOut</a></span> in <span class="math">remainder</span>:
             <code class="function"><span class="math">outs</span> = <span class="math">remainder</span> ∩ <a>arcsOut</a>(<span class="math">G</span>, <span class="math">n</span>)</code>.
@@ -1477,23 +1482,6 @@ _:User2
             The complexity of partitioning is described briefly in the <a href="../primer/#partition-complexity">ShEx2 Primer</a>.
           </p>
         </ul>
-        <section class="iovka-added">
-	  <h5>Definition of the maximal typing</h5>
-	  <p>
-	    *Similar to before, through stratification, but now the elements of the typing are pairs (node, label) where label is a **shapeExprLabel**. Before we had pairs (node, Shape) in the typing. With this new definition of typing the stratification is easier to define. What we lose is that some schemas that would have been considered stratified with the old definition won't be considered stratified with the new one.
-          </p>
-          <p class="issue">
-            Iokva: This breaks backwards compatibility, provided that there exists somewhere a schema with negations that has non trivial stratification structure, ... which would surprise me a lot*.
-          </p>
-	  <p>
-            Consider a ShEx schema `Sch` and a graph `G`, and let `U` be the set of shape expression labels of `Sch` and `N` be the set of nodes of `G`.(TODO : which labels to consider ? Only the top level ones, or any label ?)
-            Then a *typing* over `G` and `Sch` is a subset of `N x U`.
-	  </p>
-	  <p>
-            The satisfaction of the schema is defined w.r.t. a so called maximal typing, which is guaranteed to exist.
-            The maximal typing is such that whenever `(n,L)` belongs to it, it holds that the neighborhood of the node `n` *satisfies* `def(L)` w.r.t. the maximal typing. Formally, `satisfies(G, Sch, maximalTyping, n, def(L), _)` holds, where `satisfies` is the function defined below and the underscore indicates that no value is given for the corresponding optional parameter.
-	  </p>
-        </section>
       <p>
         <span class="label" id="matches">matches</span>: asserts that a <a>triple expression</a> is matched by a set of triples that come from the neighbourhood of a node in an <a>RDF graph</a>.
         The expression <code>matches(<span class="math">T</span>, <span class="math">expr</span>, <span class="math">m</span>)</code> indicates that a set of triples <span class="math">T</span> can satisfy these rules:
@@ -1694,8 +1682,10 @@ _:User2
                   </ul></div>
                 </div>
               </li>
+              <li>or expr.valueExpr is a shapeExprRef, then shapeExprRef.label is in m(value)
+              </li>
               <li>
-                <p>or <code class="function">satisfies(<span class="math">value</span>, <span class="param">valueExpr</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</code>.</p>
+                <p>or expr.valueExpr is not a shapeExprRef, then <code class="function">satisfies(<span class="math">value</span>, <span class="param">valueExpr</span>, <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>, neigh(value))</code>.</p>
                 <div class="example">
                   <div class="math"><div style="float:left;">matches(</div><div style="float:left;">T,<br/>
                   <div class="inline repchoice incomplete">
@@ -2547,8 +2537,9 @@ IMPORT &lt;http://schema.example/schema2&gt;
         <h4>Negation Requirement</h4>
         <p>
           A schema MUST NOT contain any <a>shapeExprLabel</a> that has a <a>negated reference</a> to itself, either directly or transitively.
-	  This is formalized by the requirement that the <a>dependency graph</a> of a schema MUST NOT have a cycle that traverses some <a>negated reference</a>.
+	  This is formalized by the requirement that the <a>hierarchy and dependency graph</a> of a schema MUST NOT have a cycle that traverses some <a>negated reference</a>.
         </p>
+
         <p class="leadup">
 	  The set of <dfn>atomic shapes</dfn> of a <a>shapeExpr</a> <span class="math">se</span> contains a <a>Shape</a> <span class="math">s</span> if <span class="math">s</span> or its <span class="path">id</span> appears either directly or by <a>shapeExprRef</a> in <span class="math">se</span>.
 	  That is, <span class="math">s</span> belongs to <code class="function">atomicShapes(<span class="math">se</span>)</code> if and only if 
@@ -2604,6 +2595,17 @@ IMPORT &lt;http://schema.example/schema2&gt;
           A tripleExpr <span class="param">TE</span> <code>contains</code> TripleConstraint <span class="param">TC</span> if <span class="param">TC</span> appears in the closure of <span class="param">TE</span>.
         </p -->
 
+        <p>
+          The shape expression s1 has a reference to the shape label l2 if 
+        </p>
+        <ul>
+          <li>there is a shape sh in atomicShapes(s1) and</li>
+          <li>there is a triple constraint tc in atomicTripleConstraints(sh) and </li>
+          <li>tc.valueExpr is present and </li>
+          <li>tc.valueExpr contains a shape reference to l2.</li>
+        </ul>
+
+        <!--
         <p class="leadup">
 	  The <a>Shape</a> <span class="math">s1</span> has a <dfn>reference</dfn> to the <a>Shape</a> <span class="math">s2</span> if
         </p>
@@ -2620,7 +2622,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	  <li>
 	    <span class="math">s2</span> belongs to <code>atomicShapes(<span class="math">tc</span>.<span class="param">valueExpr</span>)</code>.
 	  </li>
-	</ul>
+	</ul>-->
 <!--
 	    <span class="param">SE<sub>2</sub></span> appears in the <a>shapeExpr closure</a> of <span class="param">SE<sub>1</sub></span> or</li>
           <li><span class="param">SE<sub>2</sub></span> appears in a <a>TripleConstraint</a><span class="param">.valueExpr</span> of a shape in <span class="param">SE<sub>1</sub></span>, i.e.
@@ -2631,22 +2633,33 @@ IMPORT &lt;http://schema.example/schema2&gt;
         </ul>
 -->
         <p class="leadup">
-	  The reference from <span class="math">s1</span> to <span class="math">s2</span> is a <dfn>negated reference</dfn> if
-	</p>
-	<ul>
+	  The reference from <span class="math">s1</span> to <span class="math">l2</span> is a <dfn>negated reference</dfn> if the reference to l2 appears under an odd number of ShapeNot in tc.valueExpr.</p>
+<!--	<ul>
 	  <li>
 	    <span class="math">s2</span> appears under an odd number of <a>ShapeNot</a> in the shapeExprRef closure of <span class="math">tc</span>.<span class="param">valueExpr</span>, or
           </li>
 	  <li>
 	    <span class="math">tc</span> has <span class="param">predicate</span> <span class="math">p</span> and <span class="math">s1</span> has <span class="param">extra</span> <span class="math">p</span>.
 	  </li>
-	</ul>
+	</ul>-->
 	    <!-- appears within the <span class="param">valueExpr</span> of a <span class="jobjref"><a>TripleConstraint</a></span> with <a class="param">predicate</a> <span class="math">p</span> inside a <span class="jobjref"><a>Shape</a></span> with <span class="param">extra</span> <span class="math">p</span>, there is an additional reference from <span class="param">SE<sub>1</sub></span> to <span class="param">SE<sub>2</sub></span> with the opposite sense of <span class="param">negated</span>. -->
-	<p>
+
+
+      <p>
+        The <dfn>hierarchy and dependency graph</dfn> of a schema is the graph whose nodes are the shape labels that appear in the shape declarations of the schema, and that has an edge from l1 to l2 if:
+        <ul>
+          <li>the definition of l1 has a reference to l2, or</li>
+          <li>there is an edge from l1 to l2 in the hieararchy graph, or</li>
+          <li>there is an edge from l2 to l1 in the hieararchy graph.</li>
+        </ul>
+        The edge from l1 to l2 is negative if the definition of l1 has a negative reference to l2, otherwise the edge is positive.
+      </p>
+
+<!--	<p>
 	  The <dfn>dependency graph</dfn> of the schema <span class="math">Sch</span> is the graph whose vertices are all the <a>Shape</a>s that appear in some shape expression in the <span class="param">shapes</span> of <span class="math">Sch</span>, and that has two kinds of edges: negative and positive.
 	  There is a negative edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a <a>negated reference</a> to <span class="math">s2</span>.
 	  There is a positive edge from <span class="math">s1</span> to <span class="math">s2</span> if <span class="math">s1</span> has a reference but not a negated reference to <span class="math">s2</span>.
-	</p>
+	</p>-->
         <div class="example">
             <h3 class="followup">Examples with <span class="jobjref"><a>ShapeNot</a></span></h3>
             <p>
