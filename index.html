@@ -5359,7 +5359,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#term-PNAME_NS">PNAME_NS</a></span> <span class="prod"><a class="grammarRef" href="#term-PN_LOCAL">PN_LOCAL</a></span></code></td>
 </tr>
-    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the first token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="https://tools.ietf.org/html/rfc3987#page-9">reserved characters</a> [[!rfc7159]] in the second argument, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
+    <tr id="handle-PNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the first token, <code>PNAME_NS</code>. The unicode string of the IRI is formed by unescaping the <a href="https://tools.ietf.org/html/rfc3987#page-9">reserved characters</a> [[!rfc7159]] in the second argument, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code> found in the <a>prefixes map</a>'s entry for <code>PNAME_NS</code>.</td></tr>
 </tbody>
 
 <tbody class="term">
@@ -5379,7 +5379,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">"@" <span class="prod"><a class="grammarRef" href="#term-PNAME_LN">PNAME_LN</a></span></code></td>
 </tr>
-    <tr id="handle-ATPNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The <a>prefixes map</a> <em class="rfc2119"><em class="rfc2119" title="MUST">MUST</em></em> have a corresponding <code>namespace</code>. The unicode string of the IRI is formed by unescaping the <a href="https://tools.ietf.org/html/rfc3987#page-9">reserved characters</a> [[!rfc7159]] in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code>.</td></tr>
+    <tr id="handle-ATPNAME_LN" class="params"><td></td><td>returns: <a>      IRI         </a></td><td></td><td>A potentially empty <a>prefix</a> is identified by the second token, <code>PNAME_NS</code>. The unicode string of the IRI is formed by unescaping the <a href="https://tools.ietf.org/html/rfc3987#page-9">reserved characters</a> [[!rfc7159]] in the third token, <code>PN_LOCAL</code>, and concatenating this onto the <code>namespace</code> found in the <a>prefixes map</a>'s entry for <code>PNAME_NS</code>.</td></tr>
 </tbody>
 
 <tbody class="term">
