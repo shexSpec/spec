@@ -228,6 +228,10 @@
       table td { vertical-align: top; }
       table th { text-align: center; }
       table { border-collapse: collapse; }
+
+      table.bare td { border: none; }
+      table.bare tr td:first-child { width: 10em; }
+
       td, th { border-style: solid; }
       .pass { background-color: #cfc; }
       .fail { background-color: #fcc; }

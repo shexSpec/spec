@@ -31,6 +31,8 @@ h1, h2, h3 {
         "varCommittee": "C/SABSC - Standards Activities Board Standards Committee ",
         "varSociety": "The Computer Society",
         "varApprovedDate": "12-03-2022",
+        "overviewSource": "#abstract>*:not(:first-child)",
+        "scope": "This standard defines the syntax of Shape Expression schemas represented in JavaScript Object Notation (JSON), Resource Description Framework (RDF) and plain text. This standard includes formal semantics for validation of RDF knowledge graphs using Shape Expressions. This validation process includes the definition of ShapeMaps to associate nodes in RDF graphs with labeled Shape Expressions. A test suite covers all aspects of syntax and validation.",
         "github": {
           "repoURL": "https://github.com/shexSpec/spec/",
           "branch": "main",
@@ -136,6 +138,17 @@ h1, h2, h3 {
         This document defines the ShEx language.
         See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of ShEx.
       </p>
+      <pre>
+𐄂 s/Abstract/Overview/ and move after TOC (i guess)
+✔ invent an Overview. inject from respec config
+✔   scope
+✔   (skip purpose)
+✔   inject word usage (shall/should/may defns) from template
+  mv Normative Refs to clause 2 (after Overview) - deal with 5.2 Rererences
+✔ mv (6) Terminology to clause 3 and rename "Definitions" and hide example
+  replicate RDF Concepts concepts in Terminology
+  mv namespaces into Namespaces section.
+      </pre>
     </section>
     <section id="keywords">
       <p>
@@ -197,6 +210,109 @@ h1, h2, h3 {
         The compact syntax is intended for human consumption; the JSON structure for machine processing.
         This document defines ShEx in terms of <a>ShExJ</a> and includes a <a href="#shexc">section on the ShEx Compact Syntax (ShEx)</a>.
       </p>
+    </section>
+
+    <section id="defn-acro-abbrs">
+      <h2>Definitions, Acronyms, and Abbreviations</h2>
+
+      <section id="definitions">
+        <h3>Definitions</h3>
+        <p>Shape expressions are defined using terms from RDF semantics [[!rdf11-mt]]:</p>
+        <ul>
+          <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <dfn data-cite="rdf11-concepts#dfn-iri" data-lt="iris">IRI</dfn>, <dfn data-cite="rdf11-concepts#dfn-blank-node" data-lt="bnodes|blank nodes">blank node</dfn>, <dfn data-cite="rdf11-concepts#dfn-literal" data-lt="literal|literals|RDF Literal|RDF Literals">Literal</dfn></li>
+          <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
+        </ul>
+
+        <p>
+          The following functions access the elements of an <a>RDF graph</a> <span class="math">G</span> containing a node <span class="math">n</span>:</p>
+        <ul>
+          <li>
+            <span class="math"><dfn>arcsOut</dfn>(G, n)</span> is the set of <a>triples</a> in a <a>graph</a> <span class="math">G</span> with <a>subject</a> <span class="math">n</span>.
+          </li>
+          <li>
+            <span class="math"><dfn>predicatesOut</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsOut</a>(G, n)</span>.
+          </li>
+          <li>
+            <span class="math"><dfn>arcsIn</dfn>(G, n)</span> is the set of <a>triples</a> in a <a>graph</a> <span class="math">G</span> with <a>object</a> <span class="math">n</span>.
+          </li>
+          <li>
+            <span class="math"><dfn>predicatesIn</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsIn</a>(G, n)</span>.
+          </li>
+          <li>
+            <span class="math"><dfn>neigh</dfn>(G, n)</span> is the neighbourhood of the <a>node</a> <span class="math">n</span> in the <a>graph</a> <span class="math">G</span>.<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>.
+          </li>
+          <li>
+            <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>.
+          </li>
+          <li>
+            <span class="math"><dfn>def</dfn>(Sch, label)</span> is the <span class="math">decl</span>.<span class="param">shapeExpr</span> where <span class="math">decl</span>.<span class="param">label</span> = <code>label</code>. <code>Sch</code> must have exactly one <code>def(Sch, label)</code>.
+          </li>
+        </ul>
+
+        <div class="example">
+          <p>
+            Consider the <a>RDF graph</a> <span class="math">G</span> represented in Turtle:
+          </p>
+
+          <pre class="data">
+PREFIX ex: http://schema.example/#
+PREFIX inst: http://inst.example/#
+PREFIX foaf: http://xmlns.com/foaf/
+PREFIX xsd: http://www.w3.org/2001/XMLSchema#
+
+inst:Issue1 
+    ex:state      ex:unassigned ;
+    ex:reportedBy _:User2 .
+
+_:User2
+    foaf:name     "Bob Smith" ;
+    foaf:mbox     &lt;mailto:bob@example.org&gt; .
+          </pre>
+          <p>
+            There are two arcs out of <span class="pre">_:User2</span>; <span class="math"><a>arcsOut</a>(G, <span class="pre">_:User2</span>)</span>:
+          </p>
+          <pre class="data">
+            _:User2  foaf:name  "Bob Smith" .
+            _:User2  foaf:mbox  &lt;mailto:bob@example.org&gt; .
+          </pre>
+          <p>
+            There is one arc into <span class="pre">_:User2</span>; <span class="math"><a>arcsIn</a>(G, <span class="pre">_:User2</span>)</span>:
+          </p>
+          <pre class="data">
+            inst:Issue1 ex:reportedBy  _:User2 .
+          </pre>
+          <p>
+            There are three arcs in the neighbourhood of <span class="pre">_:User2</span> set, <span class="math"><a>neigh</a>(G, <span class="pre">_:User2</span>)</span>:
+          </p>
+          <pre class="data">
+            _:User2  foaf:name  "Bob Smith" .
+            _:User2  foaf:mbox  &lt;mailto:bob@example.org&gt; .
+            inst:Issue1 ex:reportedBy  _:User2 .
+          </pre>
+        </div>
+      </section>
+
+      <section id="Acronyms and abbreviations">
+        <h3>Acronyms And Abbreviations</h3>
+        <table id="acronyms" class="bare">
+          <tbody>
+            <tr><td>BNF</td> <td>Backus Naur Form</td></tr>
+            <tr><td>CSS</td>   <td>Cascading Stylesheets</td></tr>
+            <tr><td>IANA</td> <td>Internet Assigned Numbers Authority</td></tr>
+            <tr><td>IRI</td>   <td>Internationalized Resource Identifier</td></tr>
+            <tr><td>RDF</td>   <td>Resource Description Framework</td></tr>
+            <tr><td>ShEx</td>  <td>Shape Expressions RDF schema language</td></tr>
+            <tr><td>ShExC</td> <td>ShEx Compact syntax</td></tr>
+            <tr><td>ShExJ</td> <td>ShEx JSON (or JSON-LD) syntax</td></tr>
+            <tr><td>ShExR</td> <td>ShEx RDF syntax</td></tr>
+            <tr><td>SPARQL</td> <td>RDF Query Language</td></tr>
+            <tr><td>URL</td> <td>Uniform Resource Locator</td></tr>
+            <tr><td>UTF-8</td> <td>Unicode Transformation Format</td></tr>
+            <tr><td>XML</td> <td>Extensible Markup Language</td></tr>
+            <tr><td>XPath</td> <td>Path Language for XML</td></tr>
+          </tbody>
+        </table>
+      </section>
     </section>
 
     <section id="notation">
@@ -363,21 +479,22 @@ h1, h2, h3 {
       </section>
       <!-- button id="toggleRDF">Toggle RDF ("r")</button> <button id="toggleExamples">Toggle Examples ("e")</button> <button id="toggleSquished">Render only abstract syntax ("a")</button -->
 
-      <section id="process">
-        <h3>Validation process</h3>
-        <div>
-          <p>
-            ShEx validation is defined in this document by the <code class="function"><a>isValid</a></code> function.
-            This process takes as input a <a>shapes schema</a>, an <a>RDF graph</a>, and a <dfn data-cite="shape-map#dfn-fixed-shapemap" data-lt="shapemap">fixed ShapeMap</dfn> (abbreviated as "ShapeMap" in this document).
-            ShEx validation results may be reported as a <dfn data-cite="shape-map#dfn-result-shapemap">result ShapeMap</dfn> [[!shape-map]].
-            For illustration purposes in this specification, both the fixed ShapeMap input and the result ShapeMap output are represented in a table with four columns: <span class="data fake-example">node</span>: a ShapeMap nodeSelector, <span class="schema fake-example">shape</span>: a ShapeMap shapeLabel, <span class="fake-example">result</span>: "<span class="pass">pass</span>" (for "conformant" status) or "<span class="fail">fail</span>" ("nonconformant" status), and an optional <span class="fake-example">reason</span>: an informal, human-readable explanation.
-          </p>
-        <table class="example">
-          <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
-          <tr class="pass"><td>&lt;node1&gt;</td><td>&lt;Shape1&gt;</td><td>pass</td><td class="noreason"></td></tr>
-          <tr class="fail"><td>&lt;node2&gt;</td><td>&lt;Shape1&gt;</td><td>fail</td><td class="fail">no <code>ex:state</code> supplied.</td></tr>
-        </table>
-        </div>
+      <section id="namespaces">
+        <h3>Namespaces</h3>
+
+        <p>This specification makes use of the following namespaces:</p>
+        <dl>
+          <dt><code>foaf</code>:</dt>
+          <dd><code>http://xmlns.com/foaf/0.1/</code></dd>
+          <dt><code>rdf</code>:</dt>
+          <dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd>
+          <dt><code>rdfs</code>:</dt>
+          <dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd>
+          <dt><code>shex</code>:</dt>
+          <dd><code>http://www.w3.org/ns/shex#</code></dd>
+          <dt><code>xsd</code>:</dt>
+          <dd><code>http://www.w3.org/2001/XMLSchema#</code></dd>
+        </dl>
         </section>
       <!-- <p> -->
       <!--   The following HTML tags and CSS classes are used to highlight the roles of text in this document: -->
@@ -387,95 +504,6 @@ h1, h2, h3 {
       <!--   <li>&lt;a class="internalDFN"&gt;<a title="SHACL defined term" class="internalDFN">defined term</a>&lt;/a&gt;</li> -->
       <!--   <li><sup class="eval">eval</sup> &mdash; link to evaluation semantics</li> -->
       <!-- </ul> -->
-    </section>
-
-    <section id="terminology">
-      <h2>Terminology</h2>
-      <p>Shape expressions are defined using terms from RDF semantics [[!rdf11-mt]]:</p>
-      <ul>
-        <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <dfn data-cite="rdf11-concepts#dfn-iri" data-lt="iris">IRI</dfn>, <dfn data-cite="rdf11-concepts#dfn-blank-node" data-lt="bnodes|blank nodes">blank node</dfn>, <dfn data-cite="rdf11-concepts#dfn-literal" data-lt="literal|literals|RDF Literal|RDF Literals">Literal</dfn></li>
-        <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
-      </ul>
-
-      <p>This specification makes use of the following namespaces:</p>
-      <dl>
-        <dt><code>foaf</code>:</dt>
-        <dd><code>http://xmlns.com/foaf/0.1/</code></dd>
-        <dt><code>rdf</code>:</dt>
-        <dd><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></dd>
-        <dt><code>rdfs</code>:</dt>
-        <dd><code>http://www.w3.org/2000/01/rdf-schema#</code></dd>
-        <dt><code>shex</code>:</dt>
-        <dd><code>http://www.w3.org/ns/shex#</code></dd>
-        <dt><code>xsd</code>:</dt>
-        <dd><code>http://www.w3.org/2001/XMLSchema#</code></dd>
-      </dl>
-
-      <p>
-  The following functions access the elements of an <a>RDF graph</a> <span class="math">G</span> containing a node <span class="math">n</span>:</p>
-  <ul>
-    <li>
-      <span class="math"><dfn>arcsOut</dfn>(G, n)</span> is the set of <a>triples</a> in a <a>graph</a> <span class="math">G</span> with <a>subject</a> <span class="math">n</span>.
-    </li>
-    <li>
-      <span class="math"><dfn>predicatesOut</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsOut</a>(G, n)</span>.
-    </li>
-    <li>
-      <span class="math"><dfn>arcsIn</dfn>(G, n)</span> is the set of <a>triples</a> in a <a>graph</a> <span class="math">G</span> with <a>object</a> <span class="math">n</span>.
-    </li>
-    <li>
-      <span class="math"><dfn>predicatesIn</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsIn</a>(G, n)</span>.
-    </li>
-    <li>
-      <span class="math"><dfn>neigh</dfn>(G, n)</span> is the neighbourhood of the <a>node</a> <span class="math">n</span> in the <a>graph</a> <span class="math">G</span>.<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>.
-    </li>
-    <li>
-      <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>.
-    </li>
-    <li><dfn>def</dfn>(Sch, label)</span> is the <span class="math">decl</span>.<span class="param">shapeExpr</span> where <span class="math">decl</span>.<span class="param">label</span> = <code>label</code>. <code>Sch</code> must have exactly one <code>def(Sch, label)</code>.</li>
-  </ul>
-
-      <div class="example">
-  <p>
-    Consider the <a>RDF graph</a> <span class="math">G</span> represented in Turtle:
-  </p>
-
-  <pre class="data">
-PREFIX ex: http://schema.example/#
-PREFIX inst: http://inst.example/#
-PREFIX foaf: http://xmlns.com/foaf/
-PREFIX xsd: http://www.w3.org/2001/XMLSchema#
-
-inst:Issue1 
-    ex:state      ex:unassigned ;
-    ex:reportedBy _:User2 .
-
-_:User2
-    foaf:name     "Bob Smith" ;
-    foaf:mbox     &lt;mailto:bob@example.org&gt; .
-        </pre>
-  <p>
-    There are two arcs out of <span class="pre">_:User2</span>; <span class="math"><a>arcsOut</a>(G, <span class="pre">_:User2</span>)</span>:
-  </p>
-  <pre class="data">
-    _:User2  foaf:name  "Bob Smith" .
-    _:User2  foaf:mbox  &lt;mailto:bob@example.org&gt; .
-  </pre>
-  <p>
-    There is one arc into <span class="pre">_:User2</span>; <span class="math"><a>arcsIn</a>(G, <span class="pre">_:User2</span>)</span>:
-  </p>
-  <pre class="data">
-    inst:Issue1 ex:reportedBy  _:User2 .
-  </pre>
-  <p>
-    There are three arcs in the neighbourhood of <span class="pre">_:User2</span> set, <span class="math"><a>neigh</a>(G, <span class="pre">_:User2</span>)</span>:
-  </p>
-  <pre class="data">
-    _:User2  foaf:name  "Bob Smith" .
-    _:User2  foaf:mbox  &lt;mailto:bob@example.org&gt; .
-    inst:Issue1 ex:reportedBy  _:User2 .
-  </pre>
-      </div>
     </section>
 
     <section id="shapes-language">
