@@ -138,6 +138,12 @@ $(document).ready(function () {
       return true;
     return toggle($("body .repchoice"), evt.keyCode);
   });
+  setTimeout(
+    () => {
+      document.querySelector('#toc-toggle').click();
+    },
+    1000
+  );
 });
 
 function toggle (from, key) {
