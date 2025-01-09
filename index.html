@@ -31,7 +31,6 @@ h1, h2, h3 {
         "varCommittee": "C/SABSC - Standards Activities Board Standards Committee ",
         "varSociety": "The Computer Society",
         "varApprovedDate": "12-03-2022",
-        "overviewSource": "#abstract>*:not(:first-child)",
         "scope": "This standard defines the syntax of Shape Expression schemas represented in JavaScript Object Notation (JSON), Resource Description Framework (RDF) and plain text. This standard includes formal semantics for validation of RDF knowledge graphs using Shape Expressions. This validation process includes the definition of ShapeMaps to associate nodes in RDF graphs with labeled Shape Expressions. A test suite covers all aspects of syntax and validation.",
         "github": {
           "repoURL": "https://github.com/shexSpec/spec/",
@@ -138,17 +137,6 @@ h1, h2, h3 {
         This document defines the ShEx language.
         See the <a href="../primer/index.html">Shape Expressions Primer</a> for a non-normative description of ShEx.
       </p>
-      <pre>
-𐄂 s/Abstract/Overview/ and move after TOC (i guess)
-✔ invent an Overview. inject from respec config
-✔   scope
-✔   (skip purpose)
-✔   inject word usage (shall/should/may defns) from template
-  mv Normative Refs to clause 2 (after Overview) - deal with 5.2 Rererences
-✔ mv (6) Terminology to clause 3 and rename "Definitions" and hide example
-  replicate RDF Concepts concepts in Terminology
-  mv namespaces into Namespaces section.
-      </pre>
     </section>
     <section id="keywords">
       <p>
@@ -260,7 +248,7 @@ PREFIX inst: http://inst.example/#
 PREFIX foaf: http://xmlns.com/foaf/
 PREFIX xsd: http://www.w3.org/2001/XMLSchema#
 
-inst:Issue1 
+inst:Issue1
     ex:state      ex:unassigned ;
     ex:reportedBy _:User2 .
 
