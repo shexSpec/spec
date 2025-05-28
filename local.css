@@ -475,3 +475,7 @@ dd > dl {
 .ericP {
     background-color: #eeeeaf;
 }
+
+div.rep-choice-size-mismatch {
+    border: thick solid red
+}

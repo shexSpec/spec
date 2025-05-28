@@ -51,7 +51,7 @@ function prepRep (elts, cls) {
                      heights.json-heights.shexc]);
         button.attr("title", ""+(widths.json-widths.shexc)+
                     ", "+(heights.json-heights.shexc));
-        container.css("border", "thick solid red");
+        container.addClass("rep-choice-size-mismatch");
       }
     }
     if (!container.hasClass("incomplete")) {
@@ -71,7 +71,7 @@ function prepRep (elts, cls) {
         delete shexc.base
         if (!deepEquals(shexj, shexc)) {
           console.dir([container.get(), shexj,  shexc]);
-          container.css("border", "thick solid red");
+          container.addClass("rep-choice-size-mismatch");
         }
       } catch (e) {
         console.dir([container, e]);
