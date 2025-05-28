@@ -220,6 +220,7 @@
       pre.schema.hljs.xquery { color: #070; border: thin solid #0f0; }
       pre.data.hljs.javascript { color: #007; border: thin solid #00f; }
       .inline .hljs { padding: 0; }
+      .example .line-labels .hljs { padding: 0 .2em; }
       .schema { color: #070; }
         .data { color: #007; }
 /*      pre.schema:before { content: schema }

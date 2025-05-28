@@ -3205,8 +3205,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
           -->
           <div class="example">
               <span class="exsec">Schema:</span><br/>
-              <pre class="line-labels">
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
 
 <span class="lineno schema">nc1</span>
@@ -3267,9 +3266,9 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
                 &lt;UserShape&gt; { ex:shoeSize . }
             -->
             <span class="exsec">Schema:</span><br/>
-            <pre class="line-labels"> 
-
+            <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">tc1</span>
 </pre>
             <div class="inline repchoice">
@@ -3280,14 +3279,14 @@ ex:someNode ex:somePredicate "30"^^xsd:integer .
       "predicate": "http://schema.example/#shoeSize"
       } } ] }</pre>
               <pre class="shexc nohighlight">                                                    
+ex:UserShape {
 
-  ex:UserShape {
-    ex:shoeSize .
-  }
+  ex:shoeSize .
+}
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
@@ -3329,11 +3328,11 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
                 }
             -->
             <span class="exsec">Schema:</span><br/>
-            <pre class="line-labels"> 
-
+            <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
-<span class="lineno schema">tc1</span>
 
+
+<span class="lineno schema">tc1</span>
 
 
 <span class="lineno schema">nc1</span>
@@ -3346,15 +3345,15 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
     "expression": {
       "type": "TripleConstraint",
       "predicate": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-      "valueExpr":
-      { "type": "NodeConstraint",
+      "valueExpr": {
+        "type": "NodeConstraint",
         "values": ["http://schema.example/#Teacher"]
       } } } ] }</pre>
               <pre class="shexc nohighlight">                                                                     
-
   ex:UserShape EXTRA a {
-    a
 
+
+    a
 
 
 
@@ -3363,7 +3362,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -3417,9 +3416,9 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
           -->
           <div class="example">
               <div class="exsec">Schema:</div><br/>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
 
@@ -3480,8 +3479,7 @@ PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
 </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -3549,8 +3547,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
               Replacing triples 1-3 with a single foaf:name property will also satisfy the schema.
             </p>
             <div class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t4</span>
 <span class="lineno data">t5</span>
@@ -3589,8 +3586,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
               Any mixure of <code>foaf:name</code> with <code>foaf:givenName</code> or <code>foaf:familyName</code> will fail to satisfy the schema as there will be a matchable triple <span class="lineno data">t3</span> that is not used in the <a>triple expression</a> <span class="lineno schema">te1</span>.
             </p>
             <div class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t3</span>
 <span class="lineno data">t4</span>
@@ -3630,8 +3626,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <p class="leadup">
               Adding a <code>foaf:familyName</code> to <span class="math"><span class="lineno schema">S1</span></span>'s <span class="param">extra</span> would allow this <a>graph</a> to satisfy the schema.
             </p>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
 </pre>
             <div class="inline json">
@@ -3645,8 +3640,7 @@ PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
             <p class="leadup">
               Closing <span class="math"><span class="lineno schema">S1</span></span> would also cause a validation failure if <span class="math">unmatchables</span> were not empty:
             </p>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
 </pre>
             <div class="inline json">
@@ -3685,15 +3679,15 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">tc1</span>
 
 
 <span class="lineno schema">nc1</span>
-
 <span class="lineno schema">S2</span>
+
 <span class="lineno schema">tc2</span>
 
 
@@ -3719,23 +3713,23 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         "values": [ "http://schema.example/#testingRole" ] } } }
   ] }</pre>
               <pre class="shexc nohighlight">                                                                
-ex:IssueShape
-  {
+ex:IssueShape {
 
     ex:reproducedBy
 
+
      @ex:TesterShape }
-ex:TesterShape
- {
+ex:TesterShape {
 
     ex:role
 
-     [ex:testingRole] }
 
+
+     [ex:testingRole] }
               </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
@@ -3798,11 +3792,10 @@ PREFIX ex: <http://schema.example/#>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
-<span class="lineno schema">tc1</span>
 
+<span class="lineno schema">tc1</span>
 
 <span class="lineno schema">nc1</span>
 
@@ -3813,12 +3806,10 @@ PREFIX ex: <http://schema.example/#>
     "type": "Shape", "expression":
     { "type": "TripleConstraint", "min": 0, "max": -1,
       "predicate": "http://schema.example/#related",
-      "valueExpr":
-      "http://schema.example/#IssueShape"
+      "valueExpr": "http://schema.example/#IssueShape"
     } } ] }</pre>
               <pre class="shexc nohighlight">                                                      
   ex:IssueShape {
-
 
     ex:related
 
@@ -3826,7 +3817,7 @@ PREFIX ex: <http://schema.example/#>
 }</pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -3909,9 +3900,9 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
 
@@ -3941,24 +3932,23 @@ inst:Issue3 ex:related inst:Issue1 .</pre>
               "values": [ {"value": "b"}, {"value": "c"}, {"value": "d"} ] } }
         ] } } ] }</pre>
               <pre class="shexc nohighlight">                                                                               
-            &lt;http://schema.example/#TestResultsShape&gt;
-{
+&lt;http://schema.example/#TestResultsShape&gt; {
 
 
-                         &lt;http://schema.example/#val&gt;
+  &lt;http://schema.example/#val&gt;
 
 
-                         ["a" "b" "c"]+ ;
+    ["a" "b" "c"]+ ;
 
-                         &lt;http://schema.example/#val&gt;
+  &lt;http://schema.example/#val&gt;
 
 
-                         ["b" "c" "d"]+
+    ["b" "c" "d"]+
+
 }              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -4088,15 +4078,13 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
-<span class="lineno schema">te1</span>
 
+<span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
 
 <span class="lineno schema">nc1</span>
-
 <span class="lineno schema">tc2</span>
 
 <span class="lineno schema">nc2</span>
@@ -4112,7 +4100,6 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
 <span class="lineno schema">tc4</span>
 
-
 <span class="lineno schema">nc4</span>
 </pre>
             <div class="inline repchoice">
@@ -4122,12 +4109,10 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     { "type": "EachOf", "expressions": [
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/#reproducedBy",
-          "valueExpr":
-          "http://schema.example/#TesterShape" },
+          "valueExpr": "http://schema.example/#TesterShape" },
         { "type": "TripleConstraint",
           "predicate": "http://schema.example/#reproducedBy",
-          "valueExpr":
-          "http://schema.example/#ProgrammerShape" }
+          "valueExpr": "http://schema.example/#ProgrammerShape" }
       ] } },
   { "id": "http://schema.example/#TesterShape",
     "type": "Shape", "expression":
@@ -4140,19 +4125,17 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
     "type": "Shape", "expression":
     { "type": "TripleConstraint",
       "predicate": "http://schema.example/#department",
-      "valueExpr":
-      { "type": "NodeConstraint",
+      "valueExpr": {
+        "type": "NodeConstraint",
         "values": [ "http://schema.example/#ProgrammingDepartment" ] } } }
   ] }</pre>
               <pre class="shexc nohighlight">                                                                          
 ex:IssueShape {
 
 
-
   ex:reproducedBy
 
     @ex:TesterShape;
-
   ex:reproducedBy
 
     @ex:ProgrammerShape
@@ -4166,16 +4149,15 @@ ex:TesterShape {
 }
 ex:ProgrammerShape {
 
-
   ex:department
 
     [ex:ProgrammingDepartment]
+
 }
  </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels"> 
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span>
@@ -4281,9 +4263,9 @@ inst:Testgrammer23
           -->
           <div class="example">
               <div class="exsec">Schema:</div>
-              <pre class="line-labels"> 
-
+              <pre class="line-labels"> 
 <span class="lineno schema">S1</span>
+
 <span class="lineno schema">te1</span>
 <span class="lineno schema">tc1</span>
 
@@ -4321,8 +4303,7 @@ inst:Testgrammer23
 }              </pre>
             </div>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span></pre>
             <div class="inline json">
@@ -4368,8 +4349,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 
             <p class="leadup">If we add a <span class="math"><span class="lineno data">t2</span></span> which matches <span class="math"><span class="lineno schema">tc2</span></span>:</p>
             <div style="clear:both;" class="exsec">Data:</div>
-            <pre class="line-labels">
-
+            <pre class="line-labels"> 
 
 <span class="lineno data">t1</span>
 <span class="lineno data">t2</span></pre>
