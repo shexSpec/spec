@@ -480,3 +480,4 @@ dd > dl {
 div.rep-choice-size-mismatch {
     border: thick solid red
 }
+.validationResults { } /* validation results in examples */

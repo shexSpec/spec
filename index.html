@@ -438,7 +438,7 @@ _:User2
           Partial examples include ranges in a <span class="comment">.comment</span> CSS style to indicate text which would be substituted in a complete example.
           For example  <span class="json">{ "type": "ShapeAnd", "shapeExprs": [ <span class="comment">SE<sub>1</sub></span>, <span class="comment">…</span> ] }</span> indicates that both <span class="comment">SE<sub>1</sub></span> and <span class="comment">…</span> would be substituted in a complete example.
         </p>
-        <p>
+        <p class="removeOnPrint">
           In javascript-enabled browsers, schemas with a <button class="show-repchoice">json</button> button can be converted between the JSON representation and the compact syntax by clicking the button.
           The button text indicates the currently shown representation.
           Selecting the example and pressing "j" or "c" converts the example to the JSON (ShExJ) or compact form (ShExC).
@@ -512,7 +512,8 @@ _:User2
       </p>
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param">imports</dfn>:[<a>IRIREF</a>+]? <dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>+]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="objref">ShapeDecl</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="context"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"? <a class="param"> <dfn class="param">imports</dfn>:[<a>IRIREF</a>+]?<br />
+<dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>+]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="objref">ShapeDecl</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> | <a class="objref">ShapeExternal</a> }</td></tr>
         </table>
       </div>
@@ -912,13 +913,15 @@ _:User2
         <h3>Node Constraints</h3>
         <div class="shexjTable">
           <table class="shexj">
-  <tr class="obj"><th class="obj"><dfn>NodeConstraint</dfn></th> <td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>NodeConstraint</dfn></th> <td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)?<br />
+<span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><dfn>xsFacet</dfn></th>               <td>=</td><td><a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>stringFacet</dfn></th>       <td>=</td><td>(<span class="param">length</span>|<span class="param">minlength</span>|<span class="param">maxlength</span>):<a>INTEGER</a> | <span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>numericFacet</dfn></th>     <td>=</td><td>(<span class="param">mininclusive</span>|<span class="param">minexclusive</span>|<span class="param">maxinclusive</span>|<span class="param">maxexclusive</span>):<a class="nobref">numericLiteral</a> </td></tr>
     <tr><th></th><td>|</td><td>(<span class="param">totaldigits</span>|<span class="param">fractiondigits</span>):<a>INTEGER</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>numericLiteral</dfn></th> <td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><dfn>valueSetValue</dfn></th><td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">IriStem</a> | <a class="objref">IriStemRange</a> | <a class="objref">LiteralStem</a> | <a class="objref">LiteralStemRange</a> | <a class="objref">Language</a> | <a class="objref">LanguageStem</a> | <a class="objref">LanguageStemRange</a> ;</td></tr>
+  <tr class="nob"><th class="nob"><dfn>valueSetValue</dfn></th><td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">IriStem</a> | <a class="objref">IriStemRange</a> | <a class="objref">LiteralStem</a> | <a class="objref">LiteralStemRange</a></td></tr>
+  <tr><th></th><td>|</td><td><a class="objref">Language</a> | <a class="objref">LanguageStem</a> | <a class="objref">LanguageStemRange</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>objectValue</dfn></th><td>=</td><td><a>IRIREF</a> | <a class="objref">ObjectLiteral</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>ObjectLiteral</dfn></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
   <tr class="obj"><th class="obj"><dfn>IriStem</dfn></th><td>{</td><td><span class="param">stem</span>:<a>IRIREF</a> }</td></tr>
@@ -979,7 +982,7 @@ _:User2
 &lt;issue1&gt; ex:state ex:HunkyDory .
 &lt;issue2&gt; <span style="border-bottom: thin solid red;">ex:taste</span> ex:GoodEnough .
 <span class="fail">&lt;issue3&gt; ex:state "just fine" .</span></pre>
-            <table>
+            <table class="validationResults">
               <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail">expected 1 <code>ex:state</code> property.</td></tr>
@@ -1023,7 +1026,7 @@ _:User2
 &lt;issue1&gt; ex:submittedOn "2016-07-08"^^xsd:date .
 <span class="fail">&lt;issue2&gt; ex:submittedOn "2016-07-08T01:23:45Z"^^xsd:dateTime .</span>
 <span class="fail">&lt;issue3&gt; ex:submittedOn "2016-07"^^xsd:date .</span></pre>
-            <table>
+            <table class="validationResults">
               <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:submittedOn</code> expected to be an <code>xsd:date</code>, <code>xsd:dateTime</code> found.</td></tr>
@@ -1066,7 +1069,7 @@ _:User2
             <pre class="data">
 &lt;issue3&gt; rdfs:label "emits dense black smoke"@en .
 <span class="fail">&lt;issue4&gt; rdfs:label "unexpected odor" .</span></pre>
-            <table>
+            <table class="validationResults">
               <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;issue3&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="fail"><td>&lt;issue4&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>rdfs:label</code> expected to be an <code>rdf:langString</code>, <code>xsd:string</code> found.</td></tr>
@@ -1125,7 +1128,7 @@ _:User2
           <pre class="data">
 &lt;issue1&gt; ex:submittedBy &lt;http://a.example/bob&gt; . <span class="comment"># 20 characters</span>
 <span class="fail">&lt;issue2&gt; ex:submittedBy "Bob" .</span> <span class="comment"># 3 characters</span></pre>
-          <table>
+          <table class="validationResults">
             <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:submittedBy</code> expected to be &gt;= 10 characters,<br/> 3 characters found.</td></tr>
@@ -1162,7 +1165,7 @@ _:User2
           <pre class="data">
 &lt;issue6&gt; ex:submittedBy _:genUser218 .
 <span class="fail">&lt;issue7&gt; ex:submittedBy _:genContact817 .</span></pre>
-          <table>
+          <table class="validationResults">
             <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;issue6&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;issue7&gt;</td><td>&lt;IssueShape&gt;</td><td>fail</td><td class="fail"><code>_:genContact817</code> expected to match <code>genuser[0-9]+</code>.</td></tr>
@@ -1197,7 +1200,7 @@ _:User2
 &lt;product6&gt; ex:trademark "	\\𝒸?" .
 &lt;product7&gt; ex:trademark "\t\\\U0001D4B8?" . <span class="comment"># Turtle literals have escape characters <a href="https://www.w3.org/TR/turtle/#grammar-production-ECHAR">[tbnrf"'\]</a>.</span>
 <span class="fail">&lt;product8&gt; ex:trademark "\t\\\\U0001D4B8?" .</span></pre>
-          <table>
+          <table class="validationResults">
             <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;product6&gt;</td><td>&lt;ProductShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="pass"><td>&lt;product7&gt;</td><td>&lt;ProductShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -1257,7 +1260,7 @@ _:User2
 &lt;issue2&gt; ex:confirmations 2^^xsd:byte .
 <span class="fail">&lt;issue3&gt; ex:confirmations 0 .</span>
 <span class="fail">&lt;issue4&gt; ex:confirmations "ii"^^ex:romanNumeral .</span></pre>
-            <table>
+            <table class="validationResults">
               <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
               <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
               <tr class="pass"><td>&lt;issue2&gt;</td><td>&lt;IssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -1325,7 +1328,7 @@ _:User2
           <pre class="data">
 &lt;issue1&gt; ex:state ex:Resolved .
 <span class="fail">&lt;issue2&gt; ex:state ex:Unresolved .</span></pre>
-          <table>
+          <table class="validationResults">
             <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;issue1&gt;</td><td>&lt;NoActionIssueShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="fail"><td>&lt;issue2&gt;</td><td>&lt;NoActionIssueShape&gt;</td><td>fail</td><td class="fail"><code>ex:state</code> expected to be <code>ex:Resolved</code> or <code>ex:Rejected</code>, <code>ex:Unresolved</code> found.</td></tr>
@@ -1371,7 +1374,7 @@ _:User2
 &lt;issue5&gt; foaf:mbox &lt;mailto:sales-835@a.example&gt; .
 <span class="fail">&lt;issue6&gt; foaf:mbox "missing" .</span>
 <span class="fail">&lt;issue7&gt; foaf:mbox &lt;mailto:sales-contacts-999@a.example&gt; .</span></pre>
-          <table>
+          <table class="validationResults">
             <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;issue3&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="pass"><td>&lt;issue4&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -1416,7 +1419,7 @@ _:User2
 &lt;issue8&gt; foaf:mbox 123 .
 &lt;issue9&gt; foaf:mbox &lt;mailto:core-engineering-2112@a.example&gt; .
 <span class="fail">&lt;issue10&gt; foaf:mbox &lt;mailto:engineering-2112@a.example&gt; .</span></pre>
-          <table>
+          <table class="validationResults">
             <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>reason</th></tr>
             <tr class="pass"><td>&lt;issue8&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
             <tr class="pass"><td>&lt;issue9&gt;</td><td>&lt;EmployeeShape&gt;</td><td>pass</td><td class="noreason"></td></tr>
@@ -1444,11 +1447,16 @@ _:User2
 
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><dfn>Shape</dfn></th>                       <td>{</td><td><!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>Shape</dfn></th>                       <td>{</td><td><!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>?<br />
+<span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --><br />
+<span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><dfn>tripleExpr</dfn></th>             <td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
-  <tr class="obj"><th class="obj"><dfn>EachOf</dfn></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <dfn class="param">expressions</dfn>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>OneOf</dfn></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><dfn>TripleConstraint</dfn></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">inverse</span>:<a>BOOL</a>? <a class="param">predicate</a>:<a>IRIREF</a> <span class="param">valueExpr</span>:<a class="nobref">shapeExpr</a>? <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>EachOf</dfn></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <dfn class="param">expressions</dfn>:[<a class="nobref">tripleExpr</a>{2,}]<br />
+<span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>OneOf</dfn></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}]<br />
+<span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><dfn>TripleConstraint</dfn></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">inverse</span>:<a>BOOL</a>? <a class="param">predicate</a>:<a>IRIREF</a> <span class="param">valueExpr</span>:<a class="nobref">shapeExpr</a>?<br />
+<span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><dfn>tripleExprRef</dfn></th>       <td>=</td><td><a class="objref">tripleExprLabel</a> ;</td></tr>
   <tr class="nob"><th class="nob"><dfn>tripleExprLabel</dfn></th>   <td>=</td><td><a>IRIREF</a> | <a>BNODE</a> ;</td></tr>
         </table>
@@ -3132,7 +3140,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
             <pre class="data">&lt;http://a.example/n1&gt; &lt;http://a.example/p1&gt; &lt;http://a.example/o1&gt; .
 &lt;http://a.example/n2&gt; &lt;http://a.example/p1&gt; "a", "b" .
 &lt;http://a.example/n3&gt; &lt;http://a.example/p2&gt; &lt;http://a.example/o2&gt; .</pre>
-            <table>
+            <table class="validationResults">
               <tr><th class="data">node</th><th class="schema">shape</th><th>result</th><th>print arguments</th></tr>
               <tr class="pass"><td>&lt;n1&gt;</td><td>&lt;S1&gt;</td><td>pass</td><td>http://a.example/s1<br/>http://a.example/o1</td></tr>
               <tr class="pass"><td>&lt;n2&gt;</td><td>&lt;S1&gt;</td><td>pass</td><td>http://a.example/s1<br/>"a"<br/>http://a.example/s1<br/>"b"</td></tr>
@@ -4415,7 +4423,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
     <p>
       As with Turtle and SPARQL, ShExC offers URL resolution relative to a <dfn data-lt="prefix">base</dfn> per [[RFC3986]] and <dfn>prefixes map</dfn> to provide shorthand ways to write IRI identifiers.
     </p>
-    <p>
+    <p class="removeOnPrint">
       <button id="toggleGrammar">Display grammar only</button>
     </p>
       <div class="grammarTable">
@@ -5775,7 +5783,8 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="nob"><th class="nob"><a>numericLiteral</a></th><td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
 -->
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="context"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"?<br/><a class="param">imports</a>:[<a>IRIREF</a>+]? <span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">ShapeDecl</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="context"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"? <a class="param"> imports</a>:[<a>IRIREF</a>+]?<br />
+<span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">ShapeDecl</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> | <a class="objref">ShapeExternal</a> }</td></tr>
   <tr class="nob"><th class="obj"><a>shapeExpr</a></th>         <td>=</td> <td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExprRef</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeOr</a></th>             <td>{</td> <td><span class="param">shapeExprs</span>:[<a class="nobref">shapeExpr</a>{2,}] }</td></tr>
@@ -5784,13 +5793,15 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>ShapeExternal</a></th> <td>{</td> <td>}</td></tr>
 <tr class="nob"><th class="nob"><a>ShapeExprRef</a></th>           <td>{</td> <td><span class="param">label</span>:<span class="nobref">shapeExprLabel</a> <span class="param">exact</span>:<a>BOOL</a>? }</td></tr>
   <tr class="nob"><th class="nob"><a>shapeExprLabel</a></th>       <td>=</td> <td><a>IRIREF</a> | <a>BNODE</a> ;</td></tr>
-  <tr class="obj"><th class="obj"><a>NodeConstraint</a></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a>? <span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)? <span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>NodeConstraint</a></th> <td>{</td><td><span class="param">nodeKind</span>:(<span class="literal">"iri"</span> | <span class="literal">"bnode"</span> | <span class="literal">"nonliteral"</span> | <span class="literal">"literal"</span>)?<br />
+<span class="param">datatype</span>:<a>IRIREF</a>? <a class="nobref">xsFacet</a>* <span class="param">values</span>:[<a class="nobref">valueSetValue</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>xsFacet</a></th>               <td>=</td><td><a class="nobref">stringFacet</a> | <a class="nobref">numericFacet</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>stringFacet</a></th>       <td>=</td><td>(<span class="param">length</span>|<span class="param">minlength</span>|<span class="param">maxlength</span>):<a>INTEGER</a> | <span class="param">pattern</span>:<a>STRING</a> <span class="param">flags</span>:<a>STRING</a>? ;</td></tr>
   <tr class="nob"><th class="nob"><a>numericFacet</a></th>     <td>=</td><td>(<span class="param">mininclusive</span>|<span class="param">minexclusive</span>|<span class="param">maxinclusive</span>|<span class="param">maxexclusive</span>):<a class="nobref">numericLiteral</a> </td></tr>
   <tr><th></th><td>|</td><td>(<span class="param">totaldigits</span>|<span class="param">fractiondigits</span>):<a>INTEGER</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>numericLiteral</a></th> <td>=</td><td><a>INTEGER</a> | <a>DECIMAL</a> | <a>DOUBLE</a> ;</td></tr>
-  <tr class="nob"><th class="nob"><a>valueSetValue</a></th><td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">IriStem</a> | <a class="objref">IriStemRange</a> | <a class="objref">LiteralStem</a> | <a class="objref">LiteralStemRange</a> | <a class="objref">Language</a> | <a class="objref">LanguageStem</a> | <a class="objref">LanguageStemRange</a> ;</td></tr>
+  <tr class="nob"><th class="nob"><a>valueSetValue</a></th><td>=</td><td><a class="nobref">objectValue</a> | <a class="objref">IriStem</a> | <a class="objref">IriStemRange</a> | <a class="objref">LiteralStem</a> | <a class="objref">LiteralStemRange</a></td></tr>
+  <tr><th></th><td>|</td><td><a class="objref">Language</a> | <a class="objref">LanguageStem</a> | <a class="objref">LanguageStemRange</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>objectValue</a></th><td>=</td><td><a>IRIREF</a> | <a>ObjectLiteral</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>ObjectLiteral</a></th><td>{</td><td><span class="param">value</span>:<a>STRING</a> <span class="param">language</span>:<a>STRING</a>? <span class="param">type</span>:<a>STRING</a>? }</td></tr>
   <tr class="obj"><th class="obj"><a>IriStem</a></th><td>{</td><td><span class="param">stem</span>:<a>IRIREF</a> }</td></tr>
@@ -5801,11 +5812,16 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="obj"><th class="obj"><a>LanguageStem</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) }</td></tr>
   <tr class="obj"><th class="obj"><a>LanguageStemRange</a></th><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="@@" style="background:#FBE9E9;">EMPTY</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>Wildcard</a></th>             <td>{</td><td><span class="comment">/* empty */</span> }</td></tr>
-  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>? <span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --> <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>Shape</a></th>                       <td>{</td><td><!-- <span class="param">virtual</span>:<a>BOOL</a>?  --><span class="param">extends</span>:[<a class="objref">shapeExprRef</a>]? <span class="param">closed</span>:<a>BOOL</a>?<br />
+<span class="param">extra</span>:[<a>IRIREF</a>+]? <span class="param">expression</span>:<a class="nobref">tripleExpr</a>?<!-- <span class="param">inherit</span>:[<a class="nobref">shapeExprLabel</a>]? --><br />
+<span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExpr</a></th>             <td>=</td><td><a class="objref">EachOf</a> | <a class="objref">OneOf</a> | <a class="objref">TripleConstraint</a> | <a class="objref">tripleExprRef</a> ;</td></tr>
-  <tr class="obj"><th class="obj"><a>EachOf</a></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><a>OneOf</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}] <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
-  <tr class="obj"><th class="obj"><a>TripleConstraint</a></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">inverse</span>:<a>BOOL</a>? <a class="param" href="https://www.w3.org/TR/rdf11-concepts/#dfn-predicate">predicate</a>:<a>IRIREF</a> <span class="param">valueExpr</span>:<a class="nobref">shapeExpr</a>? <span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>EachOf</a></th>                     <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}]<br />
+<span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+<tr class="obj"><th class="obj"><a>OneOf</a></th>                       <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">expressions</span>:[<a class="nobref">tripleExpr</a>{2,}]<br />
+<span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
+  <tr class="obj"><th class="obj"><a>TripleConstraint</a></th> <td>{</td><td><span class="param">id</span>:<a class="nobref">tripleExprLabel</a>? <span class="param">inverse</span>:<a>BOOL</a>? <a class="param" href="https://www.w3.org/TR/rdf11-concepts/#dfn-predicate">predicate</a>:<a>IRIREF</a> <span class="param">valueExpr</span>:<a class="nobref">shapeExpr</a>?<br />
+<span class="param">min</span>:<a>INTEGER</a>? <span class="param">max</span>:<a>INTEGER</a>? <span class="param">semActs</span>:[<a class="objref">SemAct</a>+]? <span class="param">annotations</span>:[<a class="objref">Annotation</a>+]? }</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExprRef</a></th>       <td>=</td><td><a class="objref">tripleExprLabel</a> ;</td></tr>
   <tr class="nob"><th class="nob"><a>tripleExprLabel</a></th>   <td>=</td><td><a>IRIREF</a> | <a>BNODE</a> ;</td></tr>
   <tr class="obj"><th class="obj"><a>SemAct</a></th><td>{</td><td><span class="param">name</span>:<a>IRIREF</a> <span class="param">code</span>:<a>STRING</a>? }</td></tr>
@@ -5824,7 +5840,11 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment"><a href="http://www.w3.org/TR/turtle/#grammar-production-DECIMAL">Turtle DECIMAL</a></span></td></tr>
   <tr class="trm"><th class="trm"><dfn>DECIMAL</dfn></th>          <td>:</td><td>[+-]? [0-9]* '.' [0-9] + ;</td></tr>
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment"><a href="http://www.w3.org/TR/turtle/#grammar-production-DOUBLE">Turtle DOUBLE</a></span></td></tr>
-  <tr class="trm"><th class="trm"><dfn>DOUBLE</dfn></th>           <td>:</td><td>[+-]? ([0-9] + '.' [0-9]* <a>EXPONENT</a> | '.' [0-9]+ <a>EXPONENT</a> | [0-9]+ <a>EXPONENT</a>) ;</td></tr>
+  <tr class="trm"><th class="trm"><dfn>DOUBLE</dfn></th>           <td>:</td><td>[+-]?<br />
+(  [0-9] + '.' [0-9]* <a>EXPONENT</a><br />
+ | '.' [0-9]+ <a>EXPONENT</a><br />
+ | [0-9]+ <a>EXPONENT</a><br />
+) ;</td></tr>
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment"><a href="https://tools.ietf.org/html/bcp47#section-2.1">BCP47 Language-Tag</a></span></td></tr>
   <tr class="trm"><th class="trm"><dfn>LANGTAG</dfn></th>          <td>:</td><td>[a-zA-Z]+ ('-' [a-zA-Z0-9]+)* ;</td></tr>
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment">any <a href="https://tools.ietf.org/html/rfc7159#section-7">JSON string</a></span></td></tr>
@@ -5832,7 +5852,7 @@ tripleExprLabel = IRIREF | BNODE ;
   <tr class="trm"><td></td><td><span class="comment">#</span></td><td><span class="comment">empty string</span></td></tr>
   <tr class="trm @@" style="background:#FBE9E9;"><th class="trm"><dfn>EMPTY</dfn></th>           <td>:</td><td>^$ ;</td></tr>
 
-  <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;"><span style="opacity: 0;"># </span>Components</th><td></td><td>These terminals are referenced by other terminals but not by external productions.</td></tr>
+  <tr style="background-color:white; border-left: thin solid white; border-right: thin solid white; "><th colspan="1" style="text-align: left;"><span style="opacity: 0;"># </span>Components</th><td></td><td>Terminals referenced by other terminals but not by external productions:</td></tr>
   <tr class="trm"><th class="trm"><dfn>PN_PREFIX</dfn></th>        <td>:</td><td><a>PN_CHARS_BASE</a> ((<a>PN_CHARS</a> | '.')* <a>PN_CHARS</a>)? ;</td></tr>
   <tr class="trm"><th class="trm"><dfn>PN_CHARS_BASE</dfn></th>    <td>:</td><td>  [A-Z] | [a-z] | [\u00C0-\u00D6] | [\u00D8-\u00F6]<br/>
 | [\u00F8-\u02FF] | [\u0370-\u037D] | [\u037F-\u1FFF]<br/>
