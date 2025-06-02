@@ -274,6 +274,15 @@ div.shexjTable table * { border-left-width: 0px ;
 div.shexjTable table * tr   { border-top-style: solid ;
 			  border-top-width: 1px ;
 			  border-top-color: #AAA ; }
+div.shexjTable table * tr:has(th.comment) {
+    background-color: white;
+    border-left: thin solid white;
+    border-right: thin solid white;
+}
+
+div.shexjTable table * tr th.comment {
+    text-align: left;
+}
 
 div.shexjTable th { text-align: right; }
 
