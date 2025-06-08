@@ -20,7 +20,8 @@ start=@<#Schema>
   sx:shapeExpr @<#shapeExpr>
 }
 
-<#shapeExpr> @<#ShapeOr> OR @<#ShapeAnd> OR @<#ShapeNot> OR @<#NodeConstraint> OR @<#Shape> OR @<#ShapeExternal>
+<#shapeExpr> @<#ShapeOr> OR @<#ShapeAnd> OR @<#ShapeNot>
+    OR @<#NodeConstraint> OR @<#Shape> OR @<#ShapeExternal>
 
 <#ShapeOr> CLOSED {
   a [sx:ShapeOr] ;

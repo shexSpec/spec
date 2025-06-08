@@ -257,6 +257,9 @@ div.grammarTable table * tr   { border-top-style: solid ;
 			  border-top-width: 1px ;
 			  border-top-color: #AAA ; } 
 
+div.grammarTable table th { text-align: start; }
+
+
 .grammar	{ text-align: left ;
                   vertical-align: top ; }
 
