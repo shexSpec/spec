@@ -230,7 +230,7 @@ h1, h2, h3 {
             <span class="math"><dfn>predicatesIn</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>arcsIn</a>(G, n)</span>.
           </li>
           <li>
-            <span class="math"><dfn>neigh</dfn>(G, n)</span> is the neighbourhood of the <a>node</a> <span class="math">n</span> in the <a>graph</a> <span class="math">G</span>.<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>.
+            <span class="math"><dfn>neigh</dfn>(G, n)</span>, the neighbourhood of the <a>node</a> <span class="math">n</span> in a <a>graph</a> <span class="math">G</span>, is the union of <span class="math"><a>arcsOut</a>(G, n)</span> and <span class="math"><a>arcsIn</a>(G, n)</span>:<br/><span class="math"><a>neigh</a>(G, n) = <a>arcsOut</a>(G, n) ∪ <a>arcsIn</a>(G, n)</span>.
           </li>
           <li>
             <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>.
@@ -238,6 +238,14 @@ h1, h2, h3 {
           <li>
             <span class="math"><dfn>def</dfn>(Sch, label)</span> is the <span class="math">decl</span>.<span class="param">shapeExpr</span> where <span class="math">decl</span>.<span class="param">label</span> = <code>label</code>. <code>Sch</code> must have exactly one <code>def(Sch, label)</code>.
           </li>
+          <li>
+            <dfn data-lt="shapemap|fixed ShapeMap" data-dfn-type="dfn" id="dfn-shapemap" data-no-export=""><a href="http://shex.io/shape-map/#dfn-fixed-shapemap">fixed ShapeMap</a></dfn> is a list of pairs of RDF node label and shape expression label as defined in the [[!shape-map]] specification.
+          </li>
+          <li>
+            Given the <a>graph</a> <span class="math">G</span>, <a>schema</a> <span class="math">Sch</span>, and the fixed <a>ShapeMap</a> <span class="math">ism</span>, <span class="math"><dfn>validation</dfn>(G, Sch, ism)</span> is the process of assigning each node/shapeExpr pair in <span class="math">ism</span> a status of |conformant| or |nonconformant| reflecting whether the node in <span class="math">G</span> satisfies the shapeExpr in <span class="math">Sch</span>.
+          </li>
+      </p>
+
         </ul>
 
         <div class="example">
@@ -512,7 +520,7 @@ _:User2
       </p>
       <div class="shexjTable">
         <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="context"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"? <a class="param"> <dfn class="param">imports</dfn>:[<a>IRIREF</a>+]?<br />
+          <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td>"@<dfn class="param" data-lt="context">context</dfn>":"http://www.w3.org/ns/shex.jsonld"? <dfn class="param" data-lt="import">import</dfn>:[<a>IRIREF</a>+]?<br />
 <dfn class="param">startActs</dfn>:[<a class="objref">SemAct</a>+]? <dfn class="param">start</dfn>:<a class="nobref">shapeExpr</a>? <dfn class="param">shapes</dfn>:[<a class="objref">ShapeDecl</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td> <span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> | <a class="objref">ShapeExternal</a> }</td></tr>
         </table>
@@ -537,7 +545,7 @@ _:User2
       <h3>Validation Definition</h3>
 
       <p>
-        For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed ShapeMap <span class="math">ism</span>, <code class="function"><dfn>isValid</dfn>(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every shape association <span class="math">(<span class="param">node</span>: n, <span class="param">shape</span>: sl, <span class="param">exact</span>: exact)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
+        For a graph <span class="math">G</span>, a schema  <span class="math">Sch</span> and a fixed input <a>ShapeMap</a> <span class="math">ism</span>, <code class="function"><dfn>isValid</dfn>(<span class="math">G</span>, <span class="math">Sch</span>, <span class="math">ism</span>)</code> indicates that for every shape association <span class="math">(<span class="param">node</span>: n, <span class="param">shape</span>: sl, <span class="param">exact</span>: exact)</span> in <span class="math">ism</span>, the node <span class="math">n</span> satisfies the shape expression identified by <span class="math">sl</span>.
         If <span class="param">exact</span> is true, the result is
         <code class="function"><a>satisfies</a>(<span class="math">n</span>,  <a>def</a>(<span class="math">s.label</span>), <span class="math">G</span>, <span class="math">Sch</span>, <a>completeTyping</a>(<span class="math">G</span>, <span class="math">Sch</span>), <span class="math">neigh(n)</span>)</code>
         , otherwise, the result is
@@ -696,7 +704,7 @@ _:User2
       <section id="shape-expression-semantics">
         <h4>Semantics</h4>
         <p>
-          For a node n of the graph G, we define <dfn>neigh</dfn>(n) as the set of triples adjacent to n in the graph; these are the triples that have n either as subject or as object.
+          For a node n of the graph G, <span class="math"><a>neigh</a>(G, n)</span> is the set of triples in |G| that have |n| either as subject or as object.
         </p>
       <p>
 	For a shape expression <span class="var">se</span> we define its set of shapes <dfn>nestedShapes</dfn><span class="math">(<span class="param">se</span>)</span> recursively on the structure of <span class="var">se</span>:
@@ -1832,10 +1840,10 @@ _:User2
     <section id="import">
       <h3>ShEx Import</h3>
       <p>
-        The presence of <span class="param">imports</span> requires that:
+        The presence of <a class="param">imports</a> requires that:
       </p>
       <ul>
-        <li>each IRI in <span class="param">imports</span> be resolved and</li>
+        <li>each IRI in <a class="param">imports</a> be resolved and</li>
         <li>the returned representation of that IRI be interpreted as a ShEx <span class="math">S</span> and</li>
         <li>each <a class="jobjref">shapeExpr</a> in <span class="math">S</span>.<span class="param">shapes</span> be in scope for resolving shape expression references and</li>
         <li>each <a class="jobjref">tripleExpr</a> with a <a class="jobjref">tripleExprLabel</a> be in scope for resolving triple expression references.</li>
@@ -5287,7 +5295,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 
 <tbody class="prod">
 <tr style="vertical-align: baseline">
-<td id="prod-iri"><a href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#rIri">[<span class="prodNo">136s</span>]</a>   </td>
+<td id="prod-iri"><a href="https://www.w3.org/TR/2013/REC-sparql11-query-20130321/#riri">[<span class="prodNo">136s</span>]</a>   </td>
 <th><code class="production prod">iri</code></th>
 <td>   ::=   </td>
 <td><code class="content"><span class="prod"><a class="grammarRef" href="#term-IRIREF">IRIREF</a></span> | <span class="prod"><a class="grammarRef" href="#prod-prefixedName">prefixedName</a></span></code></td>
@@ -5752,7 +5760,7 @@ tripleExprLabel = IRIREF | BNODE ;
       </p>
       <div class="shexjTable">
 <table class="shexj">
-  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td><dfn class="param" data-lt="context"></dfn>"@context":"http://www.w3.org/ns/shex.jsonld"? <a class="param"> imports</a>:[<a>IRIREF</a>+]?<br />
+  <tr class="obj"><th class="obj"><a>Schema</a></th><td>{</td><td>"@<a class="param">context</a>":"http://www.w3.org/ns/shex.jsonld"? <a class="param"> imports</a>:[<a>IRIREF</a>+]?<br />
 <span class="param">startActs</span>:[<a class="objref">SemAct</a>+]? <a class="param">start</a>:<a class="nobref">shapeExpr</a>? <a class="param">shapes</a>:[<a class="nobref">ShapeDecl</a>+]? }</td></tr>
   <tr class="obj"><th class="obj"><a>ShapeDecl</a></th><td>{</td><td><span class="param">id</span>:<a class="nobref">shapeExprLabel</a> <span class="param">abstract</span>:<a class="nobref">BOOL</a>? <span class="param">shapeExpr</span>:<a class="nobref">shapeExpr</a> | <a class="objref">ShapeExternal</a> }</td></tr>
   <tr class="nob"><th class="obj"><a>shapeExpr</a></th>         <td>=</td> <td><a class="objref">ShapeOr</a> | <a class="objref">ShapeAnd</a> | <a class="objref">ShapeNot</a> | <a class="objref">NodeConstraint</a> | <a class="objref">Shape</a> | <a class="objref">ShapeExprRef</a> ;</td></tr>
