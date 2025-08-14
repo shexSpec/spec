@@ -144,6 +144,9 @@ $(document).ready(function () {
     },
     1000
   );
+  for (elt of [...document.querySelectorAll('.MUST')]) {
+    elt.innerText = "SHALL";
+  }
 });
 
 function toggle (from, key) {

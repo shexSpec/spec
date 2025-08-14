@@ -171,7 +171,7 @@ h1, h2, h3 {
         specification is normative.</p>
 
       <p>
-        All ShEx documents MUST conform to the <a href="#schema-requirements" class="sectionRef">Schema Requirements</a>.
+        All ShEx documents <span class="MUST">MUST</span> conform to the <a href="#schema-requirements" class="sectionRef">Schema Requirements</a>.
         Additional constraints for the specific types of ShEx documents (<a>ShExC</a>, <a>ShExJ</a>, and <a>ShExR</a>) follow:
       </p>
 
@@ -236,7 +236,7 @@ h1, h2, h3 {
             <span class="math"><dfn>predicates</dfn>(G, n)</span> is the set of <a data-lt="predicate">predicates</a> in <span class="math"><a>neigh</a>(G, n)</span>.<br/><span class="math"><a>predicates</a>(G, n) = <a>predicatesOut</a>(G, n) ∪ <a>predicatesIn</a>(G, n)</span>.
           </li>
           <li>
-            <span class="math"><dfn>def</dfn>(Sch, label)</span> is the <span class="math">decl</span>.<span class="param">shapeExpr</span> where <span class="math">decl</span>.<span class="param">label</span> = <code>label</code>. <code>Sch</code> must have exactly one <code>def(Sch, label)</code>.
+            <span class="math"><dfn>def</dfn>(Sch, label)</span> is the <span class="math">decl</span>.<span class="param">shapeExpr</span> where <span class="math">decl</span>.<span class="param">label</span> = <code>label</code>. Per the <a href="#shapeExprRef-requirement">Shape Expression Reference Requirement</a>, <code>Sch</code> has exactly one <code>def(Sch, label)</code>.
           </li>
           <li>
             <dfn data-lt="shapemap|fixed ShapeMap" data-dfn-type="dfn" id="dfn-shapemap" data-no-export=""><a href="http://shex.io/shape-map/#dfn-fixed-shapemap">fixed ShapeMap</a></dfn> is a list of pairs of RDF node label and shape expression label as defined in the [[!shape-map]] specification.
@@ -411,7 +411,6 @@ _:User2
 <a class="nobjref">tripleExpr</a>    = <a class="objref">EachOf</a> | ... | <a class="nobjref">tripleExprRef</a> ;
 <a class="nob">tripleExprRef</a> = <a class="objref">tripleExprLabel</a> ;</div>
         <p>
-          An object with a circular reference must be referenced by an <span class="param">id</span>.
           This example uses a nested shape reference on a value expression (<a data-lt="TripleConstraint">defined below</a>).
         </p>
         <div class="json">
@@ -422,9 +421,7 @@ _:User2
         "valueExpr": "<span class="lookit">http://schema.example/#IssueShape</span>", "min": 0 } } ] }</pre>
         </div>
         <p>
-          Not captured in this JSON syntax definition is the rule that every <a class="nobjref">shapeExpr</a> nested in a schema's <a class="param">shapes</a> must have an <span class="param">id</span> and no other <a class="nobjref">shapeExpr</a> may have an <span class="param">id</span>.
-          The JSON syntax definitition simplifies this by adding <span style="border: thin solid #888888; background-color: #F8F8F0;"><a class="param">id</a>:<a class="nobjref">shapeExprLabel</a>?</span> to every <a class="nobjref">shapeExpr</a>.
-          This example includes a nested shape. Nested shapes are not permitted to have <span class="param">ids</span>.
+          This example includes a nested shape.
         </p>
         <div class="json">
           <pre class="json nohighlight">{ "type": "Schema", "shapes": [
@@ -1006,7 +1003,7 @@ _:User2
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
             For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is a Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
-            The lexical form and numeric value (where applicable) of all datatypes required by <a data-cite="sparql11-query#FunctionMapping">SPARQL XPath Constructor Functions</a> MUST be tested for conformance with the corresponding XML Schema form.
+            The lexical form and numeric value (where applicable) of all datatypes required by <a data-cite="sparql11-query#FunctionMapping">SPARQL XPath Constructor Functions</a> <span class="MUST">MUST</span> be tested for conformance with the corresponding XML Schema form.
             ShEx extensions MAY add support for other datatypes.
           </p>
 
@@ -1345,7 +1342,7 @@ _:User2
 
         <div class="example">
           <div class="example-title marker"><span>Values Constraint example 2</span></div>
-          <p>An employee must have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
+          <p>This schema requires an employee to have an email address that is the string "N/A" or starts with "engineering-"  or "sales-" but not "sales-contacts" or "sales-interns":</p>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/#EmployeeShape",
@@ -1394,7 +1391,7 @@ _:User2
 
         <div class="example">
           <div class="example-title marker"><span>Values Constraint example 3</span></div>
-          <p>An employee must not have an email address that starts with "engineering-"  or "sales-":</p>
+          <p>This schema requires an employee to have an email address that starts with "engineering-"  or "sales-":</p>
           <div class="repchoice">
             <pre class="json nohighlight">{ "type": "Schema", "shapes": [
   { "id": "http://schema.example/#EmployeeShape",
@@ -2123,7 +2120,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	  </li>
 	</ul>
 	<p>
-	  A shapes schema MUST NOT define a shape label <span class="math">sl</span> that belongs to the shapeExprRef closure of its definition  <code class="function">shapeExprWithId(<span class="math">sl</span>)</code>.
+	  A shapes schema <span class="MUST">MUST</span> NOT define a shape label <span class="math">sl</span> that belongs to the shapeExprRef closure of its definition  <code class="function">shapeExprWithId(<span class="math">sl</span>)</code>.
 	</p>
 	
       <div class="example">
@@ -2322,7 +2319,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 
       <section id="tripleExprRef-requirement">
         <h4>Triple Expression Reference Requirement</h4>
-        <p>An <span class="jobjref"><a>tripleExprRef</a></span> MUST identify a <a>triple expression</a> in the schema.
+        <p>An <span class="jobjref"><a>tripleExprRef</a></span> <span class="MUST">MUST</span> identify a <a>triple expression</a> in the schema.
           The function <code><dfn>tripleExprWithId</dfn>(<span class="math">tripleExprRef</span>)</code> returns the <a>triple expression</a> with the id <span class="math">tripleExprRef</span>.
 	</p>
 
@@ -2341,7 +2338,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 	  </li>
 	</ul>
 	<p>
-	  A shapes schema MUST NOT define a triple expression label <span class="math">tl</span> that belongs to the tripleExprRef closure of its definition <code class="function">tripleExprWithId(<span class="math">tl</span>)</code>.
+	  A shapes schema <span class="MUST">MUST</span> NOT define a triple expression label <span class="math">tl</span> that belongs to the tripleExprRef closure of its definition <code class="function">tripleExprWithId(<span class="math">tl</span>)</code>.
 	</p>
 	
       <div class="example">
@@ -2420,7 +2417,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="shapeExprRef-non-abstract-shape-requirement">
         <h4>shapeExprRef non-abstract shape requirement</h4>
         <p>
-          Every <a>shapeExprRef</a> |referer| MUST identify at least one non-abstract shape.
+          Every <a>shapeExprRef</a> |referer| <span class="MUST">MUST</span> identify at least one non-abstract shape.
 	</p>
 
       <div class="example">
@@ -2574,8 +2571,8 @@ IMPORT &lt;http://schema.example/schema2&gt;
       <section id="negation-requirement">
         <h4>Negation Requirement</h4>
         <p>
-          A schema MUST NOT contain any <a>shapeExprLabel</a> that has a <a>negated reference</a> to itself, either directly or transitively.
-	  This is formalized by the requirement that the <a>hierarchy and dependency graph</a> of a schema MUST NOT have a cycle that traverses some <a>negated reference</a>.
+          A schema <span class="MUST">MUST</span> NOT contain any <a>shapeExprLabel</a> that has a <a>negated reference</a> to itself, either directly or transitively.
+	  This is formalized by the requirement that the <a>hierarchy and dependency graph</a> of a schema <span class="MUST">MUST</span> NOT have a cycle that traverses some <a>negated reference</a>.
         </p>
 
         <p class="leadup">
@@ -3074,7 +3071,7 @@ ex:UT { ex:Uq @ex:US} <!--     ex:T @ex:S -->
     <section id="acyclic-extension-requirement">
       <h4>Acyclic Extension Requirement</h4>
 
-      <p>The <a>extension hierarchy graph</a> must be acyclic.</p>
+      <p>The <a>extension hierarchy graph</a> <span class="MUST">MUST</span> be acyclic.</p>
     </section>
 
     <section id="extension-coherence-requirement">
@@ -4270,7 +4267,7 @@ inst:Testgrammer23
         <section id="example-negation">
           <h4>Negation Example</h4>
           <p>
-            Setting the maximum <a>cardinality</a> of a TripleConstraint with <a>predicate</a> <span class="math">p</span> to zero (i.e. <span>"max": 0</span> in <a>ShExJ</a> or <code>{0}</code> or <code>{0, 0}</code> in <a>ShExC</a>) asserts that matching nodes must have no triples with <a>predicate</a> <span class="math">p</span>.
+            Setting the maximum <a>cardinality</a> of a TripleConstraint with <a>predicate</a> <span class="math">p</span> to zero (i.e. <span>"max": 0</span> in <a>ShExJ</a> or <code>{0}</code> or <code>{0, 0}</code> in <a>ShExC</a>) asserts that matching nodes have no triples with <a>predicate</a> <span class="math">p</span>.
           </p>
           <!--
               BASE <http://schema.example/#>
@@ -4996,7 +4993,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
   <tr><td colspan="4">
     <p>
       Value sets identify ranges of RDF nodes by explicit inclusion or by range (indicated by "<code>~</code>").
-      Ranges may include exclusions, which may also be ranges but must not in turn contain exclusions.
+      Ranges may include exclusions, which may also be ranges but <span class="MUST">MUST</span> NOT in turn contain exclusions.
       A <a class="param">valueSetValue</a> may be an <a class="param">objectValue</a> or one of <a class="param">IriStem</a>, <a class="param">IriStemRange</a>, <a class="param">LiteralStem</a>, <a class="param">LiteralStemRange</a>, <a class="param">LanguageStem</a>, <a class="param">LanguageStemRange</a>, .
     </p>
   </td></tr>
@@ -5016,7 +5013,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>  <code class="content"><span class="prod"><a class="grammarRef" href="#prod-iriRange">iriRange</a></span> | <span class="prod"><a class="grammarRef" href="#prod-literalRange">literalRange</a></span><br />
 | <span class="prod"><a class="grammarRef" href="#prod-languageRange">languageRange</a></span> | <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>+</code></td>
 </tr>
-  <tr class="params"><td></td><td colspan="3">If "<code>.</code>" matches and <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span> matches one or more times, all matched items must be consistently iri, literal, or language. <code class="production prod">valueSetValue</code> returns either a <a class="obj">IriStemRange</a>, <a class="obj">LiteralStemRange</a>, or <a class="obj">LanguageStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>:</td></tr>
+<tr class="params"><td></td><td colspan="3">If "<code>.</code>" matches and <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span> matches one or more times, all matched items <span class="MUST">MUST</span> be consistently <code>iri</code>, <code>literal</code>, or <code>language</code>. <code class="production prod">valueSetValue</code> returns either a <a class="obj">IriStemRange</a>, <a class="obj">LiteralStemRange</a>, or <a class="obj">LanguageStemRange</a> object with <span class="param">exclusions</span> equal to the set of results of <span class="prod"><a class="grammarRef" href="#prod-exclusion">exclusion</a></span>:</td></tr>
   <tr class="obj"><td></td><td><a class="obj">IriStemRange</a></td><td>{</td><td><span class="param">stem</span>:(<a>IRIREF</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">IRIREF</a>|<a class="objref">IriStem</a> +] }</td></tr>
   <tr class="obj"><td></td><td><a class="obj">LiteralStemRange</a></td><td>{</td><td><span class="param">stem</span>:(<a class="nobref">STRING</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">STRING</a>|<a class="objref">LiteralStem</a> +] }</td></tr>
   <tr class="obj"><td></td><td><a class="obj">LanguageStemRange</a></td><td>{</td><td><span class="param">stem</span>:(<a>LANGTAG</a> | <a class="objref">Wildcard</a>) <span class="param">exclusions</span>:[<a class="nobref">LANGTAG</a>|<a class="objref">LanguageStem</a> +] }</td></tr>
@@ -5134,7 +5131,7 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
 <td>   ::=   </td>
 <td><code class="content">'&amp;' <span class="prod"><a class="grammarRef" href="#prod-tripleExprLabel">tripleExprLabel</a></span></code></td>
 </tr>
-  <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-requirement">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property MUST appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
+  <tr class="params"><td></td><td colspan="3">Per the <a href="#tripleExprRef-requirement">triple expression refrence requirement</a>, <span class="param">tripleExprLabel</span> property <span class="MUST">MUST</span> appear in the schema's <a class="param">shapes</a> map and the corresponding <a>triple expression</a> <span class="MUST">MUST</span> be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">tripleExpr</span>.</td></tr>
 <tr class="obj"><td></td><td><a class="obj">tripleExprRef</a></td><td>=</td><td><a class="nobref">tripleExprLabel</a> ;</td></tr>
 </tbody>
 
@@ -5744,7 +5741,7 @@ tripleExprLabel = IRIREF | BNODE ;
       <p>
         A ShExJ document is a JSON-LD [[!JSON-LD]] document which uses a proscribed structure to define a <a>schema</a> containing <a>shape expressions</a> and <a>triple expressions</a>.
         A ShExJ document MAY include an <code>@context</code> property referencing <code>http://www.w3.org/ns/shex.jsonld</code><!-- , and MAY include additional contexts and term definitions -->.
-        In the absense of a top-level <code>@context</code>, ShEx Processors MUST act as if a <code>@context</code> property is present with the value <code>http://www.w3.org/ns/shex.jsonld</code>.
+        In the absense of a top-level <code>@context</code>, ShEx Processors <span class="MUST">MUST</span> act as if a <code>@context</code> property is present with the value <code>http://www.w3.org/ns/shex.jsonld</code>.
       </p>
 
       <p>
