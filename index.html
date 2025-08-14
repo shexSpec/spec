@@ -208,7 +208,7 @@ h1, h2, h3 {
 
       <section id="definitions">
         <h3>Definitions</h3>
-        <p>Shape expressions are defined using terms from RDF semantics [[!rdf11-mt]]:</p>
+        <p>Shape Expressions are defined using terms from RDF semantics [[!rdf11-mt]]:</p>
         <ul>
           <li><dfn data-cite="rdf11-concepts#dfn-node" data-lt="nodes|rdf node|rdf nodes">Node</dfn>: one of <dfn data-cite="rdf11-concepts#dfn-iri" data-lt="iris">IRI</dfn>, <dfn data-cite="rdf11-concepts#dfn-blank-node" data-lt="bnodes|blank nodes">blank node</dfn>, <dfn data-cite="rdf11-concepts#dfn-literal" data-lt="literal|literals|RDF Literal|RDF Literals">Literal</dfn></li>
           <li><dfn data-cite="rdf11-concepts#dfn-rdf-graph" data-lt="RDF Graph|RDF Graphs">Graph</dfn>: a set of <dfn data-cite="rdf11-concepts#dfn-rdf-triple" data-lt="triple|rdf triple|rdf triples">Triples</dfn> of (<dfn data-cite="rdf11-concepts#dfn-subject">subject</dfn>, <dfn data-cite="rdf11-concepts#dfn-predicate">predicate</dfn>, <dfn data-cite="rdf11-concepts#dfn-object">object</dfn>)</li>
@@ -767,7 +767,7 @@ _:User2
     </ul>
 
     <p>
-      If <span class="math">Sch</span>'s <a class="param">shapes</a> maps "<code>http://schema.example/#shape1</code>" to <span class="math">SE<sub>1</sub></span> then the following holds:
+      If <span class="math">def(Sch, "<code>http://schema.example/#shape1</code>")</span> is <span class="math">SE<sub>1</sub></span> then the following holds:
     </p>
   <ul class="codelist">
     <li><div><div style="float:left;" class="code function">satisfies(</div><div style="float:left;" class="code"><span class="math">n</span>,<br/><div class="inline json"><pre>http://schema.example/#shape1"</pre></div>,<br/> <span class="math">G</span>, <span class="math">Sch</span>, <span class="math">m</span>)</div><div style="clear:both;"></div></div></li>
@@ -1741,7 +1741,7 @@ _:User2
                     <li><span class="math">T</span> has exactly one triple <span class="math">t</span>.</li>
                     <li><span class="math">t</span> has the <a>predicate</a> "<code>http://purl.org/dc/elements/1.1/author</code>"</li>
                     <li><span class="math">t</span> has a subject <span class="math">n2</span></li>
-                    <li>The schema's <a class="param">shapes</a> maps "<code>http://schema.example/#IssueShape</code>" to <span class="math">se2</span></li>
+                    <li><span class="math">def(Sch, "<code>http://schema.example/#IssueShape</code>")</span> is <span class="math">se2</span></li>
                     <li><span class="math function" >satisfies(n2, se2, G, Sch, m)</span></li>
                   </ul></div>
                 </div>
@@ -2104,7 +2104,7 @@ IMPORT &lt;http://schema.example/schema2&gt;
 
       <section id="shapeExprRef-requirement">
         <h4>Shape Expression Reference Requirement</h4>
-        <p>A <span class="jobjref"><a>shapeExprRef</a></span> MUST appear in the schema's <a class="param">shapes</a> map (or an <a href="#import">imported schema's</a> map) and the corresponding <a>shape expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span>.
+        <p>A <span class="jobjref"><a>shapeExprRef</a></span> <span class="MUST">MUST</span> match the <span class="param">id</span> of one <span class="jobjref"><a>ShapeDecl</a></span> in the schema's <a class="param">shapes</a> or an <a href="#import">imported schema's</a> <a class="param">shapes</a> <!-- and the corresponding <a>shape expression</a> MUST be a <span class="jobjref"><a>Shape</a></span> with a <span class="param">shapeExpr</span> -->.
           The function <code>shapeExprWithId(<span class="math">shapeExprRef</span>)</code> returns the shape expression with an <span class="param">id</span> of <span class="math">shapeExprRef</span>.
 	</p>
 	
