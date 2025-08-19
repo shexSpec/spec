@@ -14,7 +14,8 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
   })
 }
 
-function prepRep (elts, cls) {
+async function prepRep (elts, cls) {
+  const { default: shexParser } = await import("./dist/shexParser.es.js");
   elts.each(function (idx, container) {
     container = $(container);
     var button = $("<button></button>");
@@ -66,15 +67,17 @@ function prepRep (elts, cls) {
             "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
             "PREFIX Test: <http://shex.io/extensions/Test/>\n" +
             container.find("pre.shexc").text()
+        if (shexcStr.match(/approvedBy/))
+          debugger
         let shexc = shexParser.construct("http://schema.example/schema1").parse(shexcStr)
         delete shexc.prefixes
         delete shexc.base
         if (!deepEquals(shexj, shexc)) {
           console.dir([container.get(), shexj,  shexc]);
-          container.addClass("rep-choice-size-mismatch");
+          container.addClass("rep-choice-semantics-mismatch");
         }
       } catch (e) {
-        console.dir([container, e]);
+        console.dir([container.get(), e]);
       }
     }
     chooseRep(container, cls);
@@ -130,8 +133,8 @@ function toggleGrammar () {
   return false;
 }
 
-$(document).ready(function () {
-  prepRep($(".repchoice"), "json");
+async function doStuff () {
+  await prepRep($(".repchoice"), "json");
   $("#toggleGrammar").on("click", toggleGrammar);
   $("body").keydown(function (evt) {
     if (evt.ctrlKey || !evt.shiftKey)
@@ -147,7 +150,7 @@ $(document).ready(function () {
   for (elt of [...document.querySelectorAll('.MUST')]) {
     elt.innerText = "SHALL";
   }
-});
+};
 
 function toggle (from, key) {
     var toHide, toShow;

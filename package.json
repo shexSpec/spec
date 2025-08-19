@@ -1,0 +1,35 @@
+{
+  "name": "spec",
+  "version": "1.0.0",
+  "description": "[![ShapeExpressions Gitter chat https://gitter.im/shapeExpressions/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shapeExpressions/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)",
+  "type": "module",
+  "main": "Util.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "build": "respec -s index.html -o index.html.built.html --verbose --timeout 20",
+    "rollup": "rollup --config rollup.config.js",
+    "test": "java -jar ./node_modules/vnu-jar/build/dist/vnu.jar --also-check-css index.html.built.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shexSpec/spec.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shexSpec/spec/issues"
+  },
+  "homepage": "https://github.com/shexSpec/spec#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@shexjs/parser": "^1.0.0-alpha.28",
+    "respec": "^32.2.3",
+    "rollup": "^4.46.2",
+    "vnu-jar": "^21.10.12"
+  }
+}
