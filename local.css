@@ -489,7 +489,22 @@ dd > dl {
     background-color: #eeeeaf;
 }
 
-div.rep-choice-size-mismatch {
+div.repchoice.rep-choice-size-mismatch {
     border: thick solid red
 }
+div.repchoice.rep-choice-semantics-mismatch {
+    background: #faa
+}
+
+div.repchoice.rep-choice-parse-error {
+    color: red;
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
 .validationResults { } /* validation results in examples */

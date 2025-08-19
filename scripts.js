@@ -14,7 +14,8 @@ function prepareHighlight (highlightables, onClass, offClass, slide) {
   })
 }
 
-function prepRep (elts, cls) {
+async function prepRep (elts, cls) {
+  const { default: shexParser } = await import("./dist/shexParser.es.js");
   elts.each(function (idx, container) {
     container = $(container);
     var button = $("<button></button>");
@@ -28,6 +29,36 @@ function prepRep (elts, cls) {
         return true;
       return toggle(container, evt.keyCode);
     })
+
+    // Parse and verify that representations emit identical schemas.
+    if (!container.hasClass("incomplete")) {
+      try {
+        let shexjStr = container.find("pre.json").text()
+        let shexj = JSON.parse(shexjStr)
+        let shexcStr =
+            "PREFIX ex: <http://schema.example/#>\n" +
+            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+            "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
+            "PREFIX Test: <http://shex.io/extensions/Test/>\n" +
+            container.find("pre.shexc").text()
+        if (shexcStr.match(/approvedBy/))
+          debugger
+        let shexc = shexParser.construct("http://schema.example/base").parse(shexcStr)
+        delete shexc.prefixes
+        delete shexc.base
+        if (!deepEquals(shexj, shexc)) {
+          console.dir([container.get(), shexj,  shexc]);
+          container.addClass("rep-choice-semantics-mismatch");
+        }
+      } catch (e) {
+        console.dir([container.get(), e]);
+        container.addClass("rep-choice-parse-error");
+      }
+    }
+
+    // Verify rendered sizes line up.
     if (true) {
       var widths = {}, heights = {};
       ["json", "shexc"].forEach(c => {
@@ -54,29 +85,7 @@ function prepRep (elts, cls) {
         container.addClass("rep-choice-size-mismatch");
       }
     }
-    if (!container.hasClass("incomplete")) {
-      try {
-        let shexjStr = container.find("pre.json").text()
-        let shexj = JSON.parse(shexjStr)
-        let shexcStr =
-            "PREFIX ex: <http://schema.example/#>\n" +
-            "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-            "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-            "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" +
-            "PREFIX Test: <http://shex.io/extensions/Test/>\n" +
-            container.find("pre.shexc").text()
-        let shexc = shexParser.construct("http://schema.example/schema1").parse(shexcStr)
-        delete shexc.prefixes
-        delete shexc.base
-        if (!deepEquals(shexj, shexc)) {
-          console.dir([container.get(), shexj,  shexc]);
-          container.addClass("rep-choice-size-mismatch");
-        }
-      } catch (e) {
-        console.dir([container, e]);
-      }
-    }
+
     chooseRep(container, cls);
   });
   return 
@@ -130,8 +139,8 @@ function toggleGrammar () {
   return false;
 }
 
-$(document).ready(function () {
-  prepRep($(".repchoice"), "json");
+async function doStuff () {
+  await prepRep($(".repchoice"), "json");
   $("#toggleGrammar").on("click", toggleGrammar);
   $("body").keydown(function (evt) {
     if (evt.ctrlKey || !evt.shiftKey)
@@ -147,7 +156,7 @@ $(document).ready(function () {
   for (elt of [...document.querySelectorAll('.MUST')]) {
     elt.innerText = "SHALL";
   }
-});
+};
 
 function toggle (from, key) {
     var toHide, toShow;
