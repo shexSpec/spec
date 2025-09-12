@@ -320,7 +320,7 @@ _:User2
       </p>
 
       <p>
-        <a data-cite="rdf11-concepts/#dfn-rdf-term">RDF terms</a> are represented as <a data-cite="json-ld#dfn-node">JSON-LD nodes</a>.
+        <a data-cite="rdf11-concepts/#dfn-rdf-term">RDF terms</a> are represented as <a data-cite="json-ld#dfn-node">JSON-LD nodes</a> [[!JSON-LD]].
         <ul>
           <li><a>IRIs</a> are represented as a <a data-cite="rfc7159#section-7">JSON string</a> consisting of the IRI string, e.g. <br/><code class="json">"http://example.org/resource"</code></li>
           <li><a>Blank nodes</a> are represented as a JSON string composed of the concatenation of "<code>_:</code>" and a <dfn data-cite="rdf11-concepts#dfn-blank-node-identifier" data-lt="blank node identifiers|labeled blank nodes">blank node identifier</dfn>, e.g. <br/><code class="json">"_:blank3"</code></li>
@@ -357,7 +357,7 @@ _:User2
           <li><code>choice</code>: <span class="shexj">typeExpression1 | typeExpression2 | …</span>— a choice between two or more typeExressions.</li>
         </ul>
         </li>
-        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> following the <a data-cite="XML#sec-notation">notation in the XML specification</a>[[!XML]] or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
+        <li>Cardinalities are represented as by the strings <code>?</code>, <code>+</code>, <code>*</code> following the <a data-cite="XML#sec-notation">notation in the XML specification</a> [[!XML]] or <code>{m,}</code> to indicate a that at least <code>m</code> elements are required.</li>
       </ul>
 
       <p>
@@ -1013,7 +1013,7 @@ _:User2
         <section id="datatype">
           <h4>Datatype Constraints</h4>
           <p id="nodeSatisfies-datatype">
-            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is a Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a>[[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a>[[!xpath-functions]].
+            For a node <span class="math">n</span> and constraint value <span class="math">v</span>, <code class="function">nodeSatisfies(<span class="math">n</span>, <span class="math">v</span>)</code> if <span class="math">n</span> is a Literal with the datatype <span class="math">v</span> and, if <span class="math">v</span> is in the set of <a data-cite="sparql11-query#operandDataTypes">SPARQL operand data types</a> [[!sparql11-query]], an XML schema string with a value of the lexical form of <span class="math">n</span> can be cast to the target type <span class="math">v</span> per <a data-cite="xpath-functions-31#casting">XPath Functions 3.1 section 19 Casting</a> [[!xpath-functions]].
             The lexical form and numeric value (where applicable) of all datatypes required by <a data-cite="sparql11-query#FunctionMapping">SPARQL XPath Constructor Functions</a> <span class="MUST">MUST</span> be tested for conformance with the corresponding XML Schema form.
             ShEx extensions MAY add support for other datatypes.
           </p>
@@ -1054,7 +1054,7 @@ _:User2
 
           <div class="note">
             <p>
-              In RDF 1.1, <dfn data-cite="rdf11-concepts#dfn-language-tagged-string" data-lt="language-tagged string">language-tagged strings</dfn>[[!rdf11-concepts]] have the datatype <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#langString</code>.
+              In RDF 1.1, <dfn data-cite="rdf11-concepts#dfn-language-tagged-string" data-lt="language-tagged string">language-tagged strings</dfn> [[!rdf11-concepts]] have the datatype <code>http://www.w3.org/1999/02/22-rdf-syntax-ns#langString</code>.
             </p>
             <p>
               RDF 1.0 included <a>RDF literals</a> with no datatype or language tag.
@@ -1123,7 +1123,7 @@ _:User2
           <li id="nodeSatisfies-minlength">for "<code>minlength</code>" constraints, <span class="math">v &gt;= len</span>,</li>
           <li id="nodeSatisfies-maxlength">for "<code>maxlength</code>" constraints, <span class="math">v &lt;= len</span>,</li>
           <li id="nodeSatisfies-pattern">
-            for "<code>pattern</code>" constraints, <span class="math">v</span> is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a>[[!xpath-functions-31]] <span class="math">re</span> and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">re</span>)</code> returns <code>fn:true</code>.
+            for "<code>pattern</code>" constraints, <span class="math">v</span> is unescaped into a valid <a data-cite="xpath-functions-31#regex-syntax">XPath 3.1 regular expression</a> [[!xpath-functions-31]] <span class="math">re</span> and invoking <code class="function"><a data-cite="xpath-functions-31#func-matches">fn:matches</a>(<span class="math">lex</span>, <span class="math">re</span>)</code> returns <code>fn:true</code>.
             If the <span class="param">flags</span> parameter is present, it is passed as a third argument to <code class="function">fn:matches</code>.
             The pattern may have XPath 3.1 regular expression escape sequences per the modified production [10] in <a href="https://www.w3.org/TR/xpath-functions-31/#matching-start-and-end">section 5.6.1.1</a> as well as numeric escape sequences of the form 'u' HEX HEX HEX HEX or 'U' HEX HEX HEX HEX HEX HEX HEX HEX.
             Unescaping replaces numeric escape sequences with the corresponding unicode codepoint.
@@ -1246,7 +1246,7 @@ _:User2
           <li><a href="#fractiondigits">XML Schema Fractiondigits Constraints</a></li>
         </ul -->
         <p>
-          Numeric facet constraints apply to the numeric value of <a>RDF Literals</a> with datatypes listed in <a data-cite="sparql11-query#operandDataTypes">SPARQL 1.1 Operand Data Types</a>[[!sparql11-query]].
+          Numeric facet constraints apply to the numeric value of <a>RDF Literals</a> with datatypes listed in <a data-cite="sparql11-query#operandDataTypes">SPARQL 1.1 Operand Data Types</a> [[!sparql11-query]].
           Numeric constraints on non-numeric values fail.
           <code>totaldigits</code> and <code>fractiondigits</code> constraints on values not derived from <code>xsd:decimal</code> fail.
         </p>
@@ -1259,11 +1259,11 @@ _:User2
           <li id="nodeSatisfies-minexclusive">for "<code>minexclusive</code>" constraints, <span class="math">v &lt; num</span>,</li>
           <li id="nodeSatisfies-maxinclusive">for "<code>maxinclusive</code>" constraints, <span class="math">v &gt;= num</span>,</li>
           <li id="nodeSatisfies-maxexclusive">for "<code>maxexclusive</code>" constraints, <span class="math">v &gt; num</span>,</li>
-          <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <span class="math">v</span> is less than or equals the number of digits in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <span class="math">n</span>,</li>
-          <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <span class="math">v</span> is less than or equals the number of digits to the right of the decimal place in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a>[[!xmlschema-2]] of the value of <span class="math">n</span>, ignoring trailing zeros.</li>
+          <li id="nodeSatisfies-totaldigits">for "<code>totaldigits</code>" constraints, <span class="math">v</span> is less than or equals the number of digits in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a> [[!xmlschema-2]] of the value of <span class="math">n</span>,</li>
+          <li id="nodeSatisfies-fractiondigits">for "<code>fractiondigits</code>" constraints, <span class="math">v</span> is less than or equals the number of digits to the right of the decimal place in the <a data-cite="xmlschema-2#dt-canonical-representation">XML Schema canonical form</a> [[!xmlschema-2]] of the value of <span class="math">n</span>, ignoring trailing zeros.</li>
         </ul>
         <p>
-          The operators <span class="math">&lt;=</span>, <span class="math">&lt;</span>, <span class="math">&gt;=</span> and <span class="math">&gt;</span> are evaluated after performing <a data-cite="xpath20#promotion">numeric type promotion</a>[[!xpath20]].
+          The operators <span class="math">&lt;=</span>, <span class="math">&lt;</span>, <span class="math">&gt;=</span> and <span class="math">&gt;</span> are evaluated after performing <a data-cite="xpath20#promotion">numeric type promotion</a> [[!xpath20]].
         </p>
         <div class="example">
           <div class="example-title marker"><span>Numeric Facets example 1</span></div>
@@ -4580,7 +4580,7 @@ PREFIX ex: &lt;http://schema.example/#&gt;
 
 
 <tbody class="grammarParagraph">
-  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="XML#sec-notation">notation in the XML specification</a>[[!XML]]:</td></tr>
+  <tr style="border-top: thick solid white; border-left: thin solid white; border-right: thin solid white; "><td colspan="4">Below is the <a>ShExC</a> grammar following the <a data-cite="XML#sec-notation">notation in the XML specification</a> [[!XML]]:</td></tr>
 </tbody>
 <tbody class="prod">
 
@@ -5996,7 +5996,7 @@ tripleExprLabel = IRIREF | BNODE ;
 
   <p>
     A <dfn>ShExR</dfn> graph is any <a>RDF Graph</a> which conforms to the following <a>shapes schema</a> and meets the <a href="#schema-requirements">Schema Requirements</a>.
-    Every <a>ShExR</a> document is <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-graph-isomorphism">graph isomorphic</a>[[!rdf11-concepts]] to the <a href="https://www.w3.org/TR/json-ld11-api/#deserialize-json-ld-to-rdf-algorithm">RDF serialization</a>[[!json-ld]] of some <a>ShExJ</a> document.
+    Every <a>ShExR</a> document is <a href="https://www.w3.org/TR/rdf11-concepts/#dfn-graph-isomorphism">graph isomorphic</a> [[!rdf11-concepts]] to the <a href="https://www.w3.org/TR/json-ld11-api/#deserialize-json-ld-to-rdf-algorithm">RDF serialization</a> [[!json-ld]] of some <a>ShExJ</a> document.
   </p>
 
   <pre class="addition nohighlight" title="ShExR Shape Expression Schema" data-include="ShExR.shex" data-oninclude="highlightShExC"></pre>
