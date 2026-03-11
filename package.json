@@ -29,7 +29,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@shexjs/parser": "^1.0.0-alpha.28",
     "respec": "^32.2.3",
-    "rollup": "^4.46.2",
+    "rollup": "^4.59.0",
     "vnu-jar": "^21.10.12"
   }
 }
