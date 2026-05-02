@@ -26,7 +26,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-terser": "^1.0.0",
     "@shexjs/parser": "^1.0.0-alpha.28",
     "respec": "^32.2.3",
     "rollup": "^4.59.0",
