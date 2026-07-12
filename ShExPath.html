@@ -252,6 +252,33 @@
           </tbody>
         </table>
       </section>
+      <section id="extends-step">
+        <h3>Extended Shape Expressions</h3>
+        <p>
+          A shape's <a href="http://shex.io/shex-next/#dfn-extends"><code>EXTENDS</code></a> list is addressed with the <code>extends</code> step,
+          optionally followed by an <a>index</a> selecting one extended shape expression.
+        </p>
+        <pre class="example">
+&lt;#EmployeeShape&gt; EXTENDS @&lt;#PersonShape&gt; EXTENDS @&lt;#AgentShape&gt; {
+  :employeeId xsd:integer
+}
+        </pre>
+        <table class="example">
+          <thead>
+            <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+          </thead>
+          <tbody>
+          <tr><td>/@&lt;#EmployeeShape&gt;/extends</td><td>the list of shape expressions extended by <code>#EmployeeShape</code>.</td></tr>
+          <tr><td>/@&lt;#EmployeeShape&gt;/extends[0]</td><td>the first extended shape expression, the reference to <code>#PersonShape</code>.</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Validators may use such paths to name partial validation results, for instance
+          <code>&lt;http://a.example/s&gt;@&lt;#EmployeeShape&gt;/extends[0]</code> for the result of
+          testing node <code>&lt;http://a.example/s&gt;</code> against the extension of
+          <code>#EmployeeShape</code> by <code>#PersonShape</code>.
+        </p>
+      </section>
     </section>
 
     <section id="context-tests">
