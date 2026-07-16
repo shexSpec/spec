@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>ShEx Implementors' Notes: Partition Matching and Feasibility-Pruned Search</title>
+    <link rel="stylesheet" href="local.css"/>
+
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common'
+            defer class='remove'></script>
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+
+    <script class='remove'>
+      var respecConfig = {
+      localBiblio: {
+      "shex-spec" : {
+          "authors": ["Eric Prud'hommeaux", "Iovka Boneva", "Jose Emilio Labra Gayo", "Gregg Kellogg"],
+          "title": "Shape Expressions Language 2.next",
+          "href": "index.html"
+        },
+        "shex-algorithms": {
+          "authors": ["Iovka Boneva", "Jérémie Dusart"],
+          "title": "Algorithms for Static Analysis and Validation of the Shape Expressions Language",
+          "href": "algorithms.html"
+        },
+        "shex-complexity": {
+          "authors": ["Iovka Boneva", "Jose Emilio Labra Gayo", "Eric Prud'hommeaux", "Sławek Staworko"],
+          "title": "Complexity and Expressiveness of ShEx for RDF",
+          "href": "https://drops.dagstuhl.de/opus/volltexte/2015/4979/"
+        }
+      },
+      specStatus:     "CG-NOTE",
+      shortName:      "shex-implementors-notes",
+      latestVersion:  "",
+      thisVersion:    "",
+      prevVersion:    "",
+      edDraftURI:     "",
+      previousPublishDate:  "",
+      previousMaturity:"",
+      testSuiteURI:   "",
+      issueBase:      "",
+      githubAPI:      "",
+      editors: [
+        { name:       "Eric Prud'hommeaux",
+          company:    "ZXX / W3C",
+          url:        "https://www.w3.org/People/Eric/" },
+      ],
+      wg:           "Shape Expressions Community Group",
+      wgURI:        "https://www.w3.org/community/shex/",
+      wgPublicList: "public-shex",
+
+      bugTracker:             {
+        open: "https://github.com/shexSpec/shex/issues",
+        new:  "https://github.com/shexSpec/shex/issues/new"
+      },
+
+      otherLinks: [{
+        key: "Version control",
+        data: [{
+          value: "Github Repository",
+          href: "https://github.com/shexSpec/shexTest"
+        }]
+      }],
+      };
+    </script>
+
+    <script type="text/javascript" src="scripts.js"></script>
+  </head>
+
+  <body>
+    <section id="abstract">
+      <p>
+        Validating a node against a shape with a triple expression requires
+        deciding whether <em>some</em> assignment of the node's neighbourhood triples to
+        the triple expression's triple constraints satisfies the expression's
+        cardinalities and grouping structure — additionally split across a hierarchy of shapes
+        when <code>EXTENDS</code> is involved. This document explains, for implementors, the
+        <a href="#partitioning-scheme">data structures</a> used to represent that assignment
+        problem and, through one worked example with a deliberately large search space, two
+        techniques that make the search tractable in practice: <a href="#negative-caching">pruning
+        a triple's candidate constraints once a candidate is refuted</a> (informally, "negative
+        caching"), and <a href="#feasible-bags">searching over count distributions ("feasibility
+        bags") instead of over individual triple-to-constraint assignments</a>, pruned by a sound
+        but inexpensive feasibility test. The techniques are implementation-independent; this
+        document is illustrated with references to the <a href="https://github.com/apache/jena">Apache
+        Jena</a> <code>jena-shex</code> implementation, where they are implemented and empirically
+        measured.
+      </p>
+    </section>
+
+    <section id="sotd">
+      <p>This document is being developed by the
+        <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>.
+        It is an implementors' note: informative, not normative. It records an implementation
+        technique observed to preserve the accepted-matching semantics defined by
+        <a data-cite="shex-spec">the Shape Expressions Language specification</a> and analyzed by
+        <a data-cite="shex-algorithms">the algorithms document</a>, while making validation
+        tractable on schemas and data where the naive search is exponential.
+      </p>
+      <p>
+        This version is an editor's draft.
+      </p>
+    </section>
+
+    <section id="introduction">
+      <h2>Introduction</h2>
+
+      <p>
+        To decide whether a node <span class="math">n</span> satisfies a shape with triple
+        expression <span class="math">E</span>, partition-based ShEx semantics asks whether
+        <em>some</em> assignment ("matching") of the relevant neighbourhood triples to the triple
+        constraints of <span class="math">E</span> satisfies <span class="math">E</span>'s
+        cardinalities and grouping (EachOf, OneOf). With <code>EXTENDS</code>, the
+        neighbourhood must additionally <em>split</em> among the shapes of the extension hierarchy
+        so that every supertype's own triple expression accepts its share.
+      </p>
+
+      <p>
+        The direct reading of that decision problem is: <em>for each triple constraint, which
+        triples could possibly satisfy it?</em> — a map from triple constraints to candidate
+        triples. But a <em>matching</em> is a <em>choice</em>, not a relation: every triple must
+        end up assigned to exactly one triple constraint (or shown to be excused by
+        <code>EXTRA</code> or absent altogether). Turning the constraint-indexed relation into a
+        triple-indexed <em>function</em> — one candidate constraint chosen per triple — is what
+        makes "matching" a well-formed combinatorial object that can be enumerated, pruned, and
+        verified. <a href="#partitioning-scheme">&sect;2</a> makes this precise; it is the
+        <dfn>partitioning scheme</dfn> referred to throughout this document.
+      </p>
+
+      <p>
+        Enumerating that function naively is a Cartesian product: if <span class="math">k</span>
+        triples each have 2 candidate constraints, there are <span class="math">2^k</span>
+        candidate matchings to check, the overwhelming majority of which are doomed for reasons
+        visible long before they are fully checked. <a href="#worked-example">&sect;5</a> works a
+        single schema through both the naive algorithm and the optimized one, at increasing data
+        sizes, to make the difference concrete: at 16 candidate triples the naive algorithm checks
+        65536 candidate matchings; the optimized one checks zero, correctly, in under a
+        millisecond.
+      </p>
+    </section>
+
+    <section id="partitioning-scheme">
+      <h2>The partitioning scheme: from candidate constraints to a chosen matching</h2>
+
+      <p>
+        Three related structures recur through this document and through any partition-based
+        validator. Given a node's neighbourhood triples <span class="math">T</span> and the triple
+        constraints <span class="math">TC</span> of a (possibly <code>EXTENDS</code>-composed)
+        triple expression:
+      </p>
+
+      <dl>
+        <dt><dfn>pre-matching</dfn></dt>
+        <dd>
+          a map <span class="math">T &rarr; 2^{TC}</span>: with every triple, the set of triple
+          constraints it <em>could</em> be assigned to — same predicate, and (recursively) the
+          triple's value satisfies the constraint's value expression. This is the natural,
+          constraint-indexed-in-spirit starting point: for a fixed triple constraint
+          <span class="math">tc</span>, its candidates are <span class="math">{ t &isin; T :
+          tc &isin; preMatching(t) }</span> — the "triple constraint &rarr; set of triples" view
+          the reader may start from.
+        </dd>
+        <dt><dfn>matching</dfn></dt>
+        <dd>
+          a map <span class="math">T &rarr; TC</span> choosing, for every triple, exactly one of
+          its pre-matching candidates. A pre-matching is a compact representation of the set of
+          matchings obtainable by choosing one candidate per triple — the Cartesian product
+          <span class="math">&prod;_t preMatching(t)</span>. This is <em>the</em> partitioning
+          scheme by which this document (and the reference implementation's
+          <code>MatchingsIterator</code> / <code>FeasibleMatchingsIterator</code>) organizes
+          search: one candidate choice per triple, not one triple set per constraint, because only
+          the triple-indexed form is guaranteed to assign every triple exactly once.
+        </dd>
+        <dt><dfn>split</dfn></dt>
+        <dd>
+          the inverse of a chosen matching: a map <span class="math">TC &rarr; 2^T</span> (or,
+          grouped one level further, <span class="math">shapeLabel &rarr; 2^T</span> for
+          <code>EXTENDS</code> hierarchies) recovering, for a <em>specific</em> matching, which
+          triples ended up on which constraint. This is the view a cardinality check needs
+          ("how many triples did constraint <span class="math">tc</span> receive?"), and the view
+          <code>EXTENDS</code> constraints and semantic actions are evaluated against. It is
+          computed once a matching has been chosen, by literally inverting the
+          <span class="math">T &rarr; TC</span> map.
+        </dd>
+      </dl>
+
+      <p>
+        In short: the search is organized as <span class="math">T &rarr; TC</span> because that is
+        the form in which "assign every triple exactly once" is a syntactic guarantee rather than
+        a side condition to check; the result is read back as
+        <span class="math">TC &rarr; 2^T</span> because that is the form the cardinality and
+        <code>EXTENDS</code>/semantic-action checks are stated over. Concrete instances of both
+        views appear in the worked example below (<a href="#pre-matching-instance">&sect;5.2</a>).
+      </p>
+    </section>
+
+    <section id="negative-caching">
+      <h2>Pruning refuted candidates ("negative caching")</h2>
+
+      <p>
+        Before any matching is enumerated, every <span class="math">(triple, candidate
+        constraint)</span> pair in the pre-matching is checked once: does the triple's object (or
+        subject, for an inverse constraint) satisfy the constraint's value expression? If not, the
+        constraint is removed from that triple's candidate set — permanently, for the remainder of
+        this validation. Informally this is a <em>negative cache</em>: rather than re-discovering,
+        inside every candidate matching that happens to try the pair again, that it fails, the
+        failure is recorded once against the pre-matching itself, and the search never revisits
+        it.
+      </p>
+
+      <p>
+        This value-level pruning generalizes to a structural one, described in
+        <a href="#feasible-bags">&sect;4</a>: a candidate can also be refuted because committing
+        even one triple to it can never lead to an accepted matching, for reasons that have
+        nothing to do with any single triple's value — a co-occurrence obligation elsewhere in the
+        expression that the data cannot meet, an exclusivity rule (OneOf) already violated,
+        or a maximum cardinality already exceeded by triples committed elsewhere. Both forms of
+        pruning have the same shape: delete a <span class="math">(t, tc)</span> pair once it is
+        known to appear in <em>no</em> accepted matching, so the search never spends time
+        rediscovering that fact once per candidate matching that would have tried it.
+      </p>
+    </section>
+
+    <section id="feasible-bags">
+      <h2>Feasibility bags: searching distributions instead of assignments</h2>
+
+      <p>
+        Two further ideas turn the remaining candidate space from exponential-in-triples to, in
+        the case that matters most, non-existent.
+      </p>
+
+      <section id="triple-classes">
+        <h3>Group triples with identical candidate sets into classes</h3>
+        <p>
+          A validator that has already computed the pre-matching (<a href="#partitioning-scheme">&sect;2</a>)
+          knows, for every triple, its exact candidate set. Two triples with the <em>same</em>
+          candidate set are interchangeable for the purpose of deciding <em>whether</em> a
+          satisfying matching exists: any check that consumes only the multiset ("bag") of
+          constraints occupied by a matching — which is what the interval-based validity check
+          does — cannot tell them apart. Group triples into <dfn>classes</dfn> by candidate set,
+          and search over how many triples of a class go to each of its candidates (a
+          <em>composition</em>: a count vector summing to the class size) instead of over which
+          specific triple goes where.
+        </p>
+        <p>
+          A class of <span class="math">n</span> triples with <span class="math">k</span>
+          candidates has <span class="math">\binom{n+k-1}{k-1}</span> compositions — polynomial in
+          <span class="math">n</span> for fixed <span class="math">k</span> — in place of
+          <span class="math">k^n</span> individual assignments. Concrete assignments are only
+          produced afterwards, for compositions that survive the feasibility test below, since
+          checks external to the bag itself (<code>EXTENDS</code> constraints on the split,
+          semantic actions) do depend on which concrete triple went where.
+        </p>
+      </section>
+
+      <section id="feasibility-predicate">
+        <h3>A cheap, sound refutation test over partial bags</h3>
+        <p>
+          During the composition search, every triple constraint <span class="math">tc</span>
+          carries an interval <span class="math">[lo(tc), hi(tc)]</span>: <span class="math">lo</span>
+          triples already committed to it by classes decided so far, and up to
+          <span class="math">hi = lo + potential</span> once every remaining, not-yet-decided class
+          that has <span class="math">tc</span> as a candidate is also counted. A
+          <dfn>feasibility predicate</dfn> <span class="math">F(lo, hi)</span>, computed
+          compositionally over the expression's tree structure, answers: <em>could some exact bag
+          between <span class="math">lo</span> and <span class="math">hi</span>, pointwise, be
+          accepted?</em> It is necessary but not sufficient — a <span class="math">true</span>
+          answer does not guarantee a satisfying completion exists, but a <span class="math">false</span>
+          answer <em>proves</em> none does, because every exact bag reachable by finishing the
+          search lies between the current <span class="math">lo</span> and <span class="math">hi</span>.
+        </p>
+        <p>
+          <span class="math">F</span> is applied twice: once, upfront, as an
+          <em>arc-consistency</em> pass — for every candidate <span class="math">(t,tc)</span> pair,
+          is <span class="math">F</span> still satisfiable if <span class="math">tc</span> is
+          committed to <span class="math">lo=1</span> and every other not-yet-placed triple is
+          optimistically available? If not, delete <span class="math">tc</span> from every triple
+          of its class, all at once (<a href="#negative-caching">&sect;3</a>'s structural
+          generalization) — and again, at every node of the composition search, to cut whole
+          subtrees as soon as a partial choice cannot be completed.
+        </p>
+        <p>
+          If a class loses every candidate this way, no matching exists at all: a triple whose
+          predicate is mentioned by the expression can never be left unmatched, not even when its
+          predicate is excused for <code>EXTRA</code> — <code>EXTRA</code> only excuses triples
+          that match <em>no</em> constraint in the first place. So the moment arc consistency
+          empties a class, the answer is "does not conform," with nothing left to enumerate.
+        </p>
+        <p>
+          <span class="math">F</span> deliberately does <em>not</em> decide two families of
+          constraint that a bag abstraction cannot express as independent per-constraint intervals:
+          count coupling inside a repeated group (<code>(a . ; b .)+</code> requires equal counts
+          of <code>a</code> and <code>b</code>) and divisibility (<code>(a . {2,2})*</code> accepts
+          only even counts). Surviving compositions are therefore always re-checked, once, by the
+          exact interval verifier before being accepted — <span class="math">F</span> only ever
+          discards states that verifier would also have rejected, so completeness is preserved; it
+          just avoids the cost of enumerating and individually re-checking a combinatorial number
+          of states that never had a chance.
+        </p>
+      </section>
+    </section>
+
+    <section id="worked-example">
+      <h2>Worked example</h2>
+
+      <p>
+        The following schema is small to write but combinatorially unforgiving: every candidate
+        triple is ambiguous between two constraints, and the schema is designed so that
+        <em>every</em> matching over <span class="math">n</span> such triples is eventually
+        rejected once <span class="math">n &ge; 3</span> — which is exactly the case in which a
+        naive validator does the most possible doomed work.
+      </p>
+
+      <pre><code>PREFIX : &lt;http://example/&gt;
+
+:S {
+  :p . {1,2}
+  |
+  :p . + ; :q .
+}</code></pre>
+
+      <p>
+        <span class="math">E</span> = <code>OneOf( TC_A, EachOf( TC_B, TC_C ) )</code> where
+        <span class="math">TC_A</span> = <code>:p . {1,2}</code>,
+        <span class="math">TC_B</span> = <code>:p . {1,*}</code>, and
+        <span class="math">TC_C</span> = <code>:q . {1,1}</code>. The data is <span class="math">n</span>
+        distinct <code>:p</code> triples on the focus node and <em>no</em> <code>:q</code> triple
+        at all:
+      </p>
+
+      <pre><code>:s :p "v0" .
+:s :p "v1" .
+...
+:s :p "v<var>n</var>-1" .</code></pre>
+
+      <section id="pre-matching-instance">
+        <h3>The two views, concretely, at n = 3</h3>
+
+        <p>
+          With three triples <span class="math">t_0, t_1, t_2</span> (one per <code>:p</code>
+          value) and no <code>:q</code> triple, every <code>:p</code> triple's object is unconstrained
+          (<code>.</code>) by both <span class="math">TC_A</span> and <span class="math">TC_B</span>,
+          so both are candidates for every triple; <span class="math">TC_C</span> has no candidates
+          at all (nothing has predicate <code>:q</code>). The <a>pre-matching</a>
+          (<span class="math">T &rarr; 2^{TC}</span>) is:
+        </p>
+
+        <pre><code>t0 &rarr; { TC_A, TC_B }
+t1 &rarr; { TC_A, TC_B }
+t2 &rarr; { TC_A, TC_B }</code></pre>
+
+        <p>
+          Read the other way (<span class="math">TC &rarr; 2^T</span>, the view the question
+          "which triples could satisfy this constraint" naturally produces): <span class="math">TC_A
+          &rarr; {t_0,t_1,t_2}</span>, <span class="math">TC_B &rarr; {t_0,t_1,t_2}</span>,
+          <span class="math">TC_C &rarr; {}</span>. Neither view alone is a matching:
+          <span class="math">TC_A</span> and <span class="math">TC_B</span> both claim every
+          triple, and <span class="math">TC_C</span>, needed by <span class="math">{1,1}</span>,
+          has nothing to offer at all.
+        </p>
+
+        <p>
+          A <em>matching</em> resolves the overlap by choosing one candidate per triple —
+          one of <span class="math">2^3 = 8</span> possibilities. Take
+          <span class="math">{t_0 {\to} TC_A,\ t_1 {\to} TC_B,\ t_2 {\to} TC_B}</span> as an
+          example. Its <a>split</a> (invert back to <span class="math">TC &rarr; 2^T</span>, this
+          time as a genuine partition) is <span class="math">TC_A {\to} \{t_0\}</span>,
+          <span class="math">TC_B {\to} \{t_1,t_2\}</span>, <span class="math">TC_C {\to} \{\}</span>.
+          Read off the counts: <span class="math">TC_A</span> has 1 (&isin; [1,2], fine on its own),
+          <span class="math">TC_B</span> has 2 (&ge; 1, fine on its own) — but <em>both</em> branches
+          of the OneOf are simultaneously non-empty, which OneOf forbids outside a
+          repetition. This matching is rejected, and not because any single constraint's count is
+          wrong.
+        </p>
+
+        <p>
+          In fact <em>every</em> one of the 8 matchings at n = 3 is rejected, for one of three
+          reasons: some triples on <span class="math">TC_A</span> and some on
+          <span class="math">TC_B</span> (OneOf exclusivity, as above); all three on
+          <span class="math">TC_A</span> (count 3 &gt; max 2); or all three on
+          <span class="math">TC_B</span> (its EachOf sibling <span class="math">TC_C</span>
+          then needs a <code>:q</code> triple that does not exist). A validator that checks
+          matchings one at a time discovers this fact eight separate times.
+        </p>
+      </section>
+
+      <section id="blowup">
+        <h3>Why this gets worse fast, and how the two techniques stop it</h3>
+
+        <p>
+          At <span class="math">n</span> triples the naive Cartesian enumeration
+          (<code>MatchingsIterator</code>) produces <span class="math">2^n</span> candidate
+          matchings, and — by the same three-way case analysis as at n = 3, which does not depend
+          on <span class="math">n</span> — <em>every one of them fails</em> once
+          <span class="math">n &ge; 3</span>. This is the worst case for a search algorithm: no
+          matching succeeds, so nothing short-circuits the enumeration; the full product must be
+          exhausted (or the algorithm must know, some other way, that it can stop).
+        </p>
+
+        <p>
+          Negative caching (<a href="#negative-caching">&sect;3</a>) does not help directly here:
+          every triple's object genuinely does satisfy both <span class="math">TC_A</span> and
+          <span class="math">TC_B</span>'s value expression (<code>.</code> accepts anything), so
+          no <span class="math">(t,tc)</span> pair is refuted by a per-triple value check. The
+          failure is a property of the <em>ensemble</em> — of how many triples end up where,
+          together with the OneOf/EachOf structure — which is exactly what the
+          feasibility predicate (<a href="#feasibility-predicate">&sect;4.2</a>) is built to catch
+          during arc consistency, structurally, before any composition is even tried:
+        </p>
+
+        <ol>
+          <li>
+            No triple has predicate <code>:q</code>, so <span class="math">potential(TC_C) = 0</span>
+            and therefore <span class="math">hi(TC_C) = 0</span> under any assignment — always below
+            <span class="math">TC_C</span>'s minimum of 1.
+          </li>
+          <li>
+            Test the candidate <span class="math">TC_B</span> for arc consistency: commit one triple
+            to it (<span class="math">lo(TC_B)=1</span>) and ask whether the OneOf is still
+            feasible. Branch 2 (<span class="math">EachOf(TC_B,TC_C)</span>) needs
+            <span class="math">TC_C \ge 1</span>, impossible by step 1. Branch 1
+            (<span class="math">TC_A</span>) requires branch 2's slice to be exactly zero — but it
+            cannot be, since <span class="math">lo(TC_B)=1</span> was just committed. Both
+            alternatives of the OneOf fail: <span class="math">F</span> refutes
+            <span class="math">TC_B</span> as a candidate for <em>every</em> triple that offered it,
+            in one step, independent of <span class="math">n</span>.
+          </li>
+          <li>
+            Every triple's candidate set collapses to the singleton
+            <span class="math">\{TC_A\}</span>; there is exactly one remaining composition, all
+            <span class="math">n</span> triples on <span class="math">TC_A</span>. Test it:
+            <span class="math">lo(TC_A) = n</span>, and for <span class="math">n &ge; 3</span> this
+            already exceeds <span class="math">TC_A</span>'s maximum of 2. Refuted.
+          </li>
+        </ol>
+
+        <p>
+          No candidate matching is ever assembled or checked by the exact interval verifier —
+          the schema's unsatisfiability at this data size is established purely by the two
+          structural refutations above, whose cost does not depend on <span class="math">n</span>
+          at all. Measured on the reference implementation (<code>MatchingSearchProbesTest</code>,
+          <code>probe1_sharedPredicateOneOf_isPrunedWithoutEnumeration</code>):
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr><th><span class="math">n</span></th><th>naive: matchings to check (<span class="math">2^n</span>)</th><th>naive: measured wall time</th><th>feasibility-pruned: matchings checked</th><th>feasibility-pruned: measured wall time</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>4</td><td>16</td><td>not separately measured</td><td>0</td><td>0&nbsp;ms</td></tr>
+            <tr><td>8</td><td>256</td><td>not separately measured</td><td>0</td><td>0&nbsp;ms</td></tr>
+            <tr><td>12</td><td>4096</td><td>not separately measured</td><td>0</td><td>0&nbsp;ms</td></tr>
+            <tr><td>16</td><td>65536</td><td>166&nbsp;ms</td><td>0</td><td>0&nbsp;ms</td></tr>
+            <tr><td>24</td><td>16777216</td><td>~40&nbsp;s (extrapolated from the trend, not directly measured)</td><td>0</td><td>0&nbsp;ms</td></tr>
+          </tbody>
+        </table>
+
+        <p>
+          The <span class="math">2^n</span> column is exact by construction (it is the size of the
+          Cartesian product the naive algorithm enumerates); the naive wall-clock figures are those
+          reported where the reference implementation's design notes measured them directly (n=16)
+          or extrapolated the trend (n=24) — the point being qualitative (exponential vs. constant),
+          not that every cell was independently timed. The feasibility-pruned figures are all
+          directly measured, from the reference implementation's own test suite
+          (<code>MatchingSearchProbesTest</code>), at every listed <span class="math">n</span>.
+        </p>
+
+        <p>
+          As a positive control, <span class="math">n = 2</span> conforms (both triples fit on
+          <span class="math">TC_A</span>'s <span class="math">\{1,2\}</span>): the optimized
+          search checks exactly one matching, the same one the naive search would eventually reach
+          — the two algorithms accept and reject the same set of matchings at every
+          <span class="math">n</span>; they differ only in how much doomed work is done to find
+          that out.
+        </p>
+      </section>
+    </section>
+
+    <section id="conclusion">
+      <h2>Summary for implementors</h2>
+      <ul>
+        <li>
+          Represent the candidate-matching problem as a map from triples to their candidate
+          triple constraints (<a href="#partitioning-scheme">&sect;2</a>), not the reverse; recover
+          the constraint-indexed view only after a matching has been chosen, for the checks that
+          need it.
+        </li>
+        <li>
+          Prune a candidate the moment it is refuted, whether by a per-triple value check
+          (<a href="#negative-caching">&sect;3</a>) or by a structural, ensemble-level
+          infeasibility (<a href="#feasible-bags">&sect;4</a>) — and never re-derive a refutation
+          the search has already made once.
+        </li>
+        <li>
+          Group triples by identical candidate sets and search count distributions ("bags"), not
+          individual assignments; verify only bags that survive a cheap, sound feasibility test
+          with the exact (and only then expensive) interval computation.
+        </li>
+        <li>
+          Both pruning techniques are <em>necessary</em>, not decision, conditions: they discard
+          only states that could never lead to an accepted matching. The set of matchings a
+          validator accepts is unchanged by adding them; only the amount of work spent finding
+          that out changes.
+        </li>
+      </ul>
+    </section>
+
+  </body>
+</html>
