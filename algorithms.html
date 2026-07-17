@@ -28,6 +28,11 @@
           "authors": ["Eric Prud'hommeaux", "Thomas Baker"],
           "title": "ShapeMap Structure and Language",
           "href":  "http://shex.io/shape-map/"
+        },
+        "shex-complexity": {
+          "authors": ["Iovka Boneva", "Jose Emilio Labra Gayo", "Eric Prud'hommeaux", "S\u0142awek Staworko"],
+          "title": "Complexity and Expressiveness of ShEx for RDF",
+          "href":  "https://drops.dagstuhl.de/opus/volltexte/2015/4979/"
         }
       },
       specStatus:     "CG-DRAFT",
@@ -211,6 +216,107 @@ return stratum
     <section id="validation">
       <h2>Algorithms for Validation</h2>
 
+      <section id="matching-search">
+	<h3>Validation as a Search over Matchings</h3>
+
+	<p>
+	  The algorithms in this section orchestrate calls to
+	  <span class="math">satisfies(n, s, G, sm)</span>: refine validation evaluates it for
+	  every (node, shape) pair, stratum by stratum; recursive validation evaluates it on
+	  demand. When <span class="math">s</span> is a Shape with triple expression
+	  <span class="math">E</span>, deciding <span class="math">satisfies</span> is itself a
+	  search problem: does <em>some</em> assignment ("matching") of the relevant
+	  neighbourhood triples of <span class="math">n</span> to the triple constraints of
+	  <span class="math">E</span> satisfy <span class="math">E</span>'s cardinalities and
+	  grouping (EachOf, OneOf)? With <code>EXTENDS</code>, the neighbourhood must
+	  additionally <em>split</em> among the shapes of the extension hierarchy so that every
+	  supertype's own triple expression accepts its share.
+	</p>
+
+	<p>
+	  The direct reading of that decision problem is: <em>for each triple constraint, which
+	  triples could possibly satisfy it?</em> — a map from triple constraints to candidate
+	  triples. But a matching is a <em>choice</em>, not a relation: every triple must end up
+	  assigned to exactly one triple constraint (or shown to be excused by <code>EXTRA</code>
+	  or absent altogether). Turning the constraint-indexed relation into a triple-indexed
+	  <em>function</em> — one candidate constraint chosen per triple — is what makes
+	  "matching" a well-formed combinatorial object that can be enumerated, pruned and
+	  verified. Three related structures recur below. Given the neighbourhood triples
+	  <span class="math">T</span> of the node and the triple constraints
+	  <span class="math">TC</span> of a (possibly <code>EXTENDS</code>-composed) triple
+	  expression:
+	</p>
+
+	<dl>
+	  <dt><dfn>pre-matching</dfn></dt>
+	  <dd>
+	    a map <span class="math">T &rarr; 2^{TC}</span>: with every triple, the set of triple
+	    constraints it <em>could</em> be assigned to — same predicate, and (recursively) the
+	    triple's value satisfies the constraint's value expression. For a fixed triple
+	    constraint <span class="math">tc</span>, its candidate triples are recovered as
+	    <span class="math">{ t &isin; T : tc &isin; preMatching(t) }</span> — the
+	    "triple constraint &rarr; set of triples" view the reader may start from.
+	  </dd>
+	  <dt><dfn>matching</dfn></dt>
+	  <dd>
+	    a map <span class="math">T &rarr; TC</span> choosing, for every triple, exactly one of
+	    its pre-matching candidates. A pre-matching is a compact representation of the set of
+	    matchings obtainable by choosing one candidate per triple — the Cartesian product
+	    <span class="math">&prod;_t preMatching(t)</span>. The search is organized in this
+	    triple-indexed form because there, "assign every triple exactly once" is a syntactic
+	    guarantee rather than a side condition to check.
+	  </dd>
+	  <dt><dfn>split</dfn></dt>
+	  <dd>
+	    the inverse of a chosen matching: a map <span class="math">TC &rarr; 2^T</span> (or,
+	    grouped one level further, <span class="math">shapeLabel &rarr; 2^T</span> for an
+	    <code>EXTENDS</code> hierarchy) recovering, for a <em>specific</em> matching, which
+	    triples ended up on which constraint. This is the view a cardinality check needs
+	    ("how many triples did <span class="math">tc</span> receive?"), and the view against
+	    which <code>EXTENDS</code> constraints and semantic actions are evaluated.
+	  </dd>
+	</dl>
+
+	<p>Algorithm for deciding <span class="math">satisfies(n, s, G, sm)</span> for a Shape
+	<span class="math">s</span>, by exhaustive enumeration of matchings.</p>
+
+<pre><code>
+Input: an RDF graph G, a node n, a Shape s with triple expression E, a shape map sm
+Output: true if some matching of the relevant neighbourhood of n satisfies E, false otherwise
+
+let TCs be the set of triple constraints of E (with EXTENDS, of every triple expression of the hierarchy)
+let matchables be the set of triples (n,p,o) in G s.t. p is the predicate of some tc in TCs,
+    plus the triples (o,p,n) s.t. ^p is the predicate of some inverse tc in TCs
+
+foreach t = (n,p,o) in matchables
+    let cands(t) = { tc in TCs : tc.predicate = p and
+                     (tc has no valueExpr, or o satisfies tc.valueExpr under sm) }
+
+foreach t in matchables with cands(t) = {}
+    if t.predicate is not in s.extra then return false
+    remove t from matchables
+
+foreach matching m in the Cartesian product over t in matchables of cands(t)
+    let bag(m) be the map tc -> number of triples t s.t. m(t) = tc
+    if bag(m) is accepted by E then       // exact check: cardinalities, EachOf grouping, OneOf choice
+        return true                       // m also fixes the split consumed by EXTENDS
+                                          // constraints and by semantic actions
+return false
+</code></pre>
+
+	<p>
+	  The enumeration line is a Cartesian product: <span class="math">k</span> triples with 2
+	  candidates each yield <span class="math">2^k</span> candidate matchings, and whenever
+	  triple constraints share a predicate — across OneOf alternatives, across the shapes of
+	  an <code>EXTENDS</code> hierarchy, or between a shape and its <code>EXTRA</code>-tolerated
+	  context — most of those matchings are doomed for reasons visible long before each is
+	  individually verified. <a href="#matching-pruning"></a> refines this algorithm with two
+	  pruning techniques that leave its answers — indeed its entire set of accepted matchings —
+	  unchanged.
+	</p>
+      </section>
+
+
       <section id="refine-validation">
 	<h3>Refine Validation</h3>
 
@@ -293,6 +399,474 @@ return true
 
 	
       </section>
+
+      <section id="matching-pruning">
+	<h3>Pruning the Matching Search</h3>
+
+	<p>
+	  The two refinements below prune the enumeration algorithm of
+	  <a href="#matching-search"></a> without changing its answers: each only ever discards
+	  candidate matchings that the exact verification would also have rejected, so the set of
+	  accepted matchings — and everything downstream of it (<code>EXTENDS</code> splits,
+	  semantic actions) — is untouched. Some search is unavoidable: for expressions with
+	  repeated triple constraints, deciding bag membership is NP-complete
+	  [[shex-complexity]], and even where polynomial decision procedures exist, a practical
+	  validator streams concrete witness matchings — of which there can be exponentially
+	  many — because downstream checks consume the specific triples matched. Both refinements
+	  are implemented in Apache Jena's <code>jena-shex</code> module, from which the
+	  measurements below are taken.
+	</p>
+
+	<section id="negative-caching">
+	  <h4>Negative Caching: Prune Refuted Candidate Pairs</h4>
+
+	  <p>
+	    The pre-matching construction already contains the first pruning: computing
+	    <span class="math">cands(t)</span> once, upfront, for every (triple, candidate
+	    constraint) pair — one recursive value-expression check per pair — and never
+	    revisiting a pair that failed. Informally this is a <em>negative cache</em>: rather
+	    than re-discovering, inside every candidate matching that happens to try the pair
+	    again, that the triple's value does not satisfy the constraint, the failure is
+	    recorded once against the pre-matching itself and the pair never enters the search. A
+	    validator that instead evaluates value expressions while walking each candidate
+	    matching re-pays that cost once per matching — multiplied by however many candidate
+	    matchings the <em>rest</em> of the neighbourhood generates (measured concretely in
+	    <a href="#fhir-example"></a>).
+	  </p>
+
+	  <p>
+	    The same contract generalizes from values to structure: a candidate can also be
+	    refuted because committing even one triple to it can never lead to an accepted
+	    matching — a co-occurrence obligation elsewhere in the expression that the data
+	    cannot meet, a OneOf exclusivity already violated, or a maximum cardinality already
+	    exceeded. Both forms have the same shape: delete a
+	    <span class="math">(t, tc)</span> pair the moment it is known to appear in
+	    <em>no</em> accepted matching, so no refutation is ever derived twice. The structural
+	    form is the subject of the next section.
+	  </p>
+	</section>
+
+	<section id="bag-search">
+	  <h4>Bag-Directed Search with Partial-Bag Refutation</h4>
+
+	  <p>
+	    Whether a triple expression accepts a matching depends only on the matching's
+	    <em>bag</em> — the count of triples assigned to each triple constraint; which
+	    specific triple went where matters only to downstream consumers (splits, semantic
+	    actions). And once the pre-matching is computed, two triples with the same candidate
+	    set are interchangeable in any bag. So: group the triples into <em>classes</em> by
+	    candidate set, and search over count vectors — how many triples of the class go to
+	    each of its candidates — instead of over individual assignments. A class of
+	    <span class="math">n</span> triples over <span class="math">k</span> candidates has
+	    <span class="math">\binom{n+k-1}{k-1}</span> count vectors, polynomial in
+	    <span class="math">n</span> for fixed <span class="math">k</span>, in place of
+	    <span class="math">k^n</span> assignments. Concrete matchings are produced only for
+	    bags that survive, by enumerating the multiset permutations within each class.
+	  </p>
+
+	  <p>
+	    During the search, each triple constraint <span class="math">tc</span> carries an
+	    interval <span class="math">[lo(tc), hi(tc)]</span>: <span class="math">lo</span>
+	    counts the triples already committed to it by decided classes, and
+	    <span class="math">hi = lo +</span> the total size of the undecided classes that
+	    still offer <span class="math">tc</span> as a candidate. A test
+	    <span class="math">refute(lo, hi)</span>, computed compositionally over the
+	    expression tree, answers: is <em>no</em> exact bag between <span class="math">lo</span>
+	    and <span class="math">hi</span> (pointwise) accepted? It is a sound
+	    necessary-condition test — <em>true</em> proves the entire region hopeless, since
+	    every bag reachable by finishing the search lies between the current
+	    <span class="math">lo</span> and <span class="math">hi</span>, while <em>false</em>
+	    proves nothing and leaves the verdict to the exact verification of complete bags. It
+	    accounts for minimum and maximum cardinalities, EachOf co-occurrence obligations, and
+	    OneOf exclusivity — including that exclusivity does not survive repetition: each
+	    iteration of <code>(:a . | :b .)+</code> chooses its alternative independently.
+	    (The Jena implementation calls this test <em>feasibility</em>; this document says
+	    <em>refutation</em>, since refuting is the only verdict it delivers definitively.)
+	  </p>
+
+	  <p>
+	    The test is applied at two moments. Upfront, as an <em>arc-consistency</em> pass: for
+	    every candidate <span class="math">(t, tc)</span> pair, if committing a single triple
+	    to <span class="math">tc</span> is already refutable under the most optimistic
+	    <span class="math">hi</span>, delete <span class="math">tc</span> from the whole
+	    class at once — the structural generalization of negative caching. And once per
+	    search node: after committing each class's count vector, either the remaining region
+	    is refuted (backtrack) or the search descends. If arc consistency empties a class's
+	    candidate set, the shape fails outright: a triple that value-matches some constraint
+	    can never be left unmatched — <code>EXTRA</code> only excuses triples that matched no
+	    constraint to begin with.
+	  </p>
+
+	  <p>
+	    <span class="math">refute</span> deliberately ignores constraints that per-constraint
+	    intervals cannot express: count coupling inside a repeated group
+	    (<code>(:a . ; :b .)+</code> requires equal counts of <code>:a</code> and
+	    <code>:b</code>) and divisibility (<code>(:a . {2,2})*</code> accepts only even
+	    counts). Bags that survive are therefore always verified exactly, once, before
+	    acceptance; the refinement loses no correctness, only doomed work.
+	  </p>
+
+	  <p>The enumeration algorithm of <a href="#matching-search"></a>, with the refinement's
+	  additions <mark>highlighted</mark>:</p>
+
+<pre><code>
+Input: an RDF graph G, a node n, a Shape s with triple expression E, a shape map sm
+Output: as for enumeration - the same matchings are accepted; only the work spent differs
+
+let TCs, matchables and cands be as in the enumeration algorithm
+                                          // computing cands() once, upfront, is the negative
+                                          // cache: a refuted (t,tc) pair is never revisited
+foreach t in matchables with cands(t) = {}
+    if t.predicate is not in s.extra then return false
+    remove t from matchables
+
+<mark>partition matchables into classes: class(C) = { t : cands(t) = C }</mark>
+<mark>repeat until no candidate is removed:                       // arc consistency</mark>
+<mark>    foreach class C and candidate tc of C</mark>
+<mark>        if refute(lo = one triple on tc, hi = every triple on all of its candidates)</mark>
+<mark>            remove tc from C's candidates</mark>
+<mark>if some class has no candidates left then return false</mark>
+<mark>                      // a triple that value-matches some tc can never be left unmatched,</mark>
+<mark>                      // so EXTRA does not excuse a class emptied by refutation</mark>
+
+<mark>search depth-first over the classes, fewest candidates first:</mark>
+<mark>    at each class C, enumerate the count vectors over C's candidates summing to |C|,</mark>
+<mark>        each count capped by the candidate's declared maximum</mark>
+<mark>    after committing a count vector: if refute(lo, hi) then backtrack</mark>
+<mark>each leaf of the search determines a bag w over TCs</mark>
+    if w is accepted by E then            // exact check, unchanged
+<mark>        foreach matching m realising w  // multiset permutations within each class</mark>
+            return true                   // m fixes the split consumed by EXTENDS
+                                          // constraints and by semantic actions
+return false
+</code></pre>
+	</section>
+
+	<section id="fhir-example">
+	  <h4>Worked Example: a FHIR Research Blood-Pressure Profile</h4>
+
+	  <p>
+	    The two refinements address different failure modes, and a schema built entirely from
+	    one of them shows only one at work. The following profile — modelled on a research
+	    blood-pressure <a href="https://hl7.org/fhir/observation.html">Observation</a>
+	    profile in HL7 FHIR — needs both at once. It is illustrative rather than clinically
+	    certified, but the moving parts are real FHIR: repeated <code>component</code> and
+	    <code>referenceRange</code> elements, and range bounds that are FHIR
+	    <code>Quantity</code> structures carrying a <code>value</code>, an optional
+	    <code>comparator</code> and a UCUM unit <code>code</code> such as
+	    <code>mm[Hg]</code>. Shape labels use the document-relative
+	    <code>&lt;#Label&gt;</code> pattern, resolved against the schema document's base IRI.
+	  </p>
+
+	  <p>
+	    The profile accepts submissions from two data-collection protocols, distinguished
+	    along two independent axes. A <em>quick</em> capture records one or two
+	    <code>component</code> entries and nothing more; an <em>extended</em> capture records
+	    any number of components but must include a protocol quality-control flag.
+	    Independently, the reference ranges are either a short list (one or two) of guideline
+	    ranges, or a longer list plus exactly one <em>critical</em> range whose bounds mark
+	    the panic thresholds. Neither axis is declared explicitly; the validator works each
+	    out from what is present.
+	  </p>
+
+	  <div class="example">
+	    <div class="exsec">Schema:</div><br/>
+	    <pre class="line-labels">
+
+
+
+<span class="lineno schema">S1</span>
+<span class="lineno schema">te1</span>
+<span class="lineno schema">tc1</span>
+
+<span class="lineno schema">tc2</span>
+<span class="lineno schema">tc3</span>
+
+<span class="lineno schema">te2</span>
+<span class="lineno schema">tc4</span>
+
+<span class="lineno schema">tc5</span>
+<span class="lineno schema">tc6</span>
+
+
+
+<span class="lineno schema">S2</span>
+
+
+
+
+
+
+
+
+<span class="lineno schema">S3</span>
+
+
+
+
+
+
+</pre>
+	    <div class="inline shexc">
+	      <pre class="nohighlight">PREFIX fhir: &lt;http://hl7.org/fhir/&gt;
+PREFIX ex:   &lt;http://example.org/research-bp#&gt;
+PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+&lt;#VitalsPanelShape&gt; {
+  (
+    fhir:component . {1,2}
+    |
+    fhir:component . + ;
+    fhir:qualityFlag [ex:protocol-qc-check]
+  ) ;
+  (
+    fhir:referenceRange @&lt;#GuidelineRange&gt; {1,2}
+    |
+    fhir:referenceRange @&lt;#GuidelineRange&gt; + ;
+    fhir:referenceRange @&lt;#CriticalRange&gt;
+  )
+}
+
+&lt;#GuidelineRange&gt; {
+  fhir:low  { fhir:value xsd:decimal MININCLUSIVE 60 MAXINCLUSIVE 90 ;
+              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
+              fhir:code ["mm[Hg]"] } ;
+  fhir:high { fhir:value xsd:decimal MININCLUSIVE 90 MAXINCLUSIVE 140 ;
+              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
+              fhir:code ["mm[Hg]"] }
+}
+
+&lt;#CriticalRange&gt; {
+  fhir:low  { fhir:value xsd:decimal MININCLUSIVE 120 ;
+              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
+              fhir:code ["mm[Hg]"] } ;
+  fhir:high { fhir:value xsd:decimal MININCLUSIVE 180 ;
+              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
+              fhir:code ["mm[Hg]"] }
+}</pre>
+	    </div>
+	    <div style="clear:both;"></div>
+	  </div>
+
+	  <p>
+	    <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> are
+	    the two OneOf groups. <span class="lineno schema">tc1</span> and
+	    <span class="lineno schema">tc2</span> are the quick and extended component
+	    constraints — value-indistinguishable, since both accept any component;
+	    <span class="lineno schema">tc3</span> is the quality flag;
+	    <span class="lineno schema">tc4</span> and <span class="lineno schema">tc5</span> are
+	    the guideline-range constraints of the quick and extended alternatives; and
+	    <span class="lineno schema">tc6</span> is the critical-range constraint.
+	    <span class="lineno schema">S2</span> and <span class="lineno schema">S3</span>
+	    differ only in their <code>Quantity</code> value windows: guideline
+	    <code>low</code> &isin; [60,90] and <code>high</code> &isin; [90,140]; critical
+	    <code>low</code> &ge; 120 and <code>high</code> &ge; 180.
+	  </p>
+
+	  <div class="example">
+	    <div class="exsec">Data (conformant — an extended capture with a panic range):</div><br/>
+	    <pre class="line-labels">
+
+
+<span class="lineno data">t1</span>
+<span class="lineno data">t2</span>
+<span class="lineno data">t3</span>
+<span class="lineno data">t4</span>
+<span class="lineno data">t5</span>
+<span class="lineno data">t6</span>
+<span class="lineno data">t7</span>
+
+<span class="lineno data">t8</span>
+<span class="lineno data">t9</span>
+<span class="lineno data">t10</span>
+<span class="lineno data">t11</span>
+<span class="lineno data">t12</span>
+<span class="lineno data">t13</span></pre>
+	    <div class="inline json">
+	      <pre class="nohighlight">PREFIX fhir: &lt;http://hl7.org/fhir/&gt;
+PREFIX ex:   &lt;http://example.org/research-bp#&gt;
+
+ex:obs1 fhir:component      ex:systolic ;
+        fhir:component      ex:diastolic ;
+        fhir:component      ex:bodyPosition ;
+        fhir:qualityFlag    ex:protocol-qc-check ;
+        fhir:referenceRange ex:sysNormal ;
+        fhir:referenceRange ex:diaNormal ;
+        fhir:referenceRange ex:panic .
+
+ex:sysNormal fhir:low  [ fhir:value 90.0  ; fhir:code "mm[Hg]" ] ;
+             fhir:high [ fhir:value 140.0 ; fhir:code "mm[Hg]" ] .
+ex:diaNormal fhir:low  [ fhir:value 60.0  ; fhir:code "mm[Hg]" ] ;
+             fhir:high [ fhir:value 90.0  ; fhir:code "mm[Hg]" ] .
+ex:panic     fhir:low  [ fhir:value 120.0 ; fhir:comparator "&gt;=" ; fhir:code "mm[Hg]" ] ;
+             fhir:high [ fhir:value 180.0 ; fhir:comparator "&gt;=" ; fhir:code "mm[Hg]" ] .</pre>
+	    </div>
+	    <div style="clear:both;"></div>
+	  </div>
+
+	  <p>
+	    Labels <span class="lineno data">t8</span>–<span class="lineno data">t13</span> name
+	    the triple beginning on the labelled line; each bracketed <code>Quantity</code>
+	    contributes further nested triples, which participate in the recursive checks of the
+	    range nodes but not in the focus node's own matching.
+	  </p>
+
+	  <p>
+	    By predicate alone, the pre-matching of <code>ex:obs1</code> is
+	    <span class="lineno data">t1</span>–<span class="lineno data">t3</span> &rarr;
+	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
+	    <span class="lineno data">t4</span> &rarr; {<span class="lineno schema">tc3</span>};
+	    <span class="lineno data">t5</span>–<span class="lineno data">t7</span> &rarr;
+	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>,
+	    <span class="lineno schema">tc6</span>} — a Cartesian product of
+	    2&middot;2&middot;2&middot;1&middot;3&middot;3&middot;3 = 216 matchings.
+	  </p>
+
+	  <p>
+	    Negative caching checks each (range, candidate) pair once, recursively:
+	    <code>ex:sysNormal</code> (<span class="lineno data">t5</span>) against
+	    <span class="lineno schema">S3</span> fails inside its <code>low</code>
+	    <code>Quantity</code> (90 &lt; 120), deleting <span class="lineno schema">tc6</span>;
+	    likewise <span class="lineno data">t6</span>. <code>ex:panic</code>
+	    (<span class="lineno data">t7</span>) against <span class="lineno schema">S2</span>
+	    fails the guideline <code>low</code> window (120 &gt; 90), deleting
+	    <span class="lineno schema">tc4</span> and <span class="lineno schema">tc5</span>.
+	    The pre-matching becomes <span class="lineno data">t5</span>,<span class="lineno data">t6</span>
+	    &rarr; {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>};
+	    <span class="lineno data">t7</span> &rarr; {<span class="lineno schema">tc6</span>}:
+	    2&sup3;&middot;2&sup2; = 32 matchings — and no value expression is ever evaluated
+	    again.
+	  </p>
+
+	  <p>
+	    The classes are {<span class="lineno data">t1</span>,<span class="lineno data">t2</span>,<span class="lineno data">t3</span>}
+	    over {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
+	    {<span class="lineno data">t4</span>} over {<span class="lineno schema">tc3</span>};
+	    {<span class="lineno data">t5</span>,<span class="lineno data">t6</span>} over
+	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>}; and
+	    {<span class="lineno data">t7</span>} over {<span class="lineno schema">tc6</span>}.
+	    The two singleton classes are forced, and committing them drives the refutation test:
+	    with <span class="lineno schema">tc3</span> occupied,
+	    <span class="lineno schema">te1</span>'s first alternative — which requires the
+	    second alternative's constraints to stay empty — is refuted, so every count vector
+	    placing components on <span class="lineno schema">tc1</span> is cut:
+	    <span class="lineno data">t1</span>–<span class="lineno data">t3</span> all go to
+	    <span class="lineno schema">tc2</span>. Symmetrically,
+	    <span class="lineno data">t7</span> on <span class="lineno schema">tc6</span> forces
+	    <span class="lineno data">t5</span> and <span class="lineno data">t6</span> onto
+	    <span class="lineno schema">tc5</span>. Exactly one bag survives the search, and its
+	    expansion is a single matching, whose split is:
+	  </p>
+
+	  <table class="simple">
+	    <thead>
+	      <tr><th>triple constraint</th><th>matched triples</th></tr>
+	    </thead>
+	    <tbody>
+	      <tr><td><span class="lineno schema">tc1</span> (component, quick)</td><td>&mdash;</td></tr>
+	      <tr><td><span class="lineno schema">tc2</span> (component, extended)</td><td><span class="lineno data">t1</span> <span class="lineno data">t2</span> <span class="lineno data">t3</span></td></tr>
+	      <tr><td><span class="lineno schema">tc3</span> (quality flag)</td><td><span class="lineno data">t4</span></td></tr>
+	      <tr><td><span class="lineno schema">tc4</span> (guideline range, quick)</td><td>&mdash;</td></tr>
+	      <tr><td><span class="lineno schema">tc5</span> (guideline range, extended)</td><td><span class="lineno data">t5</span> <span class="lineno data">t6</span></td></tr>
+	      <tr><td><span class="lineno schema">tc6</span> (critical range)</td><td><span class="lineno data">t7</span></td></tr>
+	    </tbody>
+	  </table>
+
+	  <p>
+	    That matching satisfies <span class="lineno schema">te1</span> and
+	    <span class="lineno schema">te2</span> (each via its second alternative) and hence
+	    <span class="lineno schema">S1</span>: <code>ex:obs1</code> conforms. Counting
+	    everything — the focus-node search plus every recursive check of a range or
+	    <code>Quantity</code> node against a candidate shape — the whole validation verifies
+	    16 (sub-)matchings, measured, against the 32 focus-node matchings alone that
+	    post-caching enumeration walks, or the 216 that a validator evaluating value
+	    expressions inside the walk would explore.
+	  </p>
+
+	  <p>
+	    Now scale the same schema: <span class="math">n_c</span> components (and no quality
+	    flag) with <span class="math">n_r</span> reference ranges, every range
+	    guideline-valued and none critical-valued. No instance with
+	    <span class="math">n_c &ge; 3</span> conforms, so nothing short-circuits — the worst
+	    case for any search. Negative caching deletes <span class="lineno schema">tc6</span>
+	    from every range, at a one-time cost of 6 verified sub-matchings per range (the
+	    <span class="lineno schema">tc4</span> and <span class="lineno schema">tc5</span>
+	    checks each verify two <code>Quantity</code> nodes and the range node itself; the
+	    <span class="lineno schema">tc6</span> check is refuted inside the <code>low</code>
+	    <code>Quantity</code> before any sub-matching is assembled). Arc consistency then
+	    deletes <span class="lineno schema">tc5</span> from every range — committing any
+	    triple to it requires <span class="lineno schema">tc6</span> to be occupiable, but
+	    <span class="math">hi(tc6) = 0</span> — and <span class="lineno schema">tc2</span>
+	    from every component, since there is no quality-flag triple to occupy
+	    <span class="lineno schema">tc3</span>. Every class collapses to its
+	    {1,2}-bounded candidate; for counts of 3 or more no count vector fits, and the search
+	    produces no bag at all: <em>zero</em> focus-node matchings.
+	  </p>
+
+	  <table class="simple">
+	    <thead>
+	      <tr><th><span class="math">n_c</span></th><th><span class="math">n_r</span></th><th>Cartesian matchings (<span class="math">2^{n_c+n_r}</span>)</th><th>verified matchings, incl. recursive checks (measured)</th><th>wall time (measured)</th></tr>
+	    </thead>
+	    <tbody>
+	      <tr><td>4</td><td>4</td><td>256</td><td>24</td><td>&lt;1&nbsp;ms</td></tr>
+	      <tr><td>8</td><td>8</td><td>65,536</td><td>48</td><td>1&nbsp;ms</td></tr>
+	      <tr><td>12</td><td>12</td><td>16,777,216</td><td>72</td><td>1&nbsp;ms</td></tr>
+	      <tr><td>16</td><td>16</td><td>4,294,967,296</td><td>96</td><td>2&nbsp;ms</td></tr>
+	      <tr><td>24</td><td>24</td><td>281,474,976,710,656</td><td>144</td><td>3&nbsp;ms</td></tr>
+	    </tbody>
+	  </table>
+
+	  <p>Isolating the two groups shows each technique's contribution separately:</p>
+
+	  <table class="simple">
+	    <thead>
+	      <tr><th>isolated group</th><th><span class="math">n_c</span></th><th><span class="math">n_r</span></th><th>verified matchings (measured)</th></tr>
+	    </thead>
+	    <tbody>
+	      <tr><td>components only</td><td>16</td><td>0</td><td>0</td></tr>
+	      <tr><td>ranges only</td><td>0</td><td>16</td><td>96</td></tr>
+	    </tbody>
+	  </table>
+
+	  <p>
+	    The verified count is <span class="math">6 n_r</span> exactly — 96 at
+	    <span class="math">n_c = n_r = 16</span> and 96 again at
+	    <span class="math">n_c = 0, n_r = 16</span>: the cost of ruling out the
+	    critical-range candidate is linear in the number of ranges and completely independent
+	    of the combinatorics on the component side, while the component side itself
+	    contributes zero. The Cartesian column, by contrast, multiplies both sides together.
+	    As a positive control, <span class="math">n_c = n_r = 2</span> conforms (a quick
+	    capture with a short range list): the search verifies 13 (sub-)matchings and accepts
+	    — real work still happens for satisfiable instances; the pruning only ever discards
+	    states that could never be accepted.
+	  </p>
+	</section>
+
+	<section id="pruning-summary">
+	  <h4>Summary</h4>
+	  <ul>
+	    <li>
+	      Organize the search triple-indexed (a candidate-constraint set per triple, one
+	      choice per triple), and recover the constraint-indexed <a>split</a> from each
+	      chosen matching for the checks that need it.
+	    </li>
+	    <li>
+	      Refute once, never re-derive: by value (the negative cache) when the
+	      <a>pre-matching</a> is built, and by structure (partial-bag refutation) at
+	      class granularity upfront and at every search node thereafter.
+	    </li>
+	    <li>
+	      Search count vectors over classes of interchangeable triples; verify surviving
+	      bags with the exact check, and expand a bag into concrete matchings only then.
+	    </li>
+	    <li>
+	      Both prunings are necessary-condition filters: the set of accepted matchings is
+	      invariant; only the amount of work spent discovering it changes.
+	    </li>
+	  </ul>
+	</section>
+      </section>
+
     </section>
 
 
