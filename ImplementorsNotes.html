@@ -132,10 +132,14 @@
         triples each have 2 candidate constraints, there are <span class="math">2^k</span>
         candidate matchings to check, the overwhelming majority of which are doomed for reasons
         visible long before they are fully checked. <a href="#worked-example">&sect;5</a> works a
-        single schema through both the naive algorithm and the optimized one, at increasing data
-        sizes, to make the difference concrete: at 16 candidate triples the naive algorithm checks
-        65536 candidate matchings; the optimized one checks zero, correctly, in under a
-        millisecond.
+        single schema — a FHIR-flavoured research blood-pressure profile — through both the naive
+        algorithm and the optimized one, at increasing data sizes, to make the difference
+        concrete: at 32 candidate triples the naive algorithm would check 4294967296 candidate
+        matchings; the optimized one checks 32, correctly, in about a millisecond. That the
+        optimized figure is 32 and not 0 is itself informative — it is exactly where the two
+        techniques' distinct jobs become visible: one part of the schema is refuted purely by
+        value (a fixed, linear cost independent of how ambiguous the rest of the schema is), the
+        other purely by structure (collapsing to zero, however large it grows).
       </p>
     </section>
 
@@ -301,177 +305,226 @@
     </section>
 
     <section id="worked-example">
-      <h2>Worked example</h2>
+      <h2>Worked example: a FHIR research blood-pressure profile</h2>
 
       <p>
-        The following schema is small to write but combinatorially unforgiving: every candidate
-        triple is ambiguous between two constraints, and the schema is designed so that
-        <em>every</em> matching over <span class="math">n</span> such triples is eventually
-        rejected once <span class="math">n &ge; 3</span> — which is exactly the case in which a
-        naive validator does the most possible doomed work.
+        The techniques of <a href="#negative-caching">&sect;3</a> and <a href="#feasible-bags">&sect;4</a>
+        address different failure modes, and a schema built entirely from one of them (as most
+        textbook examples are) only shows one technique at work. The schema below is written to
+        need both at once, and is deliberately modelled on a real FHIR pattern — a research
+        <a href="https://hl7.org/fhir/observation.html"><code>Observation</code></a> profile for
+        blood pressure — rather than an arbitrary abstract grammar. It is <em>illustrative</em>,
+        not a certified clinical profile: the element names and general structure
+        (<code>component</code>, <code>referenceRange</code>, both repeatable and both discriminated
+        by a nested shape rather than a bare value) are real FHIR, but the exact codes and the
+        "two acceptable protocols" framing are simplified for the example.
       </p>
 
-      <pre><code>PREFIX : &lt;http://example/&gt;
+      <p>
+        The profile accepts submissions from two data-collection protocols, distinguished along
+        two independent axes. A <em>quick</em> capture records one or two <code>component</code>
+        entries (e.g. a single systolic/diastolic reading, or one retake) and nothing else; an
+        <em>extended</em> capture records any number of <code>component</code> entries but must
+        additionally include one component flagged as a protocol quality-control marker. Separately,
+        and by the same shape, the profile's <code>referenceRange</code> entries are either a short
+        list of directly-applicable guideline ranges, or an extended list plus one range specifically
+        flagged as the critical/out-of-bounds range. Neither the components nor the ranges declare
+        <em>which</em> protocol was used directly; a validator has to work it out from what is
+        present.
+      </p>
 
-:S {
-  :p . {1,2}
-  |
-  :p . + ; :q .
+      <pre><code>PREFIX fhir: &lt;http://hl7.org/fhir/&gt;
+PREFIX ex:   &lt;http://example.org/research-bp#&gt;
+PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+
+ex:VitalsPanelShape {
+  (
+    fhir:component . {1,2}
+    |
+    fhir:component . + ; fhir:qualityFlag [ex:protocol-qc-check]
+  ) ;
+  (
+    fhir:referenceRange {
+      fhir:low  xsd:decimal MININCLUSIVE 60 MAXINCLUSIVE 90 ;
+      fhir:high xsd:decimal MININCLUSIVE 90 MAXINCLUSIVE 140
+    } {1,2}
+    |
+    fhir:referenceRange {
+      fhir:low  xsd:decimal MININCLUSIVE 60 MAXINCLUSIVE 90 ;
+      fhir:high xsd:decimal MININCLUSIVE 90 MAXINCLUSIVE 140
+    } + ;
+    fhir:referenceRange {
+      fhir:low  xsd:decimal MININCLUSIVE 120 ;
+      fhir:high xsd:decimal MININCLUSIVE 180
+    }
+  )
 }</code></pre>
 
       <p>
-        <span class="math">E</span> = <code>OneOf( TC_A, EachOf( TC_B, TC_C ) )</code> where
-        <span class="math">TC_A</span> = <code>:p . {1,2}</code>,
-        <span class="math">TC_B</span> = <code>:p . {1,*}</code>, and
-        <span class="math">TC_C</span> = <code>:q . {1,1}</code>. The data is <span class="math">n</span>
-        distinct <code>:p</code> triples on the focus node and <em>no</em> <code>:q</code> triple
-        at all:
+        Two independent EachOf-sequenced OneOf groups, structurally identical to each
+        other and each identical in shape to the "shared-predicate OneOf" pattern: a
+        <span class="math">\{1,2\}</span> branch competing with an unbounded branch that requires a
+        second, distinctively-flagged element. The <code>component</code> group leaves every
+        candidate component value <em>unconstrained</em> (<code>.</code> — a quick capture's
+        readings and an extended capture's readings look identical by value; only their count and
+        the presence of the QC-flagged component distinguish the protocols). The
+        <code>referenceRange</code> group instead discriminates candidates by <em>value</em> — a
+        guideline range and a critical range have numerically distinct <code>low</code>/<code>high</code>
+        windows. This one difference is what makes the two groups exercise different halves of the
+        machinery, as <a href="#blowup">&sect;5.2</a> shows with measured numbers.
       </p>
 
-      <pre><code>:s :p "v0" .
-:s :p "v1" .
-...
-:s :p "v<var>n</var>-1" .</code></pre>
-
       <section id="pre-matching-instance">
-        <h3>The two views, concretely, at n = 3</h3>
+        <h3>The two views, concretely, at a small instance</h3>
 
         <p>
-          With three triples <span class="math">t_0, t_1, t_2</span> (one per <code>:p</code>
-          value) and no <code>:q</code> triple, every <code>:p</code> triple's object is unconstrained
-          (<code>.</code>) by both <span class="math">TC_A</span> and <span class="math">TC_B</span>,
-          so both are candidates for every triple; <span class="math">TC_C</span> has no candidates
-          at all (nothing has predicate <code>:q</code>). The <a>pre-matching</a>
-          (<span class="math">T &rarr; 2^{TC}</span>) is:
+          Take 3 <code>component</code> triples (values <code>"reading-0"</code>,
+          <code>"reading-1"</code>, <code>"reading-2"</code>, no <code>fhir:qualityFlag</code>
+          anywhere) and 2 <code>referenceRange</code> triples, both with
+          <code>low</code>/<code>high</code> inside the guideline window (say
+          <span class="math">[65,100]</span> and <span class="math">[70,110]</span>) and outside the
+          critical window. Write <span class="math">TC_A</span> = <code>fhir:component . {1,2}</code>,
+          <span class="math">TC_B</span> = <code>fhir:component . +</code>,
+          <span class="math">TC_C</span> = the QC-flag constraint,
+          <span class="math">TC_D</span> = the guideline-range shape constraint,
+          <span class="math">TC_E</span> = the critical-range shape constraint. The
+          <a>pre-matching</a> (<span class="math">T &rarr; 2^{TC}</span>) is:
         </p>
 
-        <pre><code>t0 &rarr; { TC_A, TC_B }
-t1 &rarr; { TC_A, TC_B }
-t2 &rarr; { TC_A, TC_B }</code></pre>
+        <pre><code>reading-0  &rarr; { TC_A, TC_B }
+reading-1  &rarr; { TC_A, TC_B }
+reading-2  &rarr; { TC_A, TC_B }
+range-0    &rarr; { TC_D }        &lt;- TC_E already refuted: see below
+range-1    &rarr; { TC_D }        &lt;- TC_E already refuted: see below</code></pre>
 
         <p>
-          Read the other way (<span class="math">TC &rarr; 2^T</span>, the view the question
-          "which triples could satisfy this constraint" naturally produces): <span class="math">TC_A
-          &rarr; {t_0,t_1,t_2}</span>, <span class="math">TC_B &rarr; {t_0,t_1,t_2}</span>,
-          <span class="math">TC_C &rarr; {}</span>. Neither view alone is a matching:
-          <span class="math">TC_A</span> and <span class="math">TC_B</span> both claim every
-          triple, and <span class="math">TC_C</span>, needed by <span class="math">{1,1}</span>,
-          has nothing to offer at all.
-        </p>
-
-        <p>
-          A <em>matching</em> resolves the overlap by choosing one candidate per triple —
-          one of <span class="math">2^3 = 8</span> possibilities. Take
-          <span class="math">{t_0 {\to} TC_A,\ t_1 {\to} TC_B,\ t_2 {\to} TC_B}</span> as an
-          example. Its <a>split</a> (invert back to <span class="math">TC &rarr; 2^T</span>, this
-          time as a genuine partition) is <span class="math">TC_A {\to} \{t_0\}</span>,
-          <span class="math">TC_B {\to} \{t_1,t_2\}</span>, <span class="math">TC_C {\to} \{\}</span>.
-          Read off the counts: <span class="math">TC_A</span> has 1 (&isin; [1,2], fine on its own),
-          <span class="math">TC_B</span> has 2 (&ge; 1, fine on its own) — but <em>both</em> branches
-          of the OneOf are simultaneously non-empty, which OneOf forbids outside a
-          repetition. This matching is rejected, and not because any single constraint's count is
-          wrong.
+          Read the other way (<span class="math">TC &rarr; 2^T</span>): before value-checking,
+          <span class="math">TC_D</span> and <span class="math">TC_E</span> both nominally claim
+          <span class="math">\{range_0,range_1\}</span> (same predicate, <code>fhir:referenceRange</code>);
+          after checking each range's <code>low</code>/<code>high</code> against each candidate
+          shape's numeric window — the recursive value check that <a href="#negative-caching">negative
+          caching</a> performs once per pair — <span class="math">TC_E</span> is refuted for both,
+          because neither range's bounds reach the critical window's minimum of 120/180. This
+          refutation happens <em>before</em> any structural reasoning about cardinalities runs at
+          all, and it is why the pre-matching above already shows only <span class="math">TC_D</span>
+          for both range triples.
         </p>
 
         <p>
-          In fact <em>every</em> one of the 8 matchings at n = 3 is rejected, for one of three
-          reasons: some triples on <span class="math">TC_A</span> and some on
-          <span class="math">TC_B</span> (OneOf exclusivity, as above); all three on
-          <span class="math">TC_A</span> (count 3 &gt; max 2); or all three on
-          <span class="math">TC_B</span> (its EachOf sibling <span class="math">TC_C</span>
-          then needs a <code>:q</code> triple that does not exist). A validator that checks
-          matchings one at a time discovers this fact eight separate times.
+          The <code>component</code> triples get no such help: every reading's value satisfies both
+          <span class="math">TC_A</span> and <span class="math">TC_B</span> (<code>.</code> accepts
+          anything), so no <span class="math">(t,tc)</span> pair among them is refuted by value.
+          Take the matching <span class="math">\{reading_0{\to}TC_A,\ reading_1{\to}TC_B,\
+          reading_2{\to}TC_B\}</span> as an example candidate. Its <a>split</a> (the
+          <span class="math">TC &rarr; 2^T</span> view of <em>this specific</em> matching) is
+          <span class="math">TC_A{\to}\{reading_0\}</span>, <span class="math">TC_B{\to}\{reading_1,reading_2\}</span>
+          — both individually within bounds (1 &isin; [1,2]; 2 &ge; 1) — but both branches of the
+          component OneOf are simultaneously non-empty, which OneOf forbids outside a
+          repetition. Rejected, and not because any single count is wrong — exactly the same
+          ensemble-level failure mode as before, now happening inside a FHIR-shaped schema instead
+          of an abstract one.
         </p>
       </section>
 
       <section id="blowup">
-        <h3>Why this gets worse fast, and how the two techniques stop it</h3>
+        <h3>Two techniques, two different jobs, measured</h3>
 
         <p>
-          At <span class="math">n</span> triples the naive Cartesian enumeration
-          (<code>MatchingsIterator</code>) produces <span class="math">2^n</span> candidate
-          matchings, and — by the same three-way case analysis as at n = 3, which does not depend
-          on <span class="math">n</span> — <em>every one of them fails</em> once
-          <span class="math">n &ge; 3</span>. This is the worst case for a search algorithm: no
-          matching succeeds, so nothing short-circuits the enumeration; the full product must be
-          exhausted (or the algorithm must know, some other way, that it can stop).
-        </p>
-
-        <p>
-          Negative caching (<a href="#negative-caching">&sect;3</a>) does not help directly here:
-          every triple's object genuinely does satisfy both <span class="math">TC_A</span> and
-          <span class="math">TC_B</span>'s value expression (<code>.</code> accepts anything), so
-          no <span class="math">(t,tc)</span> pair is refuted by a per-triple value check. The
-          failure is a property of the <em>ensemble</em> — of how many triples end up where,
-          together with the OneOf/EachOf structure — which is exactly what the
-          feasibility predicate (<a href="#feasibility-predicate">&sect;4.2</a>) is built to catch
-          during arc consistency, structurally, before any composition is even tried:
-        </p>
-
-        <ol>
-          <li>
-            No triple has predicate <code>:q</code>, so <span class="math">potential(TC_C) = 0</span>
-            and therefore <span class="math">hi(TC_C) = 0</span> under any assignment — always below
-            <span class="math">TC_C</span>'s minimum of 1.
-          </li>
-          <li>
-            Test the candidate <span class="math">TC_B</span> for arc consistency: commit one triple
-            to it (<span class="math">lo(TC_B)=1</span>) and ask whether the OneOf is still
-            feasible. Branch 2 (<span class="math">EachOf(TC_B,TC_C)</span>) needs
-            <span class="math">TC_C \ge 1</span>, impossible by step 1. Branch 1
-            (<span class="math">TC_A</span>) requires branch 2's slice to be exactly zero — but it
-            cannot be, since <span class="math">lo(TC_B)=1</span> was just committed. Both
-            alternatives of the OneOf fail: <span class="math">F</span> refutes
-            <span class="math">TC_B</span> as a candidate for <em>every</em> triple that offered it,
-            in one step, independent of <span class="math">n</span>.
-          </li>
-          <li>
-            Every triple's candidate set collapses to the singleton
-            <span class="math">\{TC_A\}</span>; there is exactly one remaining composition, all
-            <span class="math">n</span> triples on <span class="math">TC_A</span>. Test it:
-            <span class="math">lo(TC_A) = n</span>, and for <span class="math">n &ge; 3</span> this
-            already exceeds <span class="math">TC_A</span>'s maximum of 2. Refuted.
-          </li>
-        </ol>
-
-        <p>
-          No candidate matching is ever assembled or checked by the exact interval verifier —
-          the schema's unsatisfiability at this data size is established purely by the two
-          structural refutations above, whose cost does not depend on <span class="math">n</span>
-          at all. Measured on the reference implementation (<code>MatchingSearchProbesTest</code>,
-          <code>probe1_sharedPredicateOneOf_isPrunedWithoutEnumeration</code>):
+          Generalize to <span class="math">n_c</span> <code>component</code> triples (no QC flag) and
+          <span class="math">n_r</span> <code>referenceRange</code> triples (all inside the guideline
+          window, none inside the critical one). The naive Cartesian enumeration
+          (<code>MatchingsIterator</code>) would check
+          <span class="math">2^{n_c} \times 2^{n_r} = 2^{n_c+n_r}</span> matchings — both groups
+          multiply together, because the historical algorithm enumerates the whole neighbourhood's
+          candidate choices at once, regardless of which predicate a triple has. Measured on the
+          reference implementation (a Jena-based probe structurally identical to
+          <code>MatchingSearchProbesTest</code>), counting how many matchings reach the final exact
+          verifier (<code>informCandidateMatchingConformance</code>):
         </p>
 
         <table class="simple">
           <thead>
-            <tr><th><span class="math">n</span></th><th>naive: matchings to check (<span class="math">2^n</span>)</th><th>naive: measured wall time</th><th>feasibility-pruned: matchings checked</th><th>feasibility-pruned: measured wall time</th></tr>
+            <tr><th><span class="math">n_c</span></th><th><span class="math">n_r</span></th><th>naive: matchings to check (<span class="math">2^{n_c+n_r}</span>)</th><th>optimized: matchings checked</th><th>optimized: measured wall time</th><th>conforms</th></tr>
           </thead>
           <tbody>
-            <tr><td>4</td><td>16</td><td>not separately measured</td><td>0</td><td>0&nbsp;ms</td></tr>
-            <tr><td>8</td><td>256</td><td>not separately measured</td><td>0</td><td>0&nbsp;ms</td></tr>
-            <tr><td>12</td><td>4096</td><td>not separately measured</td><td>0</td><td>0&nbsp;ms</td></tr>
-            <tr><td>16</td><td>65536</td><td>166&nbsp;ms</td><td>0</td><td>0&nbsp;ms</td></tr>
-            <tr><td>24</td><td>16777216</td><td>~40&nbsp;s (extrapolated from the trend, not directly measured)</td><td>0</td><td>0&nbsp;ms</td></tr>
+            <tr><td>4</td><td>4</td><td>256</td><td>8</td><td>0&nbsp;ms</td><td>false</td></tr>
+            <tr><td>8</td><td>8</td><td>65,536</td><td>16</td><td>0&nbsp;ms</td><td>false</td></tr>
+            <tr><td>12</td><td>12</td><td>16,777,216</td><td>24</td><td>1&nbsp;ms</td><td>false</td></tr>
+            <tr><td>16</td><td>16</td><td>4,294,967,296</td><td>32</td><td>1&nbsp;ms</td><td>false</td></tr>
+            <tr><td>24</td><td>24</td><td>281,474,976,710,656</td><td>48</td><td>1&nbsp;ms</td><td>false</td></tr>
           </tbody>
         </table>
 
         <p>
-          The <span class="math">2^n</span> column is exact by construction (it is the size of the
-          Cartesian product the naive algorithm enumerates); the naive wall-clock figures are those
-          reported where the reference implementation's design notes measured them directly (n=16)
-          or extrapolated the trend (n=24) — the point being qualitative (exponential vs. constant),
-          not that every cell was independently timed. The feasibility-pruned figures are all
-          directly measured, from the reference implementation's own test suite
-          (<code>MatchingSearchProbesTest</code>), at every listed <span class="math">n</span>.
+          Every row is nonconformant (by construction: <span class="math">n_c &ge; 3</span> dooms
+          the component group exactly as in the single-technique case; the range group's own
+          <span class="math">\{1,2\}</span> branch is exceeded once <span class="math">n_r &gt; 2</span>,
+          and its extended branch has no critical-range candidate to complete it). What matters is
+          <em>why</em> the "optimized: matchings checked" column reads <span class="math">2 n_r</span>
+          and not <span class="math">0</span> — isolate the two groups to see it directly:
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr><th>isolated group</th><th><span class="math">n_c</span></th><th><span class="math">n_r</span></th><th>matchings checked</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>components only</td><td>16</td><td>0</td><td>0</td></tr>
+            <tr><td>ranges only</td><td>0</td><td>16</td><td>32</td></tr>
+          </tbody>
+        </table>
+
+        <p>
+          <strong>Components alone check 0</strong> — the same structural refutation as the abstract
+          example: no candidate is refutable by value (every reading satisfies both
+          <span class="math">TC_A</span> and <span class="math">TC_B</span>), so the feasibility
+          predicate <span class="math">F</span> (<a href="#feasibility-predicate">&sect;4.2</a>) has
+          to do all the work — and it does: the QC-flag constraint's zero potential makes the
+          extended branch infeasible the moment any triple commits to
+          <span class="math">TC_B</span>, collapsing every triple onto
+          <span class="math">TC_A</span> alone, which then fails its maximum of 2. No matching is
+          ever assembled at all.
         </p>
 
         <p>
-          As a positive control, <span class="math">n = 2</span> conforms (both triples fit on
-          <span class="math">TC_A</span>'s <span class="math">\{1,2\}</span>): the optimized
-          search checks exactly one matching, the same one the naive search would eventually reach
-          — the two algorithms accept and reject the same set of matchings at every
-          <span class="math">n</span>; they differ only in how much doomed work is done to find
-          that out.
+          <strong>Ranges alone check <span class="math">2 n_r</span>, not 0</strong> — and that
+          nonzero, <em>linear</em> figure is the honest signature of negative caching rather than a
+          failure of it. Each of the <span class="math">n_r</span> range triples nominally has two
+          candidates sharing predicate <code>fhir:referenceRange</code>; before either is prunable,
+          each candidate's own nested triple expression (its <code>low</code>/<code>high</code>
+          constraints) has to be checked once against that range's actual values — one recursive
+          check for the guideline-shaped candidate, one for the critical-shaped candidate, both of
+          which resolve to a single (trivial, non-ambiguous) matching of their own two facets and so
+          each register once in the count. That is exactly <span class="math">2</span> checks per
+          range triple, <span class="math">2n_r</span> total — and, critically, it does
+          <strong>not</strong> depend on <span class="math">n_c</span> at all (compare the 16/16 row
+          above, 32 checked, to the 0/16 row here, also 32): whatever combinatorial explosion the
+          component group is contributing elsewhere in the schema, the cost of ruling out the
+          critical-range candidate stays flat. Without negative caching, an implementation
+          re-deriving "this range's bounds don't reach 120" once per candidate <em>matching</em> that
+          would have tried it — rather than once per candidate <em>pair</em> — would pay that cost
+          <span class="math">2^{n_c}</span> times over for every one of the <span class="math">n_r</span>
+          ranges, multiplying into the same exponential the component group already produces on its
+          own.
+        </p>
+
+        <p>
+          Put the two together and the story is precise, not just qualitative: negative caching
+          holds the value-discriminable dimension ( ranges) at a <em>constant-per-triple, linear
+          total</em> cost, independent of everything else in the schema; feasibility bags collapse
+          the value-indistinguishable dimension (components) to <em>zero</em>, however large it
+          grows. Neither alone explains the measured <span class="math">32</span> at
+          <span class="math">n_c{=}n_r{=}16</span> — it is exactly <span class="math">0 + 2{\times}16</span>,
+          the two techniques' contributions added, against a naive baseline of
+          <span class="math">2^{32}</span>.
+        </p>
+
+        <p>
+          As a positive control, <span class="math">n_c{=}n_r{=}2</span> conforms (2 readings fit
+          the quick protocol's <span class="math">\{1,2\}</span>; 2 guideline ranges fit the
+          short-list branch): the optimized search checks 5 matchings and accepts one of them — real
+          search work happens for genuinely satisfiable instances, as it must; the pruning only ever
+          discards states that could never have led anywhere.
         </p>
       </section>
     </section>
