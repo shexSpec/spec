@@ -431,7 +431,7 @@ return true
 	    validator that instead evaluates value expressions while walking each candidate
 	    matching re-pays that cost once per matching — multiplied by however many candidate
 	    matchings the <em>rest</em> of the neighbourhood generates (measured concretely in
-	    <a href="#fhir-example"></a>).
+	    <a href="#soso-example"></a>).
 	  </p>
 
 	  <p>
@@ -542,37 +542,44 @@ return false
 </code></pre>
 	</section>
 
-	<section id="fhir-example">
-	  <h4>Worked Example: a FHIR Research Blood-Pressure Profile</h4>
+	<section id="soso-example">
+	  <h4>Worked Example: a Science-on-Schema.org Dataset Profile</h4>
 
 	  <p>
 	    The two refinements address different failure modes, and a schema built entirely from
-	    one of them shows only one at work. The following profile — modelled on a research
-	    blood-pressure <a href="https://hl7.org/fhir/observation.html">Observation</a>
-	    profile in HL7 FHIR — needs both at once. It is illustrative rather than clinically
-	    certified, but the moving parts are real FHIR: repeated <code>component</code> and
-	    <code>referenceRange</code> elements, and range bounds that are FHIR
-	    <code>Quantity</code> structures carrying a <code>value</code>, an optional
-	    <code>comparator</code> and a UCUM unit <code>code</code> such as
-	    <code>mm[Hg]</code>. Shape labels use the document-relative
-	    <code>&lt;#Label&gt;</code> pattern, resolved against the schema document's base IRI.
+	    one of them shows only one at work. The following profile — modelled on the
+	    <a href="https://science-on-schema.org/">Science-on-Schema.org</a> guidance for
+	    schema.org <code>Dataset</code> descriptions — needs both at once. It is illustrative
+	    rather than the official profile, but the moving parts are real schema.org practice:
+	    repeated <code>creator</code> and <code>identifier</code> properties whose objects are
+	    choice types (<code>Person</code> or <code>Organization</code>; a
+	    <code>PropertyValue</code> or a plain string). schema.org's repeated properties are
+	    <em>unordered repeated triples</em> — its JSON-LD context declares no
+	    <code>@list</code> containers, and order, where wanted, is modelled explicitly
+	    (<code>ItemList</code> with <code>position</code>) — so a node's neighbourhood carries
+	    one triple per value, which is precisely what exposes the repetition to the matching
+	    search. (A representation that instead preserves order with RDF Collections, as FHIR
+	    R5 RDF does for its repeating elements, moves the repetition into
+	    <code>rdf:first</code>/<code>rdf:rest</code> cells whose per-node neighbourhoods are
+	    unambiguous; this machinery has little to do there.) Shape labels use the
+	    document-relative <code>&lt;#Label&gt;</code> pattern, resolved against the schema
+	    document's base IRI.
 	  </p>
 
 	  <p>
-	    The profile accepts submissions from two data-collection protocols, distinguished
-	    along two independent axes. A <em>quick</em> capture records one or two
-	    <code>component</code> entries and nothing more; an <em>extended</em> capture records
-	    any number of components but must include a protocol quality-control flag.
-	    Independently, the reference ranges are either a short list (one or two) of guideline
-	    ranges, or a longer list plus exactly one <em>critical</em> range whose bounds mark
-	    the panic thresholds. Neither axis is declared explicitly; the validator works each
-	    out from what is present.
+	    The profile accepts two conventions on each of two independent axes. Creators: either
+	    a short list (one or two) of persons or organizations, or a longer list that must
+	    then include at least one ORCID-identified person (so someone is unambiguously
+	    citable and contactable). Identifiers: either the dataset is identified by one or two
+	    DOIs — expressed, per the Science-on-Schema.org guidance, as
+	    <code>PropertyValue</code>s whose <code>propertyID</code> names the DOI registry — or
+	    it carries legacy string identifiers plus exactly one DOI. Neither convention is
+	    declared explicitly; the validator works each out from what is present.
 	  </p>
 
 	  <div class="example">
 	    <div class="exsec">Schema:</div><br/>
 	    <pre class="line-labels">
-
 
 
 <span class="lineno schema">S1</span>
@@ -592,57 +599,68 @@ return false
 
 <span class="lineno schema">S2</span>
 
-
-
-
-
-
-
-
 <span class="lineno schema">S3</span>
 
 
 
 
+<span class="lineno schema">S4</span>
+
+
+
+
+<span class="lineno schema">S5</span>
+
+
+
+
+
+<span class="lineno schema">S6</span>
+
 
 
 </pre>
 	    <div class="inline shexc">
-	      <pre class="nohighlight">PREFIX fhir: &lt;http://hl7.org/fhir/&gt;
-PREFIX ex:   &lt;http://example.org/research-bp#&gt;
-PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
+	      <pre class="nohighlight">PREFIX schema: &lt;https://schema.org/&gt;
+PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
 
-&lt;#VitalsPanelShape&gt; {
+&lt;#SOSODataset&gt; {
   (
-    fhir:component . {1,2}
+    schema:creator @&lt;#Agent&gt; {1,2}
     |
-    fhir:component . + ;
-    fhir:qualityFlag [ex:protocol-qc-check]
+    schema:creator @&lt;#Agent&gt; + ;
+    schema:creator @&lt;#OrcidPerson&gt;
   ) ;
   (
-    fhir:referenceRange @&lt;#GuidelineRange&gt; {1,2}
+    schema:identifier @&lt;#DoiPropertyValue&gt; {1,2}
     |
-    fhir:referenceRange @&lt;#GuidelineRange&gt; + ;
-    fhir:referenceRange @&lt;#CriticalRange&gt;
+    schema:identifier xsd:string + ;
+    schema:identifier @&lt;#DoiPropertyValue&gt;
   )
 }
 
-&lt;#GuidelineRange&gt; {
-  fhir:low  { fhir:value xsd:decimal MININCLUSIVE 60 MAXINCLUSIVE 90 ;
-              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
-              fhir:code ["mm[Hg]"] } ;
-  fhir:high { fhir:value xsd:decimal MININCLUSIVE 90 MAXINCLUSIVE 140 ;
-              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
-              fhir:code ["mm[Hg]"] }
+&lt;#Agent&gt; @&lt;#Person&gt; OR @&lt;#Organization&gt;
+
+&lt;#Person&gt; {
+  a [schema:Person] ;
+  schema:name xsd:string
 }
 
-&lt;#CriticalRange&gt; {
-  fhir:low  { fhir:value xsd:decimal MININCLUSIVE 120 ;
-              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
-              fhir:code ["mm[Hg]"] } ;
-  fhir:high { fhir:value xsd:decimal MININCLUSIVE 180 ;
-              fhir:comparator ["&lt;" "&lt;=" "&gt;" "&gt;="] ? ;
-              fhir:code ["mm[Hg]"] }
+&lt;#Organization&gt; {
+  a [schema:Organization] ;
+  schema:name xsd:string
+}
+
+&lt;#OrcidPerson&gt; {
+  a [schema:Person] ;
+  schema:name xsd:string ;
+  schema:identifier /^https:\/\/orcid\.org\//
+}
+
+&lt;#DoiPropertyValue&gt; {
+  a [schema:PropertyValue] ;
+  schema:propertyID ["https://registry.identifiers.org/registry/doi"] ;
+  schema:value /^10\./
 }</pre>
 	    </div>
 	    <div style="clear:both;"></div>
@@ -651,20 +669,21 @@ PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
 	  <p>
 	    <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> are
 	    the two OneOf groups. <span class="lineno schema">tc1</span> and
-	    <span class="lineno schema">tc2</span> are the quick and extended component
-	    constraints — value-indistinguishable, since both accept any component;
-	    <span class="lineno schema">tc3</span> is the quality flag;
-	    <span class="lineno schema">tc4</span> and <span class="lineno schema">tc5</span> are
-	    the guideline-range constraints of the quick and extended alternatives; and
-	    <span class="lineno schema">tc6</span> is the critical-range constraint.
-	    <span class="lineno schema">S2</span> and <span class="lineno schema">S3</span>
-	    differ only in their <code>Quantity</code> value windows: guideline
-	    <code>low</code> &isin; [60,90] and <code>high</code> &isin; [90,140]; critical
-	    <code>low</code> &ge; 120 and <code>high</code> &ge; 180.
+	    <span class="lineno schema">tc2</span> are the short-list and long-list creator
+	    constraints — value-indistinguishable, since any valid agent satisfies both — while
+	    <span class="lineno schema">tc3</span> demands an ORCID-identified person
+	    (<span class="lineno schema">S5</span>). On the identifier side the roles are
+	    mirrored: <span class="lineno schema">tc4</span> and
+	    <span class="lineno schema">tc6</span> share the DOI value expression
+	    (<span class="lineno schema">S6</span>) and are indistinguishable from each other,
+	    but value-distinguishable from the plain-string constraint
+	    <span class="lineno schema">tc5</span>. <span class="lineno schema">S2</span> is the
+	    schema.org choice type: a creator may be a <span class="lineno schema">S3</span>
+	    person or a <span class="lineno schema">S4</span> organization.
 	  </p>
 
 	  <div class="example">
-	    <div class="exsec">Data (conformant — an extended capture with a panic range):</div><br/>
+	    <div class="exsec">Data (conformant — a long creator list and a legacy identifier alongside the DOI):</div><br/>
 	    <pre class="line-labels">
 
 
@@ -674,88 +693,112 @@ PREFIX xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt;
 <span class="lineno data">t4</span>
 <span class="lineno data">t5</span>
 <span class="lineno data">t6</span>
-<span class="lineno data">t7</span>
 
+<span class="lineno data">t7</span>
 <span class="lineno data">t8</span>
 <span class="lineno data">t9</span>
+
 <span class="lineno data">t10</span>
 <span class="lineno data">t11</span>
+
 <span class="lineno data">t12</span>
-<span class="lineno data">t13</span></pre>
+<span class="lineno data">t13</span>
+
+<span class="lineno data">t14</span>
+<span class="lineno data">t15</span>
+<span class="lineno data">t16</span></pre>
 	    <div class="inline json">
-	      <pre class="nohighlight">PREFIX fhir: &lt;http://hl7.org/fhir/&gt;
-PREFIX ex:   &lt;http://example.org/research-bp#&gt;
+	      <pre class="nohighlight">PREFIX schema: &lt;https://schema.org/&gt;
+PREFIX ex:     &lt;http://example.org/datasets#&gt;
 
-ex:obs1 fhir:component      ex:systolic ;
-        fhir:component      ex:diastolic ;
-        fhir:component      ex:bodyPosition ;
-        fhir:qualityFlag    ex:protocol-qc-check ;
-        fhir:referenceRange ex:sysNormal ;
-        fhir:referenceRange ex:diaNormal ;
-        fhir:referenceRange ex:panic .
+ex:dset1 a schema:Dataset ;
+    schema:creator    ex:alice ;
+    schema:creator    ex:bob ;
+    schema:creator    ex:noaa ;
+    schema:identifier "gov.noaa.ncdc:C00861" ;
+    schema:identifier ex:doi1 .
 
-ex:sysNormal fhir:low  [ fhir:value 90.0  ; fhir:code "mm[Hg]" ] ;
-             fhir:high [ fhir:value 140.0 ; fhir:code "mm[Hg]" ] .
-ex:diaNormal fhir:low  [ fhir:value 60.0  ; fhir:code "mm[Hg]" ] ;
-             fhir:high [ fhir:value 90.0  ; fhir:code "mm[Hg]" ] .
-ex:panic     fhir:low  [ fhir:value 120.0 ; fhir:comparator "&gt;=" ; fhir:code "mm[Hg]" ] ;
-             fhir:high [ fhir:value 180.0 ; fhir:comparator "&gt;=" ; fhir:code "mm[Hg]" ] .</pre>
+ex:alice a schema:Person ;
+    schema:name "Alice Walker" ;
+    schema:identifier "https://orcid.org/0000-0002-1825-0097" .
+
+ex:bob a schema:Person ;
+    schema:name "Bob Ferris" .
+
+ex:noaa a schema:Organization ;
+    schema:name "NOAA National Centers for Environmental Information" .
+
+ex:doi1 a schema:PropertyValue ;
+    schema:propertyID "https://registry.identifiers.org/registry/doi" ;
+    schema:value "10.7289/V5D21VHZ" .</pre>
 	    </div>
 	    <div style="clear:both;"></div>
 	  </div>
 
 	  <p>
-	    Labels <span class="lineno data">t8</span>–<span class="lineno data">t13</span> name
-	    the triple beginning on the labelled line; each bracketed <code>Quantity</code>
-	    contributes further nested triples, which participate in the recursive checks of the
-	    range nodes but not in the focus node's own matching.
+	    The focus node's neighbourhood is <span class="lineno data">t1</span>–<span class="lineno data">t6</span>:
+	    three creators and two identifiers, plus the <code>rdf:type</code> triple
+	    <span class="lineno data">t1</span>, whose predicate matches no constraint — since
+	    <span class="lineno schema">S1</span> is not <code>CLOSED</code>, it is simply
+	    ignored. The remaining triples
+	    (<span class="lineno data">t7</span>–<span class="lineno data">t16</span>) belong to
+	    the creator and identifier nodes and participate only in the recursive value checks.
 	  </p>
 
 	  <p>
-	    By predicate alone, the pre-matching of <code>ex:obs1</code> is
-	    <span class="lineno data">t1</span>–<span class="lineno data">t3</span> &rarr;
-	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
-	    <span class="lineno data">t4</span> &rarr; {<span class="lineno schema">tc3</span>};
-	    <span class="lineno data">t5</span>–<span class="lineno data">t7</span> &rarr;
+	    By predicate alone, the pre-matching of <code>ex:dset1</code> is
+	    <span class="lineno data">t2</span>–<span class="lineno data">t4</span> &rarr;
+	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>,
+	    <span class="lineno schema">tc3</span>};
+	    <span class="lineno data">t5</span>,<span class="lineno data">t6</span> &rarr;
 	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>,
 	    <span class="lineno schema">tc6</span>} — a Cartesian product of
-	    2&middot;2&middot;2&middot;1&middot;3&middot;3&middot;3 = 216 matchings.
+	    3&sup3;&middot;3&sup2; = 243 matchings.
 	  </p>
 
 	  <p>
-	    Negative caching checks each (range, candidate) pair once, recursively:
-	    <code>ex:sysNormal</code> (<span class="lineno data">t5</span>) against
-	    <span class="lineno schema">S3</span> fails inside its <code>low</code>
-	    <code>Quantity</code> (90 &lt; 120), deleting <span class="lineno schema">tc6</span>;
-	    likewise <span class="lineno data">t6</span>. <code>ex:panic</code>
-	    (<span class="lineno data">t7</span>) against <span class="lineno schema">S2</span>
-	    fails the guideline <code>low</code> window (120 &gt; 90), deleting
-	    <span class="lineno schema">tc4</span> and <span class="lineno schema">tc5</span>.
-	    The pre-matching becomes <span class="lineno data">t5</span>,<span class="lineno data">t6</span>
-	    &rarr; {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>};
-	    <span class="lineno data">t7</span> &rarr; {<span class="lineno schema">tc6</span>}:
-	    2&sup3;&middot;2&sup2; = 32 matchings — and no value expression is ever evaluated
-	    again.
+	    Negative caching checks each pair once, recursively. <code>ex:bob</code>
+	    (<span class="lineno data">t3</span>) has no <code>schema:identifier</code> at all,
+	    so <span class="lineno schema">S5</span>'s mandatory ORCID constraint is refuted
+	    without assembling any sub-matching: <span class="lineno schema">tc3</span> deleted.
+	    <code>ex:noaa</code> (<span class="lineno data">t4</span>) is typed
+	    <code>schema:Organization</code>, failing <span class="lineno schema">S5</span>'s
+	    <code>[schema:Person]</code> value set: <span class="lineno schema">tc3</span>
+	    deleted. The legacy identifier (<span class="lineno data">t5</span>) is a literal
+	    with no outgoing arcs, so <span class="lineno schema">S6</span>'s mandatory
+	    constraints can never be matched: <span class="lineno schema">tc4</span> and
+	    <span class="lineno schema">tc6</span> deleted. And <code>ex:doi1</code>
+	    (<span class="lineno data">t6</span>) is an IRI node, not a literal:
+	    <span class="lineno schema">tc5</span> deleted. The pre-matching becomes
+	    <span class="lineno data">t2</span> &rarr; {<span class="lineno schema">tc1</span>,
+	    <span class="lineno schema">tc2</span>, <span class="lineno schema">tc3</span>};
+	    <span class="lineno data">t3</span>,<span class="lineno data">t4</span> &rarr;
+	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
+	    <span class="lineno data">t5</span> &rarr; {<span class="lineno schema">tc5</span>};
+	    <span class="lineno data">t6</span> &rarr; {<span class="lineno schema">tc4</span>,
+	    <span class="lineno schema">tc6</span>}: 3&middot;2&middot;2&middot;1&middot;2 = 24
+	    matchings — and no value expression is ever evaluated again.
 	  </p>
 
 	  <p>
-	    The classes are {<span class="lineno data">t1</span>,<span class="lineno data">t2</span>,<span class="lineno data">t3</span>}
-	    over {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
-	    {<span class="lineno data">t4</span>} over {<span class="lineno schema">tc3</span>};
-	    {<span class="lineno data">t5</span>,<span class="lineno data">t6</span>} over
-	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>}; and
-	    {<span class="lineno data">t7</span>} over {<span class="lineno schema">tc6</span>}.
-	    The two singleton classes are forced, and committing them drives the refutation test:
-	    with <span class="lineno schema">tc3</span> occupied,
-	    <span class="lineno schema">te1</span>'s first alternative — which requires the
-	    second alternative's constraints to stay empty — is refuted, so every count vector
-	    placing components on <span class="lineno schema">tc1</span> is cut:
-	    <span class="lineno data">t1</span>–<span class="lineno data">t3</span> all go to
-	    <span class="lineno schema">tc2</span>. Symmetrically,
-	    <span class="lineno data">t7</span> on <span class="lineno schema">tc6</span> forces
-	    <span class="lineno data">t5</span> and <span class="lineno data">t6</span> onto
-	    <span class="lineno schema">tc5</span>. Exactly one bag survives the search, and its
-	    expansion is a single matching, whose split is:
+	    The classes are {<span class="lineno data">t2</span>} over three candidates;
+	    {<span class="lineno data">t3</span>,<span class="lineno data">t4</span>} over
+	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
+	    {<span class="lineno data">t5</span>} over {<span class="lineno schema">tc5</span>};
+	    and {<span class="lineno data">t6</span>} over
+	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc6</span>}.
+	    Committing the forced singleton <span class="lineno data">t5</span> &rarr;
+	    <span class="lineno schema">tc5</span> occupies
+	    <span class="lineno schema">tc5</span>, so <span class="lineno schema">te2</span>'s
+	    first alternative — which requires the second alternative's constraints to stay
+	    empty — is refuted for any vector using <span class="lineno schema">tc4</span>:
+	    <span class="lineno data">t6</span> goes to <span class="lineno schema">tc6</span>.
+	    On the creator side, the all-<span class="lineno schema">tc1</span> vector dies on
+	    <span class="lineno schema">tc1</span>'s {1,2} cap (there are three creators), every
+	    mixed vector dies on OneOf exclusivity, so the long alternative must hold — and
+	    <span class="lineno data">t2</span> (<code>ex:alice</code>) is the only possible
+	    occupant of the mandatory <span class="lineno schema">tc3</span>. Exactly one bag
+	    survives, and its expansion is a single matching, whose split is:
 	  </p>
 
 	  <table class="simple">
@@ -763,82 +806,84 @@ ex:panic     fhir:low  [ fhir:value 120.0 ; fhir:comparator "&gt;=" ; fhir:code 
 	      <tr><th>triple constraint</th><th>matched triples</th></tr>
 	    </thead>
 	    <tbody>
-	      <tr><td><span class="lineno schema">tc1</span> (component, quick)</td><td>&mdash;</td></tr>
-	      <tr><td><span class="lineno schema">tc2</span> (component, extended)</td><td><span class="lineno data">t1</span> <span class="lineno data">t2</span> <span class="lineno data">t3</span></td></tr>
-	      <tr><td><span class="lineno schema">tc3</span> (quality flag)</td><td><span class="lineno data">t4</span></td></tr>
-	      <tr><td><span class="lineno schema">tc4</span> (guideline range, quick)</td><td>&mdash;</td></tr>
-	      <tr><td><span class="lineno schema">tc5</span> (guideline range, extended)</td><td><span class="lineno data">t5</span> <span class="lineno data">t6</span></td></tr>
-	      <tr><td><span class="lineno schema">tc6</span> (critical range)</td><td><span class="lineno data">t7</span></td></tr>
+	      <tr><td><span class="lineno schema">tc1</span> (creators, short list)</td><td>&mdash;</td></tr>
+	      <tr><td><span class="lineno schema">tc2</span> (creators, long list)</td><td><span class="lineno data">t3</span> <span class="lineno data">t4</span></td></tr>
+	      <tr><td><span class="lineno schema">tc3</span> (ORCID-identified person)</td><td><span class="lineno data">t2</span></td></tr>
+	      <tr><td><span class="lineno schema">tc4</span> (DOI, DOI-only convention)</td><td>&mdash;</td></tr>
+	      <tr><td><span class="lineno schema">tc5</span> (legacy string identifier)</td><td><span class="lineno data">t5</span></td></tr>
+	      <tr><td><span class="lineno schema">tc6</span> (DOI alongside legacy identifiers)</td><td><span class="lineno data">t6</span></td></tr>
 	    </tbody>
 	  </table>
 
 	  <p>
 	    That matching satisfies <span class="lineno schema">te1</span> and
 	    <span class="lineno schema">te2</span> (each via its second alternative) and hence
-	    <span class="lineno schema">S1</span>: <code>ex:obs1</code> conforms. Counting
-	    everything — the focus-node search plus every recursive check of a range or
-	    <code>Quantity</code> node against a candidate shape — the whole validation verifies
-	    16 (sub-)matchings, measured, against the 32 focus-node matchings alone that
-	    post-caching enumeration walks, or the 216 that a validator evaluating value
+	    <span class="lineno schema">S1</span>: <code>ex:dset1</code> conforms. Counting
+	    everything — the focus-node search plus every recursive check of a creator or
+	    identifier node against a candidate shape — the whole validation verifies 10
+	    (sub-)matchings, measured, against the 24 focus-node matchings alone that
+	    post-caching enumeration walks, or the 243 that a validator evaluating value
 	    expressions inside the walk would explore.
 	  </p>
 
 	  <p>
-	    Now scale the same schema: <span class="math">n_c</span> components (and no quality
-	    flag) with <span class="math">n_r</span> reference ranges, every range
-	    guideline-valued and none critical-valued. No instance with
-	    <span class="math">n_c &ge; 3</span> conforms, so nothing short-circuits — the worst
-	    case for any search. Negative caching deletes <span class="lineno schema">tc6</span>
-	    from every range, at a one-time cost of 6 verified sub-matchings per range (the
-	    <span class="lineno schema">tc4</span> and <span class="lineno schema">tc5</span>
-	    checks each verify two <code>Quantity</code> nodes and the range node itself; the
-	    <span class="lineno schema">tc6</span> check is refuted inside the <code>low</code>
-	    <code>Quantity</code> before any sub-matching is assembled). Arc consistency then
-	    deletes <span class="lineno schema">tc5</span> from every range — committing any
-	    triple to it requires <span class="lineno schema">tc6</span> to be occupiable, but
-	    <span class="math">hi(tc6) = 0</span> — and <span class="lineno schema">tc2</span>
-	    from every component, since there is no quality-flag triple to occupy
-	    <span class="lineno schema">tc3</span>. Every class collapses to its
-	    {1,2}-bounded candidate; for counts of 3 or more no count vector fits, and the search
-	    produces no bag at all: <em>zero</em> focus-node matchings.
+	    Now scale the same schema with a realistic failure mode — the harvested record:
+	    <span class="math">n_a</span> creators, none carrying an ORCID, and
+	    <span class="math">n_i</span> DOI <code>PropertyValue</code>s (one per release, say)
+	    with no legacy string identifier. No instance with <span class="math">n_a &ge; 3</span>
+	    or <span class="math">n_i &ge; 3</span> conforms, so nothing short-circuits — the
+	    worst case for any search. With no ORCID-bearing creator,
+	    <span class="math">hi(tc3) = 0</span>, and arc consistency deletes
+	    <span class="lineno schema">tc2</span> from every creator: committing even one triple
+	    to it requires <span class="lineno schema">tc3</span> to be occupiable.
+	    Symmetrically, with no string identifier, <span class="math">hi(tc5) = 0</span> and
+	    <span class="lineno schema">tc6</span> is deleted from every DOI. Both sides collapse
+	    onto their {1,2}-capped candidate; for counts of 3 or more no count vector fits, and
+	    the search assembles <em>zero</em> focus-node matchings. Every verified matching is a
+	    one-time caching check: 2 per creator (the <span class="lineno schema">tc1</span> and
+	    <span class="lineno schema">tc2</span> checks each verify the person's own little
+	    sub-matching once; the <span class="lineno schema">tc3</span> check is refuted for
+	    free) and 2 per DOI (<span class="lineno schema">tc4</span> and
+	    <span class="lineno schema">tc6</span> — the same
+	    <span class="lineno schema">S6</span> check made once per candidate constraint;
+	    <span class="lineno schema">tc5</span> refuted for free).
 	  </p>
 
 	  <table class="simple">
 	    <thead>
-	      <tr><th><span class="math">n_c</span></th><th><span class="math">n_r</span></th><th>Cartesian matchings (<span class="math">2^{n_c+n_r}</span>)</th><th>verified matchings, incl. recursive checks (measured)</th><th>wall time (measured)</th></tr>
+	      <tr><th><span class="math">n_a</span></th><th><span class="math">n_i</span></th><th>Cartesian matchings (<span class="math">2^{n_a+n_i}</span>)</th><th>verified matchings, incl. recursive checks (measured)</th><th>wall time (measured)</th></tr>
 	    </thead>
 	    <tbody>
-	      <tr><td>4</td><td>4</td><td>256</td><td>24</td><td>&lt;1&nbsp;ms</td></tr>
-	      <tr><td>8</td><td>8</td><td>65,536</td><td>48</td><td>1&nbsp;ms</td></tr>
-	      <tr><td>12</td><td>12</td><td>16,777,216</td><td>72</td><td>1&nbsp;ms</td></tr>
-	      <tr><td>16</td><td>16</td><td>4,294,967,296</td><td>96</td><td>2&nbsp;ms</td></tr>
-	      <tr><td>24</td><td>24</td><td>281,474,976,710,656</td><td>144</td><td>3&nbsp;ms</td></tr>
+	      <tr><td>4</td><td>4</td><td>256</td><td>16</td><td>&lt;1&nbsp;ms</td></tr>
+	      <tr><td>8</td><td>8</td><td>65,536</td><td>32</td><td>&lt;1&nbsp;ms</td></tr>
+	      <tr><td>12</td><td>12</td><td>16,777,216</td><td>48</td><td>1&nbsp;ms</td></tr>
+	      <tr><td>16</td><td>16</td><td>4,294,967,296</td><td>64</td><td>1&nbsp;ms</td></tr>
+	      <tr><td>24</td><td>24</td><td>281,474,976,710,656</td><td>96</td><td>2&nbsp;ms</td></tr>
 	    </tbody>
 	  </table>
 
-	  <p>Isolating the two groups shows each technique's contribution separately:</p>
+	  <p>Isolating the two axes shows the costs compose additively:</p>
 
 	  <table class="simple">
 	    <thead>
-	      <tr><th>isolated group</th><th><span class="math">n_c</span></th><th><span class="math">n_r</span></th><th>verified matchings (measured)</th></tr>
+	      <tr><th>isolated axis</th><th><span class="math">n_a</span></th><th><span class="math">n_i</span></th><th>verified matchings (measured)</th></tr>
 	    </thead>
 	    <tbody>
-	      <tr><td>components only</td><td>16</td><td>0</td><td>0</td></tr>
-	      <tr><td>ranges only</td><td>0</td><td>16</td><td>96</td></tr>
+	      <tr><td>creators only</td><td>16</td><td>0</td><td>32</td></tr>
+	      <tr><td>identifiers only</td><td>0</td><td>16</td><td>32</td></tr>
 	    </tbody>
 	  </table>
 
 	  <p>
-	    The verified count is <span class="math">6 n_r</span> exactly — 96 at
-	    <span class="math">n_c = n_r = 16</span> and 96 again at
-	    <span class="math">n_c = 0, n_r = 16</span>: the cost of ruling out the
-	    critical-range candidate is linear in the number of ranges and completely independent
-	    of the combinatorics on the component side, while the component side itself
-	    contributes zero. The Cartesian column, by contrast, multiplies both sides together.
-	    As a positive control, <span class="math">n_c = n_r = 2</span> conforms (a quick
-	    capture with a short range list): the search verifies 13 (sub-)matchings and accepts
-	    — real work still happens for satisfiable instances; the pruning only ever discards
-	    states that could never be accepted.
+	    The verified count is <span class="math">2(n_a + n_i)</span> exactly: 64 at
+	    <span class="math">n_a = n_i = 16</span> is precisely the 32 measured for each axis
+	    alone, added — each axis's one-time caching cost is linear in its own count and
+	    entirely independent of the other's combinatorics. The Cartesian column, by contrast,
+	    multiplies the two sides together. As a positive control,
+	    <span class="math">n_a = 2, n_i = 1</span> conforms (both short conventions): the
+	    search verifies 7 (sub-)matchings and accepts — real work still happens for
+	    satisfiable instances; the pruning only ever discards states that could never be
+	    accepted.
 	  </p>
 	</section>
 
