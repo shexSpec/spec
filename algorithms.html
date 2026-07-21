@@ -93,6 +93,7 @@
     <section id="sotd">
       <p>This document is being developed by the
         <a href="https://www.w3.org/community/shex/">Shape Expressions Community Group</a>.
+      </p>
       <p>
 	This version is an editor's draft.
       </p>
@@ -463,11 +464,9 @@ return false
 	  <h4>Worked Example: a Science-on-Schema.org Dataset Profile</h4>
 
 	  <p>
-            The two refinements address different failure modes, and a schema built entirely from one of them shows only one at work. 
-	    The following profile — modelled on the <a href="https://science-on-schema.org/">Science-on-Schema.org</a> guidance for schema.org <code>Dataset</code> descriptions — needs both at once.
-            It is illustrative rather than the official profile, but the moving parts are real schema.org practice: repeated <code>creator</code> and <code>identifier</code> properties whose objects are choice types (<code>Person</code> or <code>Organization</code>; a <code>PropertyValue</code> or a plain string).
+	    The following profile — modelled on the <a href="https://science-on-schema.org/">Science-on-Schema.org</a> guidance for schema.org <code>Dataset</code> descriptions — demonstrates both `negative caching` and `partial bag refutation`.
+            It uses a subset of real schema.org practice: repeated <code>creator</code> and <code>identifier</code> properties whose objects are choice types (<code>Person</code> or <code>Organization</code>; a <code>PropertyValue</code> or a plain string).
             schema.org's repeated properties are <em>unordered repeated triples</em> — its JSON-LD context declares no <code>@list</code> containers, and order, where wanted, is modelled explicitly (<code>ItemList</code> with <code>position</code>) — so a node's neighbourhood carries one triple per value, which is precisely what exposes the repetition to the matching search.
-            (A representation that instead preserves order with RDF Collections, as FHIR R5 RDF does for its repeating elements, moves the repetition into <code>rdf:first</code>/<code>rdf:rest</code> cells whose per-node neighbourhoods are unambiguous; this machinery has little to do there.)
             Shape labels use the document-relative <code>&lt;#Label&gt;</code> pattern, resolved against the schema document's base IRI.
 	  </p>
 
