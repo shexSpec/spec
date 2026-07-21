@@ -220,65 +220,39 @@ return stratum
 	<h3>Validation as a Search over Matchings</h3>
 
 	<p>
-	  The algorithms in this section orchestrate calls to
-	  <span class="math">satisfies(n, s, G, sm)</span>: refine validation evaluates it for
-	  every (node, shape) pair, stratum by stratum; recursive validation evaluates it on
-	  demand. When <span class="math">s</span> is a Shape with triple expression
-	  <span class="math">E</span>, deciding <span class="math">satisfies</span> is itself a
-	  search problem: does <em>some</em> assignment ("matching") of the relevant
-	  neighbourhood triples of <span class="math">n</span> to the triple constraints of
-	  <span class="math">E</span> satisfy <span class="math">E</span>'s cardinalities and
-	  grouping (EachOf, OneOf)? With <code>EXTENDS</code>, the neighbourhood must
-	  additionally <em>split</em> among the shapes of the extension hierarchy so that every
-	  supertype's own triple expression accepts its share.
+	  The algorithms in this section orchestrate calls to <span class="math">satisfies(n, s, G, sm)</span>: refine validation evaluates it for every (node, shape) pair, stratum by stratum; recursive validation evaluates it on demand.
+	  When <span class="math">s</span> is a Shape with triple expression <span class="math">E</span>, deciding <span class="math">satisfies</span> is itself a search problem: does <em>some</em> assignment ("matching") of the relevant neighbourhood triples of <span class="math">n</span> to the triple constraints of <span class="math">E</span> satisfy <span class="math">E</span>'s cardinalities and grouping (EachOf, OneOf)?
+	  With <code>EXTENDS</code>, the neighbourhood must additionally <em>split</em> among the shapes of the extension hierarchy so that every supertype's own triple expression accepts its share.
 	</p>
 
 	<p>
-	  The direct reading of that decision problem is: <em>for each triple constraint, which
-	  triples could possibly satisfy it?</em> — a map from triple constraints to candidate
-	  triples. But a matching is a <em>choice</em>, not a relation: every triple must end up
-	  assigned to exactly one triple constraint (or shown to be excused by <code>EXTRA</code>
-	  or absent altogether). Turning the constraint-indexed relation into a triple-indexed
-	  <em>function</em> — one candidate constraint chosen per triple — is what makes
-	  "matching" a well-formed combinatorial object that can be enumerated, pruned and
-	  verified. Three related structures recur below. Given the neighbourhood triples
-	  <span class="math">T</span> of the node and the triple constraints
-	  <span class="math">TC</span> of a (possibly <code>EXTENDS</code>-composed) triple
-	  expression:
+	  The direct reading of that decision problem is: <em>for each triple constraint, which triples could possibly satisfy it?</em> — a map from triple constraints to candidate triples.
+	  But a matching is a <em>choice</em>, not a relation: every triple must end up assigned to exactly one triple constraint (or shown to be excused by <code>EXTRA</code> or absent altogether).
+	  Turning the constraint-indexed relation into a triple-indexed <em>function</em> — one candidate constraint chosen per triple — is what makes "matching" a well-formed combinatorial object that can be enumerated, pruned and verified.
+	  Three related structures recur below.
+	  Given the neighbourhood triples <span class="math">T</span> of the node and the triple constraints <span class="math">TC</span> of a (possibly <code>EXTENDS</code>-composed) triple expression:
 	</p>
 
 	<dl>
 	  <dt><dfn>pre-matching</dfn></dt>
 	  <dd>
-	    a map <span class="math">T &rarr; 2^{TC}</span>: with every triple, the set of triple
-	    constraints it <em>could</em> be assigned to — same predicate, and (recursively) the
-	    triple's value satisfies the constraint's value expression. For a fixed triple
-	    constraint <span class="math">tc</span>, its candidate triples are recovered as
-	    <span class="math">{ t &isin; T : tc &isin; preMatching(t) }</span> — the
-	    "triple constraint &rarr; set of triples" view the reader may start from.
+	    a map <span class="math">T &rarr; 2^{TC}</span>: with every triple, the set of triple constraints it <em>could</em> be assigned to — same predicate, and (recursively) the triple's value satisfies the constraint's value expression.
+	    For a fixed triple constraint <span class="math">tc</span>, its candidate triples are recovered as <span class="math">{ t &isin; T : tc &isin; preMatching(t) }</span> — the "triple constraint &rarr; set of triples" view the reader may start from.
 	  </dd>
 	  <dt><dfn>matching</dfn></dt>
 	  <dd>
-	    a map <span class="math">T &rarr; TC</span> choosing, for every triple, exactly one of
-	    its pre-matching candidates. A pre-matching is a compact representation of the set of
-	    matchings obtainable by choosing one candidate per triple — the Cartesian product
-	    <span class="math">&prod;_t preMatching(t)</span>. The search is organized in this
-	    triple-indexed form because there, "assign every triple exactly once" is a syntactic
-	    guarantee rather than a side condition to check.
+	    a map <span class="math">T &rarr; TC</span> choosing, for every triple, exactly one of its pre-matching candidates.
+	    A pre-matching is a compact representation of the set of matchings obtainable by choosing one candidate per triple — the Cartesian product <span class="math">&prod;_t preMatching(t)</span>.
+	    The search is organized in this triple-indexed form because there, "assign every triple exactly once" is a syntactic guarantee rather than a side condition to check.
 	  </dd>
 	  <dt><dfn>split</dfn></dt>
 	  <dd>
-	    the inverse of a chosen matching: a map <span class="math">TC &rarr; 2^T</span> (or,
-	    grouped one level further, <span class="math">shapeLabel &rarr; 2^T</span> for an
-	    <code>EXTENDS</code> hierarchy) recovering, for a <em>specific</em> matching, which
-	    triples ended up on which constraint. This is the view a cardinality check needs
-	    ("how many triples did <span class="math">tc</span> receive?"), and the view against
-	    which <code>EXTENDS</code> constraints and semantic actions are evaluated.
+	    the inverse of a chosen matching: a map <span class="math">TC &rarr; 2^T</span> (or, grouped one level further, <span class="math">shapeLabel &rarr; 2^T</span> for an <code>EXTENDS</code> hierarchy) recovering, for a <em>specific</em> matching, which triples ended up on which constraint.
+	    This is the view a cardinality check needs ("how many triples did <span class="math">tc</span> receive?"), and the view against which <code>EXTENDS</code> constraints and semantic actions are evaluated.
 	  </dd>
 	</dl>
 
-	<p>Algorithm for deciding <span class="math">satisfies(n, s, G, sm)</span> for a Shape
-	<span class="math">s</span>, by exhaustive enumeration of matchings.</p>
+	<p>Algorithm for deciding <span class="math">satisfies(n, s, G, sm)</span> for a Shape <span class="math">s</span>, by exhaustive enumeration of matchings.</p>
 
 <pre><code>
 Input: an RDF graph G, a node n, a Shape s with triple expression E, a shape map sm
@@ -305,14 +279,8 @@ return false
 </code></pre>
 
 	<p>
-	  The enumeration line is a Cartesian product: <span class="math">k</span> triples with 2
-	  candidates each yield <span class="math">2^k</span> candidate matchings, and whenever
-	  triple constraints share a predicate — across OneOf alternatives, across the shapes of
-	  an <code>EXTENDS</code> hierarchy, or between a shape and its <code>EXTRA</code>-tolerated
-	  context — most of those matchings are doomed for reasons visible long before each is
-	  individually verified. <a href="#matching-pruning"></a> refines this algorithm with two
-	  pruning techniques that leave its answers — indeed its entire set of accepted matchings —
-	  unchanged.
+	  The enumeration line is a Cartesian product: <span class="math">k</span> triples with 2 candidates each yield <span class="math">2^k</span> candidate matchings, and whenever triple constraints share a predicate — across OneOf alternatives, across the shapes of an <code>EXTENDS</code> hierarchy, or between a shape and its <code>EXTRA</code>-tolerated context — most of those matchings are doomed for reasons visible long before each is individually verified.
+	  <a href="#matching-pruning"></a> refines this algorithm with two pruning techniques that leave its answers — indeed its entire set of accepted matchings — unchanged.
 	</p>
       </section>
 
@@ -404,45 +372,24 @@ return true
 	<h3>Pruning the Matching Search</h3>
 
 	<p>
-	  The two refinements below prune the enumeration algorithm of
-	  <a href="#matching-search"></a> without changing its answers: each only ever discards
-	  candidate matchings that the exact verification would also have rejected, so the set of
-	  accepted matchings — and everything downstream of it (<code>EXTENDS</code> splits,
-	  semantic actions) — is untouched. Some search is unavoidable: for expressions with
-	  repeated triple constraints, deciding bag membership is NP-complete
-	  [[shex-complexity]], and even where polynomial decision procedures exist, a practical
-	  validator streams concrete witness matchings — of which there can be exponentially
-	  many — because downstream checks consume the specific triples matched. Both refinements
-	  are implemented in Apache Jena's <code>jena-shex</code> module, from which the
-	  measurements below are taken.
+	  The two refinements below prune the enumeration algorithm of <a href="#matching-search"></a> without changing its answers: each only ever discards candidate matchings that the exact verification would also have rejected, so the set of accepted matchings — and everything downstream of it (<code>EXTENDS</code> splits, semantic actions) — is untouched.
+	  Some search is unavoidable: for expressions with repeated triple constraints, deciding bag membership is NP-complete [[shex-complexity]], and even where polynomial decision procedures exist, a practical validator streams concrete witness matchings — of which there can be exponentially many — because downstream checks consume the specific triples matched.
+	  Both refinements are implemented in Apache Jena's <code>jena-shex</code> module, from which the measurements below are taken.
 	</p>
 
 	<section id="negative-caching">
 	  <h4>Negative Caching: Prune Refuted Candidate Pairs</h4>
 
 	  <p>
-	    The pre-matching construction already contains the first pruning: computing
-	    <span class="math">cands(t)</span> once, upfront, for every (triple, candidate
-	    constraint) pair — one recursive value-expression check per pair — and never
-	    revisiting a pair that failed. Informally this is a <em>negative cache</em>: rather
-	    than re-discovering, inside every candidate matching that happens to try the pair
-	    again, that the triple's value does not satisfy the constraint, the failure is
-	    recorded once against the pre-matching itself and the pair never enters the search. A
-	    validator that instead evaluates value expressions while walking each candidate
-	    matching re-pays that cost once per matching — multiplied by however many candidate
-	    matchings the <em>rest</em> of the neighbourhood generates (measured concretely in
-	    <a href="#soso-example"></a>).
+	    The pre-matching construction already contains the first pruning: computing <span class="math">cands(t)</span> once, upfront, for every (triple, candidate constraint) pair — one recursive value-expression check per pair — and never revisiting a pair that failed.
+	    Informally this is a <em>negative cache</em>: rather than re-discovering, inside every candidate matching that happens to try the pair again, that the triple's value does not satisfy the constraint, the failure is recorded once against the pre-matching itself and the pair never enters the search.
+	    A validator that instead evaluates value expressions while walking each candidate matching re-pays that cost once per matching — multiplied by however many candidate matchings the <em>rest</em> of the neighbourhood generates (measured concretely in <a href="#soso-example"></a>).
 	  </p>
 
 	  <p>
-	    The same contract generalizes from values to structure: a candidate can also be
-	    refuted because committing even one triple to it can never lead to an accepted
-	    matching — a co-occurrence obligation elsewhere in the expression that the data
-	    cannot meet, a OneOf exclusivity already violated, or a maximum cardinality already
-	    exceeded. Both forms have the same shape: delete a
-	    <span class="math">(t, tc)</span> pair the moment it is known to appear in
-	    <em>no</em> accepted matching, so no refutation is ever derived twice. The structural
-	    form is the subject of the next section.
+	    The same contract generalizes from values to structure: a candidate can also be refuted because committing even one triple to it can never lead to an accepted matching — a co-occurrence obligation elsewhere in the expression that the data cannot meet, a OneOf exclusivity already violated, or a maximum cardinality already exceeded.
+	    Both forms have the same shape: delete a <span class="math">(t, tc)</span> pair the moment it is known to appear in <em>no</em> accepted matching, so no refutation is ever derived twice.
+	    The structural form is the subject of the next section.
 	  </p>
 	</section>
 
@@ -450,64 +397,34 @@ return true
 	  <h4>Bag-Directed Search with Partial-Bag Refutation</h4>
 
 	  <p>
-	    Whether a triple expression accepts a matching depends only on the matching's
-	    <em>bag</em> — the count of triples assigned to each triple constraint; which
-	    specific triple went where matters only to downstream consumers (splits, semantic
-	    actions). And once the pre-matching is computed, two triples with the same candidate
-	    set are interchangeable in any bag. So: group the triples into <em>classes</em> by
-	    candidate set, and search over count vectors — how many triples of the class go to
-	    each of its candidates — instead of over individual assignments. A class of
-	    <span class="math">n</span> triples over <span class="math">k</span> candidates has
-	    <span class="math">\binom{n+k-1}{k-1}</span> count vectors, polynomial in
-	    <span class="math">n</span> for fixed <span class="math">k</span>, in place of
-	    <span class="math">k^n</span> assignments. Concrete matchings are produced only for
-	    bags that survive, by enumerating the multiset permutations within each class.
+	    Whether a triple expression accepts a matching depends only on the matching's <em>bag</em> — the count of triples assigned to each triple constraint; which specific triple went where matters only to downstream consumers (splits, semantic actions).
+	    And once the pre-matching is computed, two triples with the same candidate set are interchangeable in any bag.
+	    So: group the triples into <em>classes</em> by candidate set, and search over count vectors — how many triples of the class go to each of its candidates — instead of over individual assignments.
+	    A class of <span class="math">n</span> triples over <span class="math">k</span> candidates has <span class="math">\binom{n+k-1}{k-1}</span> count vectors, polynomial in <span class="math">n</span> for fixed <span class="math">k</span>, in place of <span class="math">k^n</span> assignments.
+	    Concrete matchings are produced only for bags that survive, by enumerating the multiset permutations within each class.
 	  </p>
 
 	  <p>
-	    During the search, each triple constraint <span class="math">tc</span> carries an
-	    interval <span class="math">[lo(tc), hi(tc)]</span>: <span class="math">lo</span>
-	    counts the triples already committed to it by decided classes, and
-	    <span class="math">hi = lo +</span> the total size of the undecided classes that
-	    still offer <span class="math">tc</span> as a candidate. A test
-	    <span class="math">refute(lo, hi)</span>, computed compositionally over the
-	    expression tree, answers: is <em>no</em> exact bag between <span class="math">lo</span>
-	    and <span class="math">hi</span> (pointwise) accepted? It is a sound
-	    necessary-condition test — <em>true</em> proves the entire region hopeless, since
-	    every bag reachable by finishing the search lies between the current
-	    <span class="math">lo</span> and <span class="math">hi</span>, while <em>false</em>
-	    proves nothing and leaves the verdict to the exact verification of complete bags. It
-	    accounts for minimum and maximum cardinalities, EachOf co-occurrence obligations, and
-	    OneOf exclusivity — including that exclusivity does not survive repetition: each
-	    iteration of <code>(:a . | :b .)+</code> chooses its alternative independently.
-	    (The Jena implementation calls this test <em>feasibility</em>; this document says
-	    <em>refutation</em>, since refuting is the only verdict it delivers definitively.)
+	    During the search, each triple constraint <span class="math">tc</span> carries an interval <span class="math">[lo(tc), hi(tc)]</span>: <span class="math">lo</span> counts the triples already committed to it by decided classes, and <span class="math">hi = lo +</span> the total size of the undecided classes that still offer <span class="math">tc</span> as a candidate.
+	    A test <span class="math">refute(lo, hi)</span>, computed compositionally over the expression tree, answers: is <em>no</em> exact bag between <span class="math">lo</span> and <span class="math">hi</span> (pointwise) accepted?
+	    It is a sound necessary-condition test — <em>true</em> proves the entire region hopeless, since every bag reachable by finishing the search lies between the current <span class="math">lo</span> and <span class="math">hi</span>, while <em>false</em> proves nothing and leaves the verdict to the exact verification of complete bags.
+	    It accounts for minimum and maximum cardinalities, EachOf co-occurrence obligations, and OneOf exclusivity — including that exclusivity does not survive repetition: each iteration of <code>(:a . | :b .)+</code> chooses its alternative independently.
+	    (The Jena implementation calls this test <em>feasibility</em>; this document says <em>refutation</em>, since refuting is the only verdict it delivers definitively.)
 	  </p>
 
 	  <p>
-	    The test is applied at two moments. Upfront, as an <em>arc-consistency</em> pass: for
-	    every candidate <span class="math">(t, tc)</span> pair, if committing a single triple
-	    to <span class="math">tc</span> is already refutable under the most optimistic
-	    <span class="math">hi</span>, delete <span class="math">tc</span> from the whole
-	    class at once — the structural generalization of negative caching. And once per
-	    search node: after committing each class's count vector, either the remaining region
-	    is refuted (backtrack) or the search descends. If arc consistency empties a class's
-	    candidate set, the shape fails outright: a triple that value-matches some constraint
-	    can never be left unmatched — <code>EXTRA</code> only excuses triples that matched no
-	    constraint to begin with.
+	    The test is applied at two moments.
+	    Upfront, as an <em>arc-consistency</em> pass: for every candidate <span class="math">(t, tc)</span> pair, if committing a single triple to <span class="math">tc</span> is already refutable under the most optimistic <span class="math">hi</span>, delete <span class="math">tc</span> from the whole class at once — the structural generalization of negative caching.
+	    And once per search node: after committing each class's count vector, either the remaining region is refuted (backtrack) or the search descends.
+	    If arc consistency empties a class's candidate set, the shape fails outright: a triple that value-matches some constraint can never be left unmatched — <code>EXTRA</code> only excuses triples that matched no constraint to begin with.
 	  </p>
 
 	  <p>
-	    <span class="math">refute</span> deliberately ignores constraints that per-constraint
-	    intervals cannot express: count coupling inside a repeated group
-	    (<code>(:a . ; :b .)+</code> requires equal counts of <code>:a</code> and
-	    <code>:b</code>) and divisibility (<code>(:a . {2,2})*</code> accepts only even
-	    counts). Bags that survive are therefore always verified exactly, once, before
-	    acceptance; the refinement loses no correctness, only doomed work.
+	    <span class="math">refute</span> deliberately ignores constraints that per-constraint intervals cannot express: count coupling inside a repeated group (<code>(:a . ; :b .)+</code> requires equal counts of <code>:a</code> and <code>:b</code>) and divisibility (<code>(:a . {2,2})*</code> accepts only even counts).
+	    Bags that survive are therefore always verified exactly, once, before acceptance; the refinement loses no correctness, only doomed work.
 	  </p>
 
-	  <p>The enumeration algorithm of <a href="#matching-search"></a>, with the refinement's
-	  additions <mark>highlighted</mark>:</p>
+	  <p>The enumeration algorithm of <a href="#matching-search"></a>, with the refinement's additions <mark>highlighted</mark>:</p>
 
 <pre><code>
 Input: an RDF graph G, a node n, a Shape s with triple expression E, a shape map sm
@@ -546,35 +463,19 @@ return false
 	  <h4>Worked Example: a Science-on-Schema.org Dataset Profile</h4>
 
 	  <p>
-	    The two refinements address different failure modes, and a schema built entirely from
-	    one of them shows only one at work. The following profile — modelled on the
-	    <a href="https://science-on-schema.org/">Science-on-Schema.org</a> guidance for
-	    schema.org <code>Dataset</code> descriptions — needs both at once. It is illustrative
-	    rather than the official profile, but the moving parts are real schema.org practice:
-	    repeated <code>creator</code> and <code>identifier</code> properties whose objects are
-	    choice types (<code>Person</code> or <code>Organization</code>; a
-	    <code>PropertyValue</code> or a plain string). schema.org's repeated properties are
-	    <em>unordered repeated triples</em> — its JSON-LD context declares no
-	    <code>@list</code> containers, and order, where wanted, is modelled explicitly
-	    (<code>ItemList</code> with <code>position</code>) — so a node's neighbourhood carries
-	    one triple per value, which is precisely what exposes the repetition to the matching
-	    search. (A representation that instead preserves order with RDF Collections, as FHIR
-	    R5 RDF does for its repeating elements, moves the repetition into
-	    <code>rdf:first</code>/<code>rdf:rest</code> cells whose per-node neighbourhoods are
-	    unambiguous; this machinery has little to do there.) Shape labels use the
-	    document-relative <code>&lt;#Label&gt;</code> pattern, resolved against the schema
-	    document's base IRI.
+            The two refinements address different failure modes, and a schema built entirely from one of them shows only one at work. 
+	    The following profile — modelled on the <a href="https://science-on-schema.org/">Science-on-Schema.org</a> guidance for schema.org <code>Dataset</code> descriptions — needs both at once.
+            It is illustrative rather than the official profile, but the moving parts are real schema.org practice: repeated <code>creator</code> and <code>identifier</code> properties whose objects are choice types (<code>Person</code> or <code>Organization</code>; a <code>PropertyValue</code> or a plain string).
+            schema.org's repeated properties are <em>unordered repeated triples</em> — its JSON-LD context declares no <code>@list</code> containers, and order, where wanted, is modelled explicitly (<code>ItemList</code> with <code>position</code>) — so a node's neighbourhood carries one triple per value, which is precisely what exposes the repetition to the matching search.
+            (A representation that instead preserves order with RDF Collections, as FHIR R5 RDF does for its repeating elements, moves the repetition into <code>rdf:first</code>/<code>rdf:rest</code> cells whose per-node neighbourhoods are unambiguous; this machinery has little to do there.)
+            Shape labels use the document-relative <code>&lt;#Label&gt;</code> pattern, resolved against the schema document's base IRI.
 	  </p>
 
 	  <p>
-	    The profile accepts two conventions on each of two independent axes. Creators: either
-	    a short list (one or two) of persons or organizations, or a longer list that must
-	    then include at least one ORCID-identified person (so someone is unambiguously
-	    citable and contactable). Identifiers: either the dataset is identified by one or two
-	    DOIs — expressed, per the Science-on-Schema.org guidance, as
-	    <code>PropertyValue</code>s whose <code>propertyID</code> names the DOI registry — or
-	    it carries legacy string identifiers plus exactly one DOI. Neither convention is
-	    declared explicitly; the validator works each out from what is present.
+	    The profile accepts two conventions on each of two independent axes.
+	    Creators: either a short list (one or two) of persons or organizations, or a longer list that must then include at least one ORCID-identified person (so someone is unambiguously citable and contactable).
+	    Identifiers: either the dataset is identified by one or two DOIs — expressed, per the Science-on-Schema.org guidance, as <code>PropertyValue</code>s whose <code>propertyID</code> names the DOI registry — or it carries legacy string identifiers plus exactly one DOI.
+	    Neither convention is declared explicitly; the validator works each out from what is present.
 	  </p>
 
 	  <div class="example">
@@ -667,19 +568,10 @@ PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
 	  </div>
 
 	  <p>
-	    <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> are
-	    the two OneOf groups. <span class="lineno schema">tc1</span> and
-	    <span class="lineno schema">tc2</span> are the short-list and long-list creator
-	    constraints — value-indistinguishable, since any valid agent satisfies both — while
-	    <span class="lineno schema">tc3</span> demands an ORCID-identified person
-	    (<span class="lineno schema">S5</span>). On the identifier side the roles are
-	    mirrored: <span class="lineno schema">tc4</span> and
-	    <span class="lineno schema">tc6</span> share the DOI value expression
-	    (<span class="lineno schema">S6</span>) and are indistinguishable from each other,
-	    but value-distinguishable from the plain-string constraint
-	    <span class="lineno schema">tc5</span>. <span class="lineno schema">S2</span> is the
-	    schema.org choice type: a creator may be a <span class="lineno schema">S3</span>
-	    person or a <span class="lineno schema">S4</span> organization.
+	    <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> are the two OneOf groups.
+	    <span class="lineno schema">tc1</span> and <span class="lineno schema">tc2</span> are the short-list and long-list creator constraints — value-indistinguishable, since any valid agent satisfies both — while <span class="lineno schema">tc3</span> demands an ORCID-identified person (<span class="lineno schema">S5</span>).
+	    On the identifier side the roles are mirrored: <span class="lineno schema">tc4</span> and <span class="lineno schema">tc6</span> share the DOI value expression (<span class="lineno schema">S6</span>) and are indistinguishable from each other, but value-distinguishable from the plain-string constraint <span class="lineno schema">tc5</span>.
+	    <span class="lineno schema">S2</span> is the schema.org choice type: a creator may be a <span class="lineno schema">S3</span> person or a <span class="lineno schema">S4</span> organization.
 	  </p>
 
 	  <div class="example">
@@ -736,69 +628,28 @@ ex:doi1 a schema:PropertyValue ;
 	  </div>
 
 	  <p>
-	    The focus node's neighbourhood is <span class="lineno data">t1</span>–<span class="lineno data">t6</span>:
-	    three creators and two identifiers, plus the <code>rdf:type</code> triple
-	    <span class="lineno data">t1</span>, whose predicate matches no constraint — since
-	    <span class="lineno schema">S1</span> is not <code>CLOSED</code>, it is simply
-	    ignored. The remaining triples
-	    (<span class="lineno data">t7</span>–<span class="lineno data">t16</span>) belong to
-	    the creator and identifier nodes and participate only in the recursive value checks.
+	    The focus node's neighbourhood is <span class="lineno data">t1</span>–<span class="lineno data">t6</span>: three creators and two identifiers, plus the <code>rdf:type</code> triple <span class="lineno data">t1</span>, whose predicate matches no constraint — since <span class="lineno schema">S1</span> is not <code>CLOSED</code>, it is simply ignored.
+	    The remaining triples (<span class="lineno data">t7</span>–<span class="lineno data">t16</span>) belong to the creator and identifier nodes and participate only in the recursive value checks.
 	  </p>
 
 	  <p>
-	    By predicate alone, the pre-matching of <code>ex:dset1</code> is
-	    <span class="lineno data">t2</span>–<span class="lineno data">t4</span> &rarr;
-	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>,
-	    <span class="lineno schema">tc3</span>};
-	    <span class="lineno data">t5</span>,<span class="lineno data">t6</span> &rarr;
-	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>,
-	    <span class="lineno schema">tc6</span>} — a Cartesian product of
-	    3&sup3;&middot;3&sup2; = 243 matchings.
+	    By predicate alone, the pre-matching of <code>ex:dset1</code> is <span class="lineno data">t2</span>–<span class="lineno data">t4</span> &rarr; {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>, <span class="lineno schema">tc3</span>}; <span class="lineno data">t5</span>,<span class="lineno data">t6</span> &rarr; {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>, <span class="lineno schema">tc6</span>} — a Cartesian product of 3&sup3;&middot;3&sup2; = 243 matchings.
 	  </p>
 
 	  <p>
-	    Negative caching checks each pair once, recursively. <code>ex:bob</code>
-	    (<span class="lineno data">t3</span>) has no <code>schema:identifier</code> at all,
-	    so <span class="lineno schema">S5</span>'s mandatory ORCID constraint is refuted
-	    without assembling any sub-matching: <span class="lineno schema">tc3</span> deleted.
-	    <code>ex:noaa</code> (<span class="lineno data">t4</span>) is typed
-	    <code>schema:Organization</code>, failing <span class="lineno schema">S5</span>'s
-	    <code>[schema:Person]</code> value set: <span class="lineno schema">tc3</span>
-	    deleted. The legacy identifier (<span class="lineno data">t5</span>) is a literal
-	    with no outgoing arcs, so <span class="lineno schema">S6</span>'s mandatory
-	    constraints can never be matched: <span class="lineno schema">tc4</span> and
-	    <span class="lineno schema">tc6</span> deleted. And <code>ex:doi1</code>
-	    (<span class="lineno data">t6</span>) is an IRI node, not a literal:
-	    <span class="lineno schema">tc5</span> deleted. The pre-matching becomes
-	    <span class="lineno data">t2</span> &rarr; {<span class="lineno schema">tc1</span>,
-	    <span class="lineno schema">tc2</span>, <span class="lineno schema">tc3</span>};
-	    <span class="lineno data">t3</span>,<span class="lineno data">t4</span> &rarr;
-	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
-	    <span class="lineno data">t5</span> &rarr; {<span class="lineno schema">tc5</span>};
-	    <span class="lineno data">t6</span> &rarr; {<span class="lineno schema">tc4</span>,
-	    <span class="lineno schema">tc6</span>}: 3&middot;2&middot;2&middot;1&middot;2 = 24
-	    matchings — and no value expression is ever evaluated again.
+	    Negative caching checks each pair once, recursively.
+	    <code>ex:bob</code> (<span class="lineno data">t3</span>) has no <code>schema:identifier</code> at all, so <span class="lineno schema">S5</span>'s mandatory ORCID constraint is refuted without assembling any sub-matching: <span class="lineno schema">tc3</span> deleted.
+	    <code>ex:noaa</code> (<span class="lineno data">t4</span>) is typed <code>schema:Organization</code>, failing <span class="lineno schema">S5</span>'s <code>[schema:Person]</code> value set: <span class="lineno schema">tc3</span> deleted.
+	    The legacy identifier (<span class="lineno data">t5</span>) is a literal with no outgoing arcs, so <span class="lineno schema">S6</span>'s mandatory constraints can never be matched: <span class="lineno schema">tc4</span> and <span class="lineno schema">tc6</span> deleted.
+	    And <code>ex:doi1</code> (<span class="lineno data">t6</span>) is an IRI node, not a literal: <span class="lineno schema">tc5</span> deleted.
+	    The pre-matching becomes <span class="lineno data">t2</span> &rarr; {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>, <span class="lineno schema">tc3</span>}; <span class="lineno data">t3</span>,<span class="lineno data">t4</span> &rarr; {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>}; <span class="lineno data">t5</span> &rarr; {<span class="lineno schema">tc5</span>}; <span class="lineno data">t6</span> &rarr; {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc6</span>}: 3&middot;2&middot;2&middot;1&middot;2 = 24 matchings — and no value expression is ever evaluated again.
 	  </p>
 
 	  <p>
-	    The classes are {<span class="lineno data">t2</span>} over three candidates;
-	    {<span class="lineno data">t3</span>,<span class="lineno data">t4</span>} over
-	    {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>};
-	    {<span class="lineno data">t5</span>} over {<span class="lineno schema">tc5</span>};
-	    and {<span class="lineno data">t6</span>} over
-	    {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc6</span>}.
-	    Committing the forced singleton <span class="lineno data">t5</span> &rarr;
-	    <span class="lineno schema">tc5</span> occupies
-	    <span class="lineno schema">tc5</span>, so <span class="lineno schema">te2</span>'s
-	    first alternative — which requires the second alternative's constraints to stay
-	    empty — is refuted for any vector using <span class="lineno schema">tc4</span>:
-	    <span class="lineno data">t6</span> goes to <span class="lineno schema">tc6</span>.
-	    On the creator side, the all-<span class="lineno schema">tc1</span> vector dies on
-	    <span class="lineno schema">tc1</span>'s {1,2} cap (there are three creators), every
-	    mixed vector dies on OneOf exclusivity, so the long alternative must hold — and
-	    <span class="lineno data">t2</span> (<code>ex:alice</code>) is the only possible
-	    occupant of the mandatory <span class="lineno schema">tc3</span>. Exactly one bag
-	    survives, and its expansion is a single matching, whose split is:
+	    The classes are {<span class="lineno data">t2</span>} over three candidates; {<span class="lineno data">t3</span>,<span class="lineno data">t4</span>} over {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>}; {<span class="lineno data">t5</span>} over {<span class="lineno schema">tc5</span>}; and {<span class="lineno data">t6</span>} over {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc6</span>}.
+	    Committing the forced singleton <span class="lineno data">t5</span> &rarr; <span class="lineno schema">tc5</span> occupies <span class="lineno schema">tc5</span>, so <span class="lineno schema">te2</span>'s first alternative — which requires the second alternative's constraints to stay empty — is refuted for any vector using <span class="lineno schema">tc4</span>: <span class="lineno data">t6</span> goes to <span class="lineno schema">tc6</span>.
+	    On the creator side, the all-<span class="lineno schema">tc1</span> vector dies on <span class="lineno schema">tc1</span>'s {1,2} cap (there are three creators), every mixed vector dies on OneOf exclusivity, so the long alternative must hold — and <span class="lineno data">t2</span> (<code>ex:alice</code>) is the only possible occupant of the mandatory <span class="lineno schema">tc3</span>.
+	    Exactly one bag survives, and its expansion is a single matching, whose split is:
 	  </p>
 
 	  <table class="simple">
@@ -816,37 +667,17 @@ ex:doi1 a schema:PropertyValue ;
 	  </table>
 
 	  <p>
-	    That matching satisfies <span class="lineno schema">te1</span> and
-	    <span class="lineno schema">te2</span> (each via its second alternative) and hence
-	    <span class="lineno schema">S1</span>: <code>ex:dset1</code> conforms. Counting
-	    everything — the focus-node search plus every recursive check of a creator or
-	    identifier node against a candidate shape — the whole validation verifies 10
-	    (sub-)matchings, measured, against the 24 focus-node matchings alone that
-	    post-caching enumeration walks, or the 243 that a validator evaluating value
-	    expressions inside the walk would explore.
+	    That matching satisfies <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> (each via its second alternative) and hence <span class="lineno schema">S1</span>: <code>ex:dset1</code> conforms.
+	    Counting everything — the focus-node search plus every recursive check of a creator or identifier node against a candidate shape — the whole validation verifies 10 (sub-)matchings, measured, against the 24 focus-node matchings alone that post-caching enumeration walks, or the 243 that a validator evaluating value expressions inside the walk would explore.
 	  </p>
 
 	  <p>
-	    Now scale the same schema with a realistic failure mode — the harvested record:
-	    <span class="math">n_a</span> creators, none carrying an ORCID, and
-	    <span class="math">n_i</span> DOI <code>PropertyValue</code>s (one per release, say)
-	    with no legacy string identifier. No instance with <span class="math">n_a &ge; 3</span>
-	    or <span class="math">n_i &ge; 3</span> conforms, so nothing short-circuits — the
-	    worst case for any search. With no ORCID-bearing creator,
-	    <span class="math">hi(tc3) = 0</span>, and arc consistency deletes
-	    <span class="lineno schema">tc2</span> from every creator: committing even one triple
-	    to it requires <span class="lineno schema">tc3</span> to be occupiable.
-	    Symmetrically, with no string identifier, <span class="math">hi(tc5) = 0</span> and
-	    <span class="lineno schema">tc6</span> is deleted from every DOI. Both sides collapse
-	    onto their {1,2}-capped candidate; for counts of 3 or more no count vector fits, and
-	    the search assembles <em>zero</em> focus-node matchings. Every verified matching is a
-	    one-time caching check: 2 per creator (the <span class="lineno schema">tc1</span> and
-	    <span class="lineno schema">tc2</span> checks each verify the person's own little
-	    sub-matching once; the <span class="lineno schema">tc3</span> check is refuted for
-	    free) and 2 per DOI (<span class="lineno schema">tc4</span> and
-	    <span class="lineno schema">tc6</span> — the same
-	    <span class="lineno schema">S6</span> check made once per candidate constraint;
-	    <span class="lineno schema">tc5</span> refuted for free).
+	    Now scale the same schema with a realistic failure mode — the harvested record: <span class="math">n_a</span> creators, none carrying an ORCID, and <span class="math">n_i</span> DOI <code>PropertyValue</code>s (one per release, say) with no legacy string identifier.
+	    No instance with <span class="math">n_a &ge; 3</span> or <span class="math">n_i &ge; 3</span> conforms, so nothing short-circuits — the worst case for any search.
+	    With no ORCID-bearing creator, <span class="math">hi(tc3) = 0</span>, and arc consistency deletes <span class="lineno schema">tc2</span> from every creator: committing even one triple to it requires <span class="lineno schema">tc3</span> to be occupiable.
+	    Symmetrically, with no string identifier, <span class="math">hi(tc5) = 0</span> and <span class="lineno schema">tc6</span> is deleted from every DOI.
+	    Both sides collapse onto their {1,2}-capped candidate; for counts of 3 or more no count vector fits, and the search assembles <em>zero</em> focus-node matchings.
+	    Every verified matching is a one-time caching check: 2 per creator (the <span class="lineno schema">tc1</span> and <span class="lineno schema">tc2</span> checks each verify the person's own little sub-matching once; the <span class="lineno schema">tc3</span> check is refuted for free) and 2 per DOI (<span class="lineno schema">tc4</span> and <span class="lineno schema">tc6</span> — the same <span class="lineno schema">S6</span> check made once per candidate constraint; <span class="lineno schema">tc5</span> refuted for free).
 	  </p>
 
 	  <table class="simple">
@@ -875,15 +706,9 @@ ex:doi1 a schema:PropertyValue ;
 	  </table>
 
 	  <p>
-	    The verified count is <span class="math">2(n_a + n_i)</span> exactly: 64 at
-	    <span class="math">n_a = n_i = 16</span> is precisely the 32 measured for each axis
-	    alone, added — each axis's one-time caching cost is linear in its own count and
-	    entirely independent of the other's combinatorics. The Cartesian column, by contrast,
-	    multiplies the two sides together. As a positive control,
-	    <span class="math">n_a = 2, n_i = 1</span> conforms (both short conventions): the
-	    search verifies 7 (sub-)matchings and accepts — real work still happens for
-	    satisfiable instances; the pruning only ever discards states that could never be
-	    accepted.
+	    The verified count is <span class="math">2(n_a + n_i)</span> exactly: 64 at <span class="math">n_a = n_i = 16</span> is precisely the 32 measured for each axis alone, added — each axis's one-time caching cost is linear in its own count and entirely independent of the other's combinatorics.
+	    The Cartesian column, by contrast, multiplies the two sides together.
+	    As a positive control, <span class="math">n_a = 2, n_i = 1</span> conforms (both short conventions): the search verifies 7 (sub-)matchings and accepts — real work still happens for satisfiable instances; the pruning only ever discards states that could never be accepted.
 	  </p>
 	</section>
 
@@ -891,22 +716,16 @@ ex:doi1 a schema:PropertyValue ;
 	  <h4>Summary</h4>
 	  <ul>
 	    <li>
-	      Organize the search triple-indexed (a candidate-constraint set per triple, one
-	      choice per triple), and recover the constraint-indexed <a>split</a> from each
-	      chosen matching for the checks that need it.
+	      Organize the search triple-indexed (a candidate-constraint set per triple, one choice per triple), and recover the constraint-indexed <a>split</a> from each chosen matching for the checks that need it.
 	    </li>
 	    <li>
-	      Refute once, never re-derive: by value (the negative cache) when the
-	      <a>pre-matching</a> is built, and by structure (partial-bag refutation) at
-	      class granularity upfront and at every search node thereafter.
+	      Refute once, never re-derive: by value (the negative cache) when the <a>pre-matching</a> is built, and by structure (partial-bag refutation) at class granularity upfront and at every search node thereafter.
 	    </li>
 	    <li>
-	      Search count vectors over classes of interchangeable triples; verify surviving
-	      bags with the exact check, and expand a bag into concrete matchings only then.
+	      Search count vectors over classes of interchangeable triples; verify surviving bags with the exact check, and expand a bag into concrete matchings only then.
 	    </li>
 	    <li>
-	      Both prunings are necessary-condition filters: the set of accepted matchings is
-	      invariant; only the amount of work spent discovering it changes.
+	      Both prunings are necessary-condition filters: the set of accepted matchings is invariant; only the amount of work spent discovering it changes.
 	    </li>
 	  </ul>
 	</section>
