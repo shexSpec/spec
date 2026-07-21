@@ -479,7 +479,7 @@ return false
 
 	  <div class="example">
 	    <div class="exsec">Schema:</div><br/>
-	    <pre class="line-labels"> 
+	    <pre class="line-labels nohighlight"> 
 
 
 <span class="lineno schema">S1</span>
@@ -575,7 +575,7 @@ PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
 
 	  <div class="example">
 	    <div class="exsec">Data (conformant — a long creator list and a legacy identifier alongside the DOI):</div><br/>
-	    <pre class="line-labels"> 
+	    <pre class="line-labels nohighlight"> 
 
 
 <span class="lineno data">t1</span>
@@ -585,19 +585,19 @@ PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
 <span class="lineno data">t5</span>
 <span class="lineno data">t6</span>
 
-<span class="lineno data">t7</span>
-<span class="lineno data">t8</span>
-<span class="lineno data">t9</span>
+<!-- <span class="lineno data">t7</span> -->
+<!-- <span class="lineno data">t8</span> -->
+<!-- <span class="lineno data">t9</span> -->
 
-<span class="lineno data">t10</span>
-<span class="lineno data">t11</span>
+<!-- <span class="lineno data">t10</span> -->
+<!-- <span class="lineno data">t11</span> -->
 
-<span class="lineno data">t12</span>
-<span class="lineno data">t13</span>
+<!-- <span class="lineno data">t12</span> -->
+<!-- <span class="lineno data">t13</span> -->
 
-<span class="lineno data">t14</span>
-<span class="lineno data">t15</span>
-<span class="lineno data">t16</span></pre>
+<!-- <span class="lineno data">t14</span> -->
+<!-- <span class="lineno data">t15</span> -->
+<!-- <span class="lineno data">t16</span> --></pre>
 	    <div class="inline json">
 	      <pre class="nohighlight">PREFIX schema: &lt;https://schema.org/&gt;
 PREFIX ex:     &lt;http://example.org/datasets#&gt;
@@ -628,7 +628,6 @@ ex:doi1 a schema:PropertyValue ;
 
 	  <p>
 	    The focus node's neighbourhood is <span class="lineno data">t1</span>–<span class="lineno data">t6</span>: three creators and two identifiers, plus the <code>rdf:type</code> triple <span class="lineno data">t1</span>, whose predicate matches no constraint — since <span class="lineno schema">S1</span> is not <code>CLOSED</code>, it is simply ignored.
-	    The remaining triples (<span class="lineno data">t7</span>–<span class="lineno data">t16</span>) belong to the creator and identifier nodes and participate only in the recursive value checks.
 	  </p>
 
 	  <p>
