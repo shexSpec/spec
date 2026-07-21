@@ -110,16 +110,85 @@ function unComment (doc, content) {
   return content ;
 }
 
+// pulls "..." strings out of content so later regexes can't be confused by
+// slashes, angle brackets or keywords that happen to appear inside them.
+function stashStrings (content) {
+  var strings = [];
+  content = content.replace(/"(?:[^"\\]|\\.)*"/g, function (s) {
+    strings.push(s);
+    return "@@STR" + (strings.length - 1) + "@@";
+  });
+  return { content: content, restore: function (out) {
+    return out.replace(/@@STR(\d+)@@/g,
+                        (m, i) => "<span class='string'>"+strings[+i]+"</span>");
+  } };
+}
+
 // Crappy, single-purpose ShExC highlighter.
 function highlightShExC (doc, content) {
-  return content
+  var stashed = stashStrings(content);
+  var out = stashed.content
     .replace(/# ([^\n]*)$/gm, s => s.replace(/</g, "@@@"))
     .replace(/<([^>]*)>/g, "<span class='relativeIRI'>&lt;$1&gt;</span>")
     .replace(/@@@/g, "<")
     .replace(/# ([^\n]*)$/gm, s => "<span class='comment'>"+s+"</span>")
-    .replace(/(\b(?:CLOSED|BNODE|IRI|OR|PREFIX|BASE|LITERAL)\b|start=)/g,
+    .replace(/\/(?:\\.|[^\/\n])+\//g, s => "<span class='pattern'>"+s+"</span>")
+    .replace(/(\b(?:CLOSED|BNODE|IRI|OR|PREFIX|BASE|LITERAL|a)\b|start=)/g,
              "<span class='keyword'>$1</span>")
     .replace(/\[(.*?)\]/g, "<span class='valueSet'>[$1]</span>")
+  return stashed.restore(out);
+}
+
+// Crappy, single-purpose Turtle highlighter.
+function highlightTurtle (doc, content) {
+  var stashed = stashStrings(content);
+  var out = stashed.content
+    .replace(/# ([^\n]*)$/gm, s => s.replace(/</g, "@@@"))
+    .replace(/<([^>]*)>/g, "<span class='relativeIRI'>&lt;$1&gt;</span>")
+    .replace(/@@@/g, "<")
+    .replace(/# ([^\n]*)$/gm, s => "<span class='comment'>"+s+"</span>")
+    .replace(/(^|\s)(a|PREFIX|BASE)(?=\s)/gm, "$1<span class='keyword'>$2</span>")
+  return stashed.restore(out);
+}
+
+// Expands terse "@label@" markers (e.g. "@te1@") into the full pin span
+// prose needs, so writing a reference doesn't require hand-typing
+// <span class="lineno ...">. Convention (matching this document's labels):
+// "S<n>", "te<n>" and "tc<n>" are schema labels; a bare "t<n>" is a data
+// (triple) label. Must run before initPinHighlights so the expanded spans
+// exist by the time it links same-labelled elements together. Never
+// touches .line-labels or code <pre> listings - those are hand-authored.
+function expandPinRefs () {
+  $("p, li, td, th, dd, dt").each(function () {
+    var el = $(this);
+    if (el.closest("pre, .line-labels").length) return;
+    var html = el.html();
+    if (html.indexOf("@") === -1) return;
+    el.html(html.replace(/@([A-Za-z]+[0-9]+)@/g, function (m, label) {
+      var kind = /^t[0-9]/.test(label) ? "data" : "schema";
+      return "<span class='lineno " + kind + " pin " + label + "'>" + label + "</span>";
+    }));
+  });
+}
+
+// Wires up hover on each .line-labels gutter so that mousing over a line
+// label (e.g. "tc1") highlights that gutter chip, the matching .pin span
+// in the adjacent code listing, and any prose mentions of the same label
+// - all of them share a class named after the label, and prepareHighlight()
+// (above) already knows how to link any set of same-classed elements
+// together. Scoped to the enclosing <section> (not just the .example div)
+// since prose references live outside the code/data example blocks.
+function initPinHighlights () {
+  $(".line-labels").each(function () {
+    var gutter = $(this);
+    var scope = gutter.closest("section");
+    var labels = gutter.find(".lineno")
+      .map(function () { return $(this).text().trim(); })
+      .get()
+      .filter(function (label) { return label.length > 0; });
+    if (labels.length)
+      prepareHighlight(labels, "pin-active", "pin-inactive", scope);
+  });
 }
 
 function toggleGrammar () {

@@ -10,6 +10,7 @@
             defer class='remove'></script>
     <!-- script src='../primer/respec-w3c-common.js' async class='remove'></script -->
     <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="scripts.js"></script>
 
     <script class='remove'>
       var respecConfig = {
@@ -72,10 +73,9 @@
           href: ""
         }]
       }],
+      postProcess: [ expandPinRefs, initPinHighlights ],
       };
     </script>
-
-    <script type="text/javascript" src="scripts.js"></script>
   </head>
   
   <body>
@@ -482,95 +482,95 @@ return false
 	    <pre class="line-labels nohighlight"> 
 
 
-<span class="lineno schema">S1</span>
-<span class="lineno schema">te1</span>
-<span class="lineno schema">tc1</span>
+<span class="lineno schema pin S1">S1</span>
+<span class="lineno schema pin te1">te1</span>
+<span class="lineno schema pin tc1">tc1</span>
 
-<span class="lineno schema">tc2</span>
-<span class="lineno schema">tc3</span>
+<span class="lineno schema pin tc2">tc2</span>
+<span class="lineno schema pin tc3">tc3</span>
 
-<span class="lineno schema">te2</span>
-<span class="lineno schema">tc4</span>
+<span class="lineno schema pin te2">te2</span>
+<span class="lineno schema pin tc4">tc4</span>
 
-<span class="lineno schema">tc5</span>
-<span class="lineno schema">tc6</span>
-
-
-
-<span class="lineno schema">S2</span>
-
-<span class="lineno schema">S3</span>
+<span class="lineno schema pin tc5">tc5</span>
+<span class="lineno schema pin tc6">tc6</span>
 
 
 
+<span class="lineno schema pin S2">S2</span>
 
-<span class="lineno schema">S4</span>
+<span class="lineno schema pin S3">S3</span>
 
 
 
 
-<span class="lineno schema">S5</span>
+<span class="lineno schema pin S4">S4</span>
+
+
+
+
+<span class="lineno schema pin S5">S5</span>
 
 
 
 
 
-<span class="lineno schema">S6</span>
+<span class="lineno schema pin S6">S6</span>
 
 
 
 </pre>
 	    <div class="inline shexc">
-	      <pre class="nohighlight">PREFIX schema: &lt;https://schema.org/&gt;
-PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
+	      <pre class="nohighlight"><span class="keyword">PREFIX</span> schema: <span class="relativeIRI">&lt;https://schema.org/&gt;</span>
+<span class="keyword">PREFIX</span> xsd:    <span class="relativeIRI">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span>
 
-&lt;#SOSODataset&gt; {
-  (
-    schema:creator @&lt;#Agent&gt; {1,2}
+<span class="pin S1"><span class="relativeIRI">&lt;#SOSODataset&gt;</span> {
+  <span class="pin te1">(
+    <span class="pin tc1">schema:creator @<span class="relativeIRI">&lt;#Agent&gt;</span> {1,2}</span>
     |
-    schema:creator @&lt;#Agent&gt; + ;
-    schema:creator @&lt;#OrcidPerson&gt;
-  ) ;
-  (
-    schema:identifier @&lt;#DoiPropertyValue&gt; {1,2}
+    <span class="pin tc2">schema:creator @<span class="relativeIRI">&lt;#Agent&gt;</span> + ;</span>
+    <span class="pin tc3">schema:creator @<span class="relativeIRI">&lt;#OrcidPerson&gt;</span></span>
+  ) ;</span>
+  <span class="pin te2">(
+    <span class="pin tc4">schema:identifier @<span class="relativeIRI">&lt;#DoiPropertyValue&gt;</span> {1,2}</span>
     |
-    schema:identifier xsd:string + ;
-    schema:identifier @&lt;#DoiPropertyValue&gt;
-  )
-}
+    <span class="pin tc5">schema:identifier xsd:string + ;</span>
+    <span class="pin tc6">schema:identifier @<span class="relativeIRI">&lt;#DoiPropertyValue&gt;</span></span>
+  )</span>
+}</span>
 
-&lt;#Agent&gt; @&lt;#Person&gt; OR @&lt;#Organization&gt;
+<span class="pin S2"><span class="relativeIRI">&lt;#Agent&gt;</span> @<span class="relativeIRI">&lt;#Person&gt;</span> <span class="keyword">OR</span> @<span class="relativeIRI">&lt;#Organization&gt;</span></span>
 
-&lt;#Person&gt; {
-  a [schema:Person] ;
+<span class="pin S3"><span class="relativeIRI">&lt;#Person&gt;</span> {
+  <span class="keyword">a</span> <span class="valueSet">[schema:Person]</span> ;
   schema:name xsd:string
-}
+}</span>
 
-&lt;#Organization&gt; {
-  a [schema:Organization] ;
+<span class="pin S4"><span class="relativeIRI">&lt;#Organization&gt;</span> {
+  <span class="keyword">a</span> <span class="valueSet">[schema:Organization]</span> ;
   schema:name xsd:string
-}
+}</span>
 
-&lt;#OrcidPerson&gt; {
-  a [schema:Person] ;
+<span class="pin S5"><span class="relativeIRI">&lt;#OrcidPerson&gt;</span> {
+  <span class="keyword">a</span> <span class="valueSet">[schema:Person]</span> ;
   schema:name xsd:string ;
-  schema:identifier /^https:\/\/orcid\.org\//
-}
+  schema:identifier <span class="pattern">/^https:\/\/orcid\.org\//</span>
+}</span>
 
-&lt;#DoiPropertyValue&gt; {
-  a [schema:PropertyValue] ;
-  schema:propertyID ["https://registry.identifiers.org/registry/doi"] ;
-  schema:value /^10\./
-}</pre>
+<span class="pin S6"><span class="relativeIRI">&lt;#DoiPropertyValue&gt;</span> {
+  <span class="keyword">a</span> <span class="valueSet">[schema:PropertyValue]</span> ;
+  schema:propertyID <span class="valueSet">[<span class="string">"https://registry.identifiers.org/registry/doi"</span>]</span> ;
+  schema:value <span class="pattern">/^10\./</span>
+}</span></pre>
 	    </div>
 	    <div style="clear:both;"></div>
 	  </div>
 
 	  <p>
-	    <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> are the two OneOf groups.
-	    <span class="lineno schema">tc1</span> and <span class="lineno schema">tc2</span> are the short-list and long-list creator constraints — value-indistinguishable, since any valid agent satisfies both — while <span class="lineno schema">tc3</span> demands an ORCID-identified person (<span class="lineno schema">S5</span>).
-	    On the identifier side the roles are mirrored: <span class="lineno schema">tc4</span> and <span class="lineno schema">tc6</span> share the DOI value expression (<span class="lineno schema">S6</span>) and are indistinguishable from each other, but value-distinguishable from the plain-string constraint <span class="lineno schema">tc5</span>.
-	    <span class="lineno schema">S2</span> is the schema.org choice type: a creator may be a <span class="lineno schema">S3</span> person or a <span class="lineno schema">S4</span> organization.
+	    @te1@ and @te2@ are the two OneOf groups.
+	    @tc1@ and @tc2@ are the short-list and long-list creator constraints — value-indistinguishable, since any valid agent satisfies both — while @tc3@ demands an ORCID-identified person (@S5@).
+	    On the identifier side the roles are mirrored: @tc4@ and @tc6@ share the DOI value expression (@S6@) and are indistinguishable from each other, but value-distinguishable from the plain-string constraint @tc5@.
+	    @S2@ is the schema.org choice type: a creator may be a @S3@ person or a @S4@ organization.
 	  </p>
 
 	  <div class="example">
@@ -578,12 +578,12 @@ PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
 	    <pre class="line-labels nohighlight"> 
 
 
-<span class="lineno data">t1</span>
-<span class="lineno data">t2</span>
-<span class="lineno data">t3</span>
-<span class="lineno data">t4</span>
-<span class="lineno data">t5</span>
-<span class="lineno data">t6</span>
+<span class="lineno data pin t1">t1</span>
+<span class="lineno data pin t2">t2</span>
+<span class="lineno data pin t3">t3</span>
+<span class="lineno data pin t4">t4</span>
+<span class="lineno data pin t5">t5</span>
+<span class="lineno data pin t6">t6</span>
 
 <!-- <span class="lineno data">t7</span> -->
 <!-- <span class="lineno data">t8</span> -->
@@ -599,54 +599,54 @@ PREFIX xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt;
 <!-- <span class="lineno data">t15</span> -->
 <!-- <span class="lineno data">t16</span> --></pre>
 	    <div class="inline json">
-	      <pre class="nohighlight">PREFIX schema: &lt;https://schema.org/&gt;
-PREFIX ex:     &lt;http://example.org/datasets#&gt;
+	      <pre class="nohighlight"><span class="keyword">PREFIX</span> schema: <span class="relativeIRI">&lt;https://schema.org/&gt;</span>
+<span class="keyword">PREFIX</span> ex:     <span class="relativeIRI">&lt;http://example.org/datasets#&gt;</span>
 
-ex:dset1 a schema:Dataset ;
-    schema:creator    ex:alice ;
-    schema:creator    ex:bob ;
-    schema:creator    ex:noaa ;
-    schema:identifier "gov.noaa.ncdc:C00861" ;
-    schema:identifier ex:doi1 .
+<span class="pin t1">ex:dset1 <span class="keyword">a</span> schema:Dataset ;</span>
+    <span class="pin t2">schema:creator    ex:alice ;</span>
+    <span class="pin t3">schema:creator    ex:bob ;</span>
+    <span class="pin t4">schema:creator    ex:noaa ;</span>
+    <span class="pin t5">schema:identifier <span class="string">"gov.noaa.ncdc:C00861"</span> ;</span>
+    <span class="pin t6">schema:identifier ex:doi1 .</span>
 
-ex:alice a schema:Person ;
-    schema:name "Alice Walker" ;
-    schema:identifier "https://orcid.org/0000-0002-1825-0097" .
+ex:alice <span class="keyword">a</span> schema:Person ;
+    schema:name <span class="string">"Alice Walker"</span> ;
+    schema:identifier <span class="string">"https://orcid.org/0000-0002-1825-0097"</span> .
 
-ex:bob a schema:Person ;
-    schema:name "Bob Ferris" .
+ex:bob <span class="keyword">a</span> schema:Person ;
+    schema:name <span class="string">"Bob Ferris"</span> .
 
-ex:noaa a schema:Organization ;
-    schema:name "NOAA National Centers for Environmental Information" .
+ex:noaa <span class="keyword">a</span> schema:Organization ;
+    schema:name <span class="string">"NOAA National Centers for Environmental Information"</span> .
 
-ex:doi1 a schema:PropertyValue ;
-    schema:propertyID "https://registry.identifiers.org/registry/doi" ;
-    schema:value "10.7289/V5D21VHZ" .</pre>
+ex:doi1 <span class="keyword">a</span> schema:PropertyValue ;
+    schema:propertyID <span class="string">"https://registry.identifiers.org/registry/doi"</span> ;
+    schema:value <span class="string">"10.7289/V5D21VHZ"</span> .</pre>
 	    </div>
 	    <div style="clear:both;"></div>
 	  </div>
 
 	  <p>
-	    The focus node's neighbourhood is <span class="lineno data">t1</span>–<span class="lineno data">t6</span>: three creators and two identifiers, plus the <code>rdf:type</code> triple <span class="lineno data">t1</span>, whose predicate matches no constraint — since <span class="lineno schema">S1</span> is not <code>CLOSED</code>, it is simply ignored.
+	    The focus node's neighbourhood is @t1@–@t6@: three creators and two identifiers, plus the <code>rdf:type</code> triple @t1@, whose predicate matches no constraint — since @S1@ is not <code>CLOSED</code>, it is simply ignored.
 	  </p>
 
 	  <p>
-	    By predicate alone, the pre-matching of <code>ex:dset1</code> is <span class="lineno data">t2</span>–<span class="lineno data">t4</span> &rarr; {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>, <span class="lineno schema">tc3</span>}; <span class="lineno data">t5</span>,<span class="lineno data">t6</span> &rarr; {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc5</span>, <span class="lineno schema">tc6</span>} — a Cartesian product of 3&sup3;&middot;3&sup2; = 243 matchings.
+	    By predicate alone, the pre-matching of <code>ex:dset1</code> is @t2@–@t4@ &rarr; {@tc1@, @tc2@, @tc3@}; @t5@,@t6@ &rarr; {@tc4@, @tc5@, @tc6@} — a Cartesian product of 3&sup3;&middot;3&sup2; = 243 matchings.
 	  </p>
 
 	  <p>
 	    Negative caching checks each pair once, recursively.
-	    <code>ex:bob</code> (<span class="lineno data">t3</span>) has no <code>schema:identifier</code> at all, so <span class="lineno schema">S5</span>'s mandatory ORCID constraint is refuted without assembling any sub-matching: <span class="lineno schema">tc3</span> deleted.
-	    <code>ex:noaa</code> (<span class="lineno data">t4</span>) is typed <code>schema:Organization</code>, failing <span class="lineno schema">S5</span>'s <code>[schema:Person]</code> value set: <span class="lineno schema">tc3</span> deleted.
-	    The legacy identifier (<span class="lineno data">t5</span>) is a literal with no outgoing arcs, so <span class="lineno schema">S6</span>'s mandatory constraints can never be matched: <span class="lineno schema">tc4</span> and <span class="lineno schema">tc6</span> deleted.
-	    And <code>ex:doi1</code> (<span class="lineno data">t6</span>) is an IRI node, not a literal: <span class="lineno schema">tc5</span> deleted.
-	    The pre-matching becomes <span class="lineno data">t2</span> &rarr; {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>, <span class="lineno schema">tc3</span>}; <span class="lineno data">t3</span>,<span class="lineno data">t4</span> &rarr; {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>}; <span class="lineno data">t5</span> &rarr; {<span class="lineno schema">tc5</span>}; <span class="lineno data">t6</span> &rarr; {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc6</span>}: 3&middot;2&middot;2&middot;1&middot;2 = 24 matchings — and no value expression is ever evaluated again.
+	    <code>ex:bob</code> (@t3@) has no <code>schema:identifier</code> at all, so @S5@'s mandatory ORCID constraint is refuted without assembling any sub-matching: @tc3@ deleted.
+	    <code>ex:noaa</code> (@t4@) is typed <code>schema:Organization</code>, failing @S5@'s <code>[schema:Person]</code> value set: @tc3@ deleted.
+	    The legacy identifier (@t5@) is a literal with no outgoing arcs, so @S6@'s mandatory constraints can never be matched: @tc4@ and @tc6@ deleted.
+	    And <code>ex:doi1</code> (@t6@) is an IRI node, not a literal: @tc5@ deleted.
+	    The pre-matching becomes @t2@ &rarr; {@tc1@, @tc2@, @tc3@}; @t3@,@t4@ &rarr; {@tc1@, @tc2@}; @t5@ &rarr; {@tc5@}; @t6@ &rarr; {@tc4@, @tc6@}: 3&middot;2&middot;2&middot;1&middot;2 = 24 matchings — and no value expression is ever evaluated again.
 	  </p>
 
 	  <p>
-	    The classes are {<span class="lineno data">t2</span>} over three candidates; {<span class="lineno data">t3</span>,<span class="lineno data">t4</span>} over {<span class="lineno schema">tc1</span>, <span class="lineno schema">tc2</span>}; {<span class="lineno data">t5</span>} over {<span class="lineno schema">tc5</span>}; and {<span class="lineno data">t6</span>} over {<span class="lineno schema">tc4</span>, <span class="lineno schema">tc6</span>}.
-	    Committing the forced singleton <span class="lineno data">t5</span> &rarr; <span class="lineno schema">tc5</span> occupies <span class="lineno schema">tc5</span>, so <span class="lineno schema">te2</span>'s first alternative — which requires the second alternative's constraints to stay empty — is refuted for any vector using <span class="lineno schema">tc4</span>: <span class="lineno data">t6</span> goes to <span class="lineno schema">tc6</span>.
-	    On the creator side, the all-<span class="lineno schema">tc1</span> vector dies on <span class="lineno schema">tc1</span>'s {1,2} cap (there are three creators), every mixed vector dies on OneOf exclusivity, so the long alternative must hold — and <span class="lineno data">t2</span> (<code>ex:alice</code>) is the only possible occupant of the mandatory <span class="lineno schema">tc3</span>.
+	    The classes are {@t2@} over three candidates; {@t3@,@t4@} over {@tc1@, @tc2@}; {@t5@} over {@tc5@}; and {@t6@} over {@tc4@, @tc6@}.
+	    Committing the forced singleton @t5@ &rarr; @tc5@ occupies @tc5@, so @te2@'s first alternative — which requires the second alternative's constraints to stay empty — is refuted for any vector using @tc4@: @t6@ goes to @tc6@.
+	    On the creator side, the all-@tc1@ vector dies on @tc1@'s {1,2} cap (there are three creators), every mixed vector dies on OneOf exclusivity, so the long alternative must hold — and @t2@ (<code>ex:alice</code>) is the only possible occupant of the mandatory @tc3@.
 	    Exactly one bag survives, and its expansion is a single matching, whose split is:
 	  </p>
 
@@ -655,27 +655,27 @@ ex:doi1 a schema:PropertyValue ;
 	      <tr><th>triple constraint</th><th>matched triples</th></tr>
 	    </thead>
 	    <tbody>
-	      <tr><td><span class="lineno schema">tc1</span> (creators, short list)</td><td>&mdash;</td></tr>
-	      <tr><td><span class="lineno schema">tc2</span> (creators, long list)</td><td><span class="lineno data">t3</span> <span class="lineno data">t4</span></td></tr>
-	      <tr><td><span class="lineno schema">tc3</span> (ORCID-identified person)</td><td><span class="lineno data">t2</span></td></tr>
-	      <tr><td><span class="lineno schema">tc4</span> (DOI, DOI-only convention)</td><td>&mdash;</td></tr>
-	      <tr><td><span class="lineno schema">tc5</span> (legacy string identifier)</td><td><span class="lineno data">t5</span></td></tr>
-	      <tr><td><span class="lineno schema">tc6</span> (DOI alongside legacy identifiers)</td><td><span class="lineno data">t6</span></td></tr>
+	      <tr><td>@tc1@ (creators, short list)</td><td>&mdash;</td></tr>
+	      <tr><td>@tc2@ (creators, long list)</td><td>@t3@ @t4@</td></tr>
+	      <tr><td>@tc3@ (ORCID-identified person)</td><td>@t2@</td></tr>
+	      <tr><td>@tc4@ (DOI, DOI-only convention)</td><td>&mdash;</td></tr>
+	      <tr><td>@tc5@ (legacy string identifier)</td><td>@t5@</td></tr>
+	      <tr><td>@tc6@ (DOI alongside legacy identifiers)</td><td>@t6@</td></tr>
 	    </tbody>
 	  </table>
 
 	  <p>
-	    That matching satisfies <span class="lineno schema">te1</span> and <span class="lineno schema">te2</span> (each via its second alternative) and hence <span class="lineno schema">S1</span>: <code>ex:dset1</code> conforms.
+	    That matching satisfies @te1@ {t3} and @te2@ (each via its second alternative) and hence @S1@: <code>ex:dset1</code> conforms.
 	    Counting everything — the focus-node search plus every recursive check of a creator or identifier node against a candidate shape — the whole validation verifies 10 (sub-)matchings, measured, against the 24 focus-node matchings alone that post-caching enumeration walks, or the 243 that a validator evaluating value expressions inside the walk would explore.
 	  </p>
 
 	  <p>
 	    Now scale the same schema with a realistic failure mode — the harvested record: <span class="math">n_a</span> creators, none carrying an ORCID, and <span class="math">n_i</span> DOI <code>PropertyValue</code>s (one per release, say) with no legacy string identifier.
 	    No instance with <span class="math">n_a &ge; 3</span> or <span class="math">n_i &ge; 3</span> conforms, so nothing short-circuits — the worst case for any search.
-	    With no ORCID-bearing creator, <span class="math">hi(tc3) = 0</span>, and arc consistency deletes <span class="lineno schema">tc2</span> from every creator: committing even one triple to it requires <span class="lineno schema">tc3</span> to be occupiable.
-	    Symmetrically, with no string identifier, <span class="math">hi(tc5) = 0</span> and <span class="lineno schema">tc6</span> is deleted from every DOI.
+	    With no ORCID-bearing creator, <span class="math">hi(tc3) = 0</span>, and arc consistency deletes @tc2@ from every creator: committing even one triple to it requires @tc3@ to be occupiable.
+	    Symmetrically, with no string identifier, <span class="math">hi(tc5) = 0</span> and @tc6@ is deleted from every DOI.
 	    Both sides collapse onto their {1,2}-capped candidate; for counts of 3 or more no count vector fits, and the search assembles <em>zero</em> focus-node matchings.
-	    Every verified matching is a one-time caching check: 2 per creator (the <span class="lineno schema">tc1</span> and <span class="lineno schema">tc2</span> checks each verify the person's own little sub-matching once; the <span class="lineno schema">tc3</span> check is refuted for free) and 2 per DOI (<span class="lineno schema">tc4</span> and <span class="lineno schema">tc6</span> — the same <span class="lineno schema">S6</span> check made once per candidate constraint; <span class="lineno schema">tc5</span> refuted for free).
+	    Every verified matching is a one-time caching check: 2 per creator (the @tc1@ and @tc2@ checks each verify the person's own little sub-matching once; the @tc3@ check is refuted for free) and 2 per DOI (@tc4@ and @tc6@ — the same @S6@ check made once per candidate constraint; @tc5@ refuted for free).
 	  </p>
 
 	  <table class="simple">

@@ -297,6 +297,11 @@ div.shexjTable th { text-align: right; }
 .relativeIRI { color: #058; }
 .keyword { color: #c0c; }
 .valueSet { font-style: italic }
+.pattern { color: #a60; font-style: italic; }
+.string { color: #070; }
+
+.pin { cursor: pointer; transition: box-shadow .15s ease; }
+.pin-active { box-shadow: 0 0 0 2px #e0a800; border-radius: .2em; }
 
 .grammarTable .grammarParagraph /* needs .grammarTable specificity for at least FF and chromium */
     { border-left:thin solid white; border-right:thin solid white; }
