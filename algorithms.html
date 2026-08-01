@@ -116,6 +116,13 @@
 
 	<p>For a ShEx schema <span class="math">sch</span>, let <span class="math">ShapeExprIds(sch)</span> be the set of shape expression identifiers in <span class="math">sch</span>.</p>
 
+	<p>
+	  The dependency graph traced by this requirement records the <em>same-node</em> dependencies: an edge from <span class="math">se</span> to <span class="math">se'</span> means that deciding whether a node satisfies <span class="math">se</span> immediately requires deciding whether that <em>same</em> node satisfies <span class="math">se'</span>.
+	  The operands of <code>ShapeAnd</code>, <code>ShapeOr</code> and <code>ShapeNot</code> and the target of a shape expression reference are such dependencies.
+	  So is each shape expression named in a Shape's <code>EXTENDS</code> clause: a node conforms to an extending Shape only if a split of the node's own neighbourhood satisfies every extended shape expression, so the dependency is not mediated by any triple constraint — it behaves like an additional conjunct.
+	  A Shape's <em>triple expression</em>, by contrast, contributes no edges here: the value expressions inside it constrain <em>other</em> nodes (the triples' objects), and those dependencies are the subject of the <a href="#negation">negation requirement</a>.
+	</p>
+
 <p>Algorithm checkShapeExpressionReferenceRequirement</p>
 <pre><code>
 Input: sch: a schema
@@ -136,13 +143,94 @@ foreach ShapeExpr se in the vertex set of D
         add to D an edge from se to se.shapeExpr labelled with neg
     else if se is a shapeExprRef then
         add to D an edge from se to shapeExprWithId(se) labelled with pos
+    <mark>else if se is a Shape then
+        foreach ShapeExpr ext in se.extends
+            add to D an edge from se to ext labelled with pos</mark>
 
 if D contains a cycle then
     return false
-else 
+else
     return (true, D)
 </code></pre>
-	
+
+	<p>
+	  Because <em>every</em> cycle in <span class="math">D</span> is rejected — whether or not it traverses a <span class="math">neg</span>-labelled edge — an <code>EXTENDS</code> cycle (<span class="math">S</span> extends <span class="math">T</span>, <span class="math">T</span> extends <span class="math">S</span>) is ill-formed even without negation: it defines conformance to <span class="math">S</span> in terms of itself with no triple constraint in between to ground the recursion.
+	  When such a cycle does traverse a negation, the schema is not merely ungrounded but contradictory, as the following example shows.
+	</p>
+
+	<section id="extends-negation-example">
+	  <h4>Worked Example: a Paradox through EXTENDS and NOT</h4>
+
+	  <p>
+	    The following schema is the shexTest suite's <a href="https://github.com/shexSpec/shexTest/blob/main/negativeStructure/Cycle2ExtendsNegation.shex"><code>negativeStructure/Cycle2ExtendsNegation</code></a> test.
+	    Without the highlighted <code>EXTENDS</code> rule above, it slips through the requirement checks: the reference from <code>:T</code> back to <code>:S</code> sits directly in <code>:T</code>'s shape expression (no triple constraint mediates it), so the <a href="#negation">negation requirement</a>'s dependency graph — which only traces dependencies through triple constraints' value expressions — never sees the cycle.
+	  </p>
+
+	  <div class="example">
+	    <div class="exsec">Schema (<code>Cycle2ExtendsNegation.shex</code>):</div>
+	    <pre class="nohighlight">PREFIX : &lt;http://example.org/&gt;
+
+:S EXTENDS @:T {}
+:T NOT @:S</pre>
+	  </div>
+
+	  <p>
+	    The dependency graph <span class="math">D</span> has the cycle:
+	  </p>
+
+	  <pre class="nohighlight">Shape(:S) --pos (EXTENDS)--&gt; @:T --pos--&gt; ShapeNot(:T) --neg--&gt; @:S --pos--&gt; Shape(:S)</pre>
+
+	  <p>
+	    so <span class="math">checkShapeExpressionReferenceRequirement</span> returns <span class="math">false</span> and the schema is rejected.
+	  </p>
+
+	  <p>
+	    To see why it must be, suppose the schema were admitted and validate any node at all — say <span class="math">n</span> in the one-triple graph:
+	  </p>
+
+	  <div class="example">
+	    <div class="exsec">Data:</div>
+	    <pre class="nohighlight">PREFIX : &lt;http://example.org/&gt;
+
+:n :p 1 .</pre>
+	  </div>
+
+	  <p>
+	    Write <span class="math">S(n)</span> for &ldquo;<span class="math">n</span> satisfies <code>:S</code>&rdquo; and <span class="math">T(n)</span> likewise.
+	    Unfolding the definitions:
+	  </p>
+
+	  <ul>
+	    <li>
+	      <span class="math">S(n)</span> holds iff some split of <span class="math">n</span>'s neighbourhood lets the extended <code>@:T</code> accept its share and the local triple expression <code>{}</code> accept the rest.
+	      <code>{}</code> is not <code>CLOSED</code> and constrains nothing, and <code>:T</code>'s shape expression contains no triple constraints either, so the split is immaterial: <span class="math">S(n) &hArr; T(n)</span>.
+	    </li>
+	    <li>
+	      <span class="math">T(n)</span> holds iff <span class="math">n</span> does <em>not</em> satisfy <code>:S</code>: <span class="math">T(n) &hArr; &not;S(n)</span>.
+	    </li>
+	  </ul>
+
+	  <p>
+	    Chaining the two: <span class="math">S(n) &hArr; &not;S(n)</span> — the liar's paradox.
+	    No assignment of conformance is consistent, for <em>any</em> node in <em>any</em> graph:
+	  </p>
+
+	  <ul>
+	    <li>
+	      A validator that tests <code>:n</code> against <code>:S</code> and, on encountering the recursion, <em>assumes the pending</em> <span class="math">S(n)</span> <em>fails</em>, concludes <span class="math">T(n)</span> holds — and therefore that <span class="math">S(n)</span> <em>succeeds</em>, contradicting its assumption.
+	    </li>
+	    <li>
+	      Assuming instead that the pending <span class="math">S(n)</span> succeeds makes <span class="math">T(n)</span> fail — and therefore <span class="math">S(n)</span> fail, again contradicting the assumption.
+	    </li>
+	  </ul>
+
+	  <p>
+	    So the verdict depends entirely on the order of evaluation and the guess made at the recursion, and each guess refutes itself: <code>:n</code> is &ldquo;both valid and invalid&rdquo;.
+	    The same contradiction defeats <a href="#refine-validation">refine validation</a> before it starts: the schema admits no stratification, since <code>:S</code> and <code>:T</code> would occupy the same stratum across a negated dependency.
+	    Rejecting the schema statically — here, by the cycle test on <span class="math">D</span> — is what keeps <span class="math">satisfies</span> well-defined.
+	  </p>
+	</section>
+
       </section>
 
       <section id="triple-expr-ref">
@@ -164,6 +252,11 @@ else
 	</p>
 	
 	<p>Algorithm for computing the dependency graph of a schema.</p>
+
+	<p>
+	  Since <span class="math">DSE</span> (computed by <span class="math">checkShapeExpressionReferenceRequirement</span>) contains an edge from each Shape to every shape expression in its <code>EXTENDS</code> clause, the paths followed below traverse extension hierarchies without further provision: <span class="math">atomicShapes(tc.valueExpr)</span> includes the extension bases of every Shape it reaches, with the count of <span class="math">neg</span>-labelled edges carried along the path.
+	  For example, if <span class="math">tc.valueExpr</span> is <code>NOT @:S</code> and <code>:S</code> extends <code>:T</code>, the algorithm records <span class="math">neg</span>-labelled edges to both <code>:S</code> and <code>:T</code>.
+	</p>
 
 <pre><code>
 Input: schema a ShexSchema
