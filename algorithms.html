@@ -514,6 +514,14 @@ return true
 	  </p>
 
 	  <p>
+	    Both refinements <em>delete</em>: the negative cache removes refuted <span class="math">(t, tc)</span> pairs from the <a>pre-matching</a> as it is built, and arc consistency removes candidates from whole classes at once.
+	    The invariance stated above is about <em>accepted matchings</em>, and does not extend to the pre-matching itself: what survives pruning is a search state, not a description of the neighbourhood.
+	    When a node cannot conform for any reason, refutation cascades, and that state can end with every triple's candidate set empty however much the node contains.
+	    An implementation that also <em>reports</em> on failures — which triples had nowhere to go, how many of a property the node had, what would make it conform — must take those readings from the neighbourhood and the initial pre-matching, before the first deletion.
+	    Read from the pruned state, they describe the search rather than the data.
+	  </p>
+
+	  <p>
 	    <span class="math">refute</span> deliberately ignores constraints that per-constraint intervals cannot express: count coupling inside a repeated group (<code>(:a . ; :b .)+</code> requires equal counts of <code>:a</code> and <code>:b</code>) and divisibility (<code>(:a . {2,2})*</code> accepts only even counts).
 	    Bags that survive are therefore always verified exactly, once, before acceptance; the refinement loses no correctness, only doomed work.
 	  </p>
@@ -817,6 +825,9 @@ ex:doi1 <span class="keyword">a</span> schema:PropertyValue ;
 	    </li>
 	    <li>
 	      Both prunings are necessary-condition filters: the set of accepted matchings is invariant; only the amount of work spent discovering it changes.
+	    </li>
+	    <li>
+	      Both prunings also delete from the <a>pre-matching</a>, so what remains of it is a search state: a validator that reports on failures reads the neighbourhood as it was before pruning began.
 	    </li>
 	  </ul>
 	</section>
