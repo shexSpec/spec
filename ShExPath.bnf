@@ -7,9 +7,10 @@ ContextTest ::= Context
 Context ::= "shapeAnd" | "shapeOr" | "shapeNot" | "nodeConstraint" | "shape"
           | "eachOf" | "oneOf" | "tripleConstraint"
 Index ::= "["? (INTEGER | schemaLabel INTEGER? ) "]"?
-schemaLabel ::= ShapeExprLabel | TripleExprLabel
+schemaLabel ::= ShapeExprLabel | TripleExprLabel | PredicateLabel
 ShapeExprLabel ::= "@" (iri | BLANK_NODE_LABEL)
-TripleExprLabel ::= iri | BLANK_NODE_LABEL
+TripleExprLabel ::= "$" (iri | BLANK_NODE_LABEL)
+PredicateLabel ::= iri | BLANK_NODE_LABEL
 [136s]  iri                   ::= IRIREF | prefixedName
 [137s]  prefixedName          ::= PNAME_LN | PNAME_NS
 

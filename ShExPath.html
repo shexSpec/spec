@@ -224,6 +224,8 @@
         Shape expression labels or indexes are prefixed by "<code>@</code>".
         For triple constraints, the label is the name of the predicate for that triple constraints.
         Elements of triple expressions may be selected by index within the triple expression.
+        A triple expression that was given a name is addressed by that name, prefixed by "<code>$</code>"
+        (see <a href="#triple-expression-labels">Triple Expression Labels</a>).
       </p>
       <table class="example">
         <thead>
@@ -235,6 +237,47 @@
           <tr><td>/@1/2</td><td>the <code>:category</code> constraint in the <code>#IssueShape</code> shape, addressed by the <em>index</em> of the shape expression followed by the <em>index</em> of the <code>:category</code> property.</td></tr>
         </tbody>
       </table>
+      <section id="triple-expression-labels">
+        <h3>Triple Expression Labels</h3>
+        <p>
+          ShExC can give a triple expression a name, writing
+          "<code>$</code>" before a triple constraint or a group.
+          Such a name is addressed by prefixing it with "<code>$</code>",
+          the same character that declares it.
+        </p>
+        <pre class="example">
+&lt;#IssueShape&gt; {
+  $&lt;#reportedBy&gt; :postedBy @&lt;#UserShape&gt;;
+  :category ["bug" "feature request"]
+}
+        </pre>
+        <table class="example">
+          <thead>
+            <th style="min-width: 20em;">ShExPath</th> <th>value</th>
+          </thead>
+          <tbody>
+            <tr><td>$&lt;#reportedBy&gt;</td><td>the <code>:postedBy</code> constraint, addressed by the <em>name given to it</em>.</td></tr>
+            <tr><td>$&lt;#reportedBy&gt;/valueExpr</td><td>the reference to <code>#UserShape</code> in that constraint.</td></tr>
+          </tbody>
+        </table>
+        <p>
+          A triple expression label selects wherever it was declared.
+          ShExJ has no top-level list of triple expressions the way it has
+          <code>shapes</code>, and a label may sit on an EachOf, a OneOf or a
+          TripleConstraint at any depth -- including inside the inline
+          shape of some constraint's value expression -- so the label is
+          looked for throughout the schema.
+        </p>
+        <p>
+          Note that "<code>$</code>" addresses the <em>name of a triple
+          expression</em> where a bare predicate addresses the <em>predicate of
+          a triple constraint</em>: <code>$&lt;#reportedBy&gt;</code> and
+          <code>/@&lt;#IssueShape&gt;/:postedBy</code> reach the same constraint
+          by different names.
+          A label naming both a shape expression and a triple expression is a
+          structural error in ShEx, so the three namespaces do not collide.
+        </p>
+      </section>
       <section id="context-tests">
         <h3>Nested Expressions</h3>
         <p>
@@ -384,11 +427,13 @@ ContextTest              ::= ShapeExprContext | TripleExprContext
 ShapeExprContext         ::= "ShapeAnd" | "ShapeOr" | "ShapeNot"
                            | "NodeConstraint" | "Shape"
 TripleExprContext        ::= "EachOf" | "OneOf" | "TripleConstraint"
-ExprIndex                ::= ShapeExprIndex | TripleExprIndex
+ExprIndex                ::= ShapeExprIndex | TripleExprIndex | PredicateIndex
 ShapeExprIndex           ::= "@" (INTEGER | ShapeExprLabel)
 ShapeExprLabel           ::= iri | BLANK_NODE_LABEL
-TripleExprIndex          ::= INTEGER | TripleExprLabel
-TripleExprLabel          ::= (iri | BLANK_NODE_LABEL) INTEGER?
+TripleExprIndex          ::= "$" TripleExprLabel
+TripleExprLabel          ::= iri | BLANK_NODE_LABEL
+PredicateIndex           ::= INTEGER | PredicateLabel
+PredicateLabel           ::= (iri | BLANK_NODE_LABEL) INTEGER?
 [136s]  iri              ::= IRIREF | prefixedName
 [137s]  prefixedName     ::= PNAME_LN | PNAME_NS
 
