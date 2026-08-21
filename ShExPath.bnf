@@ -1,24 +1,73 @@
-ShExPathExpr ::= AbsolutePathExpr | RelativePathExpr
-AbsolutePathExpr ::= "/" RelativePathExpr
-RelativePathExpr ::= StepExpr ("/" StepExpr)*
-StepExpr ::= ContextTest? Index | ContextTest | ExtendsExpr
-ExtendsExpr ::= "extends" Index?
-ContextTest ::= Context
-Context ::= "shapeAnd" | "shapeOr" | "shapeNot" | "nodeConstraint" | "shape"
-          | "eachOf" | "oneOf" | "tripleConstraint"
-Index ::= "["? (INTEGER | schemaLabel INTEGER? ) "]"?
-schemaLabel ::= ShapeExprLabel | TripleExprLabel | PredicateLabel
-ShapeExprLabel ::= "@" (iri | BLANK_NODE_LABEL)
-TripleExprLabel ::= "$" (iri | BLANK_NODE_LABEL)
-PredicateLabel ::= iri | BLANK_NODE_LABEL
+/* ShExPath -- addressing elements of a ShEx schema.
+ *
+ * The nonterminal names are those of the reference implementation's parser,
+ * ShapePath.js/packages/core/src/ShapePathParser.jison, so that the grammar
+ * and the parser can be read side by side.
+ *
+ * "union", "intersection" and "assert" are matched case-insensitively.
+ * Whitespace and COMMENT are skipped between tokens.
+ */
+
+shapePath             ::= sequenceStep ("," sequenceStep)*
+sequenceStep          ::= unionStep ("union" unionStep)*
+unionStep             ::= intersectionStep ("intersection" intersectionStep)*
+intersectionStep      ::= startStep nextStep*
+startStep             ::= ("/" | "//")? step | shortcut
+nextStep              ::= ("/" | "//") step | shortcut
+shortcut              ::= ("@" | "~" | "$") iri
+step                  ::= "child::"? termType filter*
+                        | "child::"? attributeOrAny termType? filter*
+                        | nonChildAxis termType? filter*
+                        | "(" shapePath ")" termType? filter*
+nonChildAxis          ::= "thisShapeExpr::" | "thisTripleExpr::"
+                        | "self::" | "parent::" | "ancestor::"
+attributeOrAny        ::= "*" | attribute
+filter                ::= "[" filterExpr "]"
+filterExpr            ::= "assert"? shapePath comparison?
+                        | "assert"? function comparison?
+                        | numericExpr
+function              ::= "index" "(" ")" | "count" "(" ")"
+comparison            ::= comparitor rvalue
+comparitor            ::= "=" | "<" | ">"
+rvalue                ::= INTEGER | iri
+numericExpr           ::= INTEGER
+
+termType              ::= shapeExprType | tripleExprType | valueType
+                        | "Schema" | "SemAct" | "Annotation"
+shapeExprType         ::= "ShapeAnd" | "ShapeOr" | "ShapeNot"
+                        | "NodeConstraint" | "Shape" | "ShapeExternal"
+tripleExprType        ::= "EachOf" | "OneOf" | "TripleConstraint"
+valueType             ::= "IriStem" | "IriStemRange"
+                        | "LiteralStem" | "LiteralStemRange"
+                        | "Language" | "LanguageStem" | "LanguageStemRange"
+                        | "Wildcard"
+
+attribute             ::= "type" | "id" | "semActs" | "annotations" | "predicate"
+                        | schemaAttr | shapeExprAttr | tripleExprAttr
+                        | valueSetValueAttr | semActAttr | annotationAttr
+schemaAttr            ::= "@context" | "startActs" | "start" | "imports" | "shapes"
+shapeExprAttr         ::= "shapeExprs" | "shapeExpr" | nodeConstraintAttr | shapeAttr
+nodeConstraintAttr    ::= "nodeKind" | "datatype" | xsFacetAttr | "values"
+xsFacetAttr           ::= stringFacetAttr | numericFacetAttr
+stringFacetAttr       ::= "length" | "minlength" | "maxlength" | "pattern" | "flags"
+numericFacetAttr      ::= "mininclusive" | "minexclusive"
+                        | "maxinclusive" | "maxexclusive"
+                        | "totaldigits" | "fractiondigits"
+valueSetValueAttr     ::= "value" | "language" | "stem" | "exclusions" | "languageTag"
+shapeAttr             ::= "closed" | "extra" | "extends" | "expression"
+tripleExprAttr        ::= "expressions" | "min" | "max" | tripleConstraintAttr
+tripleConstraintAttr  ::= "inverse" | "valueExpr"
+semActAttr            ::= "name" | "code"
+annotationAttr        ::= "object"
+
 [136s]  iri                   ::= IRIREF | prefixedName
 [137s]  prefixedName          ::= PNAME_LN | PNAME_NS
 
 @terminals
+        COMMENT               ::= '#' [^#x0a#x0d]* | '<!--' ([^-] | '-' [^-] | '--' [^>])* '-->'
 [18t]   IRIREF                ::= '<' ([^#x00-#x20<>\"{}|^`\\] | UCHAR)* '>' /* #x00=NULL #01-#x1F=control codes #x20=space */
 [140s]  PNAME_NS              ::= PN_PREFIX? ':'
 [141s]  PNAME_LN              ::= PNAME_NS PN_LOCAL
-[142s]  BLANK_NODE_LABEL      ::= '_:' (PN_CHARS_U | [0-9]) ((PN_CHARS | '.')* PN_CHARS)?
 [19t]   INTEGER               ::= [+-]? [0-9]+
 [26t]   UCHAR                 ::= '\\u' HEX HEX HEX HEX
                                 | '\\U' HEX HEX HEX HEX HEX HEX HEX HEX
@@ -33,7 +82,9 @@ PredicateLabel ::= iri | BLANK_NODE_LABEL
 [167s]  PN_CHARS              ::= PN_CHARS_U | '-' | [0-9]
                                 | [#x00B7] | [#x0300-#x036F] | [#x203F-#x2040]
 [168s]  PN_PREFIX             ::= PN_CHARS_BASE ((PN_CHARS | '.')* PN_CHARS)?
-[169s]  PN_LOCAL              ::= (PN_CHARS_U | ':' | [0-9] | PLX) ((PN_CHARS | '.' | ':' | PLX)* (PN_CHARS | ':' | PLX))?
+/* ShExPath's PN_LOCAL, unlike ShExC's, may end in a '.': no ShExPath
+ * operator is spelled '.', so nothing needs the character back. */
+[169s]  PN_LOCAL              ::= (PN_CHARS_U | ':' | [0-9] | PLX) (PN_CHARS | '.' | ':' | PLX)*
 [170s]  PLX                   ::= PERCENT | PN_LOCAL_ESC
 [171s]  PERCENT               ::= '%' HEX HEX
 [172s]  HEX                   ::= [0-9] | [A-F] | [a-f]
