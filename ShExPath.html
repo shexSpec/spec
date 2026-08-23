@@ -171,17 +171,33 @@
             <tr><td><code>parent::</code></td><td>the item that has this one as a property value or array member. The schema has no parent.</td></tr>
             <tr><td><code>ancestor::</code></td><td>that parent, its parent, and so on up to the schema.</td></tr>
             <tr><td><code>thisShapeExpr::</code></td><td>the item, and — if it is a <code>ShapeAnd</code>, <code>ShapeOr</code> or <code>ShapeNot</code> — the shape expressions it combines, transitively. This is how a path reaches the <code>Shape</code> in <code>IRI /re/ {…}</code> without knowing that a conjunction is in the way.</td></tr>
-            <tr><td><code>thisTripleExpr::</code></td><td>the item, and — if it is an <code>EachOf</code> or <code>OneOf</code> — the triple expressions it groups, transitively.</td></tr>
+            <tr><td><code>thisTripleExpr::</code></td><td>the item, and — if it is an <code>EachOf</code> or <code>OneOf</code> — the triple expressions it groups, transitively, an <a href="#inclusions">inclusion</a> among them.</td></tr>
           </tbody>
         </table>
         <p>
           Neither <code>thisShapeExpr::</code> nor <code>thisTripleExpr::</code> crosses into the other kind of expression: <code>thisTripleExpr::</code> does not enter a constraint's <code>valueExpr</code>, and <code>thisShapeExpr::</code> does not enter a shape's <code>expression</code>.
-          Both stop at a reference, which is an IRI rather than an expression.
+          <code>thisShapeExpr::</code> stops at a shape reference, which is an IRI rather than an expression.
         </p>
         <p class="issue">
           <code>thisShapeExpr::</code> yields nothing for a <code>ShapeExternal</code> or a <code>ShapeDecl</code>, though <code>ShapeExternal</code> is a <a>term type</a> and a declaration is what <code>shapes</code> holds.
-          Likewise <code>thisTripleExpr::</code> yields nothing for an inclusion (<code>&amp;&lt;#label&gt;</code>), so <code>~</code> cannot see a constraint the shape includes by reference — it has to be addressed through <code>$&lt;#label&gt;</code> at its declaration.
         </p>
+
+        <section id="inclusions">
+          <h4>Inclusions</h4>
+          <p>
+            A triple expression may be a label rather than an expression — ShExC writes it <code>&amp;&lt;#label&gt;</code> — and it means the expression that label names is part of this one.
+            <code>thisTripleExpr::</code> reads it that way: the axis goes on into the expression the label names, so a shape's body is what a validator matches against and not merely what is written between its braces.
+            The <code>~</code> shortcut is built on that axis, so it reaches an included constraint too.
+          </p>
+          <p>
+            An expression the walk has already reported is not reported again, so an expression that includes itself, and one included twice, are each that expression once.
+            A label nothing in the schema declares selects nothing.
+          </p>
+          <p class="note">
+            An included expression is <em>one</em> expression, however many bodies take it in: two shapes that include the same group reach the same items, and something hung on one of those items — an annotation, a semantic action — is hung on it for every shape that includes it.
+            Addressing it through a shape reads as though it were that shape's own; it isn't.
+          </p>
+        </section>
         <p class="issue">
           A <code>descendant::</code> axis — every item below this one, at any depth — is used by the <code>$</code> <a href="#shortcuts">shortcut</a> but has no spelling of its own in the grammar.
         </p>
