@@ -5846,6 +5846,30 @@ otherwise the result is the left <a class="grammarRef" href="#prod-unaryTripleEx
       </div>
     </div>
 
+    <div class="issue" id="issue-templates-strawman">
+      <p><strong>Templates (strawman proposal — not part of this specification).</strong>
+        A <a href="https://github.com/shexjs/shex.js/blob/main/doc/templates.md">strawman under
+        discussion</a> parameterizes shape expression declarations so that recurring patterns
+        (RDF lists, qualification, participation) are written once and instantiated per use.
+        A parameter list after a shape label declares a template; an argument list after a
+        shape reference applies one; expansion (monomorphization) yields a schema in the
+        language defined by this specification, so validation semantics are unchanged.
+        The grammar deltas under discussion (prototyped in shex.js):</p>
+      <pre>
+shapeExprDecl  ::= "ABSTRACT"? shapeExprLabel templateParams? restrictions* (shapeExpression | "EXTERNAL")
+templateParams ::= "&lt;&lt;" templateParam (',' templateParam)* "&gt;&gt;"
+templateParam  ::= VAR ("IRI")? ("EXTENDS" shapeExprLabel)?
+shapeRef       ::= (ATPNAME_LN | ATPNAME_NS | '@' shapeExprLabel) templateArgs?
+templateArgs   ::= "&lt;&lt;" templateArg (',' templateArg)* "&gt;&gt;"
+templateArg    ::= inlineShapeExpression
+shapeAtom      ::= &#8230; | VAR
+predicate      ::= iri | RDF_TYPE | VAR
+VAR            ::= '?' (PN_CHARS_U | [0-9]) (PN_CHARS_U | [0-9] | #x00B7 | [#x0300-#x036F] | [#x203F-#x2040])*</pre>
+      <p>See <a href="ShExR-templated.shex">ShExR-templated.shex</a> for this specification's
+        own list shapes written with the proposed templates; it expands to exactly the
+        schema in <a href="ShExR.shex">ShExR.shex</a>.</p>
+    </div>
+
     <!-- Non-objects are typically not injected into the grammar as they
          are abstract — they don't manifest in a materializable object.
 
